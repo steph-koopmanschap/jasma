@@ -1,0 +1,12 @@
+JASMA - Just Another Social Media App
+
+JASMA is an open source social media platform.
+JASMA Is created by Steph Koopmanschap and Others.
+
+JASMA uses:
+NextJS / React
+TailwindCSS
+NodeJS
+PostGreSQL
+
+Many thanks to everyone who directly and indirectly helped this project
