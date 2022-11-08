@@ -18,7 +18,7 @@ export default function Home() {
         
         <meta property="og:title" content="Just Another Social Media App" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://jasma.com" />
+        <meta property="og:url" content="https://jasma.vercel.app" />
         <meta property="og:description" content="Just Another Social Media App" />
         <meta property="og:image" content="image.png" />
 

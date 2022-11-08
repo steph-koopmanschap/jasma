@@ -5,7 +5,8 @@ const nextConfig = {
   swcMinify: true,
   images: {
     domains: ["localhost"]
-  }
+  },
+  poweredByHeader: false, //remove x-powered-by: NextJS header (better cybersecurity)
 };
 
 module.exports = nextConfig;
