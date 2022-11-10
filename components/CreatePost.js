@@ -1,6 +1,7 @@
 
 import React, {useState} from 'react';
-import {checkFileTooLarge, hashtagFormatter} from "../utilities/utilities.js";
+import hashtagFormatter from "../utils/hashtagFormatter.js";
+import checkFileTooLarge from "../utils/checkFileTooLarge.js";
 
 export default function CreatePost() {
 

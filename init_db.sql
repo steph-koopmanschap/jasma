@@ -19,13 +19,19 @@ COMMENT ON DATABASE "jasmaDB"
 \c jasmaDB
 
 -- Grant full permissions on the database
-
 GRANT ALL PRIVILEGES ON ALL TABLES    IN SCHEMA public to postgres;
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public to postgres;
 GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public to postgres;
 
 -- Drop tables first in case something is wrong
--- Create the tables
+DROP TABLE IF EXISTS posts_hashtags;
+DROP TABLE IF EXISTS hashtags;
+DROP TABLE IF EXISTS posts_metadata;
+DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS users_preferences;
+DROP TABLE IF EXISTS users_metadata;
+DROP TABLE IF EXISTS users_info;
+DROP TABLE IF EXISTS users;
 
 -- Create the tables
 -- some column names have table name in front of them to prevent using SQL keywords
@@ -36,9 +42,9 @@ CREATE TABLE IF NOT EXISTS users(
     username        VARCHAR(25) UNIQUE NOT NULL,
     email           VARCHAR(50) UNIQUE NOT NULL,
     recovery_email  VARCHAR(50),
-    phone           VARCHAR(20),
-    recovery_phone  VARCHAR(20),
-    user_password   CHAR(60) NOT NULL
+    user_password   CHAR(60) NOT NULL,
+    phone           VARCHAR(20)
+    recovery_phone  VARCHAR(20)
 );
 
 -- Create indexes for faster querying on usernames (the primary way to retrieve data)
@@ -48,7 +54,7 @@ CREATE INDEX users_email_idx ON users (email);
 -- One to one relationship with table users
 CREATE TABLE IF NOT EXISTS users_info(
     user_id         UUID REFERENCES users(user_id) ON DELETE CASCADE UNIQUE NOT NULL,
-    profile_pic     BYTEA
+    profile_pic     BYTEA NOT NULL,
     first_name      VARCHAR(35),
     last_name       VARCHAR(35),
     bio             TEXT, 
@@ -60,30 +66,45 @@ CREATE TABLE IF NOT EXISTS users_info(
 
 -- One to one relationship with table users
 CREATE TABLE IF NOT EXISTS users_metadata(
-    user_id         UUID REFERENCES users(user_id) ON DELETE CASCADE UNIQUE NOT NULL,           
-    last_login_date DATE NOT NULL,
+    user_id               UUID REFERENCES users(user_id) ON DELETE CASCADE UNIQUE NOT NULL,           
+    user_role             VARCHAR(10) NOT NULL
+        CHECK(user_role IN ('guest', 'normal', 'mod', 'admin')),
+    last_login_date       DATE NOT NULL,
     account_creation_date DATE NOT NULL,
-    last_ip4        VARCHAR(15)
+    isVerified_email      BOOLEAN NOT NULL,
+    last_ip4              VARCHAR(15),
     PRIMARY KEY (user_id)
 );
 
+-- One to one relationship with table users
+CREATE TABLE IF NOT EXISTS users_preferences(
+    user_id             UUID REFERENCES users(user_id) ON DELETE CASCADE UNIQUE NOT NULL,           
+    email_notifications BOOLEAN NOT NULL
+    PRIMARY KEY (user_id)
+);
+
+-- One to many relationship with table users
 CREATE TABLE IF NOT EXISTS posts(
-    post_id         UUID PRIMARY KEY,
+    post_id         UUID UNIQUE NOT NULL,
     user_id         UUID REFERENCES users(user_id),
     text_content    TEXT NOT NULL,
     file_content    BYTEA
+    PRIMARY KEY (post_id, user_id)
 );
 
+-- One to one relationship with table posts
 CREATE TABLE IF NOT EXISTS posts_metadata(
-    post_id         UUID REFERENCES posts(post_id),
-    post_creation_date DATE NOT NULL
+    post_id             UUID REFERENCES posts(post_id) ON DELETE CASCADE UNIQUE NOT NULL,
+    post_creation_date  DATE NOT NULL
+    PRIMARY KEY (post_id)
 );
 
 CREATE TABLE IF NOT EXISTS hashtags(
     hashtag         VARCHAR(50) PRIMARY KEY,
 );
 
+-- Many to many relationship with posts and hashtags
 CREATE TABLE IF NOT EXISTS posts_hashtags(
-    post_id         UUID REFERENCES posts(post_id),
+    post_id         UUID REFERENCES posts(post_id) ON DELETE CASCADE,
     hashtag         VARCHAR(50) REFERENCES hashtags(hashtag),
 );
