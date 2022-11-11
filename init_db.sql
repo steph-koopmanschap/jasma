@@ -24,10 +24,12 @@ GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public to postgres;
 GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public to postgres;
 
 -- Drop tables first in case something is wrong
+DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS posts_hashtags;
 DROP TABLE IF EXISTS hashtags;
 DROP TABLE IF EXISTS posts_metadata;
 DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS users_following;
 DROP TABLE IF EXISTS users_preferences;
 DROP TABLE IF EXISTS users_metadata;
 DROP TABLE IF EXISTS users_info;
@@ -43,7 +45,7 @@ CREATE TABLE IF NOT EXISTS users(
     email           VARCHAR(50) UNIQUE NOT NULL,
     recovery_email  VARCHAR(50),
     user_password   CHAR(60) NOT NULL,
-    phone           VARCHAR(20)
+    phone           VARCHAR(20),
     recovery_phone  VARCHAR(20)
 );
 
@@ -52,15 +54,17 @@ CREATE INDEX users_username_idx ON users (username);
 CREATE INDEX users_email_idx ON users (email);
 
 -- One to one relationship with table users
+-- by default the user's display name is their username,
+-- but they can also use their given_name or last_name if they prefer.
 CREATE TABLE IF NOT EXISTS users_info(
     user_id         UUID REFERENCES users(user_id) ON DELETE CASCADE UNIQUE NOT NULL,
     profile_pic     BYTEA NOT NULL,
-    first_name      VARCHAR(35),
+    given_name      VARCHAR(35),
     last_name       VARCHAR(35),
     bio             TEXT, 
     date_of_birth   DATE,
     country         TEXT,
-    website         TEXT
+    website         TEXT,
     PRIMARY KEY (user_id)
 );
 
@@ -79,8 +83,15 @@ CREATE TABLE IF NOT EXISTS users_metadata(
 -- One to one relationship with table users
 CREATE TABLE IF NOT EXISTS users_preferences(
     user_id             UUID REFERENCES users(user_id) ON DELETE CASCADE UNIQUE NOT NULL,           
-    email_notifications BOOLEAN NOT NULL
+    email_notifications BOOLEAN NOT NULL,
     PRIMARY KEY (user_id)
+);
+
+-- Not sure if this works? 
+-- should they be composite primary key??
+CREATE TABLE IF NOT EXISTS users_following(
+    user_id             UUID REFERENCES users(user_id) ON DELETE CASCADE NOT NULL,
+    follow_id           UUID REFERENCES users(user_id) ON DELETE CASCADE NOT NULL
 );
 
 -- One to many relationship with table users
@@ -88,23 +99,36 @@ CREATE TABLE IF NOT EXISTS posts(
     post_id         UUID UNIQUE NOT NULL,
     user_id         UUID REFERENCES users(user_id),
     text_content    TEXT NOT NULL,
-    file_content    BYTEA
+    file_content    BYTEA,
+    created_at      TIMESTAMP NOT NULL,
+    last_edited_at  TIMESTAMP NOT NULL,
     PRIMARY KEY (post_id, user_id)
 );
 
 -- One to one relationship with table posts
+-- Not sure if this table is still needed?
 CREATE TABLE IF NOT EXISTS posts_metadata(
     post_id             UUID REFERENCES posts(post_id) ON DELETE CASCADE UNIQUE NOT NULL,
-    post_creation_date  DATE NOT NULL
     PRIMARY KEY (post_id)
 );
 
 CREATE TABLE IF NOT EXISTS hashtags(
-    hashtag         VARCHAR(50) PRIMARY KEY,
+    hashtag         VARCHAR(50) PRIMARY KEY
 );
 
 -- Many to many relationship with posts and hashtags
 CREATE TABLE IF NOT EXISTS posts_hashtags(
     post_id         UUID REFERENCES posts(post_id) ON DELETE CASCADE,
     hashtag         VARCHAR(50) REFERENCES hashtags(hashtag),
+    PRIMARY KEY (post_id, hashtag)
+);
+
+-- One to many relationship with posts
+CREATE TABLE IF NOT EXISTS comments(
+    comment_id      UUID PRIMARY KEY,
+    post_id         UUID REFERENCES posts(post_id) ON DELETE CASCADE,
+    user_id         UUID REFERENCES users(user_id),
+    comment_text    TEXT NOT NULL,
+    comment_file    BYTEA,
+    created_at      TIMESTAMP NOT NULL
 );
