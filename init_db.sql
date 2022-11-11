@@ -1,7 +1,7 @@
 -- Use this file to initialize the PostGreSQL database only once, before starting the server for the first time.
 
 -- Create the database
-CREATE DATABASE "jasmaDB"
+CREATE DATABASE jasma_db
     WITH
     OWNER = postgres
     TEMPLATE = template0
@@ -12,16 +12,21 @@ CREATE DATABASE "jasmaDB"
     CONNECTION LIMIT = -1
     IS_TEMPLATE = False;
 
-COMMENT ON DATABASE "jasmaDB"
+COMMENT ON DATABASE jasma_db
     IS 'The Database for the JASMA App';
 
 -- Connect to the newly created database as current user
-\c jasmaDB
+\c jasma_db
+
+CREATE ROLE jasma_admin LOGIN PASSWORD 'a';
 
 -- Grant full permissions on the database
-GRANT ALL PRIVILEGES ON ALL TABLES    IN SCHEMA public to postgres;
-GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public to postgres;
-GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public to postgres;
+GRANT ALL PRIVILEGES ON DATABASE jasma_db TO jasma_admin;
+GRANT ALL PRIVILEGES ON SCHEMA public TO jasma_admin;
+GRANT ALL PRIVILEGES ON ALL TABLES    IN SCHEMA public to jasma_admin;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public to jasma_admin;
+GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public to jasma_admin;
+ALTER DATABASE jasma_db OWNER TO jasma_admin;
 
 -- Drop tables first in case something is wrong
 DROP TABLE IF EXISTS comments;
