@@ -1,0 +1,35 @@
+{
+  "name": "jasmaserver",
+  "version": "1.0.0",
+  "description": "API server/backend for JASMA",
+  "homepage": "https://github.com/steph-koopmanschap/jasma#readme",
+  "author": "Steph Koopmanschap and Others",
+  "license": "Apache-2.0",
+  "keywords": [
+    "socialmedia"
+  ],
+  "main": "server.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "dev": "nodemon -r dotenv/config server.js",
+    "start": "node -r dotenv/config server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/steph-koopmanschap/jasma.git"
+  },
+  "bugs": {
+    "url": "https://github.com/steph-koopmanschap/jasma/issues"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.8.0",
+    "rotating-file-stream": "^3.0.4"
+  }
+}

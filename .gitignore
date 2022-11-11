@@ -3,6 +3,7 @@
 # dependencies
 node_modules
 /node_modules
+/server/node_modules
 /.pnp
 .pnp.js
 
@@ -33,6 +34,9 @@ yarn-error.log*
 .env.production
 /.env.development
 /.env.production
+/server/.env.development
+/server/.env.production
+/server/.env
 
 # vercel
 .vercel
@@ -43,6 +47,7 @@ next-env.d.ts
 
 # Logs
 /logs/*
+/server/logs/*
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

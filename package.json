@@ -5,7 +5,10 @@
   "description": "JASMA-launcher",
   "homepage": "https://github.com/steph-koopmanschap/jasma#readme",
   "author": "Steph Koopmanschap and Others",
-  "license": "APACHE",
+  "license": "Apache-2.0",
+  "keywords": [
+    "socialmedia"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
