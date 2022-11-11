@@ -18,15 +18,7 @@ COMMENT ON DATABASE jasma_db
 -- Connect to the newly created database as current user
 \c jasma_db
 
-CREATE ROLE jasma_admin LOGIN PASSWORD 'a';
 
--- Grant full permissions on the database
-GRANT ALL PRIVILEGES ON DATABASE jasma_db TO jasma_admin;
-GRANT ALL PRIVILEGES ON SCHEMA public TO jasma_admin;
-GRANT ALL PRIVILEGES ON ALL TABLES    IN SCHEMA public to jasma_admin;
-GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public to jasma_admin;
-GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public to jasma_admin;
-ALTER DATABASE jasma_db OWNER TO jasma_admin;
 
 -- Drop tables first in case something is wrong
 DROP TABLE IF EXISTS comments;
@@ -137,3 +129,13 @@ CREATE TABLE IF NOT EXISTS comments(
     comment_file    BYTEA,
     created_at      TIMESTAMP NOT NULL
 );
+
+CREATE ROLE jasma_admin LOGIN PASSWORD 'a';
+
+-- Grant full permissions on the database
+GRANT ALL PRIVILEGES ON DATABASE jasma_db TO jasma_admin;
+GRANT ALL PRIVILEGES ON SCHEMA public TO jasma_admin;
+GRANT ALL PRIVILEGES ON ALL TABLES    IN SCHEMA public to jasma_admin;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public to jasma_admin;
+GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public to jasma_admin;
+ALTER DATABASE jasma_db OWNER TO jasma_admin;
