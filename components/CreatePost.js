@@ -87,6 +87,10 @@ export default function CreatePost() {
     //Generates a file preview
     const filePreviewJSX = () => {
         //Check file type
+        /* 
+            CHANGE THIS INTO A SWITCH STATEENT?
+            Switch statements have better performance of if-else statements
+        */
         if (postData.file?.type.includes("image")) 
         {
             _filePreviewJSX = (   
@@ -122,7 +126,7 @@ export default function CreatePost() {
             return (
                 <React.Fragment>
                 <button
-                    className="border-2 p-2 m-2"
+                    className="formButtonDefault border p-2 m-2"
                     onClick={removeFile}
                 >
                     Remove file
