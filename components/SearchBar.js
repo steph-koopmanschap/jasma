@@ -32,7 +32,7 @@ export default function SearchBar() {
                 />
                 
                 <input 
-                    className="text-white font-bold py-2 px-2 ml-2 rounded outline-white border focus:outline-white"
+                    className="formButtonDefault py-2 px-2 ml-2 outline-white border"
                     type="submit"
                     value="Search" 
                 />

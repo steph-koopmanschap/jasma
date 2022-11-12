@@ -1,0 +1,1 @@
+//Get the first 10 posts of a user

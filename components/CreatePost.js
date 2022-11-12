@@ -182,7 +182,7 @@ export default function CreatePost() {
                 </div>
                 
                 <input 
-                    className="text-white font-bold py-2 px-2 m-2 rounded outline-white border focus:outline-white"
+                    className="formButtonDefault py-2 px-2 m-2 outline-white border "
                     type="submit"
                     value="Post" 
                 />
