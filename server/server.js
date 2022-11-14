@@ -10,7 +10,7 @@ require('dotenv').config();
 const logging = require("./middlewares/logging.js");
 const loadRouters = require('./middlewares/routes.js');
 //Import connection for PostGreSQL
-    //const pool = require("./lib/dbConnect.js");
+const pool = require("./db/dbConnect.js");
 //Simple test route
 const testResponse = require("./routes/testResponse.js");
 
@@ -35,19 +35,21 @@ app.listen(port, async () => {
     console.log(`Mode: ${process.env.NODE_ENV}`);
     console.log("Testing the PostGreSQL database connection...");
 
-    // let test = await pool.query(
-    //     `
-    //     SELECT NOW() 
-    //     `);
+    let test = await pool.query(
+        `
+        SELECT NOW() 
+        `
+    );
 
-    // if (!test || !test.rows || !test.rows.length ) {
-    //     let err = new Error(`Error: Database connection failed.`);
-    //     console.log(err);
-    // }
-    // else 
-    // {
-    //     console.log(`Database connection success @ ${JSON.stringify(test.rows[0].now)}`);
-    // }
+    if (!test || !test.rows || !test.rows.length ) {
+        let err = new Error(`Error: Database connection failed.`);
+        console.log(err);
+    }
+    else 
+    {
+        console.log(`Database connection success @ ${JSON.stringify(test.rows[0].now)}`);
+    }
+
     console.log(`ExpressJS server started...`);
     console.log(`Listening on "${process.env.BASE_URL}:${port}"...`);
     console.log("------------"); 

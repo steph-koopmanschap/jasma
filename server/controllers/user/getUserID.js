@@ -1,4 +1,4 @@
-const pool = require("../../lib/dbConnect.js");
+const pool = require("../../db/dbConnect.js");
 
 //This function assumes the userID is not known yet, but username is.
 //returns null if user not found

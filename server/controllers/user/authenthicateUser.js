@@ -1,7 +1,7 @@
 //import the bcrypt library for hashing functions
 const bcrypt = require("bcrypt"); 
 //import connection for PostGreSQL
-const pool = require("../../lib/dbConnect.js");
+const pool = require("../../db/dbConnect.js");
 
 //Returns user_id, username, and email if password matches, 
 //returns false if not, 

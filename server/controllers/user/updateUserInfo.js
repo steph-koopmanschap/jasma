@@ -1,4 +1,4 @@
-const pool = require("../../lib/dbConnect.js");
+const pool = require("../../db/dbConnect.js");
 
 //Update the users_info table
 async function updateUserInfo(userData) {

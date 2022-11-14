@@ -1,16 +1,19 @@
 const Pool = require("pg").Pool; //Postgres interface for nodejs
 
-//require('dotenv').config(); //Get PSQL credentials from .env
+//Get PSQL credentials from .env
+require('dotenv').config();
+//require('dotenv').config( { path: `${__dirname}/../.env` } ); 
+const { PG_USER, PG_PASSWORD, PG_HOST, PG_PORT, PG_DATABASE } = process.env;
 
 //This file creates a connection to the PostGreSQL Database
 
 //PSQL connection credentials and config
 const config = {
-    host: process.env.PG_HOST,
-    port: process.env.PG_PORT,
-    user: process.env.PG_USER,
-    password: process.env.PG_PASSWORD, 
-    database: process.env.PG_DATABASE,
+    user: PG_USER,
+    password: PG_PASSWORD, 
+    host: PG_HOST,
+    port: PG_PORT,
+    database: PG_DATABASE,
     ssl: false,
     max: 5,
     //idleTimeoutMillis: 30000,

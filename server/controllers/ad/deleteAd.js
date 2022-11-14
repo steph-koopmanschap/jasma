@@ -1,4 +1,4 @@
-const pool = require("../../lib/dbConnect.js");
+const pool = require("../../db/dbConnect.js");
 
 //Delete a post
 async function deleteAd(adID) {

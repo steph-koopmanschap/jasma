@@ -1,5 +1,5 @@
 const formatDateToStr = require("../../utils/formatDateToStr.js");
-const pool = require("../../lib/dbConnect.js");
+const pool = require("../../db/dbConnect.js");
 
 // @TODO: THIS IS NOT DONE YET
 

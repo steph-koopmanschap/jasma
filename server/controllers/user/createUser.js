@@ -3,7 +3,7 @@ const crypto = require('crypto');
 //import the bcrypt library for hashing functions
 const bcrypt = require("bcrypt"); 
 //import connection for PostGreSQL
-const pool = require("../../lib/dbConnect.js");
+const pool = require("../../db/dbConnect.js");
 //Import utility functions
 const formatDateToStr = require("../../utils/formatDateToStr.js");
 const getUserID = require("./getUserID.js");

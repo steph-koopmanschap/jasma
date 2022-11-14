@@ -1,4 +1,4 @@
-const pool = require("../../lib/dbConnect.js");
+const pool = require("../../db/dbConnect.js");
 
 //Checks if the given email already exists in the database
 //Returns true if yes, returns false if not.

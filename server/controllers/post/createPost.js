@@ -1,6 +1,6 @@
 //import crypto library for generating UUID
 const crypto = require('crypto');
-const pool = require("../../lib/dbConnect.js");
+const pool = require("../../db/dbConnect.js");
 
 // @TODO: STILL NEED TO ADD HASHTAGS!
 

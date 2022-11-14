@@ -1,6 +1,6 @@
 //import crypto library for generating UUID
 const crypto = require('crypto');
-const pool = require("../../lib/dbConnect.js");
+const pool = require("../../db/dbConnect.js");
 
 // @TODO: Keywords should be an array not a single value
 // Link to the hashtags table???

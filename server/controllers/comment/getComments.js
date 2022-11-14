@@ -1,4 +1,4 @@
-const pool = require("../../lib/dbConnect.js");
+const pool = require("../../db/dbConnect.js");
 
 //Get all comments from a particular post
 async function getComments(postID, limit = 1) {

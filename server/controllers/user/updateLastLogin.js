@@ -1,4 +1,4 @@
-const pool = require("../../lib/dbConnect.js");
+const pool = require("../../db/dbConnect.js");
 
 //This function updates the last login date and the last ip4 of the user
 //Ideally this function is called whenever the user logs in.
