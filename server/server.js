@@ -8,6 +8,7 @@ const express = require('express');
 require('dotenv').config();
 //import middlewares
 const logging = require("./middlewares/logging.js");
+const loadRouters = require('./middlewares/routes.js');
 //Import connection for PostGreSQL
     //const pool = require("./lib/dbConnect.js");
 //Simple test route
@@ -18,8 +19,11 @@ const app = express();
 //Set port
 var port = parseInt(process.env.PORT || '3001', 10);
 
+// =================================================================
 // LOAD MIDDLEWARES
 logging(app);
+loadRouters(app);
+// =================================================================
 
 //Basic server response test
 app.all('/test', testResponse);

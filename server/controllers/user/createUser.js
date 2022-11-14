@@ -101,7 +101,9 @@ async function createUser(userData) {
             `,
             [userID, true]
         );
-    }   
+    }
+    //New user account created
+    return true;
 }
 
 module.exports = createUser;
