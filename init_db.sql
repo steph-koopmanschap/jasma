@@ -29,6 +29,9 @@ GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public to jasma_admin;
 ALTER DATABASE jasma_db OWNER TO jasma_admin;
 
 -- Drop tables first in case something is wrong
+DROP TABLE IF EXISTS transactions;
+DROP TABLE IF EXISTS ads_preferences;
+DROP TABLE IF EXISTS ads;
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS posts_hashtags;
 DROP TABLE IF EXISTS hashtags;
@@ -70,6 +73,7 @@ CREATE TABLE IF NOT EXISTS users_info(
     bio             TEXT, 
     date_of_birth   DATE,
     country         TEXT,
+    city            TEXT,
     website         TEXT,
     PRIMARY KEY (user_id)
 );
@@ -137,6 +141,38 @@ CREATE TABLE IF NOT EXISTS comments(
     comment_text    TEXT NOT NULL,
     comment_file    BYTEA,
     created_at      TIMESTAMP NOT NULL
+);
+
+-- One to many relationship with users
+CREATE TABLE IF NOT EXISTS ads(
+    ad_id           UUID PRIMARY KEY,
+    user_id         UUID REFERENCES users(user_id) ON DELETE CASCADE,
+    ad_file         BYTEA NOT NULL,
+    ad_url          TEXT
+    created_at      TIMESTAMP NOT NULL,
+    expires_at      TIMESTAMP NOT NULL
+);
+
+-- One to one relationship with ads
+-- Used for targeting demographics with ads
+CREATE TABLE IF NOT EXISTS ads_preferences(
+    ad_id           UUID REFERENCES ads(ad_id) UNIQUE ON DELETE CASCADE,
+    age_start       SMALLINT,
+    age_end         SMALLINT,
+    country         TEXT,
+    city            TEXT,
+    keyword         VARCHAR(50)
+);
+
+-- One to many relationship with users
+-- ad_id is not an FK of ads, because ads are deleted, but transactions are permanent
+CREATE TABLE IF NOT EXISTS transactions(
+    transaction_id   UUID PRIMARY KEY,
+    user_id          UUID REFERENCES users(user_id),
+    ad_id            UUID
+    transaction_date TIMESTAMP NOT NULL,
+    price            MONEY NOT NULL,
+    payment_method   VARCHAR(50)
 );
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++

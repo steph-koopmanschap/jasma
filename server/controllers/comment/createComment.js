@@ -2,7 +2,7 @@
 const crypto = require('crypto');
 const pool = require("../../lib/dbConnect.js");
 
-////Create a new comment on a post
+//Create a new comment on a post
 
 //returns the newly created comment
 async function createComment(commentData) {
@@ -15,9 +15,8 @@ async function createComment(commentData) {
         INSERT INTO comments(comment_id, post_id, user_id, comment_text, comment_file, created_at)
         VALUES (
             $1::uuid,
-            $1::uuid,
             $2::uuid,
-            $3,
+            $3::uuid,
             $4,
             $5,
             $6
