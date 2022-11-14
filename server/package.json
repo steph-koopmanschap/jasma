@@ -32,5 +32,8 @@
     "morgan": "^1.10.0",
     "pg": "^8.8.0",
     "rotating-file-stream": "^3.0.4"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^7.6.0"
   }
 }
