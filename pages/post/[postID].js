@@ -12,7 +12,7 @@ export default function PostPage() {
         <h2>Nothing here yet...</h2>
         <h3>postID:</h3>
         <h3>{postID}</h3>
-        <Post/>
+        {/*<Post/>*/}
     </div>
     );
 }

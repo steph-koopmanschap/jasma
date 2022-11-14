@@ -14,7 +14,7 @@ const createAccountLimiter = rateLimit({
 	legacyHeaders: false, // Disable the 'X-RateLimit-*' headers
 });
 
-userRouter.post('/createAccount', createAccountLimiter, async (req, res, next) => {
+userRouter.post('/createaccount', createAccountLimiter, async (req, res, next) => {
     try
     {
         let result = await createUser(req.body.userData);
