@@ -26,6 +26,32 @@ async function tableExists(tableName) {
     return res.rows[0].exists;
 }
 
+//Get the total size of the database in kb, mb, or gb
+//returns string
+async function getSizeOfDB() {
+    const res = await db.query(
+        `
+        SELECT pg_size_pretty (pg_database_size ('jasma_db')) AS total_database_size;
+        `
+    );
+
+    return res.rows[0].total_database_size;
+}
+
+//This can be useful for analytics 
+//for example getNumOfTableRows(users) returns the number of registered users on jasma.
+//Returns integer
+async function getNumOfTableRows(tableName) {
+    const res = await db.query(
+        `
+        SELECT COUNT(*) AS rowcount
+        FROM ${tableName}
+        `
+    );
+
+    return res.rows[0].rowcount;
+}
+
 async function run() {
     const exists = await tableExists("users");
     const schema = await getSchema("users");
@@ -34,3 +60,10 @@ async function run() {
 }
 
 run();
+
+module.exports = {
+    getSchema,
+    tableExists,
+    getSizeOfDB,
+    getNumOfTableRows
+}
