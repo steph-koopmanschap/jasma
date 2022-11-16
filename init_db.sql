@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS users_metadata(
     last_login_date       DATE NOT NULL,
     account_creation_date DATE NOT NULL,
     isVerified_email      BOOLEAN NOT NULL,
-    last_ip4              VARCHAR(15),
+    last_ipv4             VARCHAR(15),
     PRIMARY KEY (user_id)
 );
 

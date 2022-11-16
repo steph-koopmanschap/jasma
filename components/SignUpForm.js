@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import Link from 'next/link';
 
 export default function SignUpForm() {
     //Values of all the input boxes
@@ -24,7 +25,7 @@ export default function SignUpForm() {
     return ( 
         <div className="flex flex-col items-center justify-center my-16">
             <h1 className="my-2">Create a new account</h1>
-            <h3 className="my-2">Already registered?</h3>
+            <h3 className="my-2">Already registered? <Link className='hover:text-sky-500' href="/login">Login</Link></h3>
 
             <form className="bg-gray-600 shadow-md rounded px-8 pt-6 pb-8 mb-4" action="#" onSubmit={register}>
                 <div className="mb-6">
@@ -75,7 +76,10 @@ export default function SignUpForm() {
                 <input className="formButtonDefault"
                     type="submit" 
                     value="Sign up" 
-                />
+                />  
+                <p className='pt-4 text-xs'>
+                    By clicking Sign Up, you agree to our <Link className='hover:text-sky-500' href="/legal/terms-of-service">Terms of Serice.</Link>
+                </p>
                 </div>
             </form>
 

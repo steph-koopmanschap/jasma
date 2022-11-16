@@ -39,6 +39,13 @@ Everyone is welcome to contribute to this open source project.
 To contribute send a message to Greylien#8501 on Discord
 Or create PR or Fork of this project.
 
+Currently looking for the following contributions:
+ - Frontend design (UI/UX)
+ - Logo and graphics art
+ - Cybsersecurity
+ - Testing
+ - Ideas and inspiration
+
 ### Learn More
 
 To learn more about Next.js, take a look at the following resources:

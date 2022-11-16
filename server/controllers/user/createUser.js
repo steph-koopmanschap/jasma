@@ -78,16 +78,17 @@ async function createUser(userData) {
         //Add user metadata
         let metadata = await pool.query(
             `
-            INSERT INTO users_metadata(user_id, last_login_date, account_creation_date)
+            INSERT INTO users_metadata(user_id, last_login_date, account_creation_date, isVerified_email, last_ipv4)
             VALUES (
                 $1::uuid,
                 $2
                 $3::date,
-                $4::date
-                $5
+                $4::date,
+                $5,
+                $6
             )
             `,
-            [userID, 'normal', creation_date, creation_date, false, userData.ip]
+            [userID, 'normal', creation_date, creation_date, false, userData.last_ipv4]
         );
 
         //Add user preferences

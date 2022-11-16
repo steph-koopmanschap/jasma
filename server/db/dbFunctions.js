@@ -45,7 +45,7 @@ async function getNumOfTableRows(tableName) {
     const res = await db.query(
         `
         SELECT COUNT(*) AS rowcount
-        FROM ${tableName}
+        FROM ${tableName};
         `
     );
 

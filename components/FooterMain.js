@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 //The main footer
 
@@ -15,6 +16,7 @@ export default function FooterMain() {
                     <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
                 </span>
             </a>
+            <Link className='hover:text-sky-500' href="/about">About</Link>
         </footer>
     );
 }

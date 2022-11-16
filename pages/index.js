@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import HeaderMain  from '../components/HeaderMain';
@@ -18,7 +17,6 @@ export default function Home() {
       <main className='flex flex-col items-center justify-center w-full h-fit'>
         
         <Link className='hover:text-sky-500' href="/dashboard">Dashboard</Link>
-        <Link className='hover:text-sky-500' href="/about">About</Link>
         <LoginForm/>
         <SignUpForm/>
       </main>
