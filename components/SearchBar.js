@@ -10,7 +10,8 @@ export default function SearchBar(props) {
         //prevent page from refreshing
         e.preventDefault();
         //Go to the search page with the search query
-        router.push(`/search/?q=${searchValue}`);
+        //replace spaces with '+' characters first
+        router.push(`/search/?q=${searchValue.trim().replace(/[ ]/g, '+')}`);
     }
 
     //Empty the search bar when it is clicked for first time
