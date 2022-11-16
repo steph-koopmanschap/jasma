@@ -1,10 +1,10 @@
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
 import CreatePost from '../../components/CreatePost';
 
 //The (public?) profile page of a user
 export default function ProfilePage() {
-    const router = useRouter()
-    const { username } = router.query
+    const router = useRouter();
+    const { username } = router.query;
 
     return (
         <div>

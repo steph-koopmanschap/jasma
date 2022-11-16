@@ -1,10 +1,10 @@
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
 import Post from '../../components/Post';
 
 //Shows a specific single post on a page
 export default function PostPage() {
-    const router = useRouter()
-    const { postID } = router.query
+    const router = useRouter();
+    const { postID } = router.query;
 
     return (
     <div>

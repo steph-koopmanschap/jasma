@@ -7,7 +7,11 @@ export default function About() {
     <div>
         <HeaderMain/>
         <h1 className="">About</h1>
-        <h2>Nothing here yet...</h2>
+        <p>
+            JASMA also known as Just Another Social Media App <br/>
+            Is an open source social media platform.
+        </p>
+
     </div>
     );
 }

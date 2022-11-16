@@ -1,14 +1,24 @@
+import { useRouter } from 'next/router';
+import React, {useState, useEffect} from 'react';
 
-import React, {useState} from 'react';
+export default function SearchBar(props) {
 
-export default function SearchBar() {
-
-    const [searchValue, setsearchValue] = useState("Search...");
+    const router = useRouter();
+    const [searchValue, setsearchValue] = useState(props.prevQuery);
 
     const search = (e) => {
         //prevent page from refreshing
         e.preventDefault();
-        console.log(searchValue);
+        //Go to the search page with the search query
+        router.push(`/search/?q=${searchValue}`);
+    }
+
+    //Empty the search bar when it is clicked for first time
+    const emptySearchBar = (e) => {
+        if (searchValue === "Search...") 
+        {
+            setsearchValue("");
+        }
     }
 
     const handleChange = (e) => {
@@ -28,6 +38,7 @@ export default function SearchBar() {
                     type="search"
                     name="searchbox"
                     value={searchValue}
+                    onClick={emptySearchBar}
                     onChange={handleChange} 
                 />
                 
