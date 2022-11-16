@@ -11,7 +11,7 @@ chmod u+x install-node-modules.sh
 npx next telemetry disable
 
 # Create database
-./init_db.sh
+./server/db/init_db.sh
 # Install modules
 ./install-node-modules.sh
 
