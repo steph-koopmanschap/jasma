@@ -7,7 +7,7 @@ const pool = require("../../db/dbConnect.js");
 async function getPosts(userID, limit = 1) {
     let posts = await pool.query(
         `
-        SELECT post_id, text_content, file_content, created_at, last_edited_at
+        SELECT post_id, text_content, file_content, created_at, last_edit_at
         FROM posts
         WHERE user_id = $1
         ORDER BY created_at DESC NULLS LAST

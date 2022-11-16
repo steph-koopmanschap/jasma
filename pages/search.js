@@ -13,6 +13,7 @@ export default function Search() {
             <SearchBar prevQuery={q}/>
             <p>Query:</p>
             <p>{q}</p>
+            <h3>Filters:</h3>
         </div>
     );
 }
