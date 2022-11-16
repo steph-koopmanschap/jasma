@@ -21,6 +21,8 @@ var port = parseInt(process.env.PORT || '3001', 10);
 
 // =================================================================
 // LOAD MIDDLEWARES
+//For parsing application/json. Required to read the req.body object
+app.use(express.json());
 logging(app);
 loadRouters(app);
 // =================================================================

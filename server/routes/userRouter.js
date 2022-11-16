@@ -17,6 +17,8 @@ const createAccountLimiter = rateLimit({
 userRouter.post('/createaccount', createAccountLimiter, async (req, res, next) => {
     try
     {
+        //Attach ip address to userData
+        req.body.userData.last_ipv4 = req.ip;
         let result = await createUser(req.body.userData);
         if (result instanceof Error || result === null) 
         {

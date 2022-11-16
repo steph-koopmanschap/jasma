@@ -34,9 +34,9 @@ async function createUser(userData) {
             // generate the salt. The default salt rounds is 10.
             const salt = await bcrypt.genSalt(10);
             // create the hash (convert plaintext password to a hash)
-            const hashedPassword = await bcrypt.hash(userData.password, salt);
+            const hashedPassword = await bcrypt.hash(userData.user_password, salt);
             // Replace the plaintext password of the user with their hashed version.
-            userData.password = hashedPassword;
+            userData.user_password = hashedPassword;
         } 
         catch (error) 
         {
@@ -60,7 +60,7 @@ async function createUser(userData) {
                 $4
             )
             `,
-            [userID, userData.username, userData.email, userData.password]
+            [userID, userData.username, userData.email, userData.user_password]
         );
 
         //Add user info (nothing added yet during account creation)
@@ -69,7 +69,7 @@ async function createUser(userData) {
             `
             INSERT INTO users_info(user_id)
             VALUES (
-                $1::uuid,
+                $1::uuid
             )
             `,
             [userID]
@@ -78,10 +78,10 @@ async function createUser(userData) {
         //Add user metadata
         let metadata = await pool.query(
             `
-            INSERT INTO users_metadata(user_id, last_login_date, account_creation_date, isVerified_email, last_ipv4)
+            INSERT INTO users_metadata(user_id, user_role, last_login_date, account_creation_date, isVerified_email, last_ipv4)
             VALUES (
                 $1::uuid,
-                $2
+                $2,
                 $3::date,
                 $4::date,
                 $5,

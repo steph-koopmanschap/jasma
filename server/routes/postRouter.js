@@ -40,7 +40,7 @@ postRouter.get('/search', async (req, res, next) => {
         const posts = [];
         for (let i = 0; i < postIDs.length; i++)
         {
-            let post = await getPost(postIDs[0]); 
+            let post = await getPost(postIDs[i]); 
             posts.push(post);
         }
         
