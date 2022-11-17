@@ -1,41 +1,46 @@
 {
-  "name": "jasmaserver",
-  "version": "1.0.0",
-  "description": "API server/backend for JASMA",
-  "homepage": "https://github.com/steph-koopmanschap/jasma#readme",
-  "author": "Steph Koopmanschap and Others",
-  "license": "Apache-2.0",
-  "keywords": [
-    "socialmedia"
-  ],
-  "main": "server.js",
-  "directories": {
-    "lib": "lib"
-  },
-  "scripts": {
-    "dev": "nodemon -r dotenv/config server.js",
-    "start": "node -r dotenv/config server.js",
-    "test": "clear && echo \"Don't forget to start server first before running test.\" && node -r dotenv/config ./test/testRoutes.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/steph-koopmanschap/jasma.git"
-  },
-  "bugs": {
-    "url": "https://github.com/steph-koopmanschap/jasma/issues"
-  },
-  "dependencies": {
-    "bcrypt": "^5.1.0",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "express-rate-limit": "^6.6.0",
-    "morgan": "^1.10.0",
-    "pg": "^8.8.0",
-    "rotating-file-stream": "^3.0.4"
-  },
-  "devDependencies": {
-    "@faker-js/faker": "^7.6.0",
-    "axios": "^1.1.3",
-    "nodemon": "^2.0.20"
-  }
+    "name": "jasmaserver",
+    "version": "1.0.0",
+    "description": "API server/backend for JASMA",
+    "homepage": "https://github.com/steph-koopmanschap/jasma#readme",
+    "author": "Steph Koopmanschap and Others",
+    "license": "Apache-2.0",
+    "keywords": [
+        "socialmedia"
+    ],
+    "main": "server.js",
+    "directories": {
+        "lib": "lib"
+    },
+    "scripts": {
+        "dev": "nodemon -r dotenv/config server.js",
+        "start": "node -r dotenv/config server.js",
+        "test": "clear && echo \"Don't forget to start server first before running test.\" && node -r dotenv/config ./test/testRoutes.js",
+        "createUsers": "node ./db/usersScripts.js",
+        "dropUsers": "node ./db/usersScripts.js",
+        "resetUsers": "node ./db/usersScripts.js",
+        "populateUsers": "node ./db/usersScripts.js",
+        "resetAndPopulateUsers": "node ./db/usersScripts.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/steph-koopmanschap/jasma.git"
+    },
+    "bugs": {
+        "url": "https://github.com/steph-koopmanschap/jasma/issues"
+    },
+    "dependencies": {
+        "bcrypt": "^5.1.0",
+        "dotenv": "^16.0.3",
+        "express": "^4.18.2",
+        "express-rate-limit": "^6.6.0",
+        "morgan": "^1.10.0",
+        "pg": "^8.8.0",
+        "rotating-file-stream": "^3.0.4"
+    },
+    "devDependencies": {
+        "@faker-js/faker": "^7.6.0",
+        "axios": "^1.1.3",
+        "nodemon": "^2.0.20"
+    }
 }
