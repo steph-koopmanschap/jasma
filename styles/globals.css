@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  .labelDefault {
+    @apply text-sm font-medium block;
+  }
+  .formButtonDefault {
+    @apply bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none;
+  }
+}
+
 html,
 body {
   padding: 0;

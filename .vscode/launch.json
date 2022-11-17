@@ -24,6 +24,12 @@
             "uriFormat": "%s",
             "action": "debugWithChrome"
         }
-      }
+      },
+      {
+        "name": "API server: debug API server",
+        "type": "node-terminal",
+        "request": "launch",
+        "command": "cd server && npm run dev"
+      },
     ]
 }

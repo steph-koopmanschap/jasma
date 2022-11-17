@@ -7,7 +7,7 @@ async function testResponse(req, res, next) {
     }
     catch (error)
     {
-        console.log("Test failed.");
+        console.log('\x1b[31m%s\x1b[0m', "Test failed."); //Red
         console.log("500: Internal server error - " + error.message);
         res.status(500).send(error.message);
     }

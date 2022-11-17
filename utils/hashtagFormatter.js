@@ -1,7 +1,6 @@
 //Formats a raw hashtags input string to an array of hashtags
 export default function hashtagFormatter(hashtagsRaw) {
-    //Only lower case alphabet character hashtags allowed
-    let hashtagsModified = hashtagsRaw.toLowerCase().trim().replace(/[^a-z ]/g, '');
+    //Only lower case alphabet character hashtags allowed   
     //Each hashtag is seperated by a space. .filter removes empty hashtags created by double spaces
     let hashtagsArray = hashtagsModified.split(" ").filter(hashtag => hashtag.trim() != '');
     //remove duplicate hashtags

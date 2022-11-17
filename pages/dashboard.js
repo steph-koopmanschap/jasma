@@ -8,7 +8,7 @@ export default function Dashboard() {
     return (
     <div>
         <HeaderMain/>
-        <SearchBar />
+        <SearchBar prevQuery="Search..."/>
         <CreatePost />
     </div>
     );
