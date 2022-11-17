@@ -1,6 +1,9 @@
 -- Use this file to initialize the PostGreSQL database only once, before starting the server for the first time.
 
--- Create the database
+-- Drop jasma_db database if exists
+DROP DATABASE IF EXISTS jasma_db;
+
+-- Create jasma_db database as postgres user
 CREATE DATABASE jasma_db
     WITH
     OWNER = postgres
@@ -12,11 +15,24 @@ CREATE DATABASE jasma_db
     CONNECTION LIMIT = -1
     IS_TEMPLATE = False;
 
+-- Comment on database
 COMMENT ON DATABASE jasma_db
     IS 'The Database for the JASMA App';
 
--- Connect to the newly created database as current user
-\c jasma_db
+-- Drop jasma_admin role if exists
+DROP ROLE IF EXISTS jasma_db;
+
+-- Create jasma_admin role
+CREATE ROLE jasma_admin PASSWORD 'a';
+
+-- Pass ownership of jasma_db to jasma_admin
+ALTER DATABASE jasma_db OWNER TO jasma_admin;
+
+-- Disconnect from postgres user.
+\q
+
+-- Connect as jasma_admin user.
+psql postgresql://jasma_admin:a@localhost:5432/jasma_db?sslmode=require
 
 -- Drop tables first in case something is wrong
 DROP TABLE IF EXISTS transactions;
@@ -126,7 +142,7 @@ CREATE TABLE IF NOT EXISTS posts_hashtags(
 -- One to many relationship with posts
 CREATE TABLE IF NOT EXISTS comments(
     comment_id      UUID PRIMARY KEY,
-    post_id         UUID REFERENCES posts(post_id) ON DELETE CASCADE,
+    post_id         UUID REFERENCES posts(post_id),
     user_id         UUID REFERENCES users(user_id),
     comment_text    TEXT NOT NULL,
     comment_file    BYTEA,
@@ -138,7 +154,7 @@ CREATE TABLE IF NOT EXISTS ads(
     ad_id           UUID PRIMARY KEY,
     user_id         UUID REFERENCES users(user_id) ON DELETE CASCADE,
     ad_file         BYTEA NOT NULL,
-    ad_url          TEXT
+    ad_url          TEXT,
     created_at      TIMESTAMP NOT NULL,
     expires_at      TIMESTAMP NOT NULL
 );
@@ -159,23 +175,11 @@ CREATE TABLE IF NOT EXISTS ads_preferences(
 CREATE TABLE IF NOT EXISTS transactions(
     transaction_id   UUID PRIMARY KEY,
     user_id          UUID REFERENCES users(user_id),
-    ad_id            UUID
+    ad_id            UUID,
     transaction_date TIMESTAMP NOT NULL,
     price            MONEY NOT NULL,
     payment_method   VARCHAR(50)
 );
-
-CREATE ROLE jasma_admin LOGIN PASSWORD 'a';
-
--- Grant full permissions on the database
-GRANT ALL PRIVILEGES ON DATABASE jasma_db TO jasma_admin;
-GRANT ALL PRIVILEGES ON SCHEMA public TO jasma_admin;
-GRANT ALL PRIVILEGES ON ALL TABLES    IN SCHEMA public to jasma_admin;
-GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public to jasma_admin;
-GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public to jasma_admin;
-ALTER DATABASE jasma_db OWNER TO jasma_admin;
-
--- +++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 -- Create a default "NULL" or "Guest" user which equals non-logged in users
 -- password = guest

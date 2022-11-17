@@ -1,9 +1,18 @@
 const { faker } = require("@faker-js/faker");
 const crypto = require("crypto");
 
-function objectify(methods) {
-    const methodNames = Object.getOwnPropertyNames(methods);
-    return Object.fromEntries(methodNames.map((methodName) => [methodName, methods[methodName]()]));
+function createTableData(tableName, methods) {
+    const columnNames = [];
+    const columnValues = [];
+    const entry = {};
+    for (const columnName in methods) {
+        const columnValue = methods[columnName]();
+        columnNames.push(columnName);
+        columnValues.push(columnValue);
+        entry[columnName] = columnValue;
+    }
+
+    return { tableName, entry, columnNames, columnValues };
 }
 
 function userGen() {
@@ -12,7 +21,7 @@ function userGen() {
             return crypto.randomUUID();
         },
 
-        user_name() {
+        username() {
             return faker.internet.userName();
         },
 
@@ -25,23 +34,28 @@ function userGen() {
         },
 
         user_password() {
-            return faker.internet.password();
+            // return faker.internet.password();
+            return "a";
         },
 
         phone() {
-            return faker.phone.number();
+            return faker.phone.number("###-###-####");
         },
 
         recovery_phone() {
-            return faker.phone.number();
+            return faker.phone.number("###-###-####");
         }
     };
 
-    return objectify(methods);
+    return createTableData("users", methods);
 }
 
-function userInfoGen(user_id) {
+function userInfoGen(userId) {
     const methods = {
+        user_id() {
+            return userId;
+        },
+
         profile_pic() {
             return faker.image.avatar();
         },
@@ -74,34 +88,59 @@ function userInfoGen(user_id) {
             return faker.internet.url();
         }
     };
-    return { user_id, ...objectify(methods) };
+    return createTableData("users_info", methods);
 }
 
-function userMetaDataGen(user_id, user_role) {
+function userMetaDataGen(userId, userRole) {
     const methods = {
+        user_id() {
+            return userId;
+        },
+
+        user_role() {
+            return userRole;
+        },
+
         last_login_date() {
             return new Date().toISOString();
         },
+
         account_creation_date() {
             return new Date().toISOString();
         },
-        isVerfied_email() {
-            if (user_role === "admin" || user_role === "mod") {
+
+        isVerified_email() {
+            if (userRole === "admin" || userRole === "mod") {
                 return true;
             }
 
-            if (user_role === "normal") {
+            if (userRole === "normal") {
                 return Math.random() < 0.5;
             }
 
             return false;
         },
-        last_ip4() {
+
+        last_ipv4() {
             return faker.internet.ipv4();
         }
     };
 
-    return { user_id, user_role, ...objectify(methods) };
+    return createTableData("users_metadata", methods);
 }
 
-module.exports = { userGen, userInfoGen, userMetaDataGen };
+function userPreferencesGen(userId) {
+    const methods = {
+        user_id() {
+            return userId;
+        },
+
+        email_notifications() {
+            return Math.random() < 0.2;
+        }
+    };
+
+    return createTableData("users_preferences", methods);
+}
+
+module.exports = { userGen, userInfoGen, userMetaDataGen, userPreferencesGen };
