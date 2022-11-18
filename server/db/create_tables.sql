@@ -1,39 +1,5 @@
 -- Use this file to initialize the PostGreSQL database only once, before starting the server for the first time.
 
--- Drop jasma_db database if exists
-DROP DATABASE IF EXISTS jasma_db;
-
--- Create jasma_db database as postgres user
-CREATE DATABASE jasma_db
-    WITH
-    OWNER = postgres
-    TEMPLATE = template0
-    ENCODING = 'UTF8'
-    LC_COLLATE = 'en_US.UTF-8'
-    LC_CTYPE = 'en_US.UTF-8'
-    TABLESPACE = pg_default
-    CONNECTION LIMIT = -1
-    IS_TEMPLATE = False;
-
--- Comment on database
-COMMENT ON DATABASE jasma_db
-    IS 'The Database for the JASMA App';
-
--- Drop jasma_admin role if exists
-DROP ROLE IF EXISTS jasma_db;
-
--- Create jasma_admin role
-CREATE ROLE jasma_admin PASSWORD 'a';
-
--- Pass ownership of jasma_db to jasma_admin
-ALTER DATABASE jasma_db OWNER TO jasma_admin;
-
--- Disconnect from postgres user.
-\q
-
--- Connect as jasma_admin user.
-psql postgresql://jasma_admin:a@localhost:5432/jasma_db?sslmode=require
-
 -- Drop tables first in case something is wrong
 DROP TABLE IF EXISTS transactions;
 DROP TABLE IF EXISTS ads_preferences;
@@ -162,7 +128,7 @@ CREATE TABLE IF NOT EXISTS ads(
 -- One to one relationship with ads
 -- Used for targeting demographics with ads
 CREATE TABLE IF NOT EXISTS ads_preferences(
-    ad_id           UUID REFERENCES ads(ad_id) UNIQUE ON DELETE CASCADE,
+    ad_id           UUID REFERENCES ads(ad_id) ON DELETE CASCADE UNIQUE,
     age_start       SMALLINT,
     age_end         SMALLINT,
     country         TEXT,
@@ -213,3 +179,7 @@ VALUES(
     uuid('00000000-0000-0000-0000-000000000000'),
     FALSE
 );
+
+-- Disconnect from jasma_admin user.
+\q
+
