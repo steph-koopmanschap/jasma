@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS posts_hashtags(
 -- One to many relationship with posts
 CREATE TABLE IF NOT EXISTS comments(
     comment_id      UUID PRIMARY KEY,
-    post_id         UUID REFERENCES posts(post_id),
+    post_id         UUID REFERENCES posts(post_id) ON DELETE CASCADE,
     user_id         UUID REFERENCES users(user_id),
     comment_text    TEXT NOT NULL,
     comment_file    BYTEA,

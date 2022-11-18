@@ -11,7 +11,7 @@ const postRouter = express.Router();
 //Retrieve a number of posts from a user
 //Example url
 // /getposts:userid?limit=10
-postRouter.get('/getposts:userid', async (req, res, next) => {
+postRouter.get('/getposts/:userid', async (req, res, next) => {
     try
     {
         let result = await getPosts(req.params.userid, req.query.limit);

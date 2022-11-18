@@ -9,7 +9,7 @@ async function getPosts(userID, limit = 1) {
         `
         SELECT post_id, text_content, file_content, created_at, last_edit_at
         FROM posts
-        WHERE user_id = $1
+        WHERE user_id = $1::uuid
         ORDER BY created_at DESC NULLS LAST
         LIMIT $2
         `,
@@ -24,6 +24,7 @@ async function getPosts(userID, limit = 1) {
 
     //Get all the hashtags for each post
     //not sure yet if this works??
+    
     for (let i = 0; i < posts.rows.length; i++)
     {
         let hashtags = await pool.query(
@@ -35,14 +36,18 @@ async function getPosts(userID, limit = 1) {
             [posts.rows[i].post_id]
         );
 
+        let hashtagsArray = [];
+        //turn the hashtags object into an array
+        for (let j = 0; j < hashtags.rows.length; j++) 
+        {
+            hashtagsArray.push(hashtags.rows[j].hashtag);
+        }
+
         //Add the hashtags to each post as an array
-        posts.rows[i].hashtags = hashtags.rows;
+        posts.rows[i].hashtags = hashtagsArray;
     }
 
-    //Might give problems to return object instead of array???
-    // if (limit === 1) {
-    //     return posts.rows[0];
-    // }
+    console.log(posts.rows);
     return posts.rows;
 }
 

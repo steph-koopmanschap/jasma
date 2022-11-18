@@ -36,6 +36,7 @@ API server lives on [http://localhost:3001/api](http://localhost:3001/api)
 
 ### Database
 
+First read /server/db/pg_hba.conf to read on what to add to your pg_hba.conf file.
 Inside the /server/ folder:
 Create the database
 `npm run initdb`

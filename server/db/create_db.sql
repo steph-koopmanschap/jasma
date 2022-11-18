@@ -23,7 +23,8 @@ COMMENT ON DATABASE jasma_db
 DROP ROLE IF EXISTS jasma_admin;
 
 -- Create jasma_admin role
-CREATE ROLE jasma_admin PASSWORD 'a';
+-- NOTE: LOGIN role is needed to create the database tables
+CREATE ROLE jasma_admin WITH LOGIN PASSWORD 'a';
 
 -- Pass ownership of jasma_db to jasma_admin
 ALTER DATABASE jasma_db OWNER TO jasma_admin;

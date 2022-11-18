@@ -7,7 +7,9 @@ const {
     testUserPreferences,
     testUserPost,
     testUserPostHashtag,
-    testUserPostComment} = require("./testUserData.js");
+    testUserPostComment,
+    createTestUser,
+    deleteTestUser} = require("./testUserData.js");
 
 // Who needs a testing library/framework if you can write your own? :D
 
@@ -57,6 +59,34 @@ async function testCreateAccount() {
     report(data, "testCreateAccount", testStatus);
 }
 
-testResponse();
-testCreateAccount();
-console.log("Press CTRL+C to exit...");
+async function testGetPosts() {
+    let testStatus = "FAIL";
+    let data = null;
+    try 
+    {
+        const response = await axios.get(`${apiURL}/post/getposts/${testUser.user_id}?limit=10`);
+        data = await response.data;
+        if (data[0].post_id === '3872fb15-7320-4918-a7be-1a4e6a6d80a1') {
+            testStatus = "SUCCESS";
+        }
+    }
+    catch (e)
+    {
+        console.error(e);
+    }
+
+    report(data, "testGetPosts", testStatus);
+}
+
+async function runTest() {
+    await testResponse();
+    await deleteTestUser();
+    await testCreateAccount();
+    await createTestUser();
+    await testGetPosts();
+    console.log("Press CTRL+C to exit...");
+}
+
+runTest();
+
+

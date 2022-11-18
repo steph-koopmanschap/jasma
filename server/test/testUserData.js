@@ -58,6 +58,11 @@ testUserPostHashtag = {
     hashtag: 'test'
 };
 
+testUserPostHashtagTwo = {
+    post_id: '3872fb15-7320-4918-a7be-1a4e6a6d80a1',
+    hashtag: 'anothertest'
+};
+
 testUserPostComment = {
     comment_id: 'c831eed4-8b83-4fbc-8aec-62bb4d0593ed',
     post_id: '3872fb15-7320-4918-a7be-1a4e6a6d80a1',
@@ -67,8 +72,86 @@ testUserPostComment = {
     created_at: new Date().toISOString()
 };
 
+async function deleteTestUser() {
+    let deleteComment = await db.query(
+        `
+        DELETE 
+        FROM comments
+        WHERE comment_id = $1
+        `,
+        [testUserPostComment.comment_id]
+    );
+
+    let deletePost = await db.query(
+        `
+        DELETE 
+        FROM posts
+        WHERE post_id = $1
+        `,
+        [testUserPost.post_id]
+    );
+
+    let deleteHashtag = await db.query(
+        `
+        DELETE 
+        FROM hashtags
+        WHERE hashtag = $1
+        `,
+        [testUserPostHashtag.hashtag]
+    );
+
+    let deleteHashtagTwo = await db.query(
+        `
+        DELETE 
+        FROM hashtags
+        WHERE hashtag = $1
+        `,
+        [testUserPostHashtagTwo.hashtag]
+    );
+
+    //core user data
+    let deleteCore = await db.query(
+        `
+        DELETE 
+        FROM users
+        WHERE username = $1
+        `,
+        [testUser.username]
+    );
+
+    let deleteInfo = await db.query(
+        `
+        DELETE 
+        FROM users_info
+        WHERE user_id = $1
+        `,
+        [testUser.user_id]
+    );
+
+    let deleteMetadata = await db.query(
+        `
+        DELETE 
+        FROM users_metadata
+        WHERE user_id = $1
+        `,
+        [testUser.user_id]
+    );
+
+    let deletePreferences = await db.query(
+        `
+        DELETE 
+        FROM users_preferences
+        WHERE user_id = $1
+        `,
+        [testUser.user_id]
+    );
+}
+
 //Provide a reliable consistent test user in the database
 async function createTestUser() {
+    //First delete user in case it already exists
+    const deleteUser = await deleteTestUser();
+
     //core user data
     let core = await db.query(
         `
@@ -106,7 +189,7 @@ async function createTestUser() {
 
     let metadata = await db.query(
         `
-        INSERT INTO users_metadata(user_id, user_role, last_login_date, account_creation_date, isVerified_email, last_ip4)
+        INSERT INTO users_metadata(user_id, user_role, last_login_date, account_creation_date, isVerified_email, last_ipv4)
         VALUES (
             $1::uuid,
             $2,
@@ -136,13 +219,33 @@ async function createTestUser() {
         VALUES (
             $1::uuid,
             $2::uuid,
-            $3
+            $3,
             $4,
             $5::timestamp,
             $6::timestamp
         )
         `,
         [testUserPost.post_id, testUserPost.user_id, testUserPost.text_content, testUserPost.file_content, testUserPost.created_at, testUserPost.last_edit_at]
+    );
+
+    let hashtag = await db.query(
+        `
+        INSERT INTO hashtags(hashtag)
+        VALUES (
+            $1
+        )
+        `,
+        [testUserPostHashtag.hashtag]
+    );
+
+    let hashtagTwo = await db.query(
+        `
+        INSERT INTO hashtags(hashtag)
+        VALUES (
+            $1
+        )
+        `,
+        [testUserPostHashtagTwo.hashtag]
     );
 
     let postHashtag = await db.query(
@@ -156,14 +259,15 @@ async function createTestUser() {
         [testUserPostHashtag.post_id, testUserPostHashtag.hashtag]
     );
 
-    let hashtag = await db.query(
+    let postHashtagTwo = await db.query(
         `
-        INSERT INTO hashtags(hashtag)
+        INSERT INTO posts_hashtags(post_id, hashtag)
         VALUES (
-            $1
+            $1::uuid,
+            $2
         )
         `,
-        [testUserPostHashtag.hashtag]
+        [testUserPostHashtagTwo.post_id, testUserPostHashtagTwo.hashtag]
     );
 
     let comment = await db.query(
@@ -184,6 +288,7 @@ async function createTestUser() {
 
 module.exports = {
     createTestUser,
+    deleteTestUser,
     testUser,
     testUserInfo,
     testUserMetadata,
