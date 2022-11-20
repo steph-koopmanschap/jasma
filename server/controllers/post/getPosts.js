@@ -23,8 +23,6 @@ async function getPosts(userID, limit = 1) {
     }
 
     //Get all the hashtags for each post
-    //not sure yet if this works??
-    
     for (let i = 0; i < posts.rows.length; i++)
     {
         let hashtags = await pool.query(
@@ -47,7 +45,6 @@ async function getPosts(userID, limit = 1) {
         posts.rows[i].hashtags = hashtagsArray;
     }
 
-    console.log(posts.rows);
     return posts.rows;
 }
 

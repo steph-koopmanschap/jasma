@@ -6,7 +6,6 @@ const {
     testUserMetadata,
     testUserPreferences,
     testUserPost,
-    testUserPostHashtag,
     testUserPostComment,
     createTestUser,
     deleteTestUser} = require("./testUserData.js");
@@ -59,6 +58,44 @@ async function testCreateAccount() {
     report(data, "testCreateAccount", testStatus);
 }
 
+async function testDeletePost() {
+    let testStatus = "FAIL";
+    let data = null;
+    try 
+    {
+        const response = await axios.delete(`${apiURL}/post/deletepost/${testUserPost.post_id}`);
+        data = await response.data;
+        if (data === testUserPost.post_id) {
+            testStatus = "SUCCESS";
+        }
+    }
+    catch (e)
+    {
+        console.log(e);
+    }
+
+    report(data, "testDeletePost", testStatus);
+}
+
+async function testCreatePost() {
+    let testStatus = "FAIL";
+    let data = null;
+    try 
+    {
+        const response = await axios.post(`${apiURL}/post/createpost`, {postData: testUserPost});
+        data = await response.data;
+        if (data === true) {
+            testStatus = "SUCCESS";
+        }
+    }
+    catch (e)
+    {
+        console.log(e);
+    }
+
+    report(data, "testCreatePost", testStatus);
+}
+
 async function testGetPosts() {
     let testStatus = "FAIL";
     let data = null;
@@ -66,7 +103,7 @@ async function testGetPosts() {
     {
         const response = await axios.get(`${apiURL}/post/getposts/${testUser.user_id}?limit=10`);
         data = await response.data;
-        if (data[0].post_id === '3872fb15-7320-4918-a7be-1a4e6a6d80a1') {
+        if (data[0].post_id === testUserPost.post_id) {
             testStatus = "SUCCESS";
         }
     }
@@ -78,12 +115,34 @@ async function testGetPosts() {
     report(data, "testGetPosts", testStatus);
 }
 
+async function testSearch() {
+    let testStatus = "FAIL";
+    let data = null;
+    try 
+    {
+        const response = await axios.get(`${apiURL}/post/search/?q=${testUserPost.hashtags[0]}+${testUserPost.hashtags[1]}}&limit=10`);
+        data = await response.data;
+        if (data[0]?.hashtags[0] === testUserPost.hashtags[0]) {
+            testStatus = "SUCCESS";
+        }
+    }
+    catch (e)
+    {
+        console.error(e);
+    }
+
+    report(data, "testSearch", testStatus);
+}
+
 async function runTest() {
     await testResponse();
     await deleteTestUser();
     await testCreateAccount();
+    await testDeletePost();
+    await testCreatePost();
     await createTestUser();
     await testGetPosts();
+    await testSearch();
     console.log("Press CTRL+C to exit...");
 }
 

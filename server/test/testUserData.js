@@ -47,20 +47,21 @@ testUserPreferences = {
 testUserPost = {
     post_id: '3872fb15-7320-4918-a7be-1a4e6a6d80a1',
     user_id: '6ecb8f02-b29d-433f-9f5e-e84fd8da66a9',
-    text_content: 'Hi, this is my first test post as a test user',
+    text_content: 'Hi, this is my first test post as a test user.',
     file_content: null,
     created_at: new Date().toISOString(),
-    last_edit_at: new Date().toISOString()
+    last_edit_at: new Date().toISOString(),
+    hashtags: ['test', 'anothertest']
 };
 
-testUserPostHashtag = {
-    post_id: '3872fb15-7320-4918-a7be-1a4e6a6d80a1',
-    hashtag: 'test'
-};
-
-testUserPostHashtagTwo = {
-    post_id: '3872fb15-7320-4918-a7be-1a4e6a6d80a1',
-    hashtag: 'anothertest'
+testUserPostTwo = {
+    post_id: '431c5d87-f942-46c1-a8fa-b2c9c0f85f8a',
+    user_id: '6ecb8f02-b29d-433f-9f5e-e84fd8da66a9',
+    text_content: 'Another test post from the test user.',
+    file_content: null,
+    created_at: new Date().toISOString(),
+    last_edit_at: new Date().toISOString(),
+    hashtags: ['test', 'anothertest']
 };
 
 testUserPostComment = {
@@ -68,6 +69,15 @@ testUserPostComment = {
     post_id: '3872fb15-7320-4918-a7be-1a4e6a6d80a1',
     user_id: '6ecb8f02-b29d-433f-9f5e-e84fd8da66a9',
     comment_text: 'Hi, this is my first comment as a test user.',
+    comment_file: null,
+    created_at: new Date().toISOString()
+};
+
+testUserPostCommentTwo = {
+    comment_id: '9e508f1a-64ed-4c71-8031-f8c0f8a078a8',
+    post_id: '3872fb15-7320-4918-a7be-1a4e6a6d80a1',
+    user_id: '6ecb8f02-b29d-433f-9f5e-e84fd8da66a9',
+    comment_text: 'Just another comment from test user.',
     comment_file: null,
     created_at: new Date().toISOString()
 };
@@ -82,6 +92,15 @@ async function deleteTestUser() {
         [testUserPostComment.comment_id]
     );
 
+    let deleteCommentTwo = await db.query(
+        `
+        DELETE 
+        FROM comments
+        WHERE comment_id = $1
+        `,
+        [testUserPostCommentTwo.comment_id]
+    );
+
     let deletePost = await db.query(
         `
         DELETE 
@@ -91,13 +110,22 @@ async function deleteTestUser() {
         [testUserPost.post_id]
     );
 
+    let deletePostTwo = await db.query(
+        `
+        DELETE 
+        FROM posts
+        WHERE post_id = $1
+        `,
+        [testUserPostTwo.post_id]
+    );
+
     let deleteHashtag = await db.query(
         `
         DELETE 
         FROM hashtags
         WHERE hashtag = $1
         `,
-        [testUserPostHashtag.hashtag]
+        [testUserPost.hashtags[0]]
     );
 
     let deleteHashtagTwo = await db.query(
@@ -106,7 +134,7 @@ async function deleteTestUser() {
         FROM hashtags
         WHERE hashtag = $1
         `,
-        [testUserPostHashtagTwo.hashtag]
+        [testUserPost.hashtags[1]]
     );
 
     //core user data
@@ -235,7 +263,7 @@ async function createTestUser() {
             $1
         )
         `,
-        [testUserPostHashtag.hashtag]
+        [testUserPost.hashtags[0]]
     );
 
     let hashtagTwo = await db.query(
@@ -245,7 +273,7 @@ async function createTestUser() {
             $1
         )
         `,
-        [testUserPostHashtagTwo.hashtag]
+        [testUserPost.hashtags[1]]
     );
 
     let postHashtag = await db.query(
@@ -256,7 +284,7 @@ async function createTestUser() {
             $2
         )
         `,
-        [testUserPostHashtag.post_id, testUserPostHashtag.hashtag]
+        [testUserPost.post_id, testUserPost.hashtags[0]]
     );
 
     let postHashtagTwo = await db.query(
@@ -267,7 +295,7 @@ async function createTestUser() {
             $2
         )
         `,
-        [testUserPostHashtagTwo.post_id, testUserPostHashtagTwo.hashtag]
+        [testUserPost.post_id, testUserPost.hashtags[0]]
     );
 
     let comment = await db.query(
@@ -284,6 +312,58 @@ async function createTestUser() {
         `,
         [testUserPostComment.comment_id, testUserPostComment.post_id, testUserPostComment.user_id, testUserPostComment.comment_text, testUserPostComment.comment_file, testUserPostComment.created_at]
     );
+
+    let commentTwo = await db.query(
+        `
+        INSERT INTO comments(comment_id, post_id, user_id, comment_text, comment_file, created_at)
+        VALUES (
+            $1::uuid,
+            $2::uuid,
+            $3::uuid,
+            $4,
+            $5,
+            $6::timestamp
+        )
+        `,
+        [testUserPostCommentTwo.comment_id, testUserPostCommentTwo.post_id, testUserPostCommentTwo.user_id, testUserPostCommentTwo.comment_text, testUserPostCommentTwo.comment_file, testUserPostCommentTwo.created_at]
+    );
+
+    let postTwo = await db.query(
+        `
+        INSERT INTO posts(post_id, user_id, text_content, file_content, created_at, last_edit_at)
+        VALUES (
+            $1::uuid,
+            $2::uuid,
+            $3,
+            $4,
+            $5::timestamp,
+            $6::timestamp
+        )
+        `,
+        [testUserPostTwo.post_id, testUserPostTwo.user_id, testUserPostTwo.text_content, testUserPostTwo.file_content, testUserPostTwo.created_at, testUserPostTwo.last_edit_at]
+    );
+
+    let postTwoHashtag = await db.query(
+        `
+        INSERT INTO posts_hashtags(post_id, hashtag)
+        VALUES (
+            $1::uuid,
+            $2
+        )
+        `,
+        [testUserPostTwo.post_id, testUserPostTwo.hashtag[0]]
+    );
+
+    let postTwoHashtagTwo = await db.query(
+        `
+        INSERT INTO posts_hashtags(post_id, hashtag)
+        VALUES (
+            $1::uuid,
+            $2
+        )
+        `,
+        [testUserPostTwo.post_id, testUserPostTwo.hashtag[1]]
+    );
 }
 
 module.exports = {
@@ -294,7 +374,6 @@ module.exports = {
     testUserMetadata,
     testUserPreferences,
     testUserPost,
-    testUserPostHashtag,
     testUserPostComment
 };
 

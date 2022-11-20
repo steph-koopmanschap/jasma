@@ -3,6 +3,7 @@ const getPosts    = require('./../controllers/post/getPosts.js');
 const getPost     = require('./../controllers/post/getPost.js');
 const searchPosts = require('./../controllers/post/searchPosts.js');
 const createPost  = require('./../controllers/post/createPost.js');
+const deletePost  = require('./../controllers/post/deletePost.js');
 
 // Create the post router
 // The base URL for this router is URL:PORT/api/post/
@@ -60,12 +61,29 @@ postRouter.get('/search', async (req, res, next) => {
 postRouter.post('/createpost', async (req, res, next) => {
     try
     {
-        let result = await createPost(req.body.userData);
+        let result = await createPost(req.body.postData);
         if (result instanceof Error || result === null) 
         {
             return res.status(404).send(result);
         }
         return res.status(201).send(result);
+    }
+    catch (error)
+    {
+        console.log("500: Internal server error - " + error.message);
+        res.status(500).send(error.message);
+    }
+});
+
+postRouter.delete('/deletepost/:postid', async (req, res, next) => {
+    try
+    {
+        let result = await deletePost(req.params.postid);
+        if (result instanceof Error || result === null) 
+        {
+            return res.status(404).send(result);
+        }
+        return res.status(200).send(result);
     }
     catch (error)
     {

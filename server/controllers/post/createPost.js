@@ -10,6 +10,10 @@ async function createPost(postData) {
 
     const postID = crypto.randomUUID();
 
+    console.log("START OF createPost");
+    console.log(postID);
+    console.log(postData);
+    
     //created_at and last_edited_at will be the same for newly created posts
     let newPost = await pool.query(
         `
@@ -23,7 +27,7 @@ async function createPost(postData) {
             $6
         )
         `,
-        [postData.userID, postID, postData.textContent, postData.fileContent, postData.createdAt, postData.createdAt]
+        [postID, postData.user_id, postData.text_content, postData.file_content, postData.created_at, postData.created_at]
     );
 
     if (!newPost) {
@@ -86,16 +90,19 @@ async function createPost(postData) {
         );
     }
 
-    //Post created
-    return {
-        post_id: postID,
-        user_id: postData.userID,
-        text_content: postData.textContent,
-        file_content: postData.fileContent,
-        created_at: postData.createdAt,
-        last_edit_at: postData.createdAt,
-        hashtags: postData.hashtags
-    };
+    //add PostID to postData
+    postData.post_id = postID;
+     //Post created
+    return postData;
+    // return {
+    //     post_id: postID,
+    //     user_id: postData.user_id,
+    //     text_content: postData.text_content,
+    //     file_content: postData.file_content,
+    //     created_at: postData.createdAt,
+    //     last_edit_at: postData.createdAt,
+    //     hashtags: postData.hashtags
+    // };
 }
 
 module.exports = createPost;

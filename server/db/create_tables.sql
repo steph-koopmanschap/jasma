@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS posts(
     file_content    BYTEA,
     created_at      TIMESTAMP NOT NULL,
     last_edit_at    TIMESTAMP NOT NULL,
-    PRIMARY KEY (post_id, user_id)
+    PRIMARY KEY (post_id)
 );
 
 -- One to one relationship with table posts
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS hashtags(
 CREATE TABLE IF NOT EXISTS posts_hashtags(
     post_id         UUID REFERENCES posts(post_id) ON DELETE CASCADE,
     hashtag         VARCHAR(50) REFERENCES hashtags(hashtag),
-    PRIMARY KEY (post_id, hashtag)
+    PRIMARY KEY (hashtag)
 );
 
 -- One to many relationship with posts
