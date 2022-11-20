@@ -16,6 +16,9 @@ const testResponse = require("./routes/testResponse.js");
 
 //Initialize expressJS
 const app = express();
+//Number of proxies between express server and the client
+//This is to make the rate limiter ignore proxy requests
+app.set('trust proxy', 1);
 //Set port
 var port = parseInt(process.env.PORT || '3001', 10);
 

@@ -9,10 +9,6 @@ const pool = require("../../db/dbConnect.js");
 async function createPost(postData) {
 
     const postID = crypto.randomUUID();
-
-    console.log("START OF createPost");
-    console.log(postID);
-    console.log(postData);
     
     //created_at and last_edited_at will be the same for newly created posts
     let newPost = await pool.query(

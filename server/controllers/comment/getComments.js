@@ -4,7 +4,7 @@ const pool = require("../../db/dbConnect.js");
 async function getComments(postID, limit = 1) {
     let comments = await pool.query(
         `
-        SELECT comment_id, user_id, comment_text, comment_file, created_at
+        SELECT comment_id, post_id, user_id, comment_text, comment_file, created_at
         FROM comments
         WHERE post_id = $1
         ORDER BY created_at DESC NULLS LAST
@@ -19,10 +19,6 @@ async function getComments(postID, limit = 1) {
         return err;
     }
 
-    //Might give problems to return object instead of array???
-    // if (limit === 1) {
-    //     return comments.rows[0];
-    // }
     return comments.rows;
 }
 

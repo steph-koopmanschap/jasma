@@ -22,7 +22,7 @@ async function createComment(commentData) {
             $6
         )
         `,
-        [commentID, commentData.postID, commentData.userID, commentData.commentText, commentData.commentFile, commentData.createdAt]
+        [commentID, commentData.post_id, commentData.user_id, commentData.comment_text, commentData.comment_file, commentData.created_at]
     );
 
     if (!newComment) {
@@ -31,15 +31,10 @@ async function createComment(commentData) {
         return err;
     }
 
+    //add commentID to the comment data
+    commentData.comment_id = commentID;
     //Post created
-    return {
-        comment_id: commentID,
-        post_id: commentData.postID,
-        user_id: commentData.userID,
-        comment_text: commentData.commentText,
-        comment_file: commentData.commentFile,
-        created_at: commentData.createdAt
-    };
+    return commentData;
 }
 
 module.exports = createComment;
