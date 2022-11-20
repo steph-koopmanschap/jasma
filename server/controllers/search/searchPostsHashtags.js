@@ -3,7 +3,7 @@ const pool = require("../../db/dbConnect.js");
 //This returns a list of postIDs that contain the provided hashtags
 //hashtags is a string of hashtags seperated by spaces (" ")
 //returns an array of PostIDs
-async function searchPosts(hashtags, limit) {
+async function searchPostsHashtags(hashtags, limit) {
     //Convert string to array
     hashtags = hashtags.split(" ");
     let postsIDsArray = [];
@@ -41,4 +41,4 @@ async function searchPosts(hashtags, limit) {
     return postsIDsArray;
 }
 
-module.exports = searchPosts;
+module.exports = searchPostsHashtags;

@@ -1,7 +1,7 @@
 const express    = require('express');
 const rateLimit  = require('express-rate-limit'); //Rate limiter
 const createUser = require('./../controllers/user/createUser.js');
-const searchUsers = require('./../controllers/user/searchUsers.js');
+// const searchUsers = require('./../controllers/user/searchUsers.js');
 // Create the user router.
 // The base URL for this router is URL:PORT/api/user/
 const userRouter = express.Router();
@@ -34,21 +34,21 @@ userRouter.post('/createaccount', createAccountLimiter, async (req, res, next) =
     }
 });
 
-userRouter.get('/search', async (req, res, next) => {
-    try
-    {
-        let result = await searchUsers(req.query.q, req.query.limit);
-        if (result instanceof Error || result === null) 
-        {
-            return res.status(404).send(result);
-        }
-        return res.status(200).send(result);
-    }
-    catch (error)
-    {
-        console.log("500: Internal server error - " + error.message);
-        res.status(500).send(error.message);
-    }
-});
+// userRouter.get('/search', async (req, res, next) => {
+//     try
+//     {
+//         let result = await searchUsers(req.query.q, req.query.limit);
+//         if (result instanceof Error || result === null) 
+//         {
+//             return res.status(404).send(result);
+//         }
+//         return res.status(200).send(result);
+//     }
+//     catch (error)
+//     {
+//         console.log("500: Internal server error - " + error.message);
+//         res.status(500).send(error.message);
+//     }
+// });
 
 module.exports = userRouter;

@@ -11,8 +11,6 @@ const logging = require("./middlewares/logging.js");
 const loadRouters = require('./middlewares/routes.js');
 //Import connection for PostGreSQL
 const pool = require("./db/dbConnect.js");
-//Simple test route
-const testResponse = require("./routes/testResponse.js");
 
 //Initialize expressJS
 const app = express();
@@ -29,9 +27,6 @@ app.use(express.json());
 logging(app);
 loadRouters(app);
 // =================================================================
-
-//Basic server response test
-app.all('/test', testResponse);
 
 //Start server
 app.listen(port, async () => {
