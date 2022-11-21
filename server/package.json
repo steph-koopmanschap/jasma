@@ -17,11 +17,12 @@
         "start": "node -r dotenv/config server.js",
         "test": "clear && echo \"Don't forget to start server first before running test.\" && node -r dotenv/config ./test/testRoutes.js",
         "initdb": "chmod u+x ./db/init_db.sh && ./db/init_db.sh",
-        "createUsers": "node ./db/usersScripts.js",
-        "dropUsers": "node ./db/usersScripts.js",
-        "resetUsers": "node ./db/usersScripts.js",
-        "populateUsers": "node ./db/usersScripts.js",
-        "resetAndPopulateUsers": "node ./db/usersScripts.js"
+        "createUsers": "node ./db/sequelize/dbScripts.js",
+        "dropUsers": "node ./db/sequelize/dbScripts.js",
+        "resetUsers": "node ./db/sequelize/dbScripts.js",
+        "populateUsers": "node ./db/sequelize/dbScripts.js",
+        "resetAndPopulateUsers": "node ./db/sequelize/dbScripts.js",
+        "resetDb": "node ./db/sequelize/dbScripts.js"
     },
     "repository": {
         "type": "git",
@@ -37,7 +38,8 @@
         "express-rate-limit": "^6.6.0",
         "morgan": "^1.10.0",
         "pg": "^8.8.0",
-        "rotating-file-stream": "^3.0.4"
+        "rotating-file-stream": "^3.0.4",
+        "sequelize": "^6.25.7"
     },
     "devDependencies": {
         "@faker-js/faker": "^7.6.0",
