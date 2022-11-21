@@ -151,7 +151,9 @@ export default function CreatePost() {
                 <textarea 
                     className="my-2 p-1 mx-2"
                     id="newPostText"
+                    aria-label="Create a post on JASMA"
                     type="textarea"
+                    spellcheck="true"
                     name="text"
                     value={textInput}
                     onChange={handleChange} 
@@ -161,6 +163,7 @@ export default function CreatePost() {
                 <input 
                     className="my-2 p-1 mx-2"
                     id="newPostHashtags"
+                    aria-label="Set hashtags for your post"
                     type="text"
                     name="hashtags"
                     value={hashtagInput}

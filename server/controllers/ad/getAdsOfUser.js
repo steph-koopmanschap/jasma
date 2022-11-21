@@ -6,7 +6,7 @@ const pool = require("../../db/dbConnect.js");
 
 //Retrieve all the ads of a particular user
 async function getAdsOfUser(userID) {
-    let ad = await pool.query(
+    let ads = await pool.query(
         `
         SELECT *
         FROM ads
@@ -14,13 +14,13 @@ async function getAdsOfUser(userID) {
         `,
         [userID]);
 
-    if (!ad) {
+    if (!ads) {
         let err = new Error(`Error: SQL query failed.`);
         console.log(err);
         return err;
     }
-    //ad deleted
-    return ad.rows;
+    //ads found
+    return ads.rows;
 }
 
 module.exports = getAdsOfUser;

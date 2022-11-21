@@ -37,6 +37,7 @@ export default function SearchBar(props) {
                 <input 
                     className="my-2 p-1"
                     type="search"
+                    aria-label="JASMA search"
                     name="searchbox"
                     value={searchValue}
                     onClick={emptySearchBar}

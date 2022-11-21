@@ -1,3 +1,6 @@
+import CreateComment from "./CreateComment";
+import CommentList from "./CommentLost";
+
 export default function Post(props) {
     return (
         <div className="px-4 py-4">
@@ -19,6 +22,11 @@ export default function Post(props) {
                 width="999" 
                 height="999"
             />
+
+            {/* 
+            {CreateComment}
+            {CommentList} 
+            */}
         </div>
     );
 }

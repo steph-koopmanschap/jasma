@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS ads(
 CREATE TABLE IF NOT EXISTS ads_preferences(
     ad_id           UUID REFERENCES ads(ad_id) ON DELETE CASCADE UNIQUE,
     age_start       SMALLINT,
-    age_end         SMALLINT,
+    age_end         SMALLINT
     country         TEXT,
     city            TEXT,
     keyword         VARCHAR(50)
@@ -145,6 +145,16 @@ CREATE TABLE IF NOT EXISTS transactions(
     transaction_date TIMESTAMP NOT NULL,
     price            MONEY NOT NULL,
     payment_method   VARCHAR(50)
+);
+
+-- Independent table
+-- User feedback is stored here (this is asked in the app)
+CREATE TABLE IF NOT EXISTS userfeedback(
+    feedback_id   UUID PRIMARY KEY,
+    rating        SMALLINT NOT NULL
+            CHECK(rating >= 1 AND rating <= 5),
+    review        VARCHAR(1000),
+    feedback_date DATE NOT NULL
 );
 
 -- Create a default "NULL" or "Guest" user which equals non-logged in users
