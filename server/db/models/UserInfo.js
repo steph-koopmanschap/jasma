@@ -45,7 +45,7 @@ function generateUserInfo(user_id) {
         user_id,
         profile_pic: faker.image.avatar(),
         given_name: faker.name.firstName(),
-        last_name: fakter.name.lastName(),
+        last_name: faker.name.lastName(),
         bio: faker.lorem.paragraph(),
         date_of_birth: faker.date.birthdate(),
         country: faker.address.country(),
