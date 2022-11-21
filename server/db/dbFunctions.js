@@ -1,5 +1,4 @@
 const db = require("./dbConfig");
-const gen = require("./dataGenerator");
 
 async function getSchema(tableName) {
     const res = await db.query(
@@ -38,7 +37,7 @@ async function getSizeOfDB() {
     return res.rows[0].total_database_size;
 }
 
-//This can be useful for analytics 
+//This can be useful for analytics
 //for example getNumOfTableRows(users) returns the number of registered users on jasma.
 //Returns integer
 async function getNumOfTableRows(tableName) {
@@ -52,18 +51,9 @@ async function getNumOfTableRows(tableName) {
     return res.rows[0].rowcount;
 }
 
-async function run() {
-    const exists = await tableExists("users");
-    const schema = await getSchema("users");
-    console.log(exists, schema, gen.givenName());
-    await db.end();
-}
-
-run();
-
 module.exports = {
     getSchema,
     tableExists,
     getSizeOfDB,
     getNumOfTableRows
-}
+};
