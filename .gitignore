@@ -12,6 +12,8 @@ node_modules
 /.nyc_output
 
 # next.js
+# .next is the build directory of NextJS
+/next/.next/
 /.next/
 /out/
 
