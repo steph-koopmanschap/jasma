@@ -1,0 +1,4 @@
+#Ads.txt jasma.com JASMA - Just Another Social Media App
+
+contact=stephkoopmanschap@protonmail.com
+

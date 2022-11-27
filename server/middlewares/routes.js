@@ -12,11 +12,11 @@ function loadRouters(app)
     //Use method: "router" for routers
     //Use other methods for single routes (not inside a router)
     const routingTable = [
-        {route: '/api/user', name: userRouter, method: "router"},
-        {route: '/api/post', name: postRouter, method: "router"},
-        {route: '/api/comment', name: commentRouter, method: "router"},
-        {route: '/api/search', name: search, method: "get"},
-        {route: '/test', name: testResponse, method: "all"}
+        { route: "/api/user", name: userRouter.name, method: "router" },
+        { route: "/api/post", name: postRouter.name, method: "router" },
+        { route: "/api/comment", name: commentRouter.name, method: "router" },
+        { route: "/api/search", name: search, method: "get" },
+        { route: "/test", name: testResponse, method: "all" }
     ];
 
     //Mount all the routers. See routing table for info.

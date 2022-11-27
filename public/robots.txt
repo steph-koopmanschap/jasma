@@ -1,4 +1,0 @@
-# https://www.robotstxt.org/robotstxt.html
-User-agent: *
-Allow: *
-Sitemap: https://jasma.vercel.app/sitemap_index.xml

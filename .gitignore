@@ -31,14 +31,6 @@ yarn-error.log*
 # local env files
 .env*
 !.env*.example
-.env*.local
-.env.development
-.env.production
-/.env.development
-/.env.production
-/server/.env.development
-/server/.env.production
-/server/.env
 
 # vercel
 .vercel
