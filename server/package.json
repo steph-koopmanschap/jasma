@@ -22,7 +22,8 @@
         "resetUsers": "node ./db/sequelize/dbScripts.js",
         "populateUsers": "node ./db/sequelize/dbScripts.js",
         "resetAndPopulateUsers": "node ./db/sequelize/dbScripts.js",
-        "resetDb": "node ./db/sequelize/dbScripts.js"
+        "resetDb": "node ./db/sequelize/dbScripts.js",
+        "log:http": "node ./environment/logScript.js"
     },
     "repository": {
         "type": "git",

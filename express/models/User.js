@@ -75,8 +75,14 @@ module.exports = (sequelize, DataTypes, Model) => {
 
     User.afterCreate(async (user) => {
         const { user_id } = user;
-        await sequelize.models.UserInfo.create({ user_id });
-        await sequelize.models.UserMetadata.create({ user_id });
-        await sequelize.models.UserPreferences.create({ user_id });
+        const t = await sequelize.transaction();
+        try {
+            await sequelize.models.UserInfo.create({ user_id });
+            await sequelize.models.UserMetadata.create({ user_id });
+            await sequelize.models.UserPreferences.create({ user_id });
+        } catch (err) {
+            await t.rollback();
+        }
+        
     });
 };

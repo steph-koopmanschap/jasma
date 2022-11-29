@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes, Model) => {
         }
     };
 
-    const options = { sequelize };
+    const options = { sequelize, tableName: "users_info" };
 
     class UserInfo extends Model {
         static generate() {

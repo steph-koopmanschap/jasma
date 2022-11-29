@@ -5,10 +5,11 @@ const session = require("express-session");
 let RedisStore = require("connect-redis")(session);
 const Redis = require("ioredis");
 const helmet = require("helmet");
+const logging = require("./middleware/logging.js");
 const { apiRouter } = require("./routes/apiRouter");
 
 app.use(helmet());
-
+// logging(app);
 let redisClient = new Redis();
 app.use(
     session({
@@ -19,10 +20,12 @@ app.use(
     })
 );
 
+app.use(express.json());
+
 app.use("/api", apiRouter);
 
 const port = process.env.PORT || 5000;
-app.listen(port, async () => {
+const server = app.listen(port, () => {
     console.log(`
     ============
     Starting the JASMA API server...
@@ -34,4 +37,4 @@ app.listen(port, async () => {
     `);
 });
 
-module.exports = app;
+module.exports = { redisClient, server };
