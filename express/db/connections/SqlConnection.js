@@ -24,7 +24,7 @@ function generateConfig(role) {
         database: isSuperUser ? PG_SUPER_DATABASE : PG_ADMIN_DATABASE,
         dialect: "postgres",
         ssl: false,
-        logging: false,
+        logging: true,
         define: {
             freezeTableName: true,
             timestamps: false

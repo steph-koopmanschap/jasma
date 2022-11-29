@@ -2,7 +2,7 @@ const db = require("../../db/connections/jasmaAdmin");
 const { User } = db.models;
 const request = require("supertest");
 const { redisClient, server } = require("../../index.js");
-/* consider using mocha instead*/
+/* consider using mocha instead */
 class TestUser {
     constructor(username, email, password) {
         (this.username = username), (this.email = email), (this.password = password);
@@ -27,7 +27,7 @@ async function tearDown() {
 }
 
 afterAll(() => {
-    tearDown();
+    return tearDown();
 });
 
 describe("routes:register", () => {

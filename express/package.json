@@ -1,9 +1,9 @@
 {
     "scripts": {
-        "db:initialize": "node ./db/scripts/initializeDb.js",
+        "db:init": "node ./db/scripts/initializeDb.js",
         "db:resetTables": "node ./db/scripts/resetTables.js",
         "log:http": "node ./environment/scripts/logging.js",
-        "test": "jest"
+        "test": "jest --detectOpenHandles"
     },
     "dependencies": {
         "bcrypt": "^5.1.0",
