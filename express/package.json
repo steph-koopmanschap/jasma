@@ -1,9 +1,31 @@
 {
+    "name": "jasmaserver",
+    "version": "1.0.0",
+    "description": "API server/backend for JASMA",
+    "homepage": "https://github.com/steph-koopmanschap/jasma#readme",
+    "author": "Steph Koopmanschap and Others",
+    "license": "Apache-2.0",
+    "keywords": [
+        "socialmedia"
+    ],
+    "main": "index.js",
+    "directories": {
+        "lib": "lib"
+    },  
     "scripts": {
+        "dev": "nodemon -r dotenv/config index.js",
+        "start": "node -r dotenv/config index.js",
         "db:init": "node ./db/scripts/initializeDb.js",
         "db:resetTables": "node ./db/scripts/resetTables.js",
         "log:http": "node ./environment/scripts/logging.js",
         "test": "jest --detectOpenHandles"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/steph-koopmanschap/jasma.git"
+    },
+    "bugs": {
+        "url": "https://github.com/steph-koopmanschap/jasma/issues"
     },
     "dependencies": {
         "bcrypt": "^5.1.0",

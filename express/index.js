@@ -1,12 +1,17 @@
 require("dotenv").config();
 const express = require("express");
-const app = express();
 const session = require("express-session");
 let RedisStore = require("connect-redis")(session);
 const Redis = require("ioredis");
 const helmet = require("helmet");
 const logging = require("./middleware/logging.js");
 const { apiRouter } = require("./routes/apiRouter");
+
+const app = express();
+//Number of proxies between express server and the client
+//This is to make the rate limiter ignore proxy requests
+//This is used when there are other services in front of Express such Nginx, Amazon Web, etc.
+app.set('trust proxy', 1);
 
 app.use(helmet());
 // logging(app);
@@ -15,7 +20,7 @@ app.use(
     session({
         store: new RedisStore({ client: redisClient }),
         saveUninitialized: false,
-        secret: "keyboard cat",
+        secret: process.env.SESSION_SECRET,
         resave: false
     })
 );
