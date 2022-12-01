@@ -1,5 +1,5 @@
 import CreateComment from "./CreateComment";
-import CommentList from "./CommentLost";
+import CommentList from "./CommentList";
 
 export default function Post(props) {
     return (

@@ -14,6 +14,9 @@ Currently looking for the following contributions:
  - Testing and bug reporting
  - Ideas and inspiration
 
+Filling out this anonymous survey will help us a lot to improve JASMA.
+[Social Media Improvement Survey](https://forms.gle/wparXcH7FyNi6e27A)
+
 ## Documentation
 
 See [DOCS.md](https://github.com/steph-koopmanschap/jasma/blob/main/DOCS.MD)

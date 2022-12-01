@@ -153,7 +153,7 @@ export default function CreatePost() {
                     id="newPostText"
                     aria-label="Create a post on JASMA"
                     type="textarea"
-                    spellcheck="true"
+                    spellCheck="true"
                     name="text"
                     value={textInput}
                     onChange={handleChange} 
@@ -171,9 +171,10 @@ export default function CreatePost() {
                 />
 
                 <p>Included hashtags (max 5):</p>
-                <p>{hashtagPreview}</p>
+                <p className="bg-gray-800">{hashtagPreview}</p>
 
                 <input 
+                    className="mt-2"
                     type="file" 
                     id="newPostFile" 
                     name="file" 
@@ -193,6 +194,13 @@ export default function CreatePost() {
                     type="submit"
                     value="Post" 
                 />
+
+                <a  
+                    className="flex flex-col items-center mt-4 hover:text-sky-500"
+                    href="#"
+                >
+                    Forgot password?
+                </a>
             </form>
         </div>
     );
