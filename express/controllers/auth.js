@@ -6,12 +6,12 @@ async function register(req, res) {
     const { username, email, password } = req.body;
     const usernameExists = await User.getByUsername(username);
     if (usernameExists) {
-        return res.json({ success: false, message: "Username already in use" });
+        return res.json({ success: false, message: "Username already in use." });
     }
 
     const emailExists = await User.getByEmail(email);
     if (emailExists) {
-        return res.json({ success: false, message: "Email already in use" });
+        return res.json({ success: false, message: "Email already in use." });
     }
 
     const t = await db.transaction();
@@ -22,7 +22,7 @@ async function register(req, res) {
         await t.rollback();
     }
 
-    res.json({ success: true });
+    res.json({ success: true, message: `New user with username: ${username} registered.`});
 }
 
 async function login(req, res) {
@@ -30,12 +30,12 @@ async function login(req, res) {
 
     const user = await User.getByEmail(email);
     if (!user) {
-        return res.json({ success: false, message: "Email or password is incorrect" });
+        return res.json({ success: false, message: "Email or password is incorrect." });
     }
 
     const isCorrectPassword = UserPassword.compare(email, password);
     if (!isCorrectPassword) {
-        return res.json({ success: false, message: "Email or password is incorrect" });
+        return res.json({ success: false, message: "Email or password is incorrect." });
     }
 
     await UserMetadata.update(
@@ -44,15 +44,15 @@ async function login(req, res) {
     );
 
     req.session.user_id = user.user_id;
-    res.json({ success: true, user });
+    res.json({ success: true, user, message: "user logged in." });
 }
 
 async function logout(req, res) {
     req.session.destroy((err) => {
         if (err) {
-            res.json({ success: false, message: "Unable to logout" });
+            res.json({ success: false, message: "Unable to logout." });
         } else {
-            res.json({ success: true });
+            res.json({ success: true, message: "Logged out." });
         }
     });
 }
