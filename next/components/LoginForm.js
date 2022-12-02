@@ -1,7 +1,10 @@
 import React, {useState} from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import {login} from '../clientAPI/api.js';
 
 export default function LoginForm() {
+    const router = useRouter();
     // Values of the email and password input boxes
     const [loginFormState, setLoginFormState] = useState({
         emailInput: "",
@@ -19,7 +22,13 @@ export default function LoginForm() {
     // Login authorization code
     const authorize = async (e) => {
         e.preventDefault();
-    
+        const res = await login(loginFormState.emailInput, loginFormState.passwordInput);
+        if (res.success === true ) {
+            router.push(`/dashboard`);
+        }
+        else {
+            alert(res.message);
+        }
     }
 
     return ( 

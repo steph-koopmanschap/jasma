@@ -1,9 +1,15 @@
+/*
+    ExpressJS Server initialization file
+*/
+
 require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
 let RedisStore = require("connect-redis")(session);
 const Redis = require("ioredis");
+//middleware imports
 const helmet = require("helmet");
+const customCors = require('./middleware/customCors.js');
 const logging = require("./middleware/logging.js");
 const { apiRouter } = require("./routes/apiRouter");
 
@@ -13,6 +19,10 @@ const app = express();
 //This is used when there are other services in front of Express such Nginx, Amazon Web, etc.
 app.set('trust proxy', 1);
 
+// LOAD MIDDLEWARES
+
+customCors(app);
+//Set http security headers
 app.use(helmet());
 // logging(app);
 let redisClient = new Redis();
@@ -24,11 +34,13 @@ app.use(
         resave: false
     })
 );
-
+//For parsing application/json
 app.use(express.json());
 
+// Mount router
 app.use("/api", apiRouter);
 
+//Start server
 const port = process.env.PORT || 5000;
 const server = app.listen(port, () => {
     console.log(`

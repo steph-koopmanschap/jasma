@@ -6,7 +6,7 @@ export default function DefaultHead() {
     return ( 
         <div>
             <Head>
-                <meta charset="utf-8" />
+                <meta charSet="utf-8" />
                 
                 <title>JASMA</title>
                 

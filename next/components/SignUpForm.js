@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import Link from 'next/link';
+import {register} from '../clientAPI/api.js';
 
 export default function SignUpForm() {
     //Values of all the input boxes
@@ -18,8 +19,18 @@ export default function SignUpForm() {
     };
 
     //Registration action (OnSubmit form)
-    const register = async (e) => {
+    const signup = async (e) => {
         e.preventDefault();
+        const res = await register(registrationState.userNameInput, registrationState.emailInput, registrationState.passwordInput);
+        if (res.success === true ) {
+            alert(res.message);
+        }
+        else if (res?.errors) {
+            alert(res.errors[0].msg);
+        }
+        else {
+            alert(res.message);
+        }
     }
 
     return ( 
@@ -27,7 +38,7 @@ export default function SignUpForm() {
             <h1 className="my-2">Create a new account</h1>
             <h3 className="my-2">Already registered? <Link className='hover:text-sky-500' href="/login">Login</Link></h3>
 
-            <form className="bg-gray-600 shadow-md rounded px-8 pt-6 pb-8 mb-4" action="#" onSubmit={register}>
+            <form className="bg-gray-600 shadow-md rounded px-8 pt-6 pb-8 mb-4" action="#" onSubmit={signup}>
                 <div className="mb-6">
                     <label className='labelDefault' htmlFor="userNameInput">Username</label>
                     <input 

@@ -5,8 +5,10 @@ Tech Stack:
 Frontend:
 - NextJS / React
 - TailwindCSS
+- React Query
+- Axios
 
-Backend
+Backend:
 - ExpressJS
 - PostGreSQL
 - Redis
@@ -61,7 +63,13 @@ Create the database
 <!-- To populate the database with 10 fake users
 `npm run resetAndPopulateUsers normal 10` -->
 
-### Learn More
+## API Routes
+
+- POST /api/auth/login
+- POST /api/auth/register
+- POST /api/auth/logout
+
+## Learn More
 
 To learn more about Next.js, take a look at the following resources:
 
