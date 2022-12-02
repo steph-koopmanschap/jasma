@@ -1,6 +1,6 @@
 const db = require("../db/connections/jasmaAdmin");
 const { User, UserPassword, UserMetadata } = db.models;
-const { format } = require("date-fns");
+const { formatISO } = require("date-fns");
 
 async function register(req, res) {
     const { username, email, password } = req.body;
@@ -20,6 +20,7 @@ async function register(req, res) {
         await UserPassword.create({ user_email: email, user_password: password });
     } catch (err) {
         await t.rollback();
+        throw new Error(err);
     }
 
     res.json({ success: true });
@@ -33,13 +34,13 @@ async function login(req, res) {
         return res.json({ success: false, message: "Email or password is incorrect" });
     }
 
-    const isCorrectPassword = UserPassword.compare(email, password);
+    const isCorrectPassword = await UserPassword.compare(email, password);
     if (!isCorrectPassword) {
         return res.json({ success: false, message: "Email or password is incorrect" });
     }
 
     await UserMetadata.update(
-        { last_login_date: format(Date.now(), "MM/dd/yyyy"), last_ipv4: req.ip },
+        { last_login_date: formatISO(Date.now()), last_ipv4: req.ip },
         { where: { user_id: user.user_id } }
     );
 

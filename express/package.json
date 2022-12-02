@@ -3,10 +3,11 @@
         "db:init": "node ./db/scripts/initializeDb.js",
         "db:resetTables": "node ./db/scripts/resetTables.js",
         "log:http": "node ./environment/scripts/logging.js",
-        "test": "jest --detectOpenHandles"
+        "test": "mocha --recursive --exit"
     },
     "dependencies": {
         "bcrypt": "^5.1.0",
+        "chai": "^4.3.7",
         "connect-redis": "^6.1.3",
         "date-fns": "^2.29.3",
         "dotenv": "^16.0.3",
@@ -16,6 +17,7 @@
         "express-validator": "^6.14.2",
         "helmet": "^6.0.0",
         "ioredis": "^5.2.4",
+        "mocha": "^10.1.0",
         "morgan": "^1.10.0",
         "nodemon": "^2.0.20",
         "pg": "^8.8.0",
