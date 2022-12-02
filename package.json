@@ -10,7 +10,7 @@
         "socialmedia"
     ],
     "scripts": {
-        "dev": "concurrently -n 'express,next' -c '#9c143f,#85590d' \"cd express && nodemon index.js\" \"cd next && npm run dev\"",
+        "dev": "concurrently -n 'express,next' -c '#9c143f,#85590d' \"cd express && npm run dev\" \"cd next && npm run dev\"",
         "installAll": "cd express && npm install && cd ../next && npm install",
         "db:init": "cd express && npm run db:init",
         "db:resetTables": "cd express && npm run db:resetTables",
