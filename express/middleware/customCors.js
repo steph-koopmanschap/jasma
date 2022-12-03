@@ -3,16 +3,16 @@
 function customCors(app) {
     app.use((req, res, next) => {
         const allowedOrigins = ['http://127.0.0.1:3000', 
-                                'http://localhost:3000'];
+                                'http://localhost:3000',
+                                process.env.NEXTJS_ORIGIN];
         const origin = req.headers.origin;
+
         if (allowedOrigins.includes(origin)) 
         {
-            //res.set({'Access-Control-Allow-Origin': origin});
+            res.set({'Access-Control-Allow-Origin': origin});
         }
 
         res.set({
-            //The first line is technically the same as 'Access-Control-Allow-Origin': '*' and may be a security risk.
-            'Access-Control-Allow-Origin': origin,
             'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,HEAD,OPTIONS',
             'Access-Control-Allow-Headers': 'Authorization,Content-Type,Accept,Content-Encoding,X-Requested-With,x-api-user,x-api-key,x-client',
             'Access-Control-Allow-Credentials': true,
