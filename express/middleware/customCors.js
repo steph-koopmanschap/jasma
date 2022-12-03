@@ -2,9 +2,14 @@
 //Should be at or near the top of the middleware stack
 function customCors(app) {
     app.use((req, res, next) => {
-        const allowedOrigins = ['http://127.0.0.1:3000', 
-                                'http://localhost:3000',
-                                process.env.NEXTJS_ORIGIN];
+        const { NEXTJS_ORIGIN, NEXTJS_PORT } = process.env;
+        
+        const allowedOrigins = [
+                                `http://127.0.0.1:${NEXTJS_PORT}`, 
+                                `http://localhost:${NEXTJS_PORT}`,
+                                `${NEXTJS_ORIGIN}:${NEXTJS_PORT}`
+                            ];
+
         const origin = req.headers.origin;
 
         if (allowedOrigins.includes(origin)) 
