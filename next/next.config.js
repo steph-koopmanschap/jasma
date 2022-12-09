@@ -4,7 +4,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ["localhost"]
+    domains: ["http://localhost/", "http://127.0.0.1/"]
   },
   poweredByHeader: false, //remove x-powered-by: NextJS header (better cybersecurity)
 };
