@@ -42,8 +42,9 @@ module.exports = (sequelize, DataTypes, Model) => {
     const options = { sequelize, tableName: "users_info" };
 
     class UserInfo extends Model {
-        static async getProfilePicUrl(user_id) {
-            const res = await sequelize.query(`SELECT profile_pic_url FROM users WHERE user_id = ?`, { replacements: [user_id] });
+        static async getProfilePicUrl(user_id) 
+        {
+            const res = await sequelize.query(`SELECT profile_pic_url FROM users_info WHERE user_id = ?`, { replacements: [user_id] });
             return res[0][0];
         }
 

@@ -23,13 +23,16 @@ export default function SignUpForm() {
         e.preventDefault();
         const res = await register(registrationState.userNameInput, registrationState.emailInput, registrationState.passwordInput);
         if (res.success === true ) {
-            alert(res.message);
+            console.log(res.message);
+            //alert(res.message);
         }
         else if (res?.errors) {
-            alert(res.errors[0].msg);
+            console.log(res.errors[0].msg);
+            //alert(res.errors[0].msg);
         }
         else {
-            alert(res.message);
+            console.log(res.message);
+            //alert(res.message);
         }
     }
 

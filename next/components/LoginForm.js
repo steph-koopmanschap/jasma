@@ -27,7 +27,8 @@ export default function LoginForm() {
             router.push(`/dashboard`);
         }
         else {
-            alert(res.message);
+            //alert(res.message);
+            console.log(res.message);
         }
     }
 

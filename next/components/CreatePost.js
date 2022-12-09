@@ -69,7 +69,8 @@ export default function CreatePost() {
         }
         else 
         {
-            alert("File too large!");
+            console.log("File too large!");
+            //alert("File too large!");
         }
 
         //This sets the src for the img element from the file.
