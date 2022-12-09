@@ -15,8 +15,8 @@
 /out/
 
 # Server media files
-**/express/media
-!/express/media/users/00000000-0000-0000-0000-000000000000/*.webp
+#**/express/media
+#!/express/media/users/00000000-0000-0000-0000-000000000000/*.webp
 
 # production
 /build
