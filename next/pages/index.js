@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import HeaderMain from "../components/HeaderMain";
 import FooterMain from "../components/FooterMain";
@@ -8,6 +7,7 @@ import DefaultHead from "../components/DefaultHead";
 
 //The homepage
 export default function Home() {
+
     return (
         <div className="">
             <DefaultHead />

@@ -2,14 +2,21 @@ import React, {useState} from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {login} from '../clientAPI/api.js';
+import { useQuery } from "react-query";
 
 export default function LoginForm() {
+
     const router = useRouter();
     // Values of the email and password input boxes
     const [loginFormState, setLoginFormState] = useState({
         emailInput: "",
         passwordInput: ""
     });
+
+    const { status, isLoading, isError, data, error, refetch } = useQuery(["userCredentials"], 
+        async () => {return await login(loginFormState.emailInput, loginFormState.passwordInput)},
+        {enabled: false} // disable this query from automatically running
+    );
 
     const handleChange = (e) => {
         const value = e.target.value;
@@ -20,15 +27,17 @@ export default function LoginForm() {
     };
 
     // Login authorization code
-    const authorize = async (e) => {
+    const authorize = (e) => {
         e.preventDefault();
-        const res = await login(loginFormState.emailInput, loginFormState.passwordInput);
-        if (res.success === true ) {
+        refetch(); //Send a login request
+        //Move user to dashboard on succesful login
+        if (data?.user && data?.success)
+        {
             router.push(`/dashboard`);
         }
-        else {
-            //alert(res.message);
-            console.log(res.message);
+
+        if (isError) {
+            console.log(error);
         }
     }
 
@@ -64,9 +73,28 @@ export default function LoginForm() {
                         required 
                     /> 
                 </div>
+
+
+                {data?.success ? null : 
+                (<p 
+                    className='mb-2 text-red-500'
+                >
+                    {data?.message}</p>)
+                }
+{/* 
+                {isError ? 
+                (<p 
+                    className='mb-2 text-red-500'
+                >
+                    {error}</p>) : null
+                }    */}
             
                 <div className="flex flex-col items-center justify-between">
-                    <button className="formButtonDefault" type="submit" value="Log in">
+                    <button 
+                        className="formButtonDefault" 
+                        type="submit" 
+                        value="Log in"
+                    >
                         Log In
                     </button>
                 </div>

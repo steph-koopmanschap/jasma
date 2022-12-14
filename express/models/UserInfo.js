@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes, Model) => {
         },
         profile_pic_url: {
             type: DataTypes.STRING(300),
-            defaultValue: "/media/users/00000000-0000-0000-0000-000000000000/blank-profile-pic.webp",
+            defaultValue: "/media/users/00000000-0000-0000-0000-000000000000/profile-pic.webp",
         },
         given_name: {
             type: DataTypes.STRING(35)
