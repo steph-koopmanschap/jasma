@@ -12,6 +12,11 @@ const helmet = require("helmet");
 const customCors = require('./middleware/customCors.js');
 const logging = require("./middleware/logging.js");
 const { apiRouter } = require("./routes/apiRouter");
+var path = require('path');
+
+//Set the absolute directory path of the server(index.js) to the global namespace. 
+//This is needed for the server to find files in the /media/ directory
+global.appRoot = path.resolve(__dirname);
 
 const app = express();
 //Number of proxies between express server and the client

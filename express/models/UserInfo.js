@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes, Model) => {
             }
         },
         profile_pic_url: {
-            type: DataTypes.STRING(100)
-            // defaultValue: A standard anonymous avatar
+            type: DataTypes.STRING(300),
+            defaultValue: "/media/users/00000000-0000-0000-0000-000000000000/profile-pic.webp",
         },
         given_name: {
             type: DataTypes.STRING(35)
@@ -42,6 +42,12 @@ module.exports = (sequelize, DataTypes, Model) => {
     const options = { sequelize, tableName: "users_info" };
 
     class UserInfo extends Model {
+        static async getProfilePicUrl(user_id) 
+        {
+            const res = await sequelize.query(`SELECT profile_pic_url FROM users_info WHERE user_id = ?`, { replacements: [user_id] });
+            return res[0][0];
+        }
+
         static generate() {
             return {
                 user_id,
