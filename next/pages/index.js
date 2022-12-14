@@ -21,6 +21,19 @@ export default function Home() {
                 >
                     Dashboard
                 </Link>
+
+                <p className="text-2xl m-2">To help JASMA improve, please fill out 
+                    <a 
+                        className="text-blue-700 hover:text-blue-500" 
+                        href="https://forms.gle/dQZQHFhyXrok78Wx5"
+                        rel="nofollow"
+                        target="_blank"
+                    >
+                        &nbsp; this Social Media Improvements Survey
+                    </a>
+                </p>
+
+
                 <LoginForm />
                 <SignUpForm />
             </main>

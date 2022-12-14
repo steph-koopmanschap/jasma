@@ -34,7 +34,6 @@ module.exports = (sequelize, DataTypes, Model) => {
             const res = await sequelize.query(`SELECT * FROM posts WHERE user_id = ?`, { replacements: [user_id] });
             return res[0][0];
         }
-
     }
 
     Post.init(columns, options);
