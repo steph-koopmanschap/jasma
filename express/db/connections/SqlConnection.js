@@ -70,7 +70,7 @@ class SqlConnection extends Sequelize {
     
         DROP ROLE IF EXISTS jasma_admin;
         
-        CREATE ROLE jasma_admin WITH LOGIN PASSWORD 'a';
+        CREATE ROLE jasma_admin WITH LOGIN PASSWORD '${process.env.PG_ADMIN_PASSWORD}';
         
         ALTER DATABASE jasma_db OWNER TO jasma_admin;
         `;
