@@ -76,6 +76,7 @@ class SqlConnection extends Sequelize {
         `;
 
         const queries = sql.match(/^\w|\s[^;]+;$/gm);
+
         for (let i = 0; i < queries.length; i++) {
             const query = queries[i];
             await this.query(query);

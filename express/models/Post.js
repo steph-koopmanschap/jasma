@@ -1,3 +1,7 @@
+const { faker } = require("@faker-js/faker");
+const db = require("../db/connections/jasmaAdmin");
+const { User } = db.models;
+
 module.exports = (sequelize, DataTypes, Model) => {
     const columns = {
         post_id: {
@@ -34,7 +38,22 @@ module.exports = (sequelize, DataTypes, Model) => {
             const res = await sequelize.query(`SELECT * FROM posts WHERE user_id = ?`, { replacements: [user_id] });
             return res[0][0];
         }
-    }
+
+        static async generate() {
+            //randomLimit is beteen 1 and 50 (INT)
+            const randomLimit = Math.floor(Math.random() * (50 - 1 + 1)) + 1;
+            //Retrieve a list of userIDs from the database
+            const res = await sequelize.query(`SELECT user_id FROM users LIMIT = ?`, { replacements: [randomLimit] });
+            console.log(res);
+            //Pick a random userID from the database
+            const userID = res[0][Math.floor(Math.random() * (randomLimit - 1 + 1)) + 1];
+
+            return {
+                user_id: userID,
+                text_content: faker.internet.lorem.paragraphs(),
+                file_url: ``,
+            };
+        }}
 
     Post.init(columns, options);
 };
