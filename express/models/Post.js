@@ -1,6 +1,4 @@
 const { faker } = require("@faker-js/faker");
-const db = require("../db/connections/jasmaAdmin");
-const { User } = db.models;
 
 module.exports = (sequelize, DataTypes, Model) => {
     const columns = {
@@ -51,9 +49,10 @@ module.exports = (sequelize, DataTypes, Model) => {
             return {
                 user_id: userID,
                 text_content: faker.internet.lorem.paragraphs(),
-                file_url: ``,
+                file_url: ``
             };
-        }}
+        }
+    }
 
     Post.init(columns, options);
 };
