@@ -22,7 +22,7 @@ async function register(req, res) {
         await t.rollback();
     }
 
-    res.json({ success: true, message: `New user with username: ${username} registered.`});
+    res.json({ success: true, message: `New user with username: ${username} registered.` });
 }
 
 async function login(req, res) {
@@ -33,7 +33,7 @@ async function login(req, res) {
         return res.json({ success: false, message: "Email or password is incorrect." });
     }
 
-    const isCorrectPassword = UserPassword.compare(email, password);
+    const isCorrectPassword = await UserPassword.compare(email, password);
     if (!isCorrectPassword) {
         return res.json({ success: false, message: "Email or password is incorrect." });
     }
