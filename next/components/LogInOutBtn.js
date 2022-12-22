@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { useQueryClient } from 'react-query';
+import React, { useState } from "react";
+import { useQueryClient } from "react-query";
 import Link from "next/link";
-import { useRouter } from 'next/router';
-import {logout} from '../clientAPI/api.js';
+import { useRouter } from "next/router";
+import api from "../clientAPI/api.js";
 
 export default function LogInOutBtn(props) {
     const router = useRouter();
     const queryClient = useQueryClient();
     const [loginState, setLoginState] = useState(props.initialState);
-    
+
     const logoutUser = async (e) => {
-        const res = await logout();
+        const res = await api.logout();
         //Remove the user credentials from the query cache/storage
         queryClient.resetQueries("userCredentials", { exact: true });
         setLoginState(false);
@@ -22,29 +22,23 @@ export default function LogInOutBtn(props) {
         else {
             router.push(`/login`);
         }
-    }
+    };
 
     //Choose which button (login btn or logout btn) to render based on logged in or logged out state
     return (
         <React.Fragment>
-        {loginState ? 
-            (<button 
-                className="formButtonDefault m-2" 
-                onClick={logoutUser}
-            >
-                Logout
-            </button>)
-            :
-            (<Link 
-                href="/login"
-            >
+            {loginState ? (
                 <button
-                    className="formButtonDefault m-2" 
+                    className="formButtonDefault m-2"
+                    onClick={logoutUser}
                 >
-                    Login
+                    Logout
                 </button>
-            </Link>)
-        }
+            ) : (
+                <Link href="/login">
+                    <button className="formButtonDefault m-2">Login</button>
+                </Link>
+            )}
         </React.Fragment>
     );
 }

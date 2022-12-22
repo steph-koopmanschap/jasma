@@ -52,9 +52,18 @@ async function logout(req, res) {
         if (err) {
             res.json({ success: false, message: "Unable to logout." });
         } else {
+            res.clearCookie("connect.sid", { path: "/" });
             res.json({ success: true, message: "Logged out." });
         }
     });
 }
 
-module.exports = { register, login, logout };
+async function checkAuth(req, res) {
+    if (req.session && req.session.user_id) {
+        res.json({ isAuth: true });
+    } else {
+        res.json({ isAuth: false });
+    }
+}
+
+module.exports = { checkAuth, register, login, logout };

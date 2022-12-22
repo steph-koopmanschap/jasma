@@ -7,14 +7,15 @@ const express = require("express");
 const session = require("express-session");
 let RedisStore = require("connect-redis")(session);
 const Redis = require("ioredis");
+const cors = require("cors");
 //middleware imports
 const helmet = require("helmet");
-const customCors = require('./middleware/customCors.js');
+const customCors = require("./middleware/customCors.js");
 const logging = require("./middleware/logging.js");
 const { apiRouter } = require("./routes/apiRouter");
-var path = require('path');
+var path = require("path");
 
-//Set the absolute directory path of the server(index.js) to the global namespace. 
+//Set the absolute directory path of the server(index.js) to the global namespace.
 //This is needed for the server to find files in the /media/ directory
 global.appRoot = path.resolve(__dirname);
 
@@ -22,13 +23,12 @@ const app = express();
 //Number of proxies between express server and the client
 //This is to make the rate limiter ignore proxy requests
 //This is used when there are other services in front of Express such Nginx, Amazon Web, etc.
-app.set('trust proxy', 1);
+app.set("trust proxy", 1);
 
 // LOAD MIDDLEWARES
-
-customCors(app);
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 //Set http security headers
-app.use(helmet());
+// app.use(helmet());
 // logging(app);
 let redisClient = new Redis();
 app.use(

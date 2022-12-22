@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes, Model) => {
             const randomLimit = Math.floor(Math.random() * (50 - 1 + 1)) + 1;
             //Retrieve a list of userIDs from the database
             const res = await sequelize.query(`SELECT user_id FROM users LIMIT = ?`, { replacements: [randomLimit] });
-            console.log(res);
+
             //Pick a random userID from the database
             const userID = res[0][Math.floor(Math.random() * (randomLimit - 1 + 1)) + 1];
 
