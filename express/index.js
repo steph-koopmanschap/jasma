@@ -26,7 +26,8 @@ const app = express();
 app.set("trust proxy", 1);
 
 // LOAD MIDDLEWARES
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+//app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+customCors(app);
 //Set http security headers
 // app.use(helmet());
 // logging(app);

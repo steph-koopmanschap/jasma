@@ -20,7 +20,7 @@ function customCors(app) {
         res.set({
             'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,HEAD,OPTIONS',
             'Access-Control-Allow-Headers': 'Authorization,Content-Type,Accept,Content-Encoding,X-Requested-With,x-api-user,x-api-key,x-client',
-            'Access-Control-Allow-Credentials': true,
+            'Access-Control-Allow-Credentials': true, //Same as credentials: true in express cors.
              //Rate limit headers for CORS requests
             'Access-Control-Expose-Headers': 'X-RateLimit-Limit,X-RateLimit-Remaining,X-RateLimit-Reset,Retry-After'
         });
