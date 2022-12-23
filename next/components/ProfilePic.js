@@ -1,12 +1,12 @@
 import React from 'react';
 import Image from 'next/image';
 import { useQuery } from 'react-query';
-import {getProfilePic} from '../clientAPI/api.js';
+import api from "../clientAPI/api.js";
 
 export default function ProfilePic(props) {
     //Fetch profile pic from server
     const { status, isLoading, isError, data, error, refetch } = useQuery(["userProfilePic"], 
-    async () => {return await getProfilePic(props.userid)},
+    async () => {return await api.getProfilePic(props.userid)},
     {enabled: true}
     );
     let profilePicSrc = "/";

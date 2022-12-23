@@ -1,34 +1,55 @@
 import axios from "axios";
+import fetch from "node-fetch";
 
-// Client API functions that communicate with the API server
+const baseURL = `http://${process.env.NEXT_PUBLIC_API_SERVER_URL}:${process.env.NEXT_PUBLIC_API_SERVER_PORT}`;
 
-// Axios config
-const api = axios.create({
-    baseURL: `http://${process.env.NEXT_PUBLIC_API_SERVER_URL}:${process.env.NEXT_PUBLIC_API_SERVER_PORT}`,
-    withCredentials: true,
-    timeout: 2000, //Timeout response after 2 seconds
-});
+class Api {
+    constructor() {
+        this._api = axios.create({
+            baseURL: baseURL,
+            withCredentials: true,
+            timeout: 2000 //Timeout response after 2 seconds
+        });
+    }
 
-/* Auth Functions */
+    get api() {
+        return this._api;
+    }
 
-export async function login(email, password) {
-    const response = await api.post("/api/auth/login", {email: email, password: password});
-    return response.data;
+    async login(email, password) {
+        const response = await this.api.post("/api/auth/login", { email: email, password: password });
+        return response.data;
+    }
+
+    async register(username, email, password) {
+        const response = await this.api.post("/api/auth/register", {
+            username: username,
+            email: email,
+            password: password
+        });
+        return response.data;
+    }
+
+    async logout() {
+        const response = await this.api.post("/api/auth/logout");
+        return response.data;
+    }
+
+    async getProfilePic(userid) {
+        const response = await this.api.get(`/api/users/${userid}/profilepic`, { responseType: "blob" });
+        return response.data;
+    }
+
+    //Check if a user is autheenticated (logged in)
+    async checkAuth(req) {
+        const response = await fetch(`${baseURL}/api/auth/checkAuth`, {
+            method: "POST",
+            headers: req.headers
+        });
+        const data = await response.json();
+        return data;
+    }
 }
 
-export async function register(username, email, password) {
-    const response = await api.post("/api/auth/register", {username: username, email: email, password: password});
-    return response.data;
-}
-
-export async function logout() {
-    const response = await api.post("/api/auth/logout");
-    return response.data;
-}
-
-/* User functions */
-
-export async function getProfilePic(userid) {
-    const response = await api.get(`/api/users/${userid}/profilepic`, {responseType: 'blob'});
-    return response.data;
-}
+const jasmaApi = new Api();
+export default jasmaApi;
