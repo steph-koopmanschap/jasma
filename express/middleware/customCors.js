@@ -7,7 +7,7 @@ function customCors(app) {
         const allowedOrigins = [
                                 `http://127.0.0.1:${NEXTJS_PORT}`, 
                                 `http://localhost:${NEXTJS_PORT}`,
-                                `${NEXTJS_ORIGIN}:${NEXTJS_PORT}`
+                                `http://${NEXTJS_ORIGIN}:${NEXTJS_PORT}`
                             ];
 
         const origin = req.headers.origin;

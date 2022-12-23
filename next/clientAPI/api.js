@@ -1,10 +1,12 @@
 import axios from "axios";
 import fetch from "node-fetch";
 
+const baseURL = `http://${process.env.NEXT_PUBLIC_API_SERVER_URL}:${process.env.NEXT_PUBLIC_API_SERVER_PORT}`;
+
 class Api {
     constructor() {
         this._api = axios.create({
-            baseURL: `http://${process.env.NEXT_PUBLIC_API_SERVER_URL}:${process.env.NEXT_PUBLIC_API_SERVER_PORT}`,
+            baseURL: baseURL,
             withCredentials: true,
             timeout: 2000 //Timeout response after 2 seconds
         });
@@ -38,8 +40,9 @@ class Api {
         return response.data;
     }
 
+    //Check if a user is autheenticated (logged in)
     async checkAuth(req) {
-        const response = await fetch("http://localhost:5000/api/auth/checkAuth", {
+        const response = await fetch(`${baseURL}/api/auth/checkAuth`, {
             method: "POST",
             headers: req.headers
         });

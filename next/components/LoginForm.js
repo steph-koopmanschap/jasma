@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import api from "../clientAPI/api.js";
-import { useQuery } from "react-query";
 
 export default function LoginForm() {
     const router = useRouter();
@@ -14,17 +13,22 @@ export default function LoginForm() {
 
     const [message, setMessage] = useState();
 
+    // Login authorization code
     async function handleSubmit(e) {
         e.preventDefault();
         const { emailInput, passwordInput } = loginFormState;
         const response = await api.login(emailInput, passwordInput);
         console.log("response", response);
+        //Move user to dashboard upon succesfull login
         if (response.success) {
-            router.replace("/dashboard");
+            router.push("/dashboard");
+            setMessage(null);
+        //Failed login. Show error message.
         } else {
             setMessage(response.message);
         }
     }
+
     // const { status, isLoading, isError, data, error, refetch } = useQuery(
     //     ["userCredentials"],
     //     async () => {
@@ -40,20 +44,6 @@ export default function LoginForm() {
             [e.target.name]: value
         });
     };
-
-    // Login authorization code
-    // const authorize = (e) => {
-    //     e.preventDefault();
-    //     refetch(); //Send a login request
-    //     //Move user to dashboard on succesful login
-    //     if (data?.user && data?.success) {
-    //         router.push(`/dashboard`);
-    //     }
-
-    //     if (isError) {
-    //         console.log(error);
-    //     }
-    // };
 
     return (
         <div className="flex flex-col items-center justify-center my-16">
@@ -106,14 +96,7 @@ export default function LoginForm() {
                     />
                 </div>
 
-                {message ? null : <p className="mb-2 text-red-500">{message}</p>}
-                {/* 
-                {isError ? 
-                (<p 
-                    className='mb-2 text-red-500'
-                >
-                    {error}</p>) : null
-                }    */}
+                {message ? <p className="mb-2 text-red-500">{message}</p> : null}
 
                 <div className="flex flex-col items-center justify-between">
                     <button
