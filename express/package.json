@@ -17,6 +17,7 @@
         "start": "node -r dotenv/config index.js",
         "db:init": "node ./db/scripts/initializeDb.js",
         "db:resetTables": "node ./db/scripts/resetTables.js",
+        "db:generate": "node ./db/scripts/generateDb.js",
         "log:http": "node ./environment/scripts/logging.js",
         "test": "jest --detectOpenHandles"
     },

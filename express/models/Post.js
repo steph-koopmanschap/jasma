@@ -41,14 +41,20 @@ module.exports = (sequelize, DataTypes, Model) => {
             //randomLimit is beteen 1 and 50 (INT)
             const randomLimit = Math.floor(Math.random() * (50 - 1 + 1)) + 1;
             //Retrieve a list of userIDs from the database
-            const res = await sequelize.query(`SELECT user_id FROM users LIMIT = ?`, { replacements: [randomLimit] });
+            const res = await sequelize.query(`SELECT user_id FROM users LIMIT ?`, { replacements: [randomLimit] });
+
+            // console.log("RES");
+            // console.log(res);
 
             //Pick a random userID from the database
-            const userID = res[0][Math.floor(Math.random() * (randomLimit - 1 + 1)) + 1];
+            const userID = res[0][Math.floor(Math.random() * (randomLimit - 1 + 1)) + 1].user_id;
+
+            console.log("@@@USERID@@@");
+            console.log(userID);
 
             return {
                 user_id: userID,
-                text_content: faker.internet.lorem.paragraphs(),
+                text_content: faker.lorem.paragraph(),
                 file_url: ``
             };
         }
