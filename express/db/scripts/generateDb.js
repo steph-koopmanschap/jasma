@@ -10,10 +10,9 @@ async function createUsers(n) {
 
 async function generatePosts(n) {
     for (let i = 0; i < n; i++) {
-        await Post.create(Post.generate());
-        //await Post.generate();
+        await Post.create(await Post.generate());
     }
 };
 
-generatePosts(1);
-//createUsers(100);
+generatePosts(100);
+createUsers(100);
