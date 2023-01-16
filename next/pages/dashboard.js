@@ -6,18 +6,21 @@ import SearchBar from "../components/SearchBar";
 import HeaderMain from "../components/HeaderMain";
 import LogInOutBtn from "../components/LogInOutBtn";
 import ProfilePic from "../components/ProfilePic";
+import NewsFeed from "../components/NewsFeed";
 import { checkAuth } from "../session";
 
 export async function getServerSideProps({ req, res }) {
     const isAuth = await checkAuth(req);
-    if (!isAuth) {
-        return {
-            redirect: {
-                destination: "/login",
-                permanent: false
-            }
-        };
-    }
+    console.log("hi from dashboard page");
+    // if (!isAuth) {
+    //     console.log("Not logged in!");
+    //     return {
+    //         redirect: {
+    //             destination: "/login",
+    //             permanent: false
+    //         }
+    //     };
+    // }
     return { props: { isAuth } };
 }
 
@@ -47,6 +50,8 @@ export default function Dashboard(props) {
             <SearchBar prevQuery="Search..." />
 
             <CreatePost />
+
+            <NewsFeed />
         </div>
     );
 }

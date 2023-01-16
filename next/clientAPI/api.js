@@ -40,7 +40,12 @@ class Api {
         return response.data;
     }
 
-    //Check if a user is autheenticated (logged in)
+    async getLatestPosts(limit) {
+        const response = await this.api.get(`/api/posts/getLatestPosts?limit=${limit}`);
+        return response.data;
+    }
+
+    //Check if a user is authenticated (logged in)
     async checkAuth(req) {
         const response = await fetch(`${baseURL}/api/auth/checkAuth`, {
             method: "POST",

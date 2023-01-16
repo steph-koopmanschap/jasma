@@ -22,6 +22,8 @@ export default function LoginForm() {
         //Move user to dashboard upon succesfull login
         if (response.success) {
             router.push("/dashboard");
+            router.replace("/dashboard");
+            console.log("hi");
             setMessage(null);
         //Failed login. Show error message.
         } else {

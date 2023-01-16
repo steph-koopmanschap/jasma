@@ -14,5 +14,6 @@ async function generatePosts(n) {
     }
 };
 
-generatePosts(100);
 createUsers(100);
+generatePosts(100);
+

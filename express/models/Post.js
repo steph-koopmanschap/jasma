@@ -37,6 +37,12 @@ module.exports = (sequelize, DataTypes, Model) => {
             return res[0][0];
         }
 
+        //Return the last posts sorted by date (most recent date first)
+        static async getLatest(limit) {
+            const res = await sequelize.query(`SELECT * FROM posts ORDER BY created_at DESC LIMIT ?`, { replacements: [limit] });
+            return res[0];
+        }
+
         static async generate() {
             //randomLimit is beteen 1 and 50 (INT)
             const randomLimit = Math.floor(Math.random() * (50 - 1 + 1)) + 1;

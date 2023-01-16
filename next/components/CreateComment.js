@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+
 export default function CreateComment() {
     const [commentData, setCommentData] = useState({
         comment_text: ""
@@ -12,7 +14,7 @@ export default function CreateComment() {
 
     return (
         <div className="">
-
+            <p>Write Comment...</p>
         </div>
     ); 
 }
