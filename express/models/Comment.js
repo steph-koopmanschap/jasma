@@ -52,10 +52,10 @@ module.exports = (sequelize, DataTypes, Model) => {
 
     class Comment extends Model {
         static async getComments(post_id, limit) {
-            const res = await db.query(`SELECT * FROM comments WHERE post_id = ? LIMIT ?`, {
+            const res = await sequelize.query(`SELECT * FROM comments WHERE post_id = ? LIMIT ?`, {
                 replacements: [post_id, limit]
             });
-            return res[0][0];
+            return res[0];
         }
 
         static async generate() {

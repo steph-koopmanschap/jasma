@@ -25,17 +25,18 @@ export default function Post(props) {
                     width="999" 
                     height="999"
                 /> */}
-        </div>
+            </div>
 
-        <div className="p-2">
-            <CreateComment />
-        </div>
+            <div className="p-2">
+                <CreateComment />
+            </div>
+                
             
-        {/* 
-        <div>
-            <CommentList /> 
-        </div>
-        */}
+            <div className="p-2">
+                <CommentList
+                    postID={postData.post_id} 
+                /> 
+            </div>
         </div>
     );
 }

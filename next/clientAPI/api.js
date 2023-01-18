@@ -45,6 +45,11 @@ class Api {
         return response.data;
     }
 
+    async getComments(post_id, limit) {
+        const response = await this.api.get(`/api/comments/getComments?post_id=${post_id}&limit=${limit}`);
+        return response.data;
+    }
+
     //Check if a user is authenticated (logged in)
     async checkAuth(req) {
         const response = await fetch(`${baseURL}/api/auth/checkAuth`, {
