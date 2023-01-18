@@ -40,6 +40,11 @@ class Api {
         return response.data;
     }
 
+    async getUserPosts(user_id, limit) {
+        const response = await this.api.get(`/api/posts/getUserPosts?user_id=${user_id}&limit=${limit}`);
+        return response.data;
+    }
+
     async getLatestPosts(limit) {
         const response = await this.api.get(`/api/posts/getLatestPosts?limit=${limit}`);
         return response.data;

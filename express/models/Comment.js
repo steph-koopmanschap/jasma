@@ -69,7 +69,7 @@ module.exports = (sequelize, DataTypes, Model) => {
             //Pick a random post from the database
             const random = (Math.floor(Math.random() * (randomLimit - 1 + 1)) + 1) - 1;
             const postID = resPost[0][random].post_id;
-            //Pick a random User from the database (owner of the comment)
+             //Pick a random user from the database (comment owner)
             const userID = resUser[0][random].user_id;
             const username = resUser[0][random].username;
 

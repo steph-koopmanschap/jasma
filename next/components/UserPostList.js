@@ -3,25 +3,15 @@ import { useQuery } from 'react-query';
 import api from "../clientAPI/api.js";
 import Post from "./Post";
 
-export default function NewsFeed() {
+export default function UserPostList(props) {
+    const { userID } = props;
 
     const [posts, setPosts] = useState([]);
 
-    const { status, isLoading, isError, data, error, refetch } = useQuery(["newsFeed"], 
-    async () => {return await api.getLatestPosts(25)},
+    const { status, isLoading, isError, data, error, refetch } = useQuery([`userPosts_${userID}`], 
+    async () => {return await api.getUserPosts(userID, 25)},
     {enabled: true}
     );
-    
-    // useEffect(() => { 
-    //     console.log("test");
-    //     console.log(data);
-    //     //refetch();
-    //     if (data) {
-    //         console.log("hihihi");
-    //         console.log(data);
-    //         setPosts(data.posts);
-    //     }
-    // }, []);   
 
     if (isLoading) {
         return (<h1>Retrieving posts...</h1>);

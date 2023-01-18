@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Comment(props) {
     const { commentData } = props;
     return (

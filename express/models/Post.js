@@ -41,9 +41,9 @@ module.exports = (sequelize, DataTypes, Model) => {
     };
 
     class Post extends Model {
-        static async findByUserId(user_id) {
-            const res = await sequelize.query(`SELECT * FROM posts WHERE user_id = ?`, { replacements: [user_id] });
-            return res[0][0];
+        static async findByUserId(user_id, limit) {
+            const res = await sequelize.query(`SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC LIMIT ?`, { replacements: [user_id, limit] });
+            return res[0];
         }
 
         //Return the last posts sorted by date (most recent date first)
