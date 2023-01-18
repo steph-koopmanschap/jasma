@@ -15,6 +15,15 @@ module.exports = (sequelize, DataTypes, Model) => {
                 key: "user_id"
             }
         },
+        username: {
+            type: DataTypes.STRING(25),
+            allowNull: false,
+            onDelete: "CASCADE",
+            references: {
+                model: "users",
+                key: "username"
+            }
+        },
         text_content: {
             type: DataTypes.STRING(40000)
         },
@@ -47,19 +56,16 @@ module.exports = (sequelize, DataTypes, Model) => {
             //randomLimit is beteen 1 and 50 (INT)
             const randomLimit = Math.floor(Math.random() * (50 - 1 + 1)) + 1;
             //Retrieve a list of userIDs from the database
-            const res = await sequelize.query(`SELECT user_id FROM users LIMIT ?`, { replacements: [randomLimit] });
-
-            // console.log("RES");
-            // console.log(res);
+            const res = await sequelize.query(`SELECT user_id, username FROM users LIMIT ?`, { replacements: [randomLimit] });
 
             //Pick a random userID from the database
-            const userID = res[0][Math.floor(Math.random() * (randomLimit - 1 + 1)) + 1].user_id;
-
-            console.log("@@@USERID@@@");
-            console.log(userID);
+            const randomUser = Math.floor(Math.random() * (randomLimit - 1 + 1)) + 1;
+            const userID = res[0][randomUser].user_id;
+            const username = res[0][randomUser].username;
 
             return {
                 user_id: userID,
+                username: username,
                 text_content: faker.lorem.paragraph(),
                 file_url: ``
             };

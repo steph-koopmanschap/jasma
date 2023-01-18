@@ -1,3 +1,5 @@
+const { faker } = require("@faker-js/faker");
+
 module.exports = (sequelize, DataTypes, Model) => {
     const columns = {
         hashtag: {
@@ -8,7 +10,14 @@ module.exports = (sequelize, DataTypes, Model) => {
 
     const options = { sequelize, tableName: "hashtags" };
 
-    class Hashtag extends Model {}
+    class Hashtag extends Model {
+        static generate() {
+
+            return {
+                hashtag: faker.random.word()
+            };
+        }
+    }
 
     Hashtag.init(columns, options);
 };

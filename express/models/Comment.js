@@ -14,6 +14,24 @@ module.exports = (sequelize, DataTypes, Model) => {
                 key: "post_id"
             }
         },
+        user_id: {
+            type: DataTypes.UUID,
+            allowNull: false,
+            onDelete: "CASCADE",
+            references: {
+                model: "users",
+                key: "user_id"
+            }
+        },
+        username: {
+            type: DataTypes.STRING(25),
+            allowNull: false,
+            onDelete: "CASCADE",
+            references: {
+                model: "users",
+                key: "username"
+            }
+        },
         comment_text: {
             type: DataTypes.STRING(10000)
         },
@@ -32,10 +50,34 @@ module.exports = (sequelize, DataTypes, Model) => {
 
     class Comment extends Model {
         static async getComments(post_id, limit) {
-            const res = await db.query(`SELECT * FROM comments WHERE post_id = ? LIMIT = ?`, {
+            const res = await db.query(`SELECT * FROM comments WHERE post_id = ? LIMIT ?`, {
                 replacements: [post_id, limit]
             });
             return res[0][0];
+        }
+
+        static async generate() {
+            //randomLimit is beteen 1 and 50 (INT)
+            const randomLimit = Math.floor(Math.random() * (50 - 1 + 1)) + 1;
+            //Retrieve a list of PostIDs from the database
+            const resPost = await sequelize.query(`SELECT post_id FROM posts LIMIT ?`, { replacements: [randomLimit] });
+            //Retrieve a list of Users from the database
+            const resUser = await sequelize.query(`SELECT user_id, username FROM users LIMIT ?`, { replacements: [randomLimit] });
+
+            //Pick a random post from the database
+            const random = Math.floor(Math.random() * (randomLimit - 1 + 1)) + 1;
+            const postID = resPost[0][random].post_id;
+            //Pick a random User from the database (owner of the comment)
+            const userID = resUser[0][random].user_id;
+            const username = resUser[0][random].username;
+
+            return {
+                post_id: postID,
+                user_id: userID,
+                username: username,
+                comment_text: faker.lorem.paragraph(),
+                file_url: ``
+            };
         }
     }
 
