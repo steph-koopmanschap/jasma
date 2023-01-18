@@ -1,3 +1,5 @@
+const { faker } = require("@faker-js/faker");
+
 module.exports = (sequelize, DataTypes, Model) => {
     const columns = {
         comment_id: {
@@ -57,15 +59,15 @@ module.exports = (sequelize, DataTypes, Model) => {
         }
 
         static async generate() {
-            //randomLimit is beteen 1 and 50 (INT)
-            const randomLimit = Math.floor(Math.random() * (50 - 1 + 1)) + 1;
+            //randomLimit is beteen 3 and 50 (INT)
+            const randomLimit = Math.floor(Math.random() * (50 - 3 + 1)) + 3;
             //Retrieve a list of PostIDs from the database
             const resPost = await sequelize.query(`SELECT post_id FROM posts LIMIT ?`, { replacements: [randomLimit] });
             //Retrieve a list of Users from the database
             const resUser = await sequelize.query(`SELECT user_id, username FROM users LIMIT ?`, { replacements: [randomLimit] });
 
             //Pick a random post from the database
-            const random = Math.floor(Math.random() * (randomLimit - 1 + 1)) + 1;
+            const random = (Math.floor(Math.random() * (randomLimit - 1 + 1)) + 1) - 1;
             const postID = resPost[0][random].post_id;
             //Pick a random User from the database (owner of the comment)
             const userID = resUser[0][random].user_id;

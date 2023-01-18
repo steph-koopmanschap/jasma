@@ -15,7 +15,7 @@ async function createUsers(n) {
 
 async function generateHashtags(n) {
     for (let i = 0; i < n; i++) {
-        await Hashtag.create(Hashtag.generate());
+        await Hashtag.create(await Hashtag.generate());
     }
 };
 
@@ -37,8 +37,12 @@ async function generateComments(n) {
     }
 };
 
-createUsers(100);
-generateHashtags(100);
-generatePosts(100);
-generatePostHashtags(100);
-generateComments(100);
+async function generateDb(n) {
+    await createUsers(n);
+    await generateHashtags(n);
+    await generatePosts(n);
+    await generatePostHashtags(n);
+    await generateComments(n);
+}
+
+generateDb(100);

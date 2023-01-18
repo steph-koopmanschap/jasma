@@ -14,11 +14,7 @@ export default function Post(props) {
                     width="40" 
                     height="40"
                 /> */}
-                <Link className="font-bold" href={`/user/${postData.user_id}`}>{postData.user_id}</Link>
-                {/* <p className="">{postData.user_id}</p> */}
-                
-                
-                {/* <p className="">{postData.username}</p> */}
+                <Link className="font-bold" href={`/user/${postData.username}`}>{postData.username}</Link>
                 <p className="text-xs mb-2">{postData.created_at}</p>
                 <p className="">{postData.text_content}</p>
                 {/* <p className="">{postData.hashtags}</p> */}

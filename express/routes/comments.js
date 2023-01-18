@@ -1,3 +1,11 @@
+
+/*
+
+DEPRECATED, BUT DO NOT DELETE!!! (YET)
+
+*/
+
+
 const express = require("express");
 const getComments = require("./../controllers/comment/getComments.js");
 const createComment = require("./../controllers/comment/createComment.js");
