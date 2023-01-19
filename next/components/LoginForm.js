@@ -109,6 +109,13 @@ export default function LoginForm() {
                         Log In
                     </button>
                 </div>
+
+                <a  
+                    className="flex flex-col items-center mt-4 hover:text-sky-500"
+                    href="#"
+                >
+                    Forgot password?
+                </a>
             </form>
         </div>
     );

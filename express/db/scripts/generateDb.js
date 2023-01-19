@@ -42,7 +42,7 @@ async function generateDb(n) {
     await generateHashtags(n);
     await generatePosts(n + 500);
     await generatePostHashtags(n);
-    await generateComments(n + 500000);
+    await generateComments(n + 50000);
 }
 
 generateDb(100);

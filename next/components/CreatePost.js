@@ -195,13 +195,6 @@ export default function CreatePost() {
                     type="submit"
                     value="Post" 
                 />
-
-                <a  
-                    className="flex flex-col items-center mt-4 hover:text-sky-500"
-                    href="#"
-                >
-                    Forgot password?
-                </a>
             </form>
         </div>
     );
