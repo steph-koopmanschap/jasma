@@ -53,13 +53,13 @@ module.exports = (sequelize, DataTypes, Model) => {
         }
 
         static async generate() {
-            //randomLimit is beteen 3 and 50 (INT)
-            const randomLimit = Math.floor(Math.random() * (50 - 3 + 1)) + 3;
-            //Retrieve a list of userIDs from the database
-            const res = await sequelize.query(`SELECT user_id, username FROM users LIMIT ?`, { replacements: [randomLimit] });
+            //Retrieve a list of UserIDs from the database
+            const res = await sequelize.query(`SELECT user_id, username FROM users`);
+
+            const numberOfUsers = res[0].length;
 
             //Pick a random userID from the database
-            const randomUser = (Math.floor(Math.random() * (randomLimit - 1 + 1)) + 1) - 1;
+            const randomUser = (Math.floor(Math.random() * (numberOfUsers - 3 + 1)) + 3) - 1;
 
             const userID = res[0][randomUser].user_id;
             const username = res[0][randomUser].username;

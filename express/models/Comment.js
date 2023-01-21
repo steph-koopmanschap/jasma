@@ -59,19 +59,21 @@ module.exports = (sequelize, DataTypes, Model) => {
         }
 
         static async generate() {
-            //randomLimit is beteen 3 and 50 (INT)
-            const randomLimit = Math.floor(Math.random() * (50 - 3 + 1)) + 3;
             //Retrieve a list of PostIDs from the database
-            const resPost = await sequelize.query(`SELECT post_id FROM posts LIMIT ?`, { replacements: [randomLimit] });
+            const resPosts = await sequelize.query(`SELECT post_id FROM posts`);
             //Retrieve a list of Users from the database
-            const resUser = await sequelize.query(`SELECT user_id, username FROM users LIMIT ?`, { replacements: [randomLimit] });
+            const resUsers = await sequelize.query(`SELECT user_id, username FROM users`);
+
+            const numberOfPosts = resPosts[0].length;
+            const numberOfUsers = resUsers[0].length;
 
             //Pick a random post from the database
-            const random = (Math.floor(Math.random() * (randomLimit - 1 + 1)) + 1) - 1;
-            const postID = resPost[0][random].post_id;
+            const randomPostIndex = (Math.floor(Math.random() * (numberOfPosts - 2 + 1)) + 2) - 1;
+            const postID = resPosts[0][randomPostIndex].post_id;
              //Pick a random user from the database (comment owner)
-            const userID = resUser[0][random].user_id;
-            const username = resUser[0][random].username;
+            const randomUserIndex = (Math.floor(Math.random() * (numberOfUsers - 2 + 1)) + 2) - 1;
+            const userID = resUsers[0][randomUserIndex].user_id;
+            const username = resUsers[0][randomUserIndex].username;
 
             return {
                 post_id: postID,

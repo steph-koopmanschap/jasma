@@ -40,9 +40,9 @@ async function generateComments(n) {
 async function generateDb(n) {
     await createUsers(n);
     await generateHashtags(n);
-    await generatePosts(n + 500);
+    await generatePosts(n);
     await generatePostHashtags(n);
-    await generateComments(n + 50000);
+    await generateComments(n);
 }
 
-generateDb(100);
+generateDb(10);

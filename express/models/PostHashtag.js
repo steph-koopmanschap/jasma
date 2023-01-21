@@ -22,18 +22,20 @@ module.exports = (sequelize, DataTypes, Model) => {
 
     class PostHashtag extends Model {
         static async generate() {
-            //randomLimit is beteen 3 and 50 (INT)
-            const randomLimit = Math.floor(Math.random() * (50 - 3 + 1)) + 3;
             //Retrieve a list of PostIDs from the database
-            const resPost = await sequelize.query(`SELECT post_id FROM posts LIMIT ?`, { replacements: [randomLimit] });
+            const resPosts = await sequelize.query(`SELECT post_id FROM posts`);
             //Retrieve a list of Hashtags from the database
-            const resHashtag = await sequelize.query(`SELECT hashtag FROM hashtags LIMIT ?`, { replacements: [randomLimit] });
+            const resHashtags = await sequelize.query(`SELECT hashtag FROM hashtags`);
+
+            const numberOfPosts = resPosts[0].length;
+            const numberOfHashtags = resHashtags[0].length;
 
             //Pick a random post from the database
-            const random = (Math.floor(Math.random() * (randomLimit - 1 + 1)) + 1) - 1;
-            const postID = resPost[0][random].post_id;
+            const randomPostIndex = (Math.floor(Math.random() * (numberOfPosts - 2 + 1)) + 2) - 1;
+            const postID = resPosts[0][randomPostIndex].post_id;
             //Pick a random hashtag from the database
-            const hashtag = resHashtag[0][random].hashtag;
+            const randomHashtagIndex = (Math.floor(Math.random() * (numberOfHashtags - 2 + 1)) + 2) - 1;
+            const hashtag = resHashtags[0][randomHashtagIndex].hashtag;
 
             //Check if the hashtag a
 
