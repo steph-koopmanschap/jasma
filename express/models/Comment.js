@@ -55,7 +55,11 @@ module.exports = (sequelize, DataTypes, Model) => {
             const res = await sequelize.query(`SELECT * FROM comments WHERE post_id = ? LIMIT ?`, {
                 replacements: [post_id, limit]
             });
-            return res[0];
+            const resCount = await sequelize.query(`SELECT COUNT(*) FROM comments WHERE post_id = ?`, {
+                replacements: [post_id]
+            });
+
+            return { comments: res[0], commentCount: resCount[0][0].count };
         }
 
         static async generate() {

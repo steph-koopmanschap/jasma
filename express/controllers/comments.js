@@ -3,13 +3,13 @@ const { Comment } = db.models;
 
 async function getComments(req, res) {
     const { post_id, limit } = req.query;
-    const comments = await Comment.getComments(post_id, limit);
+    const commentData = await Comment.getComments(post_id, limit);
 
-    if (comments.length === 0) {
+    if (commentData.comments.length === 0) {
         return res.json({ success: false, message: "No comments" });
     }
 
-    return res.json({ success: true, comments: comments });
+    return res.json({ success: true, comments: commentData.comments, commentCount:  commentData.commentCount });
 }
 
 module.exports = {

@@ -33,6 +33,7 @@ export default function CommentList(props) {
 
     return ( 
         <div>
+            <p>Comments: {data.commentCount}</p>
             {data.comments.map((comment) => (
                 <Comment
                     key={comment.comment_id}
