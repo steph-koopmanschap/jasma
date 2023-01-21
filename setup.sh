@@ -26,19 +26,33 @@ sudo ln -s /etc/nginx/sites-available/jasma.conf /etc/nginx/sites-enabled/jasma.
 sudo systemctl restart nginx
 
 echo "Prepare .env files..."
-sudo cp /next/.env.example /next/.env.production
-sudo cp /express/.env.example /express/.env
+sudo cp next/.env.example next/.env.production
+sudo cp express/.env.example express/.env
 
-echo "Install node modules..."
+echo "Installing node modules..."
 sudo npm run installAll
 
 echo "Build NextJS..."
 cd next
 sudo npm run build
 
-# Remove NextJS telemetry data collection
+echo "Disabling NextJS telemetry data collection"
 npx next telemetry disable
 cd ..
+
+echo "Changing PSQL postgres root user password to 'example' (change this manually later)"
+echo "The postgres root user password needs to be same as in /express/.env"
+echo "Use the following command to change the password: "
+#echo "sudo -u postgres psql --echo-queries -c \"ALTER ROLE postgres WITH LOGIN PASSWORD 'example';\""
+sudo -u postgres psql --echo-queries -c "ALTER ROLE postgres WITH LOGIN PASSWORD 'example';"
+
+echo "Creating the database..."
+sudo npm run db:init
+sudo npm db:resetTables
+
+echo "Set up complete."
+echo "View DOCS.md for documentation and more technical info."
+echo "Please check the /express/.env and /next/.env.production files for the correct environment variables."
 
 #--DEPRECATED--
 # Set file permissions 
@@ -49,6 +63,3 @@ cd ..
 # Create database
 #./server/db/init_db.sh
 #--DEPRECATED--
-
-echo "Set up complete."
-echo "View DOCS.md for documentation and more technical info."
