@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { formatDistance } from 'date-fns'
 
 export default function Comment(props) {
     const { commentData } = props;
     return (
-        <div className="p-2 m-2 bg-gray-600">
+        <div className="p-2 m-2 bg-gray-800">
             {/* <img 
                 src={props.commentData.profilepic} 
                 className="rounded-t-full"
@@ -13,7 +14,7 @@ export default function Comment(props) {
             /> */}
             <Link className="font-bold" href={`/user/${commentData.username}`}>{commentData.username}</Link>
 
-            <p className="">{commentData.comment_text}</p>
+            <p className="mb-2">{commentData.comment_text}</p>
             {/* <img 
                 src={props.commentData.fileContent} 
                 className="object-scale-down"
@@ -22,6 +23,7 @@ export default function Comment(props) {
                 height="999"
             /> */}
             <p className="text-xs">{commentData.created_at}</p>
+            <p className="text-xs">{formatDistance(new Date(commentData.created_at), new Date())} a go.</p>
         </div>
     );
 }

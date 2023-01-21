@@ -24,16 +24,13 @@ export default function CommentList(props) {
         return (<h1>{error}</h1>);
     }
 
-    console.log("data");
-    console.log(data);
-
     if (data.success === false) {
         return (<h1>{data.message}</h1>)
     }
 
     return ( 
         <div>
-            <p>Comments: {data.commentCount}</p>
+            <p className="text-black">Comments: {data.commentCount}</p>
             {data.comments.map((comment) => (
                 <Comment
                     key={comment.comment_id}

@@ -18,9 +18,8 @@ export default function CreateComment() {
 
     const handleChange = (e) => {
         //get the text content
-        if (e.target.name === "text") 
+        if (e.target.name === "comment_text") 
         {
-            console.log(e.target.name);
             setTextInput(e.target.value);
             setCommentData({
                 ...commentData,
@@ -30,10 +29,7 @@ export default function CreateComment() {
     }
 
     return (
-        <div className="flex flex-col min-w-fit bg-gray-600 shadow-md w-1/5 mx-auto px-8 pt-6 pb-8 mb-4">
-            <p className="text-xl text-center">
-                Add comment
-            </p>
+        <div className="flex flex-col min-w-fit bg-gray-600 shadow-md w-1/5 mx-auto px-1 pt-1 pb-1 mb-1">
             <form 
                 id="createComment" 
                 className="flex flex-col mx-auto text-center justify-center rounded" 
@@ -41,18 +37,19 @@ export default function CreateComment() {
                 onSubmit={createComment}>
 
                 <textarea 
-                    className="my-2 p-1 mx-2"
+                    className="my-1 p-1 mx-1"
                     id="newPostText"
                     aria-label="Add a comment on a post"
                     type="textarea"
                     spellCheck="true"
-                    name="text"
+                    placeholder="Add comment..."
+                    name="comment_text"
                     value={textInput}
                     onChange={handleChange} 
                 />
 
                 <input 
-                    className="formButtonDefault py-2 px-2 m-2 outline-white border "
+                    className="formButtonDefault py-1 px-1 m-1 outline-white border "
                     type="submit"
                     value="Submit comment" 
                 />
