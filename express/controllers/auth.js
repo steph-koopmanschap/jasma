@@ -44,6 +44,7 @@ async function login(req, res) {
     );
 
     req.session.user_id = user.user_id;
+    req.session.username = user.username;
     res.json({ success: true, user, message: "user logged in." });
 }
 

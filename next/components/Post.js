@@ -31,7 +31,9 @@ export default function Post(props) {
             </div>
 
             <div className="p-2">
-                <CreateComment />
+                <CreateComment
+                    postID={postData.post_id}
+                />
             </div>
                 
             

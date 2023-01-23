@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Link from 'next/link';
-import {register} from '../clientAPI/api.js';
+import api from "../clientAPI/api.js";
 
 export default function SignUpForm() {
     //Values of all the input boxes
@@ -21,7 +21,7 @@ export default function SignUpForm() {
     //Registration action (OnSubmit form)
     const signup = async (e) => {
         e.preventDefault();
-        const res = await register(registrationState.userNameInput, registrationState.emailInput, registrationState.passwordInput);
+        const res = await api.register(registrationState.userNameInput, registrationState.emailInput, registrationState.passwordInput);
         if (res.success === true ) {
             console.log(res.message);
             //alert(res.message);

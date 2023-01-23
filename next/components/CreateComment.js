@@ -1,19 +1,27 @@
 import React, { useState } from 'react';
+import api from "../clientAPI/api.js";
 
-export default function CreateComment() {
+export default function CreateComment(props) {
+
+    const { postID } = props;
+
     const [commentData, setCommentData] = useState({
         comment_text: "",
         file: null
     });
 
-    const [textInput, setTextInput] = useState("");
-    const [filePreview, setFilePreview] = useState();
+    const [response, setResponse] = useState();
 
-    const createComment = (e) => {
+    const [textInput, setTextInput] = useState("");
+    const [filePreview, setFilePreview] = useState(null);
+
+    const createComment = async (e) => {
         //prevent page from refreshing
         e.preventDefault();
 
-        console.log(commentData);
+        //TODO: Send file too.
+        const createdComment = await api.createComment(postID, commentData.comment_text, "");
+        console.log(createdComment);
     }
 
     const handleChange = (e) => {
@@ -53,6 +61,8 @@ export default function CreateComment() {
                     type="submit"
                     value="Submit comment" 
                 />
+
+                {(response?.status) ? null : (<p>{response?.message}</p>)}
             </form>
         </div>
     );
