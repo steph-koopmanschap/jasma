@@ -2,6 +2,7 @@
 import React, {useState} from 'react';
 import hashtagFormatter from "../utils/hashtagFormatter.js";
 import checkFileTooLarge from "../utils/checkFileTooLarge.js";
+import api from "../clientAPI/api.js";
 
 export default function CreatePost() {
 
@@ -23,14 +24,14 @@ export default function CreatePost() {
     //based on MIME type. E.G. Audio, Img, Video
     let _filePreviewJSX = (<React.Fragment></React.Fragment>);
 
-    const createPost = (e) => {
+    const createPost = async (e) => {
         //prevent page from refreshing
         e.preventDefault();
-        // setPostData({
-        //     ...postData,
-        //     [text]: hashtagsArray,
-        //     [hashtags]: 
-        // });
+
+        //TODO: Add file
+        const createdPost = await api.createPost(postData.text, postData.hashtags, "");
+        
+        console.log(createdPost);
         console.log(postData);
     }
 

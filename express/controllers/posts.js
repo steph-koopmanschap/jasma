@@ -1,5 +1,37 @@
 const db = require("../db/connections/jasmaAdmin");
-const { Post } = db.models;
+const { Post, Hashtag, PostHashtag } = db.models;
+
+async function createPost(req, res) {
+    const { text_content, hashtags, file } = req.body;
+    const { user_id, username } = req.session;
+
+    console.log(hashtags);
+
+    if (!user_id) {
+        return res.json({ success: false, message: "You are not logged in. Login to post." });
+    }
+
+    const t = await db.transaction();
+    try {
+        await Post.create({ user_id: user_id, username: username, text_content: text_content, file_url: "" });
+        for (let i = 0; i < hashtags.length; i++)
+        {
+            //Check if the hashtag already exists.
+            const resHashtag = await db.query(`SELECT hashtag FROM hashtags WHERE hashtag = ?`, { replacements: [hashtags[i]] });
+            //Hashtag does not exist.
+            if (resHashtag[0].length === 0) {
+                await Hashtag.create( {hashtag: hashtags[i]} );    
+            }
+            await PostHashtag.create({hashtag: hashtags[i], post_id: ""});
+        }
+    } catch (err) {
+        await t.rollback();
+        return res.json({ success: false, message: err.message });
+    }
+
+    //TODO Also return created post
+    return res.json({ success: true });
+}
 
 async function getUserPosts(req, res) {
     const { user_id, limit } = req.query;
@@ -16,6 +48,7 @@ async function getLatestPosts(req, res) {
 }
 
 module.exports = {
+    createPost,
     getUserPosts,
     getLatestPosts
 };

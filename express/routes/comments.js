@@ -13,7 +13,7 @@ const deleteComment = require("./../controllers/comment/deleteComment.js");
 
 // Create the post router
 // The base URL for this router is URL:PORT/api/post/
-const commentRouter = express.Router();
+//const commentRouter = express.Router();
 
 //Retrieve a number of commments from a post
 //Example url
@@ -60,4 +60,4 @@ commentRouter.delete("/deletecomment/:commentid", async (req, res, next) => {
     }
 });
 
-module.exports = commentRouter;
+//module.exports = commentRouter;

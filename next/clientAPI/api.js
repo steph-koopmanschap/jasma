@@ -50,8 +50,12 @@ class Api {
         return response.data;
     }
 
-    async createPost() {
-        const response = await this.api.post("/api/posts/createPost");
+    async createPost(text_content, hashtags, file) {
+        const response = await this.api.post("/api/posts/createPost", {
+            text_content: text_content,
+            hashtags: hashtags,
+            file: file
+        });
         return response.data;
     }
 
