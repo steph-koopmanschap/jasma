@@ -1,17 +1,12 @@
 import Link from "next/link";
-import { formatDistance } from 'date-fns'
+import { formatDistance } from 'date-fns';
+import ProfilePic from "./ProfilePic";
 
 export default function Comment(props) {
     const { commentData } = props;
     return (
         <div className="p-2 m-2 bg-gray-800">
-            {/* <img 
-                src={props.commentData.profilepic} 
-                className="rounded-t-full"
-                alt="Profile pic"
-                width="32" 
-                height="32"
-            /> */}
+            <ProfilePic userID={commentData.user_id} width={32} height={32} />
             <Link className="font-bold" href={`/user/${commentData.username}`}>{commentData.username}</Link>
 
             <p className="mb-2">{commentData.comment_text}</p>

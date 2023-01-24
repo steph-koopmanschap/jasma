@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { formatDistance } from 'date-fns'
+import { formatDistance } from 'date-fns';
 import CreateComment from "./CreateComment";
 import CommentList from "./CommentList";
+import ProfilePic from "./ProfilePic";
 
 export default function Post(props) {
     const { postData } = props;
@@ -9,13 +10,7 @@ export default function Post(props) {
     return (
         <div className="mx-auto w-1/5 bg-gray-400 p-2 m-4">
             <div className="p-2 m-2 bg-gray-600">
-                {/* <img 
-                    src={props.profilepic} 
-                    className="rounded-t-full"
-                    alt="Profile pic"
-                    width="40" 
-                    height="40"
-                /> */}
+                <ProfilePic userID={postData.user_id} width={32} height={32} />
                 <Link className="font-bold" href={`/user/${postData.username}`}>{postData.username}</Link>
                 <p className="text-xs">{postData.created_at}</p>
                 <p className="text-xs mb-2 inline-block">{formatDistance(new Date(postData.created_at), new Date())} a go.</p>

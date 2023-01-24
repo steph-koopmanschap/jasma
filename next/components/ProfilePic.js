@@ -5,6 +5,8 @@ import api from "../clientAPI/api.js";
 
 export default function ProfilePic(props) {
 
+    //rounded-t-full (css)
+
     const {userID} = props;
 
     //Fetch profile pic from server
@@ -24,7 +26,7 @@ export default function ProfilePic(props) {
     return (
         <React.Fragment>
             <Image 
-                className="m-2"
+                className=" m-2"
                 src={profilePicSrc || "/"}
                 width={props.width}
                 height={props.height}
