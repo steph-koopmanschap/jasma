@@ -13,7 +13,7 @@ export default function Search() {
     const router = useRouter();
     const { q } = router.query;
 
-    const [filter, setFilter] = useState("hashtags");
+    const [filter, setFilter] = useState("posts");
 
     const { status, isLoading, isError, data, error, refetch } = useQuery([`search_key=${q}&filter=${filter}`], 
     async () => {return await api.search(q, filter)},
