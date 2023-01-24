@@ -4,10 +4,6 @@ const { Comment } = db.models;
 async function createComment(req, res) {
     const { post_id, comment_text, file } = req.body;
     const { user_id, username } = req.session;
-
-    if (!user_id) {
-        return res.json({ success: false, message: "You are not logged in. Login to comment." });
-    }
     
     try {
         const createdComment = await Comment.create({ post_id: post_id, user_id: user_id, username: username, comment_text: comment_text, file_url: "" });

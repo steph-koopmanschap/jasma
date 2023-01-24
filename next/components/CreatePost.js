@@ -192,7 +192,7 @@ export default function CreatePost() {
                 </div>
                 
                 <input 
-                    className="formButtonDefault py-2 px-2 m-2 outline-white border "
+                    className="formButtonDefault py-2 px-2 m-2 outline-white border"
                     type="submit"
                     value="Post" 
                 />

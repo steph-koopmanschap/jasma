@@ -22,6 +22,7 @@ export default function CreateComment(props) {
         //TODO: Send file too.
         const createdComment = await api.createComment(postID, commentData.comment_text, "");
         console.log(createdComment);
+        setTextInput("");
     }
 
     const handleChange = (e) => {

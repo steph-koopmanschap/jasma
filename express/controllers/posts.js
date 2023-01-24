@@ -7,13 +7,11 @@ async function createPost(req, res) {
 
     console.log(hashtags);
 
-    if (!user_id) {
-        return res.json({ success: false, message: "You are not logged in. Login to post." });
-    }
-
     const t = await db.transaction();
     try {
-        await Post.create({ user_id: user_id, username: username, text_content: text_content, file_url: "" });
+        const createdPost = await Post.create({ user_id: user_id, username: username, text_content: text_content, file_url: "" });
+        console.log("createdPost");
+        console.log(createdPost);
         for (let i = 0; i < hashtags.length; i++)
         {
             //Check if the hashtag already exists.
