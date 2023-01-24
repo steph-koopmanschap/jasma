@@ -27,12 +27,15 @@ export default function CreatePost() {
     const createPost = async (e) => {
         //prevent page from refreshing
         e.preventDefault();
-
         //TODO: Add file
         const createdPost = await api.createPost(postData.text, postData.hashtags, "");
         
+        setTextInput("");
+        setHashtagInput("");
+        setHashtagPreview("");
+        setFilePreview(null);
+        
         console.log(createdPost);
-        console.log(postData);
     }
 
     const handleChange = (e) => {

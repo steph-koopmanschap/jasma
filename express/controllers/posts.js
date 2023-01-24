@@ -5,13 +5,10 @@ async function createPost(req, res) {
     const { text_content, hashtags, file } = req.body;
     const { user_id, username } = req.session;
 
-    console.log(hashtags);
-
     const t = await db.transaction();
     try {
         const createdPost = await Post.create({ user_id: user_id, username: username, text_content: text_content, file_url: "" });
-        console.log("createdPost");
-        console.log(createdPost);
+        const post_id = createdPost.dataValues.post_id;
         for (let i = 0; i < hashtags.length; i++)
         {
             //Check if the hashtag already exists.
@@ -20,7 +17,7 @@ async function createPost(req, res) {
             if (resHashtag[0].length === 0) {
                 await Hashtag.create( {hashtag: hashtags[i]} );    
             }
-            await PostHashtag.create({hashtag: hashtags[i], post_id: ""});
+            await PostHashtag.create({hashtag: hashtags[i], post_id: post_id});
         }
     } catch (err) {
         await t.rollback();
