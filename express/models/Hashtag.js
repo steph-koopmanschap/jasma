@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes, Model) => {
             while (hashtagAlreadyExists === true)
             {
                 //create random hashtag
-                hashtag = faker.random.word();
+                hashtag = faker.random.word().toLowerCase();
                 //Check if the hashtag exists in the database
                 const res = await sequelize.query(`SELECT hashtag FROM hashtags WHERE hashtag = ?`, { replacements: [hashtag] });
                 //Hashtag does not exist

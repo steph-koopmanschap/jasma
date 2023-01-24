@@ -10,7 +10,10 @@ export default function UserPostList(props) {
 
     const { status, isLoading, isError, data, error, refetch } = useQuery([`userPosts_${userID}`], 
     async () => {return await api.getUserPosts(userID, 25)},
-    {enabled: true}
+    {   
+        enabled: true,
+        refetchOnWindowFocus: false
+    }
     );
 
     if (isLoading) {

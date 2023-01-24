@@ -4,10 +4,16 @@ import { useQuery } from 'react-query';
 import api from "../clientAPI/api.js";
 
 export default function ProfilePic(props) {
+
+    const {userID} = props;
+
     //Fetch profile pic from server
-    const { status, isLoading, isError, data, error, refetch } = useQuery(["userProfilePic"], 
-    async () => {return await api.getProfilePic(props.userid)},
-    {enabled: true}
+    const { status, isLoading, isError, data, error, refetch } = useQuery([`profilePic_${userID}`], 
+    async () => {return await api.getProfilePic(userID)},
+    {   
+        enabled: true,
+        refetchOnWindowFocus: false
+    }
     );
     let profilePicSrc = "/";
     if (data) {

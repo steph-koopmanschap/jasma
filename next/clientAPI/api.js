@@ -82,6 +82,11 @@ class Api {
         const response = await this.api.get(`/api/comments/getComments?post_id=${post_id}&limit=${limit}`);
         return response.data;
     }
+
+    async search(keyword, filter) {
+        const response = await this.api.get(`/api/search/search?q=${keyword}&filter=${filter}`);
+        return response.data;
+    }
 }
 
 const jasmaApi = new Api();

@@ -9,7 +9,10 @@ export default function NewsFeed() {
 
     const { status, isLoading, isError, data, error, refetch } = useQuery(["newsFeed"], 
     async () => {return await api.getLatestPosts(25)},
-    {enabled: true}
+    {   
+        enabled: true,
+        refetchOnWindowFocus: false
+    }
     );
     
     // useEffect(() => { 
