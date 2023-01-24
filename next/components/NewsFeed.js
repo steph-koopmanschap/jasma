@@ -7,10 +7,18 @@ export default function NewsFeed() {
 
     const [posts, setPosts] = useState([]);
 
-    const { status, isLoading, isError, data, error, refetch } = useQuery(["latestPosts"], 
+    const { status, isLoading, isError, data, error, refetch } = useQuery(["newsFeed"], 
     async () => {return await api.getLatestPosts(25)},
-    {enabled: true}
+    {   
+        enabled: true,
+        refetchOnWindowFocus: false
+    }
     );
+
+    //Refresh newsfeed without reloading the page????
+    const refresh = () => {
+        refetch();
+    }
     
     // useEffect(() => { 
     //     console.log("test");
@@ -33,6 +41,7 @@ export default function NewsFeed() {
 
     return ( 
         <div>
+            <button className='formButtonDefault py-2 px-2 m-2 outline-white border flex mx-auto' onClick={refresh}>Refresh</button>
             {data.posts.map((post) => (
                 <Post
                     key={post.post_id}

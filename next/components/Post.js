@@ -1,25 +1,19 @@
 import Link from "next/link";
+import { formatDistance } from 'date-fns';
 import CreateComment from "./CreateComment";
 import CommentList from "./CommentList";
+import ProfilePic from "./ProfilePic";
 
 export default function Post(props) {
     const { postData } = props;
+
     return (
-        <div>
+        <div className="mx-auto w-1/5 bg-gray-400 p-2 m-4">
             <div className="p-2 m-2 bg-gray-600">
-                {/* <img 
-                    src={props.profilepic} 
-                    className="rounded-t-full"
-                    alt="Profile pic"
-                    width="40" 
-                    height="40"
-                /> */}
-                <Link className="font-bold" href={`/user/${postData.user_id}`}>{postData.user_id}</Link>
-                {/* <p className="">{postData.user_id}</p> */}
-                
-                
-                {/* <p className="">{postData.username}</p> */}
-                <p className="text-xs mb-2">{postData.created_at}</p>
+                <ProfilePic userID={postData.user_id} width={32} height={32} />
+                <Link className="font-bold" href={`/user/${postData.username}`}>{postData.username}</Link>
+                <p className="text-xs">{postData.created_at}</p>
+                <p className="text-xs mb-2 inline-block">{formatDistance(new Date(postData.created_at), new Date())} a go.</p>
                 <p className="">{postData.text_content}</p>
                 {/* <p className="">{postData.hashtags}</p> */}
                 {/* <img 
@@ -29,17 +23,20 @@ export default function Post(props) {
                     width="999" 
                     height="999"
                 /> */}
-        </div>
+            </div>
 
-        <div className="p-2">
-            <CreateComment />
-        </div>
+            <div className="p-2">
+                <CreateComment
+                    postID={postData.post_id}
+                />
+            </div>
+                
             
-        {/* 
-        <div>
-            <CommentList /> 
-        </div>
-        */}
+            <div className="p-2">
+                <CommentList
+                    postID={postData.post_id} 
+                /> 
+            </div>
         </div>
     );
 }

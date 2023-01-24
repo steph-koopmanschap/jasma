@@ -30,6 +30,16 @@ class Api {
         return response.data;
     }
 
+    //Check if a user is authenticated (logged in)
+    async checkAuth(req) {
+        const response = await fetch(`${baseURL}/api/auth/checkAuth`, {
+            method: "POST",
+            headers: req.headers
+        });
+        const data = await response.json();
+        return data;
+    }
+
     async logout() {
         const response = await this.api.post("/api/auth/logout");
         return response.data;
@@ -40,19 +50,42 @@ class Api {
         return response.data;
     }
 
+    async createPost(text_content, hashtags, file) {
+        const response = await this.api.post("/api/posts/createPost", {
+            text_content: text_content,
+            hashtags: hashtags,
+            file: file
+        });
+        return response.data;
+    }
+
+    async getUserPosts(user_id, limit) {
+        const response = await this.api.get(`/api/posts/getUserPosts?user_id=${user_id}&limit=${limit}`);
+        return response.data;
+    }
+
     async getLatestPosts(limit) {
         const response = await this.api.get(`/api/posts/getLatestPosts?limit=${limit}`);
         return response.data;
     }
 
-    //Check if a user is authenticated (logged in)
-    async checkAuth(req) {
-        const response = await fetch(`${baseURL}/api/auth/checkAuth`, {
-            method: "POST",
-            headers: req.headers
+    async createComment(post_id, comment_text, file) {
+        const response = await this.api.post(`/api/comments/createComment`, {
+            post_id: post_id,
+            comment_text: comment_text,
+            file: file
         });
-        const data = await response.json();
-        return data;
+        return response.data;
+    }
+
+    async getComments(post_id, limit) {
+        const response = await this.api.get(`/api/comments/getComments?post_id=${post_id}&limit=${limit}`);
+        return response.data;
+    }
+
+    async search(keyword, filter) {
+        const response = await this.api.get(`/api/search/search?q=${keyword}&filter=${filter}`);
+        return response.data;
     }
 }
 

@@ -2,6 +2,7 @@
 import React, {useState} from 'react';
 import hashtagFormatter from "../utils/hashtagFormatter.js";
 import checkFileTooLarge from "../utils/checkFileTooLarge.js";
+import api from "../clientAPI/api.js";
 
 export default function CreatePost() {
 
@@ -23,15 +24,18 @@ export default function CreatePost() {
     //based on MIME type. E.G. Audio, Img, Video
     let _filePreviewJSX = (<React.Fragment></React.Fragment>);
 
-    const createPost = (e) => {
+    const createPost = async (e) => {
         //prevent page from refreshing
         e.preventDefault();
-        // setPostData({
-        //     ...postData,
-        //     [text]: hashtagsArray,
-        //     [hashtags]: 
-        // });
-        console.log(postData);
+        //TODO: Add file
+        const createdPost = await api.createPost(postData.text, postData.hashtags, "");
+        
+        setTextInput("");
+        setHashtagInput("");
+        setHashtagPreview("");
+        setFilePreview(null);
+        
+        console.log(createdPost);
     }
 
     const handleChange = (e) => {
@@ -191,17 +195,10 @@ export default function CreatePost() {
                 </div>
                 
                 <input 
-                    className="formButtonDefault py-2 px-2 m-2 outline-white border "
+                    className="formButtonDefault py-2 px-2 m-2 outline-white border"
                     type="submit"
                     value="Post" 
                 />
-
-                <a  
-                    className="flex flex-col items-center mt-4 hover:text-sky-500"
-                    href="#"
-                >
-                    Forgot password?
-                </a>
             </form>
         </div>
     );

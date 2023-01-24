@@ -19,4 +19,4 @@ Filling out this anonymous survey will help us a lot to improve JASMA.
 
 ## Documentation
 
-See [DOCS.md](https://github.com/steph-koopmanschap/jasma/blob/main/DOCS.MD)
+See [DOCS.md](https://github.com/steph-koopmanschap/jasma/blob/main/DOCS.md)

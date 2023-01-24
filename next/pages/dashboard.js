@@ -28,6 +28,9 @@ export default function Dashboard(props) {
     const queryClient = useQueryClient();
     const [userCredentials, setUserCredentials] = useState(queryClient.getQueryData("userCredentials")?.user);
 
+    console.log("Dashboard props");
+    console.log(props);
+
     // useEffect(() => {
 
     // }, [userCredentials]);

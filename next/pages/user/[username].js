@@ -4,6 +4,7 @@ import CreatePost from '../../components/CreatePost';
 import HeaderMain from '../../components/HeaderMain';
 import ProfilePic from '../../components/ProfilePic';
 import LogInOutBtn from '../../components/LogInOutBtn';
+import UserPostList from '../../components/UserPostList';
 
 //The (public?) profile page of a user
 export default function ProfilePage() {
@@ -33,7 +34,9 @@ export default function ProfilePage() {
                 <p>Settings</p>
                 <h3>username:</h3>
                 <h3>{username}</h3>
-                <CreatePost/>
+                <CreatePost />
+
+                <UserPostList userID={"922f5d99-1ec7-418d-a2e0-005f4ab8ed4d"} />
             </main>
 
         </div>
