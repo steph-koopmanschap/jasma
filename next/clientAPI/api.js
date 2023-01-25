@@ -1,6 +1,21 @@
 import axios from "axios";
 import fetch from "node-fetch";
 
+function createMultipartData(data, file) {
+    const formData = new FormData();
+
+    for (const key in data) {
+        const value = data[key];
+        formData.append(key, value);
+    }
+
+    if (file) {
+        formData.append("file", file);
+    }
+
+    return formData;
+}
+
 const baseURL = `http://${process.env.NEXT_PUBLIC_API_SERVER_URL}:${process.env.NEXT_PUBLIC_API_SERVER_PORT}`;
 
 class Api {
@@ -50,13 +65,12 @@ class Api {
         return response.data;
     }
 
-    async createPost(text_content, hashtags, file) {
-        const response = await this.api.post("/api/posts/createPost", {
-            text_content: text_content,
-            hashtags: hashtags,
-            file: file
+    async createPost(postData, file) {
+        const multipartData = createMultipartData(postData, file);
+        const response = await this.api.post("api/posts/createPost", multipartData, {
+            headers: { "content-type": "multipart/form-data" }
         });
-        return response.data;
+        console.log(response.data);
     }
 
     async getUserPosts(user_id, limit) {
