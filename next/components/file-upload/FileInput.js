@@ -29,6 +29,11 @@ const FileInput = ({ file, setFile, accept }) => {
 
     const dismiss = () => toast.dismiss(toastId.current);
 
+    const handleChooseFileClick = (e) => {
+        e.preventDefault();
+        inputRef.current.click();
+    };
+
     const handleFile = (e) => {
         const eventFile = e.target.files[0];
         if (!eventFile) {
@@ -61,7 +66,7 @@ const FileInput = ({ file, setFile, accept }) => {
                         fontSize: "16px",
                         marginRight: "5px"
                     }}
-                    onClick={() => inputRef.current.click()}
+                    onClick={handleChooseFileClick}
                 >
                     Choose File
                 </button>
