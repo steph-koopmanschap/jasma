@@ -1,24 +1,16 @@
 const db = require("../db/connections/jasmaAdmin");
-const { User, Post, Comment, PostHashtag } = db.models;
 
 async function searchHashtags(keyword) {
     keyword = `%${keyword}%`;
-    console.log("keyword:");
-    console.log(keyword);
-    // I DONT KNOW WHY THIS DOESNT WORK!!
-    /*
-        jasma/express/node_modules/sequelize/lib/utils/sql.js:150
-        throw new Error(`Positional replacement (?) ${replacementIndex} has no entry in the replacement map (replacements[${replacementIndex}] is undefined).`);
-        Error: Positional replacement (?) 0 has no entry in the replacement map (replacements[0] is undefined).
-    */
+
     const resHashtags = await db.query(`SELECT * FROM posts_hashtags WHERE LOWER(hashtag) LIKE ?`, { replacements: [keyword] });
     const posts = [];
 
     //Retrieve posts accociated with each hashtag
     for (let i = 0; i < resHashtags[0].length; i++)
     {
-        const user_id = resHashtags[0][i].user_id;
-        const resPost = await db.query(`SELECT * FROM posts WHERE user_id = ?`, { replacements: [user_id] });
+        const user_id = resHashtags[0][i].post_id;
+        const resPost = await db.query(`SELECT * FROM posts WHERE post_id = ?`, { replacements: [user_id] });
         posts.push(resPost[0][0]);
     }
 
