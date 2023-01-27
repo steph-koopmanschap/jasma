@@ -72,7 +72,7 @@ class Api {
         const response = await this.api.post("api/posts/createPost", multipartData, {
             headers: { "content-type": "multipart/form-data" }
         });
-        console.log("multipart response", response.data);
+        console.log("multipart response(post)", response.data);
     }
 
     async getUserPosts(user_id, limit) {
@@ -85,12 +85,13 @@ class Api {
         return response.data;
     }
 
-    async createComment(post_id, comment_text, file) {
-        const response = await this.api.post(`/api/comments/createComment`, {
-            post_id: post_id,
-            comment_text: comment_text,
-            file: file
+    async createComment(commentData, file) {
+        console.log("commentData", commentData);
+        const multipartData = createMultipartData(commentData, file);
+        const response = await this.api.post(`/api/comments/createComment`, multipartData, {
+            headers: { "content-type": "multipart/form-data" }
         });
+        console.log("multipart response(comment)", response.data);
         return response.data;
     }
 

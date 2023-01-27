@@ -40,4 +40,6 @@ next-env.d.ts
 **/logs
 *.log
 
+# Server media files
 **/media/posts/*
+**/media/comments/*

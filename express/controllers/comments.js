@@ -2,11 +2,16 @@ const db = require("../db/connections/jasmaAdmin");
 const { Comment } = db.models;
 
 async function createComment(req, res) {
-    const { post_id, comment_text, file } = req.body;
+    const { post_id, comment_text, file, fileName } = req.body;
     const { user_id, username } = req.session;
     
     try {
-        const createdComment = await Comment.create({ post_id: post_id, user_id: user_id, username: username, comment_text: comment_text, file_url: "" });
+        const createdComment = await Comment.create({ 
+            post_id: post_id, 
+            user_id: user_id, 
+            username: username, 
+            comment_text: comment_text, 
+            file_url: `http://localhost:5000/media/comments/${fileName}` });
     }
     catch (err) {
         return res.json({ success: false, message: err.message });

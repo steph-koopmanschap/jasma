@@ -45,9 +45,14 @@ app.use(express.json());
 
 // Mount router
 app.use("/api", apiRouter);
+//Media file fetching
 app.get("/media/posts/:fileName", (req, res) => {
     const { fileName } = req.params;
     res.sendFile(`${__dirname}/media/posts/${fileName}`);
+});
+app.get("/media/comments/:fileName", (req, res) => {
+    const { fileName } = req.params;
+    res.sendFile(`${__dirname}/media/comments/${fileName}`);
 });
 
 //Start server

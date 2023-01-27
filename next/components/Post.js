@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from 'next/image';
 import { formatDistance } from "date-fns";
 import CreateComment from "./CreateComment";
 import CommentList from "./CommentList";
@@ -26,14 +27,17 @@ export default function Post(props) {
                     {formatDistance(new Date(postData.created_at), new Date())} a go.
                 </p>
                 <p className="">{postData.text_content}</p>
-                {/* <p className="">{postData.hashtags}</p> */}
-                <img
+                <hr />
+                <p className="">Hashtags: {postData.hashtags}</p>
+                {postData.file_url ? 
+                    <Image
                     src={postData.file_url}
                     className="object-scale-down"
                     alt="Post picture"
                     width="999"
                     height="999"
-                />
+                    /> 
+                    : null}
             </div>
 
             <div className="p-2">

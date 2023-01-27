@@ -1,28 +1,34 @@
 import React, { useState } from 'react';
 import api from "../clientAPI/api.js";
+import FileUploader from "./file-upload/FileUploader.js";
+
+const initialCommentData = { post_id: "", comment_text: "", context: "comment" };
 
 export default function CreateComment(props) {
 
     const { postID } = props;
 
     const [commentData, setCommentData] = useState({
-        comment_text: "",
-        file: null
-    });
+        ...initialCommentData,
+        post_id: postID
+        });
 
     const [response, setResponse] = useState();
 
+    const [file, setFile] = useState(null);
     const [textInput, setTextInput] = useState("");
-    const [filePreview, setFilePreview] = useState(null);
 
     const createComment = async (e) => {
         //prevent page from refreshing
         e.preventDefault();
 
         //TODO: Send file too.
-        const createdComment = await api.createComment(postID, commentData.comment_text, "");
-        console.log(createdComment);
+        const createdComment = await api.createComment(commentData, file);
+        
         setTextInput("");
+        setFile(null);
+
+        console.log(createdComment);
     }
 
     const handleChange = (e) => {
@@ -55,6 +61,11 @@ export default function CreateComment(props) {
                     name="comment_text"
                     value={textInput}
                     onChange={handleChange} 
+                />
+
+                <FileUploader
+                    file={file}
+                    setFile={setFile}
                 />
 
                 <input 
