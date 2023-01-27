@@ -1,5 +1,6 @@
 const db = require("../db/connections/jasmaAdmin");
 const { User, UserInfo } = db.models;
+const fs = require('fs');
 
 async function getUserIdByUsername(req, res) {
     const { username } = req.params;
@@ -40,6 +41,22 @@ async function getProfilePic(req, res) {
         }
     });
 }
+
+// // Alternative getProfilePic function. (DOES NOT WORK)
+// async function getProfilePic(req, res) {
+//     const { userid } = req.params;
+//     //Send the default profile pic unknown userid
+//     if (userid === 'undefined' || userid === undefined || userid === false || userid === 'null' || userid === null) {
+//         return res.json({ success: false, file_url: "/media/users/00000000-0000-0000-0000-000000000000/profile-pic.webp" });
+//     }
+//     //Check if the file exists, if not revert back to the default user id.
+//     fs.open(`/media/users/${userid}/profile-pic.webp`, 'r', (err, fd) => {
+//         console.log("HELLO!");
+//         return res.json({ success: false, file_url: "/media/users/00000000-0000-0000-0000-000000000000/profile-pic.webp" });
+//     });
+
+//     return res.json({ success: true, file_url: `/media/users/${userid}/profile-pic.webp` });
+// }
 
 module.exports = {
     getUserIdByUsername,
