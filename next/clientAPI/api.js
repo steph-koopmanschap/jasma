@@ -66,11 +66,13 @@ class Api {
     }
 
     async createPost(postData, file) {
+        console.log("postData", postData);
+
         const multipartData = createMultipartData(postData, file);
         const response = await this.api.post("api/posts/createPost", multipartData, {
             headers: { "content-type": "multipart/form-data" }
         });
-        console.log(response.data);
+        console.log("multipart response", response.data);
     }
 
     async getUserPosts(user_id, limit) {

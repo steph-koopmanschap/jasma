@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import hashtagFormatter from "../utils/hashtagFormatter.js";
 import api from "../clientAPI/api.js";
 import FileUploader from "./file-upload/FileUploader.js";
+
+const initialPostData = { text_content: "", hashtags: [], context: "post" };
 export default function CreatePost() {
-    const [postData, setPostData] = useState({
-        text: "",
-        hashtags: []
-    });
+    const [postData, setPostData] = useState(initialPostData);
     const [file, setFile] = useState(null);
 
     const [textInput, setTextInput] = useState("");
@@ -19,7 +18,8 @@ export default function CreatePost() {
         //prevent page from refreshing
         e.preventDefault();
         //TODO: Add file
-        const createdPost = await api.createPost(postData.text, postData.hashtags, "");
+
+        const createdPost = await api.createPost(postData, file);
 
         setTextInput("");
         setHashtagInput("");
@@ -31,7 +31,7 @@ export default function CreatePost() {
 
     const handleChange = (e) => {
         //get the text content
-        if (e.target.name === "text") {
+        if (e.target.name === "text_content") {
             console.log(e.target.name);
             setTextInput(e.target.value);
             setPostData({
@@ -66,7 +66,7 @@ export default function CreatePost() {
                     aria-label="Create a post on JASMA"
                     type="textarea"
                     spellCheck="true"
-                    name="text"
+                    name="text_content"
                     value={textInput}
                     onChange={handleChange}
                 />

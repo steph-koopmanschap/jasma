@@ -14,21 +14,22 @@ const isImage = (mimeType) => ["image/gif", "image/jpeg", "image/jpg", "image/pn
 const isVideo = (mimeType) => [].includes(mimeType);
 const isAudio = (mimeType) => [].includes(mimeType);
 
-function determineSaveTo(formData, entry_id, fileExtension) {
-    const { context, isPrivate } = formData;
+function determineSaveTo(formData, fileExtension) {
+    const { context, assignedEntryId } = formData;
     let saveTo = "./media";
+    let fileName = `${assignedEntryId}.${fileExtension}`;
     if (context === "post") {
-        saveTo += `/posts/${entry_id}.${fileExtension}`;
+        saveTo += `/posts/${fileName}`;
     }
 
     if (context === "comment") {
-        saveTo += `/comments/${entry_id}.${fileExtension}`;
+        saveTo += `/comments/${fileName}`;
     }
 
     if (context === "avatar") {
-        saveTo += `/avatars/${entry_id}.${fileExtension}`;
+        saveTo += `/avatars/${fileName}`;
     }
-    return saveTo;
+    return { saveTo, fileName };
 }
 
 const contextExists = (formData) => formData?.context;
@@ -55,10 +56,12 @@ async function multipartHandler(req, res, next) {
         let textExists = false;
 
         bb.on("field", (name, val, info) => {
+            console.log("field name", name);
+            console.log("field value", val);
             appendField(formData, name, formatVal(val));
         }).on("close", () => {
             console.log("formdata on close", formData);
-            if (formData.text) {
+            if (formData.text_content) {
                 textExists = true;
             }
         });
@@ -66,15 +69,18 @@ async function multipartHandler(req, res, next) {
         bb.on("file", (name, file, info) => {
             fileExists = true;
             const fileExtension = getFileExtension(info);
-            const saveTo = determineSaveTo(formData, assignedEntryId, fileExtension);
+            const { saveTo, fileName } = determineSaveTo(formData, fileExtension);
+            formData.fileName = fileName;
             file.pipe(fs.createWriteStream(saveTo));
         });
 
         bb.on("close", () => {
+            console.log("and ndext 1");
             if (!textExists && !fileExists) {
                 return res.json({ success: false, message: "Post must include content" });
             }
 
+            console.log("and ndext 2");
             if (!contextExists(formData)) {
                 return res.json({
                     success: false,
@@ -82,13 +88,14 @@ async function multipartHandler(req, res, next) {
                 });
             }
 
+            console.log("and ndext 3");
             if (!isValidContext(formData)) {
                 return res.json({
                     success: false,
                     message: "Not a valid context. Available contexts are [avatar, comment, post]"
                 });
             }
-
+            console.log("and ndext");
             req.body = formData;
             next();
         });

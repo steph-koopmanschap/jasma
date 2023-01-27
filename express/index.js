@@ -45,6 +45,10 @@ app.use(express.json());
 
 // Mount router
 app.use("/api", apiRouter);
+app.get("/media/posts/:fileName", (req, res) => {
+    const { fileName } = req.params;
+    res.sendFile(`${__dirname}/media/posts/${fileName}`);
+});
 
 //Start server
 const port = process.env.PORT || 5000;
