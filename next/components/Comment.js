@@ -5,10 +5,20 @@ import ProfilePic from "./ProfilePic";
 
 export default function Comment(props) {
     const { commentData } = props;
+
     return (
         <div className="p-2 m-2 bg-gray-800">
-            <ProfilePic userID={commentData.user_id} width={32} height={32} />
-            <Link className="font-bold" href={`/user/${commentData.username}`}>{commentData.username}</Link>
+            <ProfilePic 
+                userID={commentData.user_id} 
+                width={32} 
+                height={32} 
+            />
+            <Link
+                className="font-bold"
+                href={`/user/${commentData.username}`}
+            >
+                {commentData.username}
+            </Link>
 
             <p className="mb-2">{commentData.comment_text}</p>
             {commentData.file_url ? 

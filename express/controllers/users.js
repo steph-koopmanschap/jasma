@@ -1,5 +1,20 @@
 const db = require("../db/connections/jasmaAdmin");
-const { UserInfo } = db.models;
+const { User, UserInfo } = db.models;
+
+async function getUserIdByUsername(req, res) {
+    const { username } = req.params;
+    let result = null;
+    let userID = "";
+    try {
+        result = await User.getByUsername(username);
+        userID = result.user_id;
+    }
+    catch (e) {
+        return res.json({ success: false, message: `User ${username} not found.` });
+    }
+
+    return res.json({ success: true, user_id: userID });
+}
 
 async function getProfilePic(req, res) {
     const { userid } = req.params;
@@ -27,5 +42,6 @@ async function getProfilePic(req, res) {
 }
 
 module.exports = {
+    getUserIdByUsername,
     getProfilePic
 };

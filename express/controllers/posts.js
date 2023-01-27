@@ -35,7 +35,14 @@ async function createPost(req, res) {
 
 async function getUserPosts(req, res) {
     const { user_id, limit } = req.query;
-    const posts = await Post.findByUserId(user_id, limit);
+    let posts = [];
+    try {
+        posts = await Post.findByUserId(user_id, limit);
+    }
+    catch(e) {
+        console.log(e);
+        return res.json({ success: false, message: "user_id is undefined. Can't retrieve posts." } );
+    }
 
     return res.json({ success: true, posts: posts });
 }

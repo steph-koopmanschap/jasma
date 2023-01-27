@@ -60,6 +60,12 @@ class Api {
         return response.data;
     }
 
+    //Get the userID from a username
+    async getUserID(username) {
+        const response = await this.api.get(`/api/users/getUserId/${username}`);
+        return response.data;
+    }
+
     async getProfilePic(userid) {
         const response = await this.api.get(`/api/users/${userid}/profilepic`, { responseType: "blob" });
         return response.data;

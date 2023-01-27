@@ -1,27 +1,34 @@
 import { useRouter } from 'next/router';
-import { useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
+import api from "../../clientAPI/api.js";
 import CreatePost from '../../components/CreatePost';
 import HeaderMain from '../../components/HeaderMain';
 import ProfilePic from '../../components/ProfilePic';
 import LogInOutBtn from '../../components/LogInOutBtn';
 import UserPostList from '../../components/UserPostList';
+import { useEffect } from 'react';
+
 
 //The (public?) profile page of a user
-export default function ProfilePage() {
+export default function ProfilePage(props) {
     const router = useRouter();
     const { username } = router.query;
+    const userID = "";
 
-    const queryClient = useQueryClient();
-
-    const userCredentials = queryClient.getQueryData("userCredentials");
-    const userID = userCredentials?.user.user_id;
+    const { status, isLoading, isError, data, error, refetch } = useQuery([`${username}`], 
+    async () => {return await api.getUserID(username)},
+    {   
+        enabled: true,
+        refetchOnWindowFocus: false
+    }
+    );
 
     return (
         <div>
             <HeaderMain />
             <div className="flex flex-col items-end justify-end mr-4">
                 <ProfilePic 
-                    userid={userID} 
+                    userid={data?.user_id} 
                     width="100" 
                     height="100" 
                 />
@@ -29,14 +36,10 @@ export default function ProfilePage() {
             </div>
 
             <main className="flex flex-col">
-                <h1 className="">Noting</h1>
-                <h2>Nothing here yet...</h2>
                 <p>Settings</p>
-                <h3>username:</h3>
-                <h3>{username}</h3>
                 <CreatePost />
 
-                <UserPostList userID={"922f5d99-1ec7-418d-a2e0-005f4ab8ed4d"} />
+                {data?.success ? <UserPostList userID={data?.user_id} /> : <p>Could not retrieve posts.</p>}
             </main>
 
         </div>
