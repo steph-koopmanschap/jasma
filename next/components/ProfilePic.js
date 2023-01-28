@@ -7,7 +7,7 @@ export default function ProfilePic(props) {
 
     //rounded-t-full (css)
 
-    const {userID} = props;
+    const { userID } = props;
 
     //Fetch profile pic from server
     const { status, isLoading, isError, data, error, refetch } = useQuery([`profilePic_${userID}`], 

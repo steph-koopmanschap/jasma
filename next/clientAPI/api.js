@@ -33,7 +33,17 @@ class Api {
 
     async login(email, password) {
         const response = await this.api.post("/api/auth/login", { email: email, password: password });
-        return response.data;
+
+        //Strip all data except user_id from the response
+        const returnData = {
+            success: response.data.success,
+            user: {
+                user_id: response.data.user.user_id,
+            },
+            message: response.data.message,
+        }
+
+        return returnData;
     }
 
     async register(username, email, password) {

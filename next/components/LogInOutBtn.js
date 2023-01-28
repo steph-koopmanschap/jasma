@@ -1,19 +1,23 @@
-import React, { useState } from "react";
-import { useQueryClient } from "react-query";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import api from "../clientAPI/api.js";
 
 export default function LogInOutBtn(props) {
     const router = useRouter();
-    const queryClient = useQueryClient();
-    const [loginState, setLoginState] = useState(props.initialState);
+
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect( () => {
+        setIsLoggedIn(window.sessionStorage.getItem('loggedInUserID') ? true : false);
+    }, [isLoggedIn]);
 
     const logoutUser = async (e) => {
         const res = await api.logout();
-        //Remove the user credentials from the query cache/storage
-        queryClient.resetQueries("userCredentials", { exact: true });
-        setLoginState(false);
+
+        setIsLoggedIn(false);
+        //Remove userID from sessionStorage
+        window.sessionStorage.setItem('loggedInUserID', "");
         //Force reload the page if on dashboard
         if (window.location.pathname === "/dashboard") {
             router.reload(window.location.pathname);
@@ -27,7 +31,7 @@ export default function LogInOutBtn(props) {
     //Choose which button (login btn or logout btn) to render based on logged in or logged out state
     return (
         <React.Fragment>
-            {loginState ? (
+            {isLoggedIn ? (
                 <button
                     className="formButtonDefault m-2"
                     onClick={logoutUser}
