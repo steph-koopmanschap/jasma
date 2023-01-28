@@ -46,9 +46,16 @@ export default function Comment(props) {
                     width="999" 
                     height="999"
                 />
-                : null}
-            <p className="text-xs">{commentData.created_at}</p>
-            <p className="text-xs">{formatDistance(new Date(commentData.created_at), new Date())} a go.</p>
+            : null}
+            
+            <p className="text-xs">Created on {commentData.created_at}</p>
+            <p className="text-xs">Created {formatDistance(new Date(commentData.created_at), new Date())} a go.</p>
+            {(commentData.created_at !== commentData.last_edited_at) ? (
+                <React.Fragment>
+                <p className="text-xs">Last edited on {commentData.last_edited_at}</p>
+                <p className="text-xs">Last edited {formatDistance(new Date(commentData.last_edited_at), new Date())} a go.</p>
+                </React.Fragment>)
+            : null}
         </div>
     );
 }

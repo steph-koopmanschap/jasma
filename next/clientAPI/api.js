@@ -34,6 +34,9 @@ class Api {
     async login(email, password) {
         const response = await this.api.post("/api/auth/login", { email: email, password: password });
 
+        if (response.data.success === false) {
+            return response.data;
+        }
         //Strip all data except user_id from the response
         const returnData = {
             success: response.data.success,
@@ -67,6 +70,13 @@ class Api {
 
     async logout() {
         const response = await this.api.post("/api/auth/logout");
+        return response.data;
+    }
+
+    async changePassword(newPassword) {
+        const response = await this.api.post("/api/auth/changePassword", {
+            newPassword: newPassword
+        });
         return response.data;
     }
 

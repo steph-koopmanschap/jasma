@@ -63,11 +63,20 @@ app.get("/media/users/:userid/profile-pic.webp", (req, res) => {
 const port = process.env.PORT || 5000;
 const server = app.listen(port, () => {
     console.log(`
+    ********************
+    *   WELCOME TO     *
+    ********************
+        .-------.
+        | JASMA |
+        '-------'
+    Just Another Social Media App
+    `);
+    console.log(`
     ============
     Starting the JASMA API server...
     Mode: ${process.env.NODE_ENV}
     ExpressJS server started...
-    Listening on port ${port}"...
+    Listening on port ${port}...
     ------------
     Use CTRL+C to stop the server...
     `);
