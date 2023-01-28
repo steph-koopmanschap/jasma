@@ -69,7 +69,7 @@ export default function CreateComment(props) {
                 />
 
                 <input 
-                    className="formButtonDefault py-1 px-1 m-1 outline-white border "
+                    className="formButtonDefault py-1 px-1 m-1 outline-white border"
                     type="submit"
                     value="Submit comment" 
                 />

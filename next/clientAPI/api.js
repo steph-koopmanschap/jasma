@@ -91,6 +91,17 @@ class Api {
         console.log("multipart response(post)", response.data);
     }
 
+    async deletePost(postID) {
+        const response = await this.api.delete(`/api/posts/deletePost/${postID}`);
+        return response.data;
+    }
+
+    //Not tested yet
+    async editPost(postID) {
+        const response = await this.api.put(`/api/posts/editPost/`);
+        return response.data;
+    }
+
     async getUserPosts(user_id, limit) {
         const response = await this.api.get(`/api/posts/getUserPosts?user_id=${user_id}&limit=${limit}`);
         return response.data;
@@ -108,6 +119,17 @@ class Api {
             headers: { "content-type": "multipart/form-data" }
         });
         console.log("multipart response(comment)", response.data);
+        return response.data;
+    }
+
+    async deleteComment(commentID) {
+        const response = await this.api.delete(`/api/comments/deleteComment/${commentID}`);
+        return response.data;
+    }
+
+    //Not tested yet
+    async editComment(commentID) {
+        const response = await this.api.put(`/api/comments/editComment/`);
         return response.data;
     }
 

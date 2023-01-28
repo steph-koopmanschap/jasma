@@ -1,6 +1,8 @@
+import React from 'react';
 import Link from "next/link";
 import Image from 'next/image';
 import { formatDistance } from "date-fns";
+import api from "../clientAPI/api.js";
 import CreateComment from "./CreateComment";
 import CommentList from "./CommentList";
 import ProfilePic from "./ProfilePic";
@@ -8,9 +10,25 @@ import ProfilePic from "./ProfilePic";
 export default function Post(props) {
     const { postData } = props;
 
+    const deletePost = async () => {
+        const res = await api.deletePost(postData.post_id);
+        console.log(res);
+    }
+
+    const EditPost = () => {
+        console.log("Editing posts does not work yet.")
+    }
+
     return (
         <div className="mx-auto w-1/5 bg-gray-400 p-2 m-4">
             <div className="p-2 m-2 bg-gray-600">
+                {(window.sessionStorage.getItem('loggedInUserID') === postData.user_id) ? (
+                    <React.Fragment>
+                    <button className="formButtonDefault outline-white border mr-1" onClick={deletePost}>Delete</button>
+                    <button className="formButtonDefault outline-white border" onClick={EditPost}>Edit</button>
+                    </React.Fragment>) 
+                : null}
+
                 <ProfilePic
                     userID={postData.user_id}
                     width={32}
@@ -40,9 +58,11 @@ export default function Post(props) {
                     : null}
             </div>
 
-            <div className="p-2">
-                <CreateComment postID={postData.post_id} />
-            </div>
+            {window.sessionStorage.getItem('loggedInUserID') ? (            
+                <div className="p-2">
+                    <CreateComment postID={postData.post_id} />
+                </div>) 
+            : null}
 
             <div className="p-2">
                 <CommentList postID={postData.post_id} />

@@ -1,12 +1,9 @@
-import Router, { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
+import { useRouter } from 'next/router';
 import api from "../../clientAPI/api.js";
-import CreatePost from '../../components/CreatePost';
 import HeaderMain from '../../components/HeaderMain';
 import ProfilePic from '../../components/ProfilePic';
-import LogInOutBtn from '../../components/LogInOutBtn';
-import UserPostList from '../../components/UserPostList';
-import { useState, useEffect } from 'react';
+
+import React, { useState, useEffect } from 'react';
 
 //import FileUploader from "../../file-upload/FileUploader";
 
@@ -28,16 +25,18 @@ export default function Settings(props) {
         console.log("isLoggedIn from settings page?");
         console.log(isLoggedIn, userID);
 
-        if(isLoggedIn === false) {
-            router.replace("/dashboard");
-        }
+        // if(isLoggedIn === false) {
+        //     router.replace("/dashboard");
+        // }
 
-    }, []);
+    }, [isLoggedIn]);
 
     return (
         <div>
             <HeaderMain /> 
 
+            {isLoggedIn ? (
+            <React.Fragment>
             <h1 className='text-2xl'>Settings</h1>
 
             <p>Your current profile picture: </p>
@@ -51,6 +50,10 @@ export default function Settings(props) {
                 file={file}
                 setFile={setFile}
             /> */}
+            </React.Fragment>
+            ) 
+            : 
+            <h2 className='text-2xl'>You need to login.</h2>}
 
         </div>
     );
