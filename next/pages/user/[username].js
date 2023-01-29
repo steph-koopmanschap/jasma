@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
+import Link from "next/link";
 import api from "../../clientAPI/api.js";
 import CreatePost from '../../components/CreatePost';
 import HeaderMain from '../../components/HeaderMain';
@@ -7,7 +8,6 @@ import ProfilePic from '../../components/ProfilePic';
 import UserBox from '../../components/UserBox';
 import UserPostList from '../../components/UserPostList';
 import { useState, useEffect } from 'react';
-
 
 //The (public?) profile page of a user
 export default function ProfilePage(props) {
@@ -46,11 +46,12 @@ export default function ProfilePage(props) {
                     height="100" 
                 />
                 <h1 className='font-bold'>{username}</h1>
+                <Link className='hover:text-sky-500' href={`/user/${username}/bio`}>About</Link>
             </div>
 
             <main className="flex flex-col">
                 {isLoggedIn ? <CreatePost /> : null}
-                {data?.success ? <UserPostList userID={data?.user_id} /> : <p>Could not retrieve posts.</p>}
+                {data?.success ? <UserPostList userID={data?.user_id} /> : <p className='text-center'>Could not retrieve posts.</p>}
             </main>
 
         </div>

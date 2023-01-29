@@ -17,6 +17,39 @@ async function getUserIdByUsername(req, res) {
     return res.json({ success: true, user_id: userID });
 }
 
+async function getUserInfo(req, res) {
+    const { userID } = req.params;
+    console.log("HELLO 0 FROM getUserInfo uers.js controller");
+    let resUserInfo = null;
+    let resUser = null;
+    try {
+        console.log("HELLO 1!");
+        resUserInfo = await UserInfo.getById(userID);
+        resUser = await User.getById(userID);   
+        console.log("HELLO 2!");
+    }
+    catch (e) {
+        console.log(e);
+        return res.json({ success: false, message: `User info not found.` });
+    }
+
+    console.log("HELLO 3!");
+
+    const returnData = {
+        given_name: resUserInfo.given_name,
+        last_name: resUserInfo.last_name,
+        bio: resUserInfo.bio,
+        date_of_birth: resUserInfo.date_of_birth,
+        country: resUserInfo.country,
+        city: resUserInfo.city,
+        website: resUserInfo.website,
+        email: resUser.email,
+        phone: resUser.phone
+    }
+
+    return res.json({ success: true, userInfo: returnData });
+}
+
 async function getProfilePic(req, res) {
     const { userid } = req.params;
     const options = {
@@ -60,5 +93,6 @@ async function getProfilePic(req, res) {
 
 module.exports = {
     getUserIdByUsername,
+    getUserInfo,
     getProfilePic
 };

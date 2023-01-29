@@ -16,8 +16,9 @@ export default function LogInOutBtn(props) {
         const res = await api.logout();
 
         setIsLoggedIn(false);
-        //Remove userID from sessionStorage
+        //Remove userID and username from sessionStorage
         window.sessionStorage.setItem('loggedInUserID', "");
+        window.sessionStorage.setItem('loggedInUsername', "");
         //Force reload the page if on dashboard
         if (window.location.pathname === "/dashboard") {
             router.reload(window.location.pathname);

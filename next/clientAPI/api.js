@@ -37,11 +37,12 @@ class Api {
         if (response.data.success === false) {
             return response.data;
         }
-        //Strip all data except user_id from the response
+        //Strip all data except user_id and username from the response
         const returnData = {
             success: response.data.success,
             user: {
                 user_id: response.data.user.user_id,
+                username: response.data.user.username,
             },
             message: response.data.message,
         }
@@ -68,6 +69,11 @@ class Api {
         return data;
     }
 
+    async checkAuthClientSide() {
+        const response = await this.api.post("/api/auth/checkAuth");
+        return response.data.isAuth;
+    }
+
     async logout() {
         const response = await this.api.post("/api/auth/logout");
         return response.data;
@@ -83,6 +89,11 @@ class Api {
     //Get the userID from a username
     async getUserID(username) {
         const response = await this.api.get(`/api/users/getUserId/${username}`);
+        return response.data;
+    }
+
+    async getUserInfo(userID) {
+        const response = await this.api.get(`/api/users/${userID}/UserInfo`);
         return response.data;
     }
 
