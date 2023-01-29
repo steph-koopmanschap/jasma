@@ -46,3 +46,6 @@ next-env.d.ts
 
 # dumprdb
 **/dump.rdb
+
+# Video server uploads
+video-server/uploads
