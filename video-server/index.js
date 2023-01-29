@@ -91,7 +91,7 @@ app.post("/upload", async (req, res) => {
 
             fs.unlinkSync(tempFilePath);
 
-            res.json({ hlsURL: `http://localhost:5000/media/${mediaId}/index.m3u8` });
+            res.json({ hlsURL: `http://localhost:4000/media/${mediaId}/index.m3u8` });
         });
 
         req.pipe(bb);
@@ -100,4 +100,4 @@ app.post("/upload", async (req, res) => {
     }
 });
 
-server.listen(5000);
+server.listen(4000);
