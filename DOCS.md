@@ -62,7 +62,7 @@ API server lives on [http://localhost:5000/api](http://localhost:5000/api)
 
 ### Database
 
-First read /server/db/pg_hba.conf to read on what to add to your pg_hba.conf file.
+<!-- First read /server/db/pg_hba.conf to read on what to add to your pg_hba.conf file. -->
 Create the database
 `npm run db:init`
 
@@ -82,10 +82,24 @@ This will set up everything you need automatically.
 - POST /api/auth/register
 - POST /api/auth/logout
 - POST /api/auth/checkAuth
+- POST /api/auth/changePassword
+
+- GET  /api/users/getUserId/${username}
+- GET  /api/users/${userID}/UserInfo
 - GET  /api/users/${userid}/profilepic
+
+- POST /api/posts/createPost
+- DELETE /api/posts/deletePost/${postID}
+- PUT  /api/posts/editPost
 - GET  /api/posts/getUserPosts?user_id=${user_id}&limit=${limit}
 - GET  /api/posts/getLatestPosts?limit=${limit}
+
+- POST /api/comments/createComment
+- DELETE /api/comments/deleteComment/${commentID}
+- PUT  /api/comments/editComment
 - GET  /api/comments/getComments?post_id=${post_id}&limit=${limit}
+
+- GET  /api/search/search?q=${keyword}&filter=${filter}
 
 ## Learn More
 
@@ -101,3 +115,4 @@ External documentation of 3rd party libraries and frameworks
 - [PostGreSQL Docs](https://www.postgresql.org/docs/)
 - [Express.js Docs](https://expressjs.com/en/guide/routing.html)
 - [Date FNS Docs](https://date-fns.org/docs/Getting-Started)
+- [Font Awesome Docs](https://fontawesome.com/docs)
