@@ -21,6 +21,28 @@ async function createComment(req, res) {
     return res.json({ success: true });
 }
 
+async function deleteComment(req, res) {
+    const { commentID } = req.params;
+    const deletedComment = await Comment.destroy({
+        where: {
+            comment_id: commentID
+        }
+    });
+    
+    return res.json({ success: true, comment_id: commentID });
+}
+
+//Not tested yet
+async function editComment(req, res) {
+    const { commentData } = req.body;
+    const updatedComment = await Comment.update(commentData, {
+        where: 
+            { comment_id: commentData.comment_id } 
+        });
+    
+    return res.json({ success: true, commentData: commentData });
+}
+
 async function getComments(req, res) {
     const { post_id, limit } = req.query;
     const commentData = await Comment.getComments(post_id, limit);
@@ -34,5 +56,7 @@ async function getComments(req, res) {
 
 module.exports = {
     createComment,
+    deleteComment,
+    editComment,
     getComments
 };

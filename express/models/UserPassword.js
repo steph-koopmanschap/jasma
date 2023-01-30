@@ -35,12 +35,24 @@ module.exports = (sequelize, DataTypes, Model) => {
             });
             return res[0][0];
         }
+
+        static async hashPassword(password) {
+            let hashedPassword = "";
+            try {
+                hashedPassword = await bcrypt.hash(password, 10);
+            }
+            catch (e) {
+                return e;
+            }
+            return hashedPassword;
+        }
     }
 
     UserPassword.init(columns, options);
 
     UserPassword.beforeCreate(async (entry) => {
-        const hashedPassword = await bcrypt.hash(entry.user_password, 10);
+        //const hashedPassword = await bcrypt.hash(entry.user_password, 10);
+        const hashedPassword = await this.hashPassword(entry.user_password);
         entry.user_password = hashedPassword;
     });
 };

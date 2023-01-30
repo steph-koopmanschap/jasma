@@ -33,9 +33,38 @@ async function createPost(req, res) {
     return res.json({ success: true });
 }
 
+async function deletePost(req, res) {
+    const { postID } = req.params;
+    const deletedPost = await Post.destroy({
+        where: {
+            post_id: postID
+        }
+    });
+    
+    return res.json({ success: true, post_id: postID });
+}
+
+//Not tested yet
+async function editPost(req, res) {
+    const { postData } = req.body;
+    const updatedPost = await Post.update(postData, {
+        where: 
+            { post_id: postData.post_id } 
+        });
+    
+    return res.json({ success: true, postData: postData });
+}
+
 async function getUserPosts(req, res) {
     const { user_id, limit } = req.query;
-    const posts = await Post.findByUserId(user_id, limit);
+    let posts = [];
+    try {
+        posts = await Post.findByUserId(user_id, limit);
+    }
+    catch(e) {
+        console.log(e);
+        return res.json({ success: false, message: "user_id is undefined. Can't retrieve posts." } );
+    }
 
     return res.json({ success: true, posts: posts });
 }
@@ -49,6 +78,8 @@ async function getLatestPosts(req, res) {
 
 module.exports = {
     createPost,
+    deletePost,
+    editPost,
     getUserPosts,
     getLatestPosts
 };
