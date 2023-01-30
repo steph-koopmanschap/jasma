@@ -1,8 +1,15 @@
-import React, {useState} from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
+import { toast } from "react-toastify";
+import { toastSuccess } from "../utils/defaultToasts.js"
 import api from "../clientAPI/api.js";
 
 export default function SignUpForm() {
+    //React Toast
+    const toastId = useRef(null);
+    const notify = (text) => (toastId.current = toastSuccess(text));
+    const dismiss = () => toast.dismiss(toastId.current);
+
     //Values of all the input boxes
     const [registrationState, setRegistrationState] = useState({
         userNameInput: "",
@@ -24,15 +31,15 @@ export default function SignUpForm() {
         const res = await api.register(registrationState.userNameInput, registrationState.emailInput, registrationState.passwordInput);
         if (res.success === true ) {
             console.log(res.message);
-            //alert(res.message);
+            return notify(res.message);
         }
         else if (res?.errors) {
             console.log(res.errors[0].msg);
-            //alert(res.errors[0].msg);
+            return notify(res.errors[0].msg);
         }
         else {
             console.log(res.message);
-            //alert(res.message);
+            return notify(res.message);
         }
     }
 

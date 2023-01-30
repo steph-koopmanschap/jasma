@@ -3,31 +3,19 @@ import Link from "next/link";
 import Image from 'next/image';
 import { formatDistance } from "date-fns";
 import { toast } from "react-toastify";
+import { toastSuccess } from "../utils/defaultToasts.js"
 import api from "../clientAPI/api.js";
 import CreateComment from "./CreateComment";
 import CommentList from "./CommentList";
 import ProfilePic from "./ProfilePic";
 import DropDownBtn from './DropDownBtn.js';
 
-function toastNotification(text) {
-    toast.success(text, {
-        position: "bottom-center",
-        autoClose: false,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light"
-    });
-}
-
 export default function Post(props) {
     const { postData } = props;
 
     //React Toast
     const toastId = useRef(null);
-    const notify = (text) => (toastId.current = toastNotification(text));
+    const notify = (text) => (toastId.current = toastSuccess(text));
     const dismiss = () => toast.dismiss(toastId.current);
 
     const deletePost = async () => {
