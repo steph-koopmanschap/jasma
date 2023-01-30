@@ -10,7 +10,7 @@ or create PR or Fork of this project.
 Currently looking for the following contributions:
  - Frontend design (UI/UX)
  - Logo and graphics art
- - Cybsersecurity
+ - Cybersecurity
  - Testing and bug reporting
  - Ideas and inspiration
 

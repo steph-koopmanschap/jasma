@@ -13,7 +13,7 @@ export default function LoginForm() {
 
     const [message, setMessage] = useState();
 
-    // Login authorization code
+    //Login authorization code
     async function handleSubmit(e) {
         e.preventDefault();
         const { emailInput, passwordInput } = loginFormState;
@@ -21,23 +21,36 @@ export default function LoginForm() {
         console.log("response", response);
         //Move user to dashboard upon succesfull login
         if (response.success) {
-            router.push("/dashboard");
-            router.replace("/dashboard");
-            console.log("hi");
+            //Store the userID and username of the logged in user into the session storage.
+            window.sessionStorage.setItem('loggedInUserID', response.user.user_id);
+            window.sessionStorage.setItem('loggedInUsername', response.user.username);
             setMessage(null);
+            router.push("/dashboard");
         //Failed login. Show error message.
         } else {
             setMessage(response.message);
         }
     }
 
-    // const { status, isLoading, isError, data, error, refetch } = useQuery(
-    //     ["userCredentials"],
-    //     async () => {
-    //         return await aplogin(loginFormState.emailInput, loginFormState.passwordInput);
-    //     },
-    //     { enabled: false } // disable this query from automatically running
-    // );
+    // OLD LOGIN CODE DEPRECATED
+    // Login authorization code
+    // async function handleSubmit(e) {
+    //     e.preventDefault();
+    //     await refetch();
+    //     //mutate(loginFormState.emailInput, loginFormState.passwordInput)
+    //     console.log("status:", status);
+    //     console.log("isSuccess:", isSuccess);
+
+    //      //Move user to dashboard upon succesfull login
+    //     if (data?.success) {
+    //         setMessage(null);
+    //         router.push("/dashboard");
+    //     }
+    //     //Failed login. Show error message.
+    //     else {
+    //         setMessage(response.message);
+    //     }
+    // }
 
     const handleChange = (e) => {
         const value = e.target.value;

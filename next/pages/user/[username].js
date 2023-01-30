@@ -1,42 +1,57 @@
 import { useRouter } from 'next/router';
-import { useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
+import Link from "next/link";
+import api from "../../clientAPI/api.js";
 import CreatePost from '../../components/CreatePost';
 import HeaderMain from '../../components/HeaderMain';
 import ProfilePic from '../../components/ProfilePic';
-import LogInOutBtn from '../../components/LogInOutBtn';
+import UserBox from '../../components/UserBox';
 import UserPostList from '../../components/UserPostList';
+import { useState, useEffect } from 'react';
 
 //The (public?) profile page of a user
-export default function ProfilePage() {
+export default function ProfilePage(props) {
     const router = useRouter();
     const { username } = router.query;
+    const userID = "";
 
-    const queryClient = useQueryClient();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const userCredentials = queryClient.getQueryData("userCredentials");
-    const userID = userCredentials?.user.user_id;
+    useEffect( () => {
+        checkLoggedIn();
+    }, []);
+
+    const checkLoggedIn = async () => {
+        // setIsLoggedIn(await api.checkAuth());
+    }
+
+    const { status, isLoading, isError, data, error, refetch } = useQuery([`${username}`], 
+    async () => {return await api.getUserID(username)},
+    {   
+        enabled: true,
+        refetchOnWindowFocus: false
+    }
+    );
 
     return (
         <div>
             <HeaderMain />
-            <div className="flex flex-col items-end justify-end mr-4">
+
+            <UserBox />
+
+            <div className='flex flex-col items-center justify-center'>
                 <ProfilePic 
-                    userid={userID} 
+                    userid={data?.user_id} 
                     width="100" 
                     height="100" 
                 />
-                <LogInOutBtn initialState={userID ? true : false} />
+                <h1 className='font-bold'>{username}</h1>
+                <Link className='hover:text-sky-500' href={`/user/${username}/bio`}>About</Link>
             </div>
 
             <main className="flex flex-col">
-                <h1 className="">Noting</h1>
-                <h2>Nothing here yet...</h2>
-                <p>Settings</p>
-                <h3>username:</h3>
-                <h3>{username}</h3>
-                <CreatePost />
-
-                <UserPostList userID={"922f5d99-1ec7-418d-a2e0-005f4ab8ed4d"} />
+                {isLoggedIn ? <CreatePost /> : null}
+                {data?.success ? <UserPostList userID={data?.user_id} /> : <p className='text-center'>Could not retrieve posts.</p>}
             </main>
 
         </div>

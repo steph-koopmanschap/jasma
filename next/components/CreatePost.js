@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import { toast } from "react-toastify";
+import { toastSuccess } from "../utils/defaultToasts.js"
 import hashtagFormatter from "../utils/hashtagFormatter.js";
 import api from "../clientAPI/api.js";
 import FileUploader from "./file-upload/FileUploader.js";
 
 const initialPostData = { text_content: "", hashtags: [], context: "post" };
 export default function CreatePost() {
+    //React Toast
+    const toastId = useRef(null);
+    const notify = (text) => (toastId.current = toastSuccess(text));
+    const dismiss = () => toast.dismiss(toastId.current);
+
     const [postData, setPostData] = useState(initialPostData);
     const [file, setFile] = useState(null);
 
@@ -27,6 +34,7 @@ export default function CreatePost() {
         setFile(null);
 
         console.log(createdPost);
+        return notify("Post created.");
     };
 
     const handleChange = (e) => {

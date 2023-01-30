@@ -26,12 +26,14 @@ export default function UserPostList(props) {
 
     return ( 
         <div>
-            {data.posts.map((post) => (
-                <Post
-                    key={post.post_id}
-                    postData={post}
-                />
-            ))}
+            {data.success ? 
+                data.posts.map((post) => (
+                    <Post
+                        key={post.post_id}
+                        postData={post}
+                    />
+                ))
+                : <h1>Could not retrieve posts...</h1> }
         </div>
     );
 }

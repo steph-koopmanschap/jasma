@@ -7,7 +7,7 @@ export default function ProfilePic(props) {
 
     //rounded-t-full (css)
 
-    const {userID} = props;
+    const { userID } = props;
 
     //Fetch profile pic from server
     const { status, isLoading, isError, data, error, refetch } = useQuery([`profilePic_${userID}`], 
@@ -32,6 +32,13 @@ export default function ProfilePic(props) {
                 height={props.height}
                 alt="Profile picture"
             />
+            {/* <Image 
+                className=" m-2"
+                src={`http://localhost:5000/media/users/00000000-0000-0000-0000-000000000000/profile-pic.webp`}
+                width={props.width}
+                height={props.height}
+                alt="Profile picture"
+            /> */}
         </React.Fragment>
     );
 }

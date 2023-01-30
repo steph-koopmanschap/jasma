@@ -33,7 +33,21 @@ class Api {
 
     async login(email, password) {
         const response = await this.api.post("/api/auth/login", { email: email, password: password });
-        return response.data;
+
+        if (response.data.success === false) {
+            return response.data;
+        }
+        //Strip all data except user_id and username from the response
+        const returnData = {
+            success: response.data.success,
+            user: {
+                user_id: response.data.user.user_id,
+                username: response.data.user.username,
+            },
+            message: response.data.message,
+        }
+
+        return returnData;
     }
 
     async register(username, email, password) {
@@ -55,8 +69,31 @@ class Api {
         return data;
     }
 
+    async checkAuthClientSide() {
+        const response = await this.api.post("/api/auth/checkAuth");
+        return response.data.isAuth;
+    }
+
     async logout() {
         const response = await this.api.post("/api/auth/logout");
+        return response.data;
+    }
+
+    async changePassword(newPassword) {
+        const response = await this.api.post("/api/auth/changePassword", {
+            newPassword: newPassword
+        });
+        return response.data;
+    }
+
+    //Get the userID from a username
+    async getUserID(username) {
+        const response = await this.api.get(`/api/users/getUserId/${username}`);
+        return response.data;
+    }
+
+    async getUserInfo(userID) {
+        const response = await this.api.get(`/api/users/${userID}/UserInfo`);
         return response.data;
     }
 
@@ -73,6 +110,17 @@ class Api {
             headers: { "content-type": "multipart/form-data" }
         });
         console.log("multipart response(post)", response.data);
+    }
+
+    async deletePost(postID) {
+        const response = await this.api.delete(`/api/posts/deletePost/${postID}`);
+        return response.data;
+    }
+
+    //Not tested yet
+    async editPost(postID) {
+        const response = await this.api.put(`/api/posts/editPost/`);
+        return response.data;
     }
 
     async getUserPosts(user_id, limit) {
@@ -92,6 +140,17 @@ class Api {
             headers: { "content-type": "multipart/form-data" }
         });
         console.log("multipart response(comment)", response.data);
+        return response.data;
+    }
+
+    async deleteComment(commentID) {
+        const response = await this.api.delete(`/api/comments/deleteComment/${commentID}`);
+        return response.data;
+    }
+
+    //Not tested yet
+    async editComment(commentID) {
+        const response = await this.api.put(`/api/comments/editComment/`);
         return response.data;
     }
 
