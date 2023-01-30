@@ -23,6 +23,7 @@ Backend:
 - Install Redis
 - Install NodeJS
 - Install NPM
+- Install Nginx (For production deployment)
 
 ### Frontend and Backend
 
@@ -33,6 +34,11 @@ To run client and server at same time (in development mode)
 `npm run dev`
 See all available scripts
 `npm run`
+
+#### Setup environment variables
+Make sure to copy the following files and then edit them to setup the environment variables 
+/express/.env.example to /express/.env
+/next/.env.example to /next/.env.development
 
 ### Frontend
 
@@ -56,24 +62,57 @@ API server lives on [http://localhost:5000/api](http://localhost:5000/api)
 
 ### Database
 
-First read /server/db/pg_hba.conf to read on what to add to your pg_hba.conf file.
+<!-- First read /server/db/pg_hba.conf to read on what to add to your pg_hba.conf file. -->
 Create the database
 `npm run db:init`
 
-<!-- To populate the database with 10 fake users
-`npm run resetAndPopulateUsers normal 10` -->
+ To populate the database with fake users, posts, and comments
+`npm run db:generate`
+<!--`npm run resetAndPopulateUsers normal 10` -->
+
+### Production
+
+To get started with a production server you can run: 
+`sudo ./setup.sh`
+This will set up everything you need automatically.
 
 ## API Routes
 
 - POST /api/auth/login
 - POST /api/auth/register
 - POST /api/auth/logout
+- POST /api/auth/checkAuth
+- POST /api/auth/changePassword
+
+- GET  /api/users/getUserId/${username}
+- GET  /api/users/${userID}/UserInfo
+- GET  /api/users/${userid}/profilepic
+
+- POST /api/posts/createPost
+- DELETE /api/posts/deletePost/${postID}
+- PUT  /api/posts/editPost
+- GET  /api/posts/getUserPosts?user_id=${user_id}&limit=${limit}
+- GET  /api/posts/getLatestPosts?limit=${limit}
+
+- POST /api/comments/createComment
+- DELETE /api/comments/deleteComment/${commentID}
+- PUT  /api/comments/editComment
+- GET  /api/comments/getComments?post_id=${post_id}&limit=${limit}
+
+- GET  /api/search/search?q=${keyword}&filter=${filter}
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+External documentation of 3rd party libraries and frameworks
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- [Next.js Docs](https://nextjs.org/docs)
+- [React.js Docs](https://reactjs.org/docs/getting-started.html)
+- [React Query Docs](https://react-query-v2.tanstack.com/overview)
+- [TailwindCSS Docs](https://tailwindcss.com/docs/installation)
+- [Axios Docs](https://axios-http.com/docs/intro)
+- [NPM Docs](https://docs.npmjs.com/)
+- [Sequelize SQL ORM Docs](https://sequelize.org/docs/v6/)
+- [PostGreSQL Docs](https://www.postgresql.org/docs/)
+- [Express.js Docs](https://expressjs.com/en/guide/routing.html)
+- [Date FNS Docs](https://date-fns.org/docs/Getting-Started)
+- [Font Awesome Docs](https://fontawesome.com/docs)

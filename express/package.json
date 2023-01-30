@@ -17,6 +17,7 @@
         "start": "node -r dotenv/config index.js",
         "db:init": "node ./db/scripts/initializeDb.js",
         "db:resetTables": "node ./db/scripts/resetTables.js",
+        "db:generate": "node ./db/scripts/generateDb.js",
         "log:http": "node ./environment/scripts/logging.js",
         "test": "jest --detectOpenHandles"
     },
@@ -28,7 +29,9 @@
         "url": "https://github.com/steph-koopmanschap/jasma/issues"
     },
     "dependencies": {
+        "append-field": "^1.0.0",
         "bcrypt": "^5.1.0",
+        "busboy": "^1.6.0",
         "connect-redis": "^6.1.3",
         "cors": "^2.8.5",
         "date-fns": "^2.29.3",

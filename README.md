@@ -10,7 +10,7 @@ or create PR or Fork of this project.
 Currently looking for the following contributions:
  - Frontend design (UI/UX)
  - Logo and graphics art
- - Cybsersecurity
+ - Cybersecurity
  - Testing and bug reporting
  - Ideas and inspiration
 
@@ -19,4 +19,4 @@ Filling out this anonymous survey will help us a lot to improve JASMA.
 
 ## Documentation
 
-See [DOCS.md](https://github.com/steph-koopmanschap/jasma/blob/main/DOCS.MD)
+See [DOCS.md](https://github.com/steph-koopmanschap/jasma/blob/main/DOCS.md)

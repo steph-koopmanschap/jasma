@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS hashtags(
 CREATE TABLE IF NOT EXISTS posts_hashtags(
     post_id         UUID REFERENCES posts(post_id) ON DELETE CASCADE,
     hashtag         VARCHAR(50) REFERENCES hashtags(hashtag),
-    PRIMARY KEY (hashtag)
+    PRIMARY KEY (post_id, hashtag)
 );
 
 -- One to many relationship with posts
@@ -155,6 +155,14 @@ CREATE TABLE IF NOT EXISTS userfeedback(
             CHECK(rating >= 1 AND rating <= 5),
     review        VARCHAR(1000),
     feedback_date DATE NOT NULL
+);
+
+-- Independent table
+-- Bookmarked posts of each user
+CREATE TABLE IF NOT EXISTS user_bookmarks(
+    user_id   UUID REFERENCES users(user_id) ON DELETE CASCADE,
+    post_id   UUID REFERENCES posts(post_id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, post_id)
 );
 
 -- Create a default "NULL" or "Guest" user which equals non-logged in users

@@ -16,14 +16,20 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^6.2.1",
+        "@fortawesome/free-regular-svg-icons": "^6.2.1",
+        "@fortawesome/free-solid-svg-icons": "^6.2.1",
+        "@fortawesome/react-fontawesome": "^0.2.0",
         "axios": "^1.2.0",
+        "date-fns": "^2.29.3",
         "ioredis": "^5.2.4",
         "next": "^13.0.3",
         "next-session": "^4.0.5",
         "node-fetch": "^2.6.1",
         "react": "18.2.0",
         "react-dom": "18.2.0",
-        "react-query": "^3.39.2"
+        "react-query": "^3.39.2",
+        "react-toastify": "^9.1.1"
     },
     "devDependencies": {
         "autoprefixer": "^10.4.13",

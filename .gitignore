@@ -39,3 +39,13 @@ next-env.d.ts
 # Logs
 **/logs
 *.log
+
+# Server media files
+**/media/posts/*
+**/media/comments/*
+
+# dumprdb
+**/dump.rdb
+
+# Video server uploads
+video-server/uploads

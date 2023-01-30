@@ -44,6 +44,8 @@ async function login(req, res) {
     );
 
     req.session.user_id = user.user_id;
+    req.session.username = user.username;
+    req.session.email = user.email;
     res.json({ success: true, user, message: "user logged in." });
 }
 
@@ -66,4 +68,18 @@ async function checkAuth(req, res) {
     }
 }
 
-module.exports = { checkAuth, register, login, logout };
+async function changePassword(req, res) {
+    const { newPassword } = req.body;
+    const email = req.session.email;
+
+    const hashedPassword = await UserPassword.hashPassword(newPassword);
+
+    const update = await UserPassword.update(
+        { user_password: hashedPassword },
+        { where: { user_email: email }}
+    );
+
+    return res.json({ success: true, message: "Password changed." });
+}
+
+module.exports = { checkAuth, register, login, logout, changePassword };
