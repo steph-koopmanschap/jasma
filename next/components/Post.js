@@ -7,6 +7,7 @@ import api from "../clientAPI/api.js";
 import CreateComment from "./CreateComment";
 import CommentList from "./CommentList";
 import ProfilePic from "./ProfilePic";
+import DropDownBtn from './DropDownBtn.js';
 
 function toastNotification(text) {
     toast.success(text, {
@@ -29,27 +30,40 @@ export default function Post(props) {
     const notify = (text) => (toastId.current = toastNotification(text));
     const dismiss = () => toast.dismiss(toastId.current);
 
-
     const deletePost = async () => {
         const res = await api.deletePost(postData.post_id);
         console.log(res);
         return notify("Post deleted.");
-        
     }
 
-    const EditPost = () => {
-        console.log("Editing posts does not work yet.")
+    const editPost = () => {
+        console.log("Editing posts does not work yet.");
+    }
+
+    const reportPost = () => {
+        console.log("Reporting posts does not work yet.");
+    }
+
+    const bookmarkPost = () => {
+        console.log("Bookmarking posts does not work yet.");
     }
 
     return (
         <div className="mx-auto w-1/5 bg-gray-400 p-2 m-4">
             <div className="p-2 m-2 bg-gray-600">
-                {(window.sessionStorage.getItem('loggedInUserID') === postData.user_id) ? (
-                    <React.Fragment>
-                    <button className="formButtonDefault outline-white border mr-1" onClick={deletePost}>Delete</button>
-                    <button className="formButtonDefault outline-white border" onClick={EditPost}>Edit</button>
-                    </React.Fragment>) 
-                : null}
+                
+                <DropDownBtn 
+                    style="flex flex-col" 
+                    dropDownStyle="flex flex-col p-2 m-1 w-1/2 bg-gray-900 place-self-end">
+                    {(window.sessionStorage.getItem('loggedInUserID') === postData.user_id) ? (
+                        <React.Fragment>
+                        <button className="formButtonDefault outline-white border my-1" onClick={deletePost}>Delete</button>
+                        <button className="formButtonDefault outline-white border my-1" onClick={editPost}>Edit</button>
+                        <button className="formButtonDefault outline-white border my-1" onClick={bookmarkPost}>Bookmark</button>
+                        </React.Fragment>) 
+                    : null}
+                    <button className="formButtonDefault outline-white border my-1" onClick={reportPost}>Report</button>
+                </DropDownBtn>
 
                 <ProfilePic
                     userID={postData.user_id}

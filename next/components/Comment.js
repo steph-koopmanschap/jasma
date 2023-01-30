@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { formatDistance } from 'date-fns';
 import api from "../clientAPI/api.js";
 import ProfilePic from "./ProfilePic";
+import DropDownBtn from './DropDownBtn.js';
 
 export default function Comment(props) {
     const { commentData } = props;
@@ -19,12 +20,19 @@ export default function Comment(props) {
 
     return (
         <div className="p-2 m-2 bg-gray-800">
-            {(window.sessionStorage.getItem('loggedInUserID') === commentData.user_id) ? (
-                <React.Fragment>
-                <button className="formButtonDefault outline-white border mr-1" onClick={deleteComment}>Delete</button>
-                <button className="formButtonDefault outline-white border" onClick={EditComment}>Edit</button>
-                </React.Fragment>) 
-            : null}
+
+            <DropDownBtn 
+                style="flex flex-col" 
+                dropDownStyle="flex flex-col p-2 m-1 w-1/2 bg-gray-900 place-self-end">
+                {(window.sessionStorage.getItem('loggedInUserID') === commentData.user_id) ? (
+                    <React.Fragment>
+                    <button className="formButtonDefault outline-white border my-1" onClick={deleteComment}>Delete</button>
+                    <button className="formButtonDefault outline-white border my-1" onClick={EditComment}>Edit</button>
+                    </React.Fragment>) 
+                : null}
+            </DropDownBtn>
+
+
             <ProfilePic 
                 userID={commentData.user_id} 
                 width={32} 
@@ -50,10 +58,10 @@ export default function Comment(props) {
             
             <p className="text-xs">Created on {commentData.created_at}</p>
             <p className="text-xs">Created {formatDistance(new Date(commentData.created_at), new Date())} a go.</p>
-            {(commentData.created_at !== commentData.last_edited_at) ? (
+            {(commentData.created_at !== commentData.updated_at) ? (
                 <React.Fragment>
-                <p className="text-xs">Last edited on {commentData.last_edited_at}</p>
-                <p className="text-xs">Last edited {formatDistance(new Date(commentData.last_edited_at), new Date())} a go.</p>
+                <p className="text-xs">Last edited on {commentData.updated_at}</p>
+                <p className="text-xs">Last edited {formatDistance(new Date(commentData.updated_at), new Date())} a go.</p>
                 </React.Fragment>)
             : null}
         </div>
