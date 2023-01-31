@@ -8,22 +8,18 @@ import ProfilePic from '../../components/ProfilePic';
 import UserBox from '../../components/UserBox';
 import UserPostList from '../../components/UserPostList';
 import { useState, useEffect } from 'react';
+import FollowUnfollowBtn from '../../components/FollowUnfollowBtn.js';
 
 //The (public?) profile page of a user
 export default function ProfilePage(props) {
     const router = useRouter();
     const { username } = router.query;
-    const userID = "";
-
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    
+    const [loggedInUserID, setLoggedInUserID] = useState(null);
 
     useEffect( () => {
-        checkLoggedIn();
+        setLoggedInUserID(window.sessionStorage.getItem('loggedInUserID'));
     }, []);
-
-    const checkLoggedIn = async () => {
-        // setIsLoggedIn(await api.checkAuth());
-    }
 
     const { status, isLoading, isError, data, error, refetch } = useQuery([`${username}`], 
     async () => {return await api.getUserID(username)},
@@ -47,10 +43,15 @@ export default function ProfilePage(props) {
                 />
                 <h1 className='font-bold'>{username}</h1>
                 <Link className='hover:text-sky-500' href={`/user/${username}/bio`}>About</Link>
+                {loggedInUserID ?
+                    (data?.user_id !== loggedInUserID ? 
+                        <FollowUnfollowBtn userID_two={data?.user_id} username={username} /> 
+                    : null)
+                : null}
             </div>
 
             <main className="flex flex-col">
-                {isLoggedIn ? <CreatePost /> : null}
+                {loggedInUserID ? <CreatePost /> : null}
                 {data?.success ? <UserPostList userID={data?.user_id} /> : <p className='text-center'>Could not retrieve posts.</p>}
             </main>
 
