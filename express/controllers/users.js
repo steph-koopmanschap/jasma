@@ -1,6 +1,6 @@
 const db = require("../db/connections/jasmaAdmin");
 const { User, UserInfo } = db.models;
-const fs = require('fs');
+const fs = require("fs");
 
 async function getUserIdByUsername(req, res) {
     const { username } = req.params;
@@ -9,14 +9,18 @@ async function getUserIdByUsername(req, res) {
     try {
         result = await User.getByUsername(username);
         userID = result.user_id;
-    }
-    catch (e) {
+    } catch (e) {
         return res.json({ success: false, message: `User ${username} not found.` });
     }
 
     return res.json({ success: true, user_id: userID });
 }
 
+async function getClientUser(req, res) {
+    const { user_id } = req.session;
+    const user = await User.getById(user_id);
+    return res.json({ user });
+}
 async function getUserInfo(req, res) {
     const { userID } = req.params;
     console.log("HELLO 0 FROM getUserInfo uers.js controller");
@@ -25,10 +29,9 @@ async function getUserInfo(req, res) {
     try {
         console.log("HELLO 1!");
         resUserInfo = await UserInfo.getById(userID);
-        resUser = await User.getById(userID);   
+        resUser = await User.getById(userID);
         console.log("HELLO 2!");
-    }
-    catch (e) {
+    } catch (e) {
         console.log(e);
         return res.json({ success: false, message: `User info not found.` });
     }
@@ -45,7 +48,7 @@ async function getUserInfo(req, res) {
         website: resUserInfo.website,
         email: resUser.email,
         phone: resUser.phone
-    }
+    };
 
     return res.json({ success: true, userInfo: returnData });
 }
@@ -57,7 +60,7 @@ async function getProfilePic(req, res) {
     };
     //If userid is undefined postgresql will give an error and crash the server.
     //This if-block prevents the server from crashing and sends the default profile pic
-    if (userid === 'undefined' || userid === undefined || userid === false || userid === 'null' || userid === null) {
+    if (userid === "undefined" || userid === undefined || userid === false || userid === "null" || userid === null) {
         res.sendFile("/media/users/00000000-0000-0000-0000-000000000000/profile-pic.webp", options, (err) => {
             if (err) {
                 res.json({ success: false, message: "File not found." });
@@ -67,7 +70,7 @@ async function getProfilePic(req, res) {
     }
     const fileUrlObj = await UserInfo.getProfilePicUrl(userid);
     const fileUrl = fileUrlObj.profile_pic_url;
-    
+
     res.sendFile(fileUrl, options, (err) => {
         if (err) {
             res.json({ success: false, message: "File not found." });
@@ -94,5 +97,6 @@ async function getProfilePic(req, res) {
 module.exports = {
     getUserIdByUsername,
     getUserInfo,
-    getProfilePic
+    getProfilePic,
+    getClientUser
 };

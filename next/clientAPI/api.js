@@ -42,10 +42,10 @@ class Api {
             success: response.data.success,
             user: {
                 user_id: response.data.user.user_id,
-                username: response.data.user.username,
+                username: response.data.user.username
             },
-            message: response.data.message,
-        }
+            message: response.data.message
+        };
 
         return returnData;
     }
@@ -99,6 +99,11 @@ class Api {
 
     async getProfilePic(userid) {
         const response = await this.api.get(`/api/users/${userid}/profilepic`, { responseType: "blob" });
+        return response.data;
+    }
+
+    async getClientUser() {
+        const response = await this.api.get("/api/users/getClientUser");
         return response.data;
     }
 
