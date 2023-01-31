@@ -66,9 +66,8 @@ API server lives on [http://localhost:5000/api](http://localhost:5000/api)
 Create the database
 `npm run db:init`
 
- To populate the database with fake users, posts, and comments
-`npm run db:generate`
-<!--`npm run resetAndPopulateUsers normal 10` -->
+ To populate the database with fake users, posts, and comments. Replace 10 with the amount of each you want to generate.
+`npm run db:generate 10`
 
 ### Production
 
