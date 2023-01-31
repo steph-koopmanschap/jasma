@@ -10,7 +10,7 @@
         "socialmedia"
     ],
     "scripts": {
-        "dev": "next dev",
+        "dev": "RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED=false next dev",
         "build": "next build",
         "start": "next start",
         "lint": "next lint"
@@ -30,6 +30,7 @@
         "react-dom": "18.2.0",
         "react-query": "^3.39.2",
         "react-toastify": "^9.1.1",
+        "recoil": "^0.7.6",
         "styled-components": "^5.3.6"
     },
     "devDependencies": {

@@ -8,51 +8,8 @@ import { ThemeProvider } from "styled-components";
 import GlobalStyles from "../styles/GlobalStyles";
 
 export default function Home({ initialTheme }) {
-    const [theme, setTheme] = useState(null);
-    const isLoaded = useRef(false);
-
-    useEffect(() => {
-        function determineTheme() {
-            if (window.matchMedia) {
-                if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-                    setTheme(themes.dark);
-                } else {
-                    setTheme(themes.light);
-                }
-            } else {
-                setTheme(themes.light);
-            }
-        }
-
-        function registerPreferenceListener() {
-            window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (event) => {
-                setTheme(event.matches ? themes.dark : themes.light);
-            });
-        }
-
-        determineTheme();
-        registerPreferenceListener();
-    }, []);
-
-    useEffect(() => {
-        if (theme && !isLoaded.current) {
-            isLoaded.current = true;
-        }
-    });
-
-    function toggleTheme() {
-        setTheme((prev) => (prev.name === "light" ? themes.dark : themes.light));
-    }
-
-    if (!theme) {
-        return null;
-    }
-
     return (
-        <ThemeProvider theme={theme.styles}>
-            <GlobalStyles isLoaded={isLoaded.current} />
-            <DefaultHead />
-            <button onClick={toggleTheme}>click me</button>
+        <>
             <HeaderMain />
 
             <main className={`flex flex-col items-center justify-center w-full h-fit jprimary`}>
@@ -90,6 +47,6 @@ export default function Home({ initialTheme }) {
             </main>
 
             <FooterMain />
-        </ThemeProvider>
+        </>
     );
 }

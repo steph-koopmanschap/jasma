@@ -1,0 +1,28 @@
+.nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    height: 50px;
+    border-bottom: 1px solid gray;
+}
+
+.nav-left,
+.nav-middle,
+.nav-right {
+    display: flex;
+}
+
+.brand {
+    height: 40px;
+    width: 40px;
+    background: blue;
+}
+
+.search {
+}
+
+.profile {
+    height: 100%;
+    width: 30px;
+    background: yellow;
+}
