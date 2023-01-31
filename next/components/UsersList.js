@@ -4,6 +4,8 @@ import ProfilePic from "./ProfilePic";
 export default function UsersList(props) {
     const { users } = props;
 
+    console.log(users);
+
     return ( 
         <div>
             {users.map((user) => (

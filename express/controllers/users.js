@@ -116,6 +116,7 @@ async function getFollowing(req, res) {
 async function getFollowers(req, res) {
     const { userID } = req.params;
     const result = await UserFollowing.getFollowers(userID);
+
     console.log(result);
 
     return res.json({ success: true, followers: result.followers, followerCount: result.followerCount  });

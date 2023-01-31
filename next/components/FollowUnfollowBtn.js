@@ -36,12 +36,12 @@ export default function FollowUnfollowBtn(props) {
     }
 
     return (
-        <div className="">
+        <React.Fragment>
             {isFollowing ? 
                 <button className='formButtonDefault m-2' onClick={unfollow}>Unfollow</button>
             : 
                 <button className='formButtonDefault m-2' onClick={follow}>Follow</button> 
             }
-        </div>
+        </React.Fragment>
     );
 }

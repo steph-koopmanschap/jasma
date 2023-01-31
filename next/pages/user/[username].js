@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
 import Link from "next/link";
@@ -7,8 +8,9 @@ import HeaderMain from '../../components/HeaderMain';
 import ProfilePic from '../../components/ProfilePic';
 import UserBox from '../../components/UserBox';
 import UserPostList from '../../components/UserPostList';
-import { useState, useEffect } from 'react';
 import FollowUnfollowBtn from '../../components/FollowUnfollowBtn.js';
+import Modal from '../../components/Modal.js';
+import FollowersList from '../../components/FollowersList.js';
 
 //The (public?) profile page of a user
 export default function ProfilePage(props) {
@@ -16,6 +18,7 @@ export default function ProfilePage(props) {
     const { username } = router.query;
     
     const [loggedInUserID, setLoggedInUserID] = useState(null);
+    const [showModal, SetShowModal] = useState(false);
 
     useEffect( () => {
         setLoggedInUserID(window.sessionStorage.getItem('loggedInUserID'));
@@ -48,6 +51,14 @@ export default function ProfilePage(props) {
                         <FollowUnfollowBtn userID_two={data?.user_id} username={username} /> 
                     : null)
                 : null}
+
+                <button className='formButtonDefault m-2' onClick={() => {SetShowModal(true)}}>OPEN MODAL</button>
+                <Modal modalName="test" modalState={showModal} >
+                    <p className='text-black'>HELLO!</p>
+                </Modal>
+
+                <FollowersList userID={data?.user_id} />
+
             </div>
 
             <main className="flex flex-col">
