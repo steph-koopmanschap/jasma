@@ -7,7 +7,7 @@ export default function FollowersList(props) {
     const { userID } = props;
 
     const { status, isLoading, isError, data, error, refetch } = useQuery([`followers_${userID}`], 
-    async () => {return await api.getFollowers(userID)},
+    async () => { return await api.getFollowers(userID) },
     {   
         enabled: true,
         refetchOnWindowFocus: false
@@ -22,17 +22,10 @@ export default function FollowersList(props) {
         return (<h1>{error}</h1>);
     }
 
-    if (data.success === false) {
-        return (<h1>{data.message}</h1>)
-    }
-
     return ( 
         <div>
-            <p className="">Followers: {data.followerCount}</p>
-            <UsersList users={data?.followers} />
-            {data?.followers.map((follower) => (
-                <p key={follower.user_id}>{follower.user_id}</p>
-            ))}
+            <p className="">People that follow this person: {data.followersCount}</p>
+            <UsersList users={data.followers} />
         </div>
     );
 }

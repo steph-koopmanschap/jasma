@@ -9,16 +9,18 @@ export default function LogInOutBtn(props) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect( () => {
-        setIsLoggedIn(window.sessionStorage.getItem('loggedInUserID') ? true : false);
+        setIsLoggedIn(window.localStorage.getItem('loggedInUserID') ? true : false);
     }, [isLoggedIn]);
 
     const logoutUser = async (e) => {
         const res = await api.logout();
 
         setIsLoggedIn(false);
-        //Remove userID and username from sessionStorage
-        window.sessionStorage.setItem('loggedInUserID', "");
-        window.sessionStorage.setItem('loggedInUsername', "");
+        //Remove userID and username from localStorage
+        window.localStorage.setItem('loggedInUserID', "");
+        window.localStorage.setItem('loggedInUsername', "");
+        window.localStorage.removeItem('loggedInUserID');
+        window.localStorage.removeItem('loggedInUsername');
         //Force reload the page if on dashboard
         if (window.location.pathname === "/dashboard") {
             router.reload(window.location.pathname);

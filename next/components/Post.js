@@ -43,7 +43,7 @@ export default function Post(props) {
                 <DropDownBtn 
                     style="flex flex-col" 
                     dropDownStyle="flex flex-col p-2 m-1 w-1/2 bg-gray-900 place-self-end">
-                    {(window.sessionStorage.getItem('loggedInUserID') === postData.user_id) ? (
+                    {(window.localStorage.getItem('loggedInUserID') === postData.user_id) ? (
                         <React.Fragment>
                         <button className="formButtonDefault outline-white border my-1" onClick={deletePost}>Delete</button>
                         <button className="formButtonDefault outline-white border my-1" onClick={editPost}>Edit</button>
@@ -89,7 +89,7 @@ export default function Post(props) {
                 : null}
             </div>
 
-            {window.sessionStorage.getItem('loggedInUserID') ? (            
+            {window.localStorage.getItem('loggedInUserID') ? (            
                 <div className="p-2">
                     <CreateComment postID={postData.post_id} />
                 </div>) 

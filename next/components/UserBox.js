@@ -10,7 +10,7 @@ export default function UserBox(props) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect( () => {
-        setUserID(window.sessionStorage.getItem('loggedInUserID'));
+        setUserID(window.localStorage.getItem('loggedInUserID'));
         setIsLoggedIn(userID ? true : false);
     }, [isLoggedIn, userID]);
 
@@ -19,7 +19,7 @@ export default function UserBox(props) {
             <div className="flex flex-col items-end justify-end mr-4">
                 {isLoggedIn ? 
                     (<React.Fragment>
-                    <Link href={`/user/${window.sessionStorage.getItem('loggedInUsername')}`} >
+                    <Link href={`/user/${window.localStorage.getItem('loggedInUsername')}`} >
                         <ProfilePic 
                             userid={userID} 
                             width="75" 

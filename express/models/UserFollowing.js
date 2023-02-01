@@ -28,18 +28,18 @@ module.exports = (sequelize, DataTypes, Model) => {
     class UserFollowing extends Model {
         static async getFollowing(user_id)
         {
-            const res = await sequelize.query(`SELECT follow_id FROM users_following WHERE user_id = ?`, { replacements: [user_id] });
+            const res = await sequelize.query(`SELECT follow_id AS user_id FROM users_following WHERE user_id = ?`, { replacements: [user_id] });
             const count = await sequelize.query(`SELECT COUNT(*) FROM users_following WHERE user_id = ?`, { replacements: [user_id] });
             //Retrieve the username of each userID and add it to the data
             for (let i = 0; i < res[0].length; i++)
             { 
-                const user = await sequelize.query(`SELECT username FROM users WHERE user_id = ?`, { replacements: [res[0][i].follow_id] });
+                const user = await sequelize.query(`SELECT username FROM users WHERE user_id = ?`, { replacements: [res[0][i].user_id] });
                 res[0][i].username = user[0][0].username;
             }
             
             return {
                 following: res[0],
-                followingCount: count[0][0]
+                followingCount: count[0][0].count
             }
         }
 
@@ -56,7 +56,7 @@ module.exports = (sequelize, DataTypes, Model) => {
 
             return {
                 followers: res[0],
-                followersCount: count[0][0]
+                followersCount: count[0][0].count
             }
         }
 

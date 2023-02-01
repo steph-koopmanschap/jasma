@@ -5,7 +5,7 @@ import api from "../clientAPI/api.js";
 
 export default function FollowUnfollowBtn(props) {
     const { userID_two, username } = props;
-    //const loggedInUserID = window.sessionStorage.getItem('loggedInUserID');
+    //const loggedInUserID = window.localStorage.getItem('loggedInUserID');
     const [isFollowing, setIsFollowing] = useState(false);
 
         //React Toast

@@ -11,6 +11,7 @@ import UserPostList from '../../components/UserPostList';
 import FollowUnfollowBtn from '../../components/FollowUnfollowBtn.js';
 import Modal from '../../components/Modal.js';
 import FollowersList from '../../components/FollowersList.js';
+import FolloweesList from '../../components/FolloweesList.js';
 
 //The (public?) profile page of a user
 export default function ProfilePage(props) {
@@ -21,7 +22,7 @@ export default function ProfilePage(props) {
     const [showModal, SetShowModal] = useState(false);
 
     useEffect( () => {
-        setLoggedInUserID(window.sessionStorage.getItem('loggedInUserID'));
+        setLoggedInUserID(window.localStorage.getItem('loggedInUserID'));
     }, []);
 
     const { status, isLoading, isError, data, error, refetch } = useQuery([`${username}`], 
@@ -46,18 +47,20 @@ export default function ProfilePage(props) {
                 />
                 <h1 className='font-bold'>{username}</h1>
                 <Link className='hover:text-sky-500' href={`/user/${username}/bio`}>About</Link>
+    
                 {loggedInUserID ?
-                    (data?.user_id !== loggedInUserID ? 
+                    (data?.user_id !== loggedInUserID) ? 
                         <FollowUnfollowBtn userID_two={data?.user_id} username={username} /> 
-                    : null)
+                    : null
                 : null}
 
-                <button className='formButtonDefault m-2' onClick={() => {SetShowModal(true)}}>OPEN MODAL</button>
+                <button className='formButtonDefault m-2' onClick={() => {SetShowModal(true)}}>See followers</button>
                 <Modal modalName="test" modalState={showModal} >
-                    <p className='text-black'>HELLO!</p>
+                    <p className='text-black'>Hello</p>
                 </Modal>
 
-                <FollowersList userID={data?.user_id} />
+                <FollowersList userID={data ? data?.user_id : ""} />
+                <FolloweesList userID={data ? data?.user_id : ""} />
 
             </div>
 

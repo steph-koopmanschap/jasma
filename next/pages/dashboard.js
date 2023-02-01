@@ -29,7 +29,7 @@ export default function Dashboard(props) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
-        userID = window.sessionStorage.getItem('loggedInUserID');
+        userID = window.localStorage.getItem('loggedInUserID');
         setIsLoggedIn(userID ? true : false);
     }, [isLoggedIn]);
 

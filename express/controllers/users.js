@@ -107,19 +107,24 @@ async function removeFollower(req, res) {
 
 async function getFollowing(req, res) {
     const { userID } = req.params;
+    //Prevent server crash if userID is undefined.
+    if (userID === undefined || userID === 'undefined' || userID === false || userID === null) {
+        return res.json({ success: false, message: "Users not found.", following: [], followingCount: 0  });
+    }
     const result = await UserFollowing.getFollowing(userID);
-    console.log(result);
 
     return res.json({ success: true, following: result.following, followingCount: result.followingCount  });
 }
 
 async function getFollowers(req, res) {
     const { userID } = req.params;
+    //Prevent server crash if userID is undefined.
+    if (userID === undefined || userID === 'undefined' || userID === false || userID === null) {
+        return res.json({ success: false, message: "Users not found.", followers: [], followersCount: 0  });
+    }
     const result = await UserFollowing.getFollowers(userID);
 
-    console.log(result);
-
-    return res.json({ success: true, followers: result.followers, followerCount: result.followerCount  });
+    return res.json({ success: true, followers: result.followers, followersCount: result.followersCount  });
 }
 
 async function checkIsFollowing(req, res) {
