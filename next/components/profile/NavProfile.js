@@ -8,13 +8,15 @@ const NavProfile = () => {
     useEffect(() => {
         async function getClientUser() {
             const data = await jasmaApi.getClientUser();
-            setUser(data.user);
+            if (data.success) {
+                setUser(data.user);
+            }
         }
         getClientUser();
     }, []);
 
     if (!user) {
-        return null;
+        return <div>default stuff</div>;
     }
 
     return (
