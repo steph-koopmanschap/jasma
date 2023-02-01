@@ -102,6 +102,33 @@ class Api {
         return response.data;
     }
 
+    async addFollower(userID_two) {
+        const response = await this.api.post(`/api/users/addFollower`, {
+            userID_two: userID_two
+        });
+        return response.data;
+    }
+
+    async removeFollower(userID_two) {
+        const response = await this.api.delete(`/api/users/removeFollower/${userID_two}`);
+        return response.data;
+    }
+
+    async getFollowers(userID) {
+        const response = await this.api.get(`/api/users/${userID}/getFollowers`);
+        return response.data;
+    }
+
+    async getFollowing(userID) {
+        const response = await this.api.get(`/api/users/${userID}/getFollowing`);
+        return response.data;
+    }
+
+    async checkIsFollowing(userID_two) {
+        const response = await this.api.get(`/api/users/checkIsFollowing/${userID_two}`);
+        return response.data;
+    }
+
     async getClientUser() {
         const response = await this.api.get("/api/users/getClientUser");
         return response.data;
@@ -124,7 +151,7 @@ class Api {
 
     //Not tested yet
     async editPost(postID) {
-        const response = await this.api.put(`/api/posts/editPost/`);
+        const response = await this.api.put(`/api/posts/editPost`);
         return response.data;
     }
 
@@ -155,7 +182,7 @@ class Api {
 
     //Not tested yet
     async editComment(commentID) {
-        const response = await this.api.put(`/api/comments/editComment/`);
+        const response = await this.api.put(`/api/comments/editComment`);
         return response.data;
     }
 

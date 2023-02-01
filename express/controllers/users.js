@@ -1,6 +1,6 @@
 const db = require("../db/connections/jasmaAdmin");
-const { User, UserInfo } = db.models;
-const fs = require("fs");
+const { User, UserInfo, UserFollowing } = db.models;
+const fs = require('fs');
 
 async function getUserIdByUsername(req, res) {
     const { username } = req.params;
@@ -78,6 +78,66 @@ async function getProfilePic(req, res) {
     });
 }
 
+async function addFollower(req, res) {
+    const { userID_two } = req.body;
+    const { user_id } = req.session;
+
+    try {
+        const addedFollower = await UserFollowing.create({
+            user_id: user_id,
+            follow_id: userID_two
+        });
+    }
+    catch (err) {
+        return res.json({ success: false, message: "You are already following this person." });
+    }
+
+    return res.json({ success: true, message: "Follower added." });
+}
+
+async function removeFollower(req, res) {
+    const { userID_two } = req.params;
+    const { user_id } = req.session;
+    const removedFollower = await UserFollowing.destroy({
+        where: {
+            user_id: user_id,
+            follow_id: userID_two
+        }
+    });
+
+    return res.json({ success: true, message: "Follower removed." });
+}
+
+async function getFollowing(req, res) {
+    const { userID } = req.params;
+    //Prevent server crash if userID is undefined.
+    if (userID === undefined || userID === 'undefined' || userID === false || userID === null) {
+        return res.json({ success: false, message: "Users not found.", following: [], followingCount: 0  });
+    }
+    const result = await UserFollowing.getFollowing(userID);
+
+    return res.json({ success: true, following: result.following, followingCount: result.followingCount  });
+}
+
+async function getFollowers(req, res) {
+    const { userID } = req.params;
+    //Prevent server crash if userID is undefined.
+    if (userID === undefined || userID === 'undefined' || userID === false || userID === null) {
+        return res.json({ success: false, message: "Users not found.", followers: [], followersCount: 0  });
+    }
+    const result = await UserFollowing.getFollowers(userID);
+
+    return res.json({ success: true, followers: result.followers, followersCount: result.followersCount  });
+}
+
+async function checkIsFollowing(req, res) {
+    const { userID_two } = req.params;
+    const { user_id } = req.session;
+    const result = await UserFollowing.isFollowing(user_id, userID_two);
+
+    return res.json({ isFollowing: result });
+}
+
 // // Alternative getProfilePic function. (DOES NOT WORK)
 // async function getProfilePic(req, res) {
 //     const { userid } = req.params;
@@ -98,5 +158,10 @@ module.exports = {
     getUserIdByUsername,
     getUserInfo,
     getProfilePic,
+    addFollower,
+    removeFollower,
+    getFollowers,
+    getFollowing,
+    checkIsFollowing,
     getClientUser
 };

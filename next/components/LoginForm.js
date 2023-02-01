@@ -22,8 +22,8 @@ export default function LoginForm() {
         //Move user to dashboard upon succesfull login
         if (response.success) {
             //Store the userID and username of the logged in user into the session storage.
-            window.sessionStorage.setItem('loggedInUserID', response.user.user_id);
-            window.sessionStorage.setItem('loggedInUsername', response.user.username);
+            window.localStorage.setItem('loggedInUserID', response.user.user_id);
+            window.localStorage.setItem('loggedInUsername', response.user.username);
             setMessage(null);
             router.push("/dashboard");
         //Failed login. Show error message.

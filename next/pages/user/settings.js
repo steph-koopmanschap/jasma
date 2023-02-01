@@ -18,7 +18,7 @@ export default function Settings(props) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect( () => {
-        setUserID(window.sessionStorage.getItem('loggedInUserID'));
+        setUserID(window.localStorage.getItem('loggedInUserID'));
         setIsLoggedIn(userID ? true : false);
 
         console.log("userID from settings page?");
