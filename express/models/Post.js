@@ -52,6 +52,38 @@ module.exports = (sequelize, DataTypes, Model) => {
             return res[0];
         }
 
+        static async getNewsFeed(user_id) {
+            //1. Get the all the people that this user follows
+            const resFollowing = await sequelize.query(`SELECT follow_id AS user_id FROM users_following WHERE user_id = ?`, { replacements: [user_id] });
+            let posts = [];
+
+            //1.5 If user is not following anyone. Get the global newsfeed instead.
+            if (resFollowing[0].length === 0) {
+                posts = await Post.getLatest(25);
+                return posts;
+            }
+
+            for (let i = 0; i < resFollowing[0].length; i++)
+            {
+                //2. Get the latest post of each person
+                const resPost = await sequelize.query(`SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC LIMIT 1`, { replacements: [resFollowing[0][i].user_id] });
+                //2.5 The user has not made any posts at all. Skip. (Probably unlikely)
+                if (resPost[0].length === 0) {
+                    continue;
+                }
+                //3. Combine all posts into a list
+                posts.push(resPost[0][0]);
+            }
+
+            //4. If posts from followers is not enough
+            //   Either get posts from global (implemented) or get more posts from other users. (not implemented)
+            if (posts.length < 25) {
+                additionalPosts = await Post.getLatest(25 - posts.length);
+            }
+
+            return posts;
+        }
+
         static async generate() {
             //Retrieve a list of UserIDs from the database
             const res = await sequelize.query(`SELECT user_id, username FROM users`);

@@ -8,7 +8,7 @@ export default function NewsFeed() {
     const [posts, setPosts] = useState([]);
 
     const { status, isLoading, isError, data, error, refetch } = useQuery(["newsFeed"], 
-    async () => {return await api.getNewsFeed()},
+    async () => {return await api.getLatestPosts(25)},
     {   
         enabled: true,
         refetchOnWindowFocus: false
@@ -20,17 +20,6 @@ export default function NewsFeed() {
         refetch();
     }
     
-    // useEffect(() => { 
-    //     console.log("test");
-    //     console.log(data);
-    //     //refetch();
-    //     if (data) {
-    //         console.log("hihihi");
-    //         console.log(data);
-    //         setPosts(data.posts);
-    //     }
-    // }, []);   
-
     if (isLoading) {
         return (<h1>Retrieving posts...</h1>);
     }

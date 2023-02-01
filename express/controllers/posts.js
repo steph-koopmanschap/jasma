@@ -76,10 +76,18 @@ async function getLatestPosts(req, res) {
     return res.json({ success: true, posts: posts });
 }
 
+async function getNewsFeed(req, res) {
+    const user_id = req.session.user_id;
+    const posts = await Post.getNewsFeed(user_id);
+
+    return res.json({ success: true, posts: posts });
+}
+
 module.exports = {
     createPost,
     deletePost,
     editPost,
     getUserPosts,
-    getLatestPosts
+    getLatestPosts,
+    getNewsFeed
 };

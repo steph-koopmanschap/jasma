@@ -12,7 +12,10 @@ const ThemeSwitch = () => {
     }
 
     return (
-        <div style={{ height: "100%", width: "30px", cursor: "pointer" }}>
+        // {` height: "100%", width: "30px", cursor: "pointer" `}
+        //"h-full w-8 cursor-pointer"
+        //{` h-full w-8 cursor-pointer `}
+        <div style={` h-full w-8 cursor-pointer `}>
             {theme.name === "light" && (
                 <FontAwesomeIcon
                     icon={faMoon}
