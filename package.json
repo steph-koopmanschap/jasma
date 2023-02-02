@@ -12,8 +12,8 @@
     "scripts": {
         "dev": "concurrently -n 'redis,express,next,video-server' -c '#04FCF1,#9c143f,#85590d,#0FFC03' \"redis-server\" \"cd express && npm run dev\" \"cd next && npm run dev\" \"cd video-server && npm run dev\"",
         "build": "cd next && npm run build && cd ..",
-        "start": "concurrently -n 'express,next' -c '#9c143f,#85590d' \"cd express && npm run start\" \"cd next && npm run start\"",
-        "installAll": "npm install && cd express && npm install && cd ../next && npm install",
+        "start": "concurrently -n 'express,next,video-server,redis' -c '#9c143f,#85590d,#0FFC03,#04FCF1' \"cd express && npm run start\" \"cd next && npm run start\" \"cd video-server && npm run start\" \"redis-server\"",
+        "installAll": "npm install && cd express && npm install && cd ../next && npm install && cd ../video-server && npm install",
         "db:init": "cd express && npm run db:init",
         "db:resetTables": "cd express && npm run db:resetTables",
         "log:http": "cd express && npm run log:http"

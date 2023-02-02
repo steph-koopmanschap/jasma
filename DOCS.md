@@ -6,7 +6,9 @@ Frontend:
 - NextJS / React
 - TailwindCSS
 - React Query
+- Recoil
 - Axios
+- Font Awesome
 
 Backend:
 - ExpressJS
@@ -107,6 +109,7 @@ External documentation of 3rd party libraries and frameworks
 - [Next.js Docs](https://nextjs.org/docs)
 - [React.js Docs](https://reactjs.org/docs/getting-started.html)
 - [React Query Docs](https://react-query-v2.tanstack.com/overview)
+- [Recoil](https://recoiljs.org/docs/introduction/getting-started/)
 - [TailwindCSS Docs](https://tailwindcss.com/docs/installation)
 - [Axios Docs](https://axios-http.com/docs/intro)
 - [NPM Docs](https://docs.npmjs.com/)
