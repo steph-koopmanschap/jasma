@@ -17,17 +17,22 @@ export default function ProfilePic(props) {
         refetchOnWindowFocus: false
     }
     );
-    let profilePicSrc = "/";
-    if (data) {
-        //Create url from blob for img src={profilePic}
-        profilePicSrc = window.URL.createObjectURL(data);
-    }
+
+    // if (data) {
+    //     console.log("data from profile pic", data);
+    // }
+
+    // let profilePicSrc = "/";
+    // if (data) {
+    //     //Create url from blob for img src={profilePic}
+    //     profilePicSrc = window.URL.createObjectURL(data);
+    // }
     
     return (
         <React.Fragment>
             <Image 
                 className=" m-2"
-                src={profilePicSrc || "/"}
+                src={data ? data.file_url : "/"}
                 width={props.width}
                 height={props.height}
                 alt="Profile picture"

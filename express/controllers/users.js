@@ -4,14 +4,17 @@ const fs = require('fs');
 
 async function getUserIdByUsername(req, res) {
     const { username } = req.params;
+    console.log("username from getUserIdByUsername", username);
     let result = null;
     let userID = "";
     try {
         result = await User.getByUsername(username);
+        console.log("result from getUserIdByUsername", result);
         userID = result.user_id;
     } catch (e) {
         return res.json({ success: false, message: `User ${username} not found.` });
     }
+    console.log("user_id from getUserIdByUsername", userID);
 
     return res.json({ success: true, user_id: userID });
 }
@@ -55,27 +58,35 @@ async function getUserInfo(req, res) {
 
 async function getProfilePic(req, res) {
     const { userid } = req.params;
-    const options = {
-        root: appRoot
-    };
+
     //If userid is undefined postgresql will give an error and crash the server.
     //This if-block prevents the server from crashing and sends the default profile pic
     if (userid === "undefined" || userid === undefined || userid === false || userid === "null" || userid === null) {
-        res.sendFile("/media/users/00000000-0000-0000-0000-000000000000/profile-pic.webp", options, (err) => {
-            if (err) {
-                res.json({ success: false, message: "File not found." });
-            }
-        });
-        return 1;
+        return res.json({ success: false, file_url: `${process.env.HOSTNAME}:${process.env.PORT}/media/avatars/default-profile-pic.webp`, message: "File not found. Sending default profile picture." });
     }
-    const fileUrlObj = await UserInfo.getProfilePicUrl(userid);
-    const fileUrl = fileUrlObj.profile_pic_url;
+    const resProfilePic = await await UserInfo.getProfilePicUrl(userid);
+    const file_url = resProfilePic.profile_pic_url;
 
-    res.sendFile(fileUrl, options, (err) => {
-        if (err) {
-            res.json({ success: false, message: "File not found." });
-        }
-    });
+    return res.json({ success: true, file_url: file_url, message: "Profile pic found." });
+}
+
+async function uploadProfilePic(req, res) 
+{
+    const { file, fileName } = req.body;
+    const { user_id } = req.session;
+
+    const profile_pic_url = `${process.env.HOSTNAME}:${process.env.PORT}/media/avatars/${fileName}`;
+
+    const updatedPic = await UserInfo.update({
+            profile_pic_url: profile_pic_url
+        }, 
+        {
+        where: 
+            { user_id: user_id } 
+        });
+
+    return res.json({ success: true, message: "Profile picture updated." });
+    //return res.json({ success: false, message: "Profile picture failed to update." });
 }
 
 async function addFollower(req, res) {
@@ -138,26 +149,37 @@ async function checkIsFollowing(req, res) {
     return res.json({ isFollowing: result });
 }
 
-// // Alternative getProfilePic function. (DOES NOT WORK)
+// OLD GET PROFILE FUNCTION
 // async function getProfilePic(req, res) {
 //     const { userid } = req.params;
-//     //Send the default profile pic unknown userid
-//     if (userid === 'undefined' || userid === undefined || userid === false || userid === 'null' || userid === null) {
-//         return res.json({ success: false, file_url: "/media/users/00000000-0000-0000-0000-000000000000/profile-pic.webp" });
+//     const options = {
+//         root: appRoot
+//     };
+//     //If userid is undefined postgresql will give an error and crash the server.
+//     //This if-block prevents the server from crashing and sends the default profile pic
+//     if (userid === "undefined" || userid === undefined || userid === false || userid === "null" || userid === null) {
+//         res.sendFile("/media/users/00000000-0000-0000-0000-000000000000/profile-pic.webp", options, (err) => {
+//             if (err) {
+//                 return res.json({ success: false, message: "File not found." });
+//             }
+//         });
+//         return 1;
 //     }
-//     //Check if the file exists, if not revert back to the default user id.
-//     fs.open(`/media/users/${userid}/profile-pic.webp`, 'r', (err, fd) => {
-//         console.log("HELLO!");
-//         return res.json({ success: false, file_url: "/media/users/00000000-0000-0000-0000-000000000000/profile-pic.webp" });
-//     });
+//     const fileUrlObj = await UserInfo.getProfilePicUrl(userid);
+//     const fileUrl = fileUrlObj.profile_pic_url;
 
-//     return res.json({ success: true, file_url: `/media/users/${userid}/profile-pic.webp` });
+//     res.sendFile(fileUrl, options, (err) => {
+//         if (err) {
+//             return res.json({ success: false, message: "File not found." });
+//         }
+//     });
 // }
 
 module.exports = {
     getUserIdByUsername,
     getUserInfo,
     getProfilePic,
+    uploadProfilePic,
     addFollower,
     removeFollower,
     getFollowers,

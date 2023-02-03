@@ -30,7 +30,7 @@ sudo ufw allow out 123 comment 'allow NTP out'
 #sudo ufw allow 22/tcp #SSH
 sudo ufw allow 80/tcp #HTTP
 sudo ufw allow 443/tcp #HTTPS
-# sudo ufw allow 5000/tcp #EXPRESSJS
+sudo ufw allow 5000/tcp #EXPRESSJS
 # sudo ufw allow 3000/tcp #NEXTJS
 sudo ufw enable
 sudo ufw reload

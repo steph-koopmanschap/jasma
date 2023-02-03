@@ -1,8 +1,10 @@
 const express = require("express");
 const isAuth = require("../middleware/isAuth.js");
+const { multipartHandler } = require("../middleware/multipartHandler");
 const { getUserIdByUsername, 
         getUserInfo, 
         getProfilePic,
+        uploadProfilePic,
         addFollower,
         removeFollower,
         getFollowers,
@@ -15,6 +17,7 @@ usersRouter.get("/getClientUser", isAuth, getClientUser);
 usersRouter.get("/getUserId/:username", getUserIdByUsername);
 usersRouter.get("/:userid/UserInfo", getUserInfo);
 usersRouter.get("/:userid/profilepic", getProfilePic);
+usersRouter.put("/uploadProfilePic", isAuth, multipartHandler, uploadProfilePic);
 usersRouter.post('/addFollower', isAuth, addFollower);
 usersRouter.delete('/removeFollower/:userID_two', isAuth, removeFollower);
 usersRouter.get('/:userID/getFollowers', getFollowers);

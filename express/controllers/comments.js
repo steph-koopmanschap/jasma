@@ -11,7 +11,9 @@ async function createComment(req, res) {
             user_id: user_id, 
             username: username, 
             comment_text: comment_text, 
-            file_url: `http://localhost:5000/media/comments/${fileName}` });
+            file_url: `${process.env.HOSTNAME}:${process.env.PORT}/media/comments/${fileName}`
+            //file_url: `http://localhost:5000/media/comments/${fileName}` 
+        });
     }
     catch (err) {
         return res.json({ success: false, message: err.message });

@@ -10,7 +10,8 @@ async function createPost(req, res) {
             user_id: user_id,
             username: username,
             text_content: text_content,
-            file_url: `http://localhost:5000/media/posts/${fileName}`
+            file_url: `${process.env.HOSTNAME}:${process.env.PORT}/media/posts/${fileName}`
+            //file_url: `http://localhost:5000/media/posts/${fileName}`
         });
         const post_id = createdPost.dataValues.post_id;
         for (let i = 0; i < hashtags.length; i++) {

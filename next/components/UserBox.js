@@ -21,7 +21,7 @@ export default function UserBox(props) {
                     (<React.Fragment>
                     <Link href={`/user/${window.localStorage.getItem('loggedInUsername')}`} >
                         <ProfilePic 
-                            userid={userID} 
+                            userID={userID} 
                             width="75" 
                             height="75" 
                         /> 

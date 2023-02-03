@@ -17,6 +17,7 @@ import FolloweesList from '../../components/FolloweesList.js';
 export default function ProfilePage(props) {
     const router = useRouter();
     const { username } = router.query;
+    console.log("username: from profilePage)", username);
     
     const [loggedInUserID, setLoggedInUserID] = useState(null);
     const [showModal, SetShowModal] = useState(false);
@@ -33,6 +34,10 @@ export default function ProfilePage(props) {
     }
     );
 
+    if (data) {
+        console.log("data from ProfilePage", data);
+    }
+
     return (
         <div>
             <HeaderMain />
@@ -41,7 +46,7 @@ export default function ProfilePage(props) {
 
             <div className='flex flex-col items-center justify-center'>
                 <ProfilePic 
-                    userid={data?.user_id} 
+                    userID={data.success ? data.user_id : ""} 
                     width="100" 
                     height="100" 
                 />

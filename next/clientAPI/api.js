@@ -88,7 +88,9 @@ class Api {
 
     //Get the userID from a username
     async getUserID(username) {
+        console.log("username from getUserID in api.js", username);
         const response = await this.api.get(`/api/users/getUserId/${username}`);
+        console.log("response.data from getUserID in api.js", response.data);
         return response.data;
     }
 
@@ -98,7 +100,16 @@ class Api {
     }
 
     async getProfilePic(userid) {
-        const response = await this.api.get(`/api/users/${userid}/profilepic`, { responseType: "blob" });
+        //const response = await this.api.get(`/api/users/${userid}/profilepic`, { responseType: "blob" });
+        const response = await this.api.get(`/api/users/${userid}/profilepic`);
+        return response.data;
+    }
+
+    async uploadProfilePic(file) {
+        const multipartData = createMultipartData({context: "avatar"}, file);
+        const response = await this.api.put(`/api/users/uploadProfilePic`, multipartData, {
+            headers: { "content-type": "multipart/form-data" }
+        });
         return response.data;
     }
 
@@ -115,6 +126,7 @@ class Api {
     }
 
     async getFollowers(userID) {
+        console.log("userID from getFollowers from api.js", userID);
         const response = await this.api.get(`/api/users/${userID}/getFollowers`);
         return response.data;
     }
