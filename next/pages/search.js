@@ -2,7 +2,6 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import api from "../clientAPI/api.js";
-import SearchBar from '../components/SearchBar';
 import HeaderMain from '../components/HeaderMain';
 import Post from "../components/Post";
 import Comment from "../components/Comment";
@@ -74,7 +73,6 @@ export default function Search() {
     return (
         <div>
             <HeaderMain/>
-            <SearchBar prevQuery={q}/>
             <h3 className='flex justify-center mx-auto text-xl'>Filters:</h3>
             <div className='flex justify-center mx-auto'>
                     <button className='formButtonDefault m-2' value="hashtags" onClick={changeFilter}>Hashtags</button>

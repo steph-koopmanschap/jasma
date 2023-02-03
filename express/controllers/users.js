@@ -22,7 +22,7 @@ async function getUserIdByUsername(req, res) {
 async function getClientUser(req, res) {
     const { user_id } = req.session;
     const user = await User.getById(user_id);
-    return res.json({ user });
+    return res.json({ success: true, user: user });
 }
 async function getUserInfo(req, res) {
     const { userID } = req.params;

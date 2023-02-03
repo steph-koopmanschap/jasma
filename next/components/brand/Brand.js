@@ -1,11 +1,12 @@
+import Link from "next/link";
 import Logo from "./Logo";
 import BrandName from "./BrandName";
-import Link from "next/link";
-import styles from "./Brand.module.css";
+
 function Brand() {
+
     return (
         <Link href="/">
-            <div className={styles.brand}>
+            <div className="flex w-full h-full text-2xl">
                 <Logo />
                 <BrandName />
             </div>

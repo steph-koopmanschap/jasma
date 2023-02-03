@@ -1,20 +1,20 @@
 import Brand from "../brand/Brand";
-import SearchBar from "../search/SearchBar";
+import SearchBar from "../SearchBar";
 import ThemeSwitch from "../ThemeSwitch";
 import NavProfile from "../profile/NavProfile";
-import styles from "./Nav.module.css";
+
 const Nav = () => {
     return (
-        <div className={styles.nav}>
-            <div className={styles["nav-left"]}>
+        <div className="flex justify-between p-2.5 h-14 border-solid border border-gray-500">
+            <div className="flex">
                 <Brand />
             </div>
 
-            <div className={styles["nav-middle"]}>
-                <SearchBar />
+            <div className="flex">
+                <SearchBar prevQuery="Search..." />
             </div>
 
-            <div className={styles["nav-right"]}>
+            <div className="flex">
                 <ThemeSwitch />
                 <NavProfile />
             </div>

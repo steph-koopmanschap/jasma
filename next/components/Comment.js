@@ -31,7 +31,10 @@ export default function Comment(props) {
 
             <DropDownBtn 
                 style="flex flex-col" 
-                dropDownStyle="flex flex-col p-2 m-1 w-1/2 bg-gray-900 place-self-end">
+                dropDownStyle="flex flex-col p-2 m-1 w-1/2 bg-gray-900 place-self-end"
+                addIcon={true}
+                replacementIcon={null}
+            >
                 {(window.localStorage.getItem('loggedInUserID') === commentData.user_id) ? (
                     <React.Fragment>
                     <button className="formButtonDefault outline-white border my-1" onClick={deleteComment}>Delete</button>

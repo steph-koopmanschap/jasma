@@ -1,5 +1,5 @@
 function BrandName() {
-    return <div>Jasma</div>;
+    return <div>JASMA</div>;
 }
 
 export default BrandName;

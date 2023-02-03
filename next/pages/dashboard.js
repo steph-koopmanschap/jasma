@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import CreatePost from "../components/CreatePost";
-import SearchBar from "../components/SearchBar";
 import HeaderMain from "../components/HeaderMain";
 import UserBox from "../components/UserBox";
 import NewsFeed from "../components/NewsFeed";
@@ -40,7 +39,6 @@ export default function Dashboard(props) {
 
             <UserBox />
 
-            <SearchBar prevQuery="Search..." />
             {isLoggedIn ? (
                 <React.Fragment>
                 <CreatePost /> 
