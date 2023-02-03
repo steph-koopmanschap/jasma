@@ -4,6 +4,9 @@ const { Post, Hashtag, PostHashtag } = db.models;
 async function createPost(req, res) {
     const { text_content, hashtags, file, fileName } = req.body;
     const { user_id, username } = req.session;
+    //Transform raw hashtags string to array
+    const hashtagsArray = hashtags.split(",");
+
     const t = await db.transaction();
     try {
         const createdPost = await Post.create({
@@ -14,16 +17,16 @@ async function createPost(req, res) {
             //file_url: `http://localhost:5000/media/posts/${fileName}`
         });
         const post_id = createdPost.dataValues.post_id;
-        for (let i = 0; i < hashtags.length; i++) {
+        for (let i = 0; i < hashtagsArray.length; i++) {
             //Check if the hashtag already exists.
             const resHashtag = await db.query(`SELECT hashtag FROM hashtags WHERE hashtag = ?`, {
-                replacements: [hashtags[i]]
+                replacements: [hashtagsArray[i]]
             });
             //Hashtag does not exist.
             if (resHashtag[0].length === 0) {
-                await Hashtag.create({ hashtag: hashtags[i] });
+                await Hashtag.create({ hashtag: hashtagsArray[i] });
             }
-            await PostHashtag.create({ hashtag: hashtags[i], post_id: post_id });
+            await PostHashtag.create({ hashtag: hashtagsArray[i], post_id: post_id });
         }
     } catch (err) {
         await t.rollback();

@@ -80,7 +80,18 @@ export default function Post(props) {
                 
                 <p className="">{postData.text_content}</p>
                 <hr />
-                <p className="">Hashtags: {postData.hashtags}</p>
+                
+                <p className="">Hashtags: &nbsp;
+                {postData.hashtags.map((hashtag) => (
+                    <Link
+                        className="font-bold text-sky-500 mr-1 before:content-['#']"
+                        href={`/search?q=${hashtag}`}
+                    >
+                        {hashtag}
+                    </Link>
+                ))}
+                </p>
+
                 {postData.file_url ? 
                     <Image
                         src={postData.file_url}

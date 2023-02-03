@@ -1,10 +1,12 @@
 const db = require("../db/connections/jasmaAdmin");
+const { Post } = db.models;
+
 
 async function searchHashtags(keyword) {
     keyword = `%${keyword}%`;
 
     const resHashtags = await db.query(`SELECT * FROM posts_hashtags WHERE LOWER(hashtag) LIKE ?`, { replacements: [keyword] });
-    const posts = [];
+    let posts = [];
 
     //Retrieve posts accociated with each hashtag
     for (let i = 0; i < resHashtags[0].length; i++)
@@ -13,6 +15,8 @@ async function searchHashtags(keyword) {
         const resPost = await db.query(`SELECT * FROM posts WHERE post_id = ?`, { replacements: [user_id] });
         posts.push(resPost[0][0]);
     }
+
+    posts = await Post.attachHashtags(posts);
 
     return posts; 
 }    
@@ -25,8 +29,9 @@ async function searchHashtags(keyword) {
 async function searchPosts(keyword) {
     keyword = `%${keyword}%`;
     const resPosts = await db.query(`SELECT * FROM posts WHERE LOWER(text_content) LIKE ?`, { replacements: [keyword] });
-
-    return resPosts[0];
+    const posts = await Post.attachHashtags(resPosts[0]);
+    
+    return posts;
 }
 
 async function searchComments(keyword) {

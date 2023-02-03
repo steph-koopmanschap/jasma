@@ -43,13 +43,41 @@ module.exports = (sequelize, DataTypes, Model) => {
     class Post extends Model {
         static async findByUserId(user_id, limit) {
             const res = await sequelize.query(`SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC LIMIT ?`, { replacements: [user_id, limit] });
-            return res[0];
+            const posts = Post.attachHashtags(res[0]);
+
+            return posts;
+        }
+
+        //Get all the hashtags linked to post_id
+        static async getHashtags(post_id) {
+            const res = await sequelize.query(`SELECT hashtag FROM posts_hashtags WHERE post_id = ? LIMIT 5`, { replacements: [post_id] });
+            const hashtags = [];
+            //Turn hashtags into a simple array
+            for (let i = 0; i < res[0].length; i++) 
+            {
+                hashtags.push(res[0][i].hashtag);
+            }
+
+            return hashtags;
+        }
+
+        //Attach hashtags to each post in a list of posts
+        static async attachHashtags(posts) {
+            for (let i = 0; i < posts.length; i++) 
+            {
+                posts[i].hashtags = await Post.getHashtags(posts[i].post_id);
+            }
+
+            return posts;
         }
 
         //Return the last posts sorted by date (most recent date first)
         static async getLatest(limit) {
             const res = await sequelize.query(`SELECT * FROM posts ORDER BY created_at DESC LIMIT ?`, { replacements: [limit] });
-            return res[0];
+            const posts = await Post.attachHashtags(res[0]);
+            
+            console.log("posts", posts);
+            return posts;
         }
 
         static async getNewsFeed(user_id) {
@@ -81,6 +109,8 @@ module.exports = (sequelize, DataTypes, Model) => {
                 additionalPosts = await Post.getLatest(25 - posts.length);
             }
 
+            posts = await Post.attachHashtags(posts);
+            console.log("posts", posts);
             return posts;
         }
 

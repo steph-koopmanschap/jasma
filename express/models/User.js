@@ -50,6 +50,7 @@ module.exports = (sequelize, DataTypes, Model) => {
         }
 
         static async getById(user_id) {
+            console.log("user_id from User.getById", user_id);
             const res = await sequelize.query(`SELECT * FROM users WHERE user_id = ?`, { replacements: [user_id] });
             return res[0][0];
         }
