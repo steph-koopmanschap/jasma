@@ -179,7 +179,6 @@ class Api {
 
     async getNewsFeed() {
         const response = await this.api.get(`/api/posts/getNewsFeed`);
-        console.log("response.data from api/getNewsFeed", response);
         return response.data;
     }
 

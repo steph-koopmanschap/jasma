@@ -25,12 +25,13 @@ export default function Dashboard(props) {
     console.log("Dashboard props");
     console.log(props);
 
-    let userID = null;
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userID, setuserID] = useState();
+    const [isLoggedIn, setIsLoggedIn] = useState();
 
     useEffect(() => {
-        userID = window.localStorage.getItem('loggedInUserID');
+        setuserID(window.localStorage.getItem('loggedInUserID'));
         setIsLoggedIn(userID ? true : false);
+
     }, [isLoggedIn]);
 
     return (
@@ -44,10 +45,8 @@ export default function Dashboard(props) {
                 <CreatePost /> 
                 <NewsFeed />
                 </React.Fragment>)
-            : 
-            <GlobalNewsFeed />}
-            
-            
+            : <GlobalNewsFeed />
+            }
         </div>
     );
 }

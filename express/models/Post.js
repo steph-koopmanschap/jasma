@@ -76,7 +76,6 @@ module.exports = (sequelize, DataTypes, Model) => {
             const res = await sequelize.query(`SELECT * FROM posts ORDER BY created_at DESC LIMIT ?`, { replacements: [limit] });
             const posts = await Post.attachHashtags(res[0]);
             
-            console.log("posts", posts);
             return posts;
         }
 
@@ -105,12 +104,13 @@ module.exports = (sequelize, DataTypes, Model) => {
 
             //4. If posts from followers is not enough
             //   Either get posts from global (implemented) or get more posts from other users. (not implemented)
+            let additionalPosts = [];
             if (posts.length < 25) {
                 additionalPosts = await Post.getLatest(25 - posts.length);
             }
-
+            posts = posts.concat(additionalPosts);
             posts = await Post.attachHashtags(posts);
-            console.log("posts", posts);
+
             return posts;
         }
 

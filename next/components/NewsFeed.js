@@ -15,6 +15,12 @@ export default function NewsFeed() {
     }
     );
 
+    //console.log("HELLO FROM NEWSFEED");
+
+    // if (data) {
+    //     console.log("data from newsFeed", data);
+    // }
+
     //Refresh newsfeed without reloading the page????
     const refresh = () => {
         refetch();

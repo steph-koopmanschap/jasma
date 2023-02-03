@@ -12,6 +12,6 @@ postsRouter.put("/editPost", isAuth, editPost);
 postsRouter.get("/getUserPosts", getUserPosts);
 // api/posts/getLatestPosts?limit=50
 postsRouter.get("/getLatestPosts", getLatestPosts);
-postsRouter.get("/getNewsFeed", isAuth, getLatestPosts);
+postsRouter.get("/getNewsFeed", isAuth, getNewsFeed);
 
 module.exports = { postsRouter };
