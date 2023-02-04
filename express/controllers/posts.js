@@ -1,5 +1,5 @@
 const db = require("../db/connections/jasmaAdmin");
-const { Post, Hashtag, PostHashtag } = db.models;
+const { Post, Hashtag, PostHashtag, UserBookmarks } = db.models;
 
 async function createPost(req, res) {
     const { text_content, hashtags, file, fileName } = req.body;
@@ -81,10 +81,42 @@ async function getLatestPosts(req, res) {
 }
 
 async function getNewsFeed(req, res) {
-    const user_id = req.session.user_id;
+    const { user_id } = req.session;
     const posts = await Post.getNewsFeed(user_id);
 
     return res.json({ success: true, posts: posts });
+}
+
+async function addPostBookmark(req, res) {
+    const { post_id } = req.body;
+    const { user_id } = req.session;
+    const createdBookmark = await UserBookmarks.create({
+        user_id: user_id,
+        post_id: post_id
+    });
+    
+    return res.json({ success: true, message: "Bookmark added." });
+}
+
+async function removePostBookmark(req, res) {
+    const { post_id } = req.params;
+    const { user_id } = req.session;
+    const removedBookmark = await UserBookmarks.destroy({
+        where: {
+            user_id: user_id,
+            post_id: post_id
+        }
+    });
+
+    return res.json({ success: true, message: "Bookmark removed." });
+}
+
+async function getBookmarkedPosts(req, res) {
+    const { user_id } = req.session;
+
+    const bookmarkedPosts = await Post.getBookmarkedPosts(user_id);
+
+    return res.json({ success: true, posts: bookmarkedPosts });
 }
 
 module.exports = {
@@ -93,5 +125,8 @@ module.exports = {
     editPost,
     getUserPosts,
     getLatestPosts,
-    getNewsFeed
+    getNewsFeed,
+    addPostBookmark,
+    removePostBookmark,
+    getBookmarkedPosts
 };

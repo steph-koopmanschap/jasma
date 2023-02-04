@@ -182,6 +182,23 @@ class Api {
         return response.data;
     }
 
+    async addPostBookmark(post_id) {
+        const response = await this.api.post(`/api/posts/addPostBookmark`, {
+            post_id: post_id
+        });
+        return response.data;
+    }
+
+    async removePostBookmark(post_id) {
+        const response = await this.api.delete(`/api/posts/removePostBookmark/${post_id}`);
+        return response.data;
+    }
+
+    async getBookmarkedPosts() {
+        const response = await this.api.get(`/api/posts/getBookmarkedPosts`);
+        return response.data;
+    }
+
     async createComment(commentData, file) {
         console.log("commentData", commentData);
         const multipartData = createMultipartData(commentData, file);
@@ -207,7 +224,7 @@ class Api {
         const response = await this.api.get(`/api/comments/getComments?post_id=${post_id}&limit=${limit}`);
         return response.data;
     }
-
+    
     async search(keyword, filter) {
         const response = await this.api.get(`/api/search/search?q=${keyword}&filter=${filter}`);
         return response.data;

@@ -24,16 +24,17 @@ export default function Post(props) {
         return notify("Post deleted.");
     }
 
-    const editPost = () => {
+    const editPost = async () => {
         console.log("Editing posts does not work yet.");
     }
 
-    const reportPost = () => {
+    const reportPost = async () => {
         console.log("Reporting posts does not work yet.");
     }
 
-    const bookmarkPost = () => {
-        console.log("Bookmarking posts does not work yet.");
+    const bookmarkPost = async () => {
+        const res = await api.addPostBookmark(postData.post_id);
+        return notify("Post has been bookmarked.");
     }
 
     return (
@@ -50,10 +51,14 @@ export default function Post(props) {
                         <React.Fragment>
                         <button className="formButtonDefault outline-white border my-1" onClick={deletePost}>Delete</button>
                         <button className="formButtonDefault outline-white border my-1" onClick={editPost}>Edit</button>
-                        <button className="formButtonDefault outline-white border my-1" onClick={bookmarkPost}>Bookmark</button>
                         </React.Fragment>) 
                     : null}
-                    <button className="formButtonDefault outline-white border my-1" onClick={reportPost}>Report</button>
+                    {window.localStorage.getItem('loggedInUserID') ? 
+                        <button className="formButtonDefault outline-white border my-1" onClick={bookmarkPost}>Bookmark</button>
+                    : null}
+                    {(window.localStorage.getItem('loggedInUserID') !== postData.user_id) ? 
+                        <button className="formButtonDefault outline-white border my-1" onClick={reportPost}>Report</button>
+                    : null}
                 </DropDownBtn>
 
                 <ProfilePic

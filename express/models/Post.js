@@ -114,6 +114,26 @@ module.exports = (sequelize, DataTypes, Model) => {
             return posts;
         }
 
+        static async getBookmarkedPosts(user_id) {
+            const resBookmarks = await sequelize.query(`SELECT post_id FROM user_bookmarks WHERE user_id = ?`, { replacements: [user_id] });
+            const bookmarks = resBookmarks[0]; 
+            const posts = [];
+
+            //No bookmarks found exit early.
+            if (bookmarks.length === 0) {
+                return posts;
+            }
+
+            for (let i = 0; i < bookmarks.length; i++) {
+                const resPost = await sequelize.query(`SELECT * FROM posts WHERE post_id = ?`, { replacements: [bookmarks[i].post_id] });
+                posts.push(resPost[0]);
+            }
+
+            posts = await Post.attachHashtags(posts);
+            
+            return posts;
+        }
+
         static async generate() {
             //Retrieve a list of UserIDs from the database
             const res = await sequelize.query(`SELECT user_id, username FROM users`);
