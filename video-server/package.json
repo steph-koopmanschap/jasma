@@ -1,5 +1,5 @@
 {
-  "name": "JASMA-media-server",
+  "name": "jasma-media-server",
   "version": "1.0.0",
   "description": "Media server of JASMA",
   "main": "index.js",

@@ -1,8 +1,8 @@
 {
-    "name": "jasma",
+    "name": "jasma-next",
     "version": "0.1.0",
     "private": true,
-    "description": "JASMA-launcher",
+    "description": "JASMA-next",
     "homepage": "https://github.com/steph-koopmanschap/jasma#readme",
     "author": "Steph Koopmanschap and Others",
     "license": "Apache-2.0",

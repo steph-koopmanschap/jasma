@@ -44,6 +44,11 @@ module.exports = (sequelize, DataTypes, Model) => {
         updatedAt: false
     };
 
-    class UserMetadata extends Model {}
+    class UserMetadata extends Model {
+        static async getById(user_id) {
+            const res = await sequelize.query(`SELECT * FROM users_metadata WHERE user_id = ?`, { replacements: [user_id] });
+            return res[0][0];
+        }
+    }
     UserMetadata.init(columns, options);
 };
