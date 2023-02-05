@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js",
-    "start": "node index.js"
+    "dev": "PORT=4000 nodemon index.js",
+    "start": "PORT=4000 node index.js"
   },
   "repository": {
     "type": "git",

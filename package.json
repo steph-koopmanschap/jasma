@@ -14,6 +14,8 @@
         "build": "cd next && npm run build && cd ..",
         "start": "concurrently -n 'express,next,video-server,redis' -c '#9c143f,#85590d,#0FFC03,#04FCF1' \"cd express && npm run start\" \"cd next && npm run start\" \"cd video-server && npm run start\" \"redis-server\"",
         "installAll": "npm install && cd express && npm install && cd ../next && npm install && cd ../video-server && npm install",
+        "devAll": "gnome-terminal --window --title=JASMA-API -x sh -i -c \"cd express && npm run dev\" && gnome-terminal --window --title=JASMA-NEXT -x sh -i -c \"cd next && npm run dev\" && gnome-terminal --window --title=JAMSA-MEDIA-SERVER -x sh -i -c \"cd video-server && npm run dev\"",
+        "startAll": "gnome-terminal --window --title=JASMA-API -x sh -i -c \"cd express && npm run start\" && gnome-terminal --window --title=JASMA-NEXT -x sh -i -c \"cd next && npm run start\" && gnome-terminal --window --title=JAMSA-MEDIA-SERVER -x sh -i -c \"cd video-server && npm run start\"",
         "db:init": "cd express && npm run db:init",
         "db:resetTables": "cd express && npm run db:resetTables",
         "log:http": "cd express && npm run log:http"
