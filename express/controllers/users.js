@@ -1,6 +1,6 @@
 const db = require("../db/connections/jasmaAdmin");
+const { deleteFile } = require("../utils/deleteFile.js");
 const { User, UserInfo, UserFollowing } = db.models;
-const fs = require('fs');
 
 async function getUserIdByUsername(req, res) {
     const { username } = req.params;
@@ -77,6 +77,16 @@ async function uploadProfilePic(req, res)
 
     const profile_pic_url = `${process.env.HOSTNAME}:${process.env.PORT}/media/avatars/${fileName}`;
 
+    //Delete the old profile pic
+    const resFileUrl = await db.query(`SELECT profile_pic_url FROM users_info WHERE user_id = ?`, {
+        replacements: [user_id]
+    });
+    //Only delete the old profile pic if the old pic is not the default profile pic. 
+    //(Default profile pic is shared by all accounts without profile pic and should never be deleted)
+    if (resFileUrl[0][0].profile_pic_url !== `${process.env.HOSTNAME}:${process.env.PORT}/media/avatars/default-profile-pic.webp`) {
+        deleteFile(resFileUrl[0][0].profile_pic_url);
+    }
+
     const updatedPic = await UserInfo.update({
             profile_pic_url: profile_pic_url
         }, 
@@ -87,6 +97,32 @@ async function uploadProfilePic(req, res)
 
     return res.json({ success: true, message: "Profile picture updated." });
     //return res.json({ success: false, message: "Profile picture failed to update." });
+}
+
+//Not complete yet
+async function deleteUser(req, res) {
+    const { DeleteUserID } = req.params;
+    const { user_id } = req.session;
+
+    //Delete the old profile pic
+    const resFileUrl = await db.query(`SELECT profile_pic_url FROM users_info WHERE user_id = ?`, {
+        replacements: [DeleteUserID]
+    });
+    //Only delete the old profile pic if the old pic is not the default profile pic. 
+    //(Default profile pic is shared by all accounts without profile pic and should never be deleted)
+    if (resFileUrl[0][0].profile_pic_url !== `${process.env.HOSTNAME}:${process.env.PORT}/media/avatars/default-profile-pic.webp`) {
+        deleteFile(resFileUrl[0][0].profile_pic_url);
+    }
+
+    const updatedProfilePic = await UserInfo.update({
+            profile_pic_url: `${process.env.HOSTNAME}:${process.env.PORT}/media/avatars/default-profile-pic.webp`
+        }, 
+        {
+        where: 
+            { user_id: DeleteUserID } 
+    });
+
+    return res.json({ success: true, message: "User account deleted." });
 }
 
 async function addFollower(req, res) {

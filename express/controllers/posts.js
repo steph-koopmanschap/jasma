@@ -1,4 +1,5 @@
 const db = require("../db/connections/jasmaAdmin");
+const { deleteFile } = require("../utils/deleteFile.js");
 const { Post, Hashtag, PostHashtag, UserBookmarks } = db.models;
 
 async function createPost(req, res) {
@@ -39,6 +40,17 @@ async function createPost(req, res) {
 
 async function deletePost(req, res) {
     const { postID } = req.params;
+    const resFileUrl = await db.query(`SELECT file_url FROM posts WHERE post_id = ?`, {
+        replacements: [postID]
+    });
+
+    //Delete the file accociated to the post, only if there is a file accociated with it.
+    if (//resFileUrl[0].length !== 0 ||
+        resFileUrl[0][0].file_url !== `${process.env.HOSTNAME}:${process.env.PORT}/media/posts/undefined`)
+    {
+        deleteFile(resFileUrl[0][0].file_url);
+    }
+
     const deletedPost = await Post.destroy({
         where: {
             post_id: postID
