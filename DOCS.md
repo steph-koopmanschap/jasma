@@ -79,50 +79,52 @@ This will set up everything you need automatically.
 
 ## API Routes
 
+#### Routes marked with ! require authenthication/authorization.
+
 ### Auth
 
-- POST /api/auth/register
-- POST /api/auth/login
-- POST /api/auth/logout
-- POST /api/auth/checkAuth
-- POST /api/auth/changePassword
+- POST   /api/auth/register
+- POST   /api/auth/login
+- POST   /api/auth/logout
+- POST   /api/auth/checkAuth
+- ! POST /api/auth/changePassword
 
 ### Users
 
-- GET  /api/users/getClientUser
-- GET  /api/users/getUserId/${username}
-- GET  /api/users/${userID}/UserInfo
-- GET  /api/users/${userid}/profilepic
-- PUT  /api/users/uploadProfilePic
-- POST /api/users/addFollower
-- DELETE /api/users/removeFollower/${userID_two}
-- GET  /api/users/${userID}/getFollowers
-- GET  /api/users/${userID}/getFollowing
-- GET  /api/users/checkIsFollowing/${userID_two}
+- ! GET    /api/users/getClientUser
+- GET      /api/users/getUserId/${username}
+- GET      /api/users/${userID}/UserInfo
+- GET      /api/users/${userid}/profilepic
+- ! PUT    /api/users/uploadProfilePic
+- ! POST   /api/users/addFollower
+- ! DELETE /api/users/removeFollower/${userID_two}
+- GET      /api/users/${userID}/getFollowers
+- GET      /api/users/${userID}/getFollowing
+- ! GET    /api/users/checkIsFollowing/${userID_two}
 
 ### Posts
 
-- POST /api/posts/createPost
-- DELETE /api/posts/deletePost/${postID}
-- PUT  /api/posts/editPost
-- GET  /api/posts/getUserPosts?user_id=${user_id}&limit=${limit}
-- GET  /api/posts/getSinglePost/${post_id}
-- GET  /api/posts/getLatestPosts?limit=${limit}
-- GET  /api/posts/getNewsFeed
-- POST  /api/posts/addPostBookmark
-- DELETE  /api/posts/removePostBookmark/${post_id}
-- GET  /api/posts/getBookmarkedPosts
+- ! POST   /api/posts/createPost
+- ! DELETE /api/posts/deletePost/${postID}
+- ! PUT    /api/posts/editPost
+- GET      /api/posts/getUserPosts?user_id=${user_id}&limit=${limit}
+- GET      /api/posts/getSinglePost/${post_id}
+- GET      /api/posts/getLatestPosts?limit=${limit}
+- ! GET    /api/posts/getNewsFeed
+- ! POST   /api/posts/addPostBookmark
+- ! DELETE /api/posts/removePostBookmark/${post_id}
+- ! GET    /api/posts/getBookmarkedPosts
 
 ### Comments
 
-- POST /api/comments/createComment
-- DELETE /api/comments/deleteComment/${commentID}
-- PUT  /api/comments/editComment
-- GET  /api/comments/getComments?post_id=${post_id}&limit=${limit}
+- ! POST   /api/comments/createComment
+- ! DELETE /api/comments/deleteComment/${commentID}
+- ! PUT    /api/comments/editComment
+- GET      /api/comments/getComments?post_id=${post_id}&limit=${limit}
 
 ### Search
 
-- GET  /api/search/search?q=${keyword}&filter=${filter}
+- GET /api/search/search?q=${keyword}&filter=${filter}
 
 ## Learn More
 

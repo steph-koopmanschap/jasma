@@ -4,4 +4,5 @@ const { SqlConnection } = require("../connections/SqlConnection");
     jasmaAdmin.loadModels();
     await jasmaAdmin.drop();
     await jasmaAdmin.sync();
+    await jasmaAdmin.close();
 })();

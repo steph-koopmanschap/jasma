@@ -64,7 +64,11 @@ async function getProfilePic(req, res) {
     if (userid === "undefined" || userid === undefined || userid === false || userid === "null" || userid === null) {
         return res.json({ success: false, file_url: `${process.env.HOSTNAME}:${process.env.PORT}/media/avatars/default-profile-pic.webp`, message: "File not found. Sending default profile picture." });
     }
-    const resProfilePic = await await UserInfo.getProfilePicUrl(userid);
+    const resProfilePic = await UserInfo.getProfilePicUrl(userid);
+    //This if-block prevents server crash if the user does not exist as a row in the UserInfo table. (rare bug).
+    if (!resProfilePic) {
+        return res.json({ success: false, file_url: `${process.env.HOSTNAME}:${process.env.PORT}/media/avatars/default-profile-pic.webp`, message: "File not found. Sending default profile picture.", message: "Profile pic found." });
+    }
     const file_url = resProfilePic.profile_pic_url;
 
     return res.json({ success: true, file_url: file_url, message: "Profile pic found." });
