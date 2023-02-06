@@ -116,6 +116,7 @@ export default function Post(props) {
                 {postData.hashtags.map((hashtag) => (
                     <Link
                         className="font-bold text-sky-500 mr-1 before:content-['#']"
+                        key={`${postData.post_id}_${hashtag}`}
                         href={`/search?q=${hashtag}`}
                     >
                         {hashtag}

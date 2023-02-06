@@ -42,7 +42,7 @@ export default function BookmarksList(props) {
     return ( 
         <div>
             {data.posts.map((post) => (
-                <div>
+                <div key={post.post_id}>
                     <button 
                         className='formButtonDefault py-2 px-2 m-2 outline-white border' 
                         onClick={() => removeBookmark(post.post_id)}
@@ -50,7 +50,6 @@ export default function BookmarksList(props) {
                         Remove bookmark
                     </button>
                     <Post
-                        key={post.post_id}
                         postData={post}
                     />
                 </div>
