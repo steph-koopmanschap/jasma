@@ -67,24 +67,21 @@ export default function Post(props) {
                     {window.localStorage.getItem('loggedInUserID') ? 
                         <button className="formButtonDefault outline-white border my-1" onClick={bookmarkPost}>Bookmark</button>
                     : null}
-                    {(window.localStorage.getItem('loggedInUserID') !== postData.user_id) ? (
-                        <React.Fragment>
+                    {(window.localStorage.getItem('loggedInUserID') !== postData.user_id) ?
                         <button className="formButtonDefault outline-white border my-1" onClick={reportPost}>Report</button>
-
-                        <DropDownBtn 
-                            style="flex flex-col" 
-                            dropDownStyle="flex flex-col p-2 m-1 bg-gray-600 border-2 border-solid border-black place-self-end"
-                            addIcon={false}
-                            replacementIcon={(<button className="formButtonDefault outline-white border my-1">Share</button>)}
-                        >
-                            <React.Fragment>
-                            <p className="formButtonDefault outline-black border my-1" onClick={sharePost}>Copy link</p>
-                            <p className='text-black bg-white border-2 border-black p-2'>{`${window.location.origin}/post/${postData.post_id}`}</p>
-                            </React.Fragment>
-                        </DropDownBtn>
-
-                        </React.Fragment>)
                     : null}
+
+                    <DropDownBtn 
+                        style="flex flex-col" 
+                        dropDownStyle="flex flex-col p-2 m-1 bg-gray-600 border-2 border-solid border-black place-self-end"
+                        addIcon={false}
+                        replacementIcon={(<button className="formButtonDefault outline-white border my-1">Share</button>)}
+                    >
+                        <React.Fragment>
+                        <p className="formButtonDefault outline-black border my-1" onClick={sharePost}>Copy link</p>
+                        <p className='text-black bg-white border-2 border-black p-2'>{`${window.location.origin}/post/${postData.post_id}`}</p>
+                        </React.Fragment>
+                    </DropDownBtn>
                 </DropDownBtn>
 
                 <ProfilePic
