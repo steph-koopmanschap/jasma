@@ -1,4 +1,5 @@
 const db = require("../db/connections/jasmaAdmin");
+const { deleteFile } = require("../utils/deleteFile.js");
 const { Comment } = db.models;
 
 async function createComment(req, res) {
@@ -11,7 +12,9 @@ async function createComment(req, res) {
             user_id: user_id, 
             username: username, 
             comment_text: comment_text, 
-            file_url: `http://localhost:5000/media/comments/${fileName}` });
+            file_url: `${process.env.HOSTNAME}:${process.env.PORT}/media/comments/${fileName}`
+            //file_url: `http://localhost:5000/media/comments/${fileName}` 
+        });
     }
     catch (err) {
         return res.json({ success: false, message: err.message });
@@ -23,6 +26,16 @@ async function createComment(req, res) {
 
 async function deleteComment(req, res) {
     const { commentID } = req.params;
+    const resFileUrl = await db.query(`SELECT file_url FROM comments WHERE comment_id = ?`, {
+        replacements: [commentID]
+    });
+    //Delete the file accociated to the comment, only if there is a file accociated with it.
+    if (//resFileUrl[0].length !== 0 ||
+        resFileUrl[0][0].file_url !== `${process.env.HOSTNAME}:${process.env.PORT}/media/posts/undefined`)
+    {
+        deleteFile(resFileUrl[0][0].file_url);
+    }
+    
     const deletedComment = await Comment.destroy({
         where: {
             comment_id: commentID

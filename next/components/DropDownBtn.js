@@ -12,7 +12,9 @@ export default function DropDownBtn(props) {
 
     return (
         <div className={props.style}>
-            <button className="" onClick={handleOnClick}><FontAwesomeIcon icon={faBars} /></button>
+            <button className="" onClick={handleOnClick}>
+                {props.addIcon ? <FontAwesomeIcon icon={faBars} /> : props.replacementIcon}
+            </button>
             
             {isActive ? 
                 <div className={props.dropDownStyle}>

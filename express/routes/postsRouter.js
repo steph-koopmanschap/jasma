@@ -1,7 +1,16 @@
 const express = require("express");
 const isAuth = require("../middleware/isAuth.js");
 const { multipartHandler } = require("../middleware/multipartHandler");
-const { createPost, deletePost, editPost, getUserPosts, getLatestPosts } = require("../controllers/posts.js");
+const { createPost, 
+        deletePost, 
+        editPost, 
+        getUserPosts,
+        getSinglePost, 
+        getLatestPosts, 
+        getNewsFeed,
+        addPostBookmark,
+        removePostBookmark,
+        getBookmarkedPosts } = require("../controllers/posts.js");
 
 const postsRouter = express.Router();
 
@@ -10,7 +19,12 @@ postsRouter.delete("/deletePost/:postID", isAuth, deletePost);
 postsRouter.put("/editPost", isAuth, editPost);
 // api/posts/getUserPosts?user_id=UUID&limit=50
 postsRouter.get("/getUserPosts", getUserPosts);
+postsRouter.get("/getSinglePost/:post_id", getSinglePost);
 // api/posts/getLatestPosts?limit=50
 postsRouter.get("/getLatestPosts", getLatestPosts);
+postsRouter.get("/getNewsFeed", isAuth, getNewsFeed);
+postsRouter.post("/addPostBookmark", isAuth, addPostBookmark);
+postsRouter.delete("/removePostBookmark/:post_id", isAuth, removePostBookmark);
+postsRouter.get("/getBookmarkedPosts", isAuth, getBookmarkedPosts);
 
 module.exports = { postsRouter };

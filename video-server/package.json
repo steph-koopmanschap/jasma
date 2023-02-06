@@ -1,11 +1,19 @@
 {
-  "name": "media-server",
+  "name": "jasma-media-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Media server of JASMA",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "dev": "PORT=4000 nodemon index.js",
+    "start": "PORT=4000 node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/steph-koopmanschap/jasma.git"
+  },
+  "bugs": {
+      "url": "https://github.com/steph-koopmanschap/jasma/issues"
   },
   "author": "",
   "license": "ISC",

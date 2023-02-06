@@ -3,31 +3,19 @@ import Link from "next/link";
 import Image from 'next/image';
 import { formatDistance } from "date-fns";
 import { toast } from "react-toastify";
+import { toastSuccess } from "../utils/defaultToasts.js"
 import api from "../clientAPI/api.js";
 import CreateComment from "./CreateComment";
 import CommentList from "./CommentList";
 import ProfilePic from "./ProfilePic";
 import DropDownBtn from './DropDownBtn.js';
 
-function toastNotification(text) {
-    toast.success(text, {
-        position: "bottom-center",
-        autoClose: false,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light"
-    });
-}
-
 export default function Post(props) {
     const { postData } = props;
 
     //React Toast
     const toastId = useRef(null);
-    const notify = (text) => (toastId.current = toastNotification(text));
+    const notify = (text) => (toastId.current = toastSuccess(text));
     const dismiss = () => toast.dismiss(toastId.current);
 
     const deletePost = async () => {
@@ -36,16 +24,28 @@ export default function Post(props) {
         return notify("Post deleted.");
     }
 
-    const editPost = () => {
+    const editPost = async () => {
         console.log("Editing posts does not work yet.");
     }
 
-    const reportPost = () => {
+    const reportPost = async () => {
         console.log("Reporting posts does not work yet.");
     }
 
-    const bookmarkPost = () => {
-        console.log("Bookmarking posts does not work yet.");
+    const bookmarkPost = async () => {
+        const res = await api.addPostBookmark(postData.post_id);
+        return notify("Post has been bookmarked.");
+    }
+
+    const sharePost = async () => {
+        navigator.clipboard.writeText(`${window.location.origin}/post/${postData.post_id}`).then(
+            () => {
+                return notify("Link has been copied to your clipboard.");
+            },
+            () => {
+              /* clipboard write failed */
+            }
+        );
     }
 
     return (
@@ -54,15 +54,37 @@ export default function Post(props) {
                 
                 <DropDownBtn 
                     style="flex flex-col" 
-                    dropDownStyle="flex flex-col p-2 m-1 w-1/2 bg-gray-900 place-self-end">
-                    {(window.sessionStorage.getItem('loggedInUserID') === postData.user_id) ? (
+                    dropDownStyle="flex flex-col p-2 m-1 w-1/2 bg-gray-900 place-self-end"
+                    addIcon={true}
+                    replacementIcon={null}
+                >
+                    {(window.localStorage.getItem('loggedInUserID') === postData.user_id) ? (
                         <React.Fragment>
                         <button className="formButtonDefault outline-white border my-1" onClick={deletePost}>Delete</button>
                         <button className="formButtonDefault outline-white border my-1" onClick={editPost}>Edit</button>
-                        <button className="formButtonDefault outline-white border my-1" onClick={bookmarkPost}>Bookmark</button>
                         </React.Fragment>) 
                     : null}
-                    <button className="formButtonDefault outline-white border my-1" onClick={reportPost}>Report</button>
+                    {window.localStorage.getItem('loggedInUserID') ? 
+                        <button className="formButtonDefault outline-white border my-1" onClick={bookmarkPost}>Bookmark</button>
+                    : null}
+                    {(window.localStorage.getItem('loggedInUserID') !== postData.user_id) ? (
+                        <React.Fragment>
+                        <button className="formButtonDefault outline-white border my-1" onClick={reportPost}>Report</button>
+
+                        <DropDownBtn 
+                            style="flex flex-col" 
+                            dropDownStyle="flex flex-col p-2 m-1 bg-gray-600 border-2 border-solid border-black place-self-end"
+                            addIcon={false}
+                            replacementIcon={(<button className="formButtonDefault outline-white border my-1">Share</button>)}
+                        >
+                            <React.Fragment>
+                            <p className="formButtonDefault outline-black border my-1" onClick={sharePost}>Copy link</p>
+                            <p className='text-black bg-white border-2 border-black p-2'>{`${window.location.origin}/post/${postData.post_id}`}</p>
+                            </React.Fragment>
+                        </DropDownBtn>
+
+                        </React.Fragment>)
+                    : null}
                 </DropDownBtn>
 
                 <ProfilePic
@@ -89,7 +111,19 @@ export default function Post(props) {
                 
                 <p className="">{postData.text_content}</p>
                 <hr />
-                <p className="">Hashtags: {postData.hashtags}</p>
+                
+                <p className="">Hashtags: &nbsp;
+                {postData.hashtags.map((hashtag) => (
+                    <Link
+                        className="font-bold text-sky-500 mr-1 before:content-['#']"
+                        key={`${postData.post_id}_${hashtag}`}
+                        href={`/search?q=${hashtag}`}
+                    >
+                        {hashtag}
+                    </Link>
+                ))}
+                </p>
+
                 {postData.file_url ? 
                     <Image
                         src={postData.file_url}
@@ -101,7 +135,7 @@ export default function Post(props) {
                 : null}
             </div>
 
-            {window.sessionStorage.getItem('loggedInUserID') ? (            
+            {window.localStorage.getItem('loggedInUserID') ? (            
                 <div className="p-2">
                     <CreateComment postID={postData.post_id} />
                 </div>) 

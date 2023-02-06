@@ -1,6 +1,6 @@
 const db = require("../db/connections/jasmaAdmin");
 const { User, UserPassword, UserMetadata } = db.models;
-const { format } = require("date-fns");
+const { formatISO } = require("date-fns");
 
 async function register(req, res) {
     const { username, email, password } = req.body;
@@ -38,14 +38,18 @@ async function login(req, res) {
         return res.json({ success: false, message: "Email or password is incorrect." });
     }
 
-    await UserMetadata.update(
-        { last_login_date: format(Date.now(), "MM/dd/yyyy"), last_ipv4: req.ip },
+    const updatedMetadata = await UserMetadata.update(
+        { last_login_date: formatISO(Date.now(), { representation: 'date' }), last_ipv4: req.ip },
         { where: { user_id: user.user_id } }
     );
+
+    //Get the user role
+    const resMetadata = await UserMetadata.getById(user.user_id);
 
     req.session.user_id = user.user_id;
     req.session.username = user.username;
     req.session.email = user.email;
+    req.session.role = resMetadata.user_role;
     res.json({ success: true, user, message: "user logged in." });
 }
 

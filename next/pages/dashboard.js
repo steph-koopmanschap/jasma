@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import CreatePost from "../components/CreatePost";
-import SearchBar from "../components/SearchBar";
 import HeaderMain from "../components/HeaderMain";
 import UserBox from "../components/UserBox";
 import NewsFeed from "../components/NewsFeed";
+import GlobalNewsFeed from "../components/GlobalNewsFeed";
 import { checkAuth } from "../session";
 
 export async function getServerSideProps({ req, res }) {
@@ -25,12 +25,13 @@ export default function Dashboard(props) {
     console.log("Dashboard props");
     console.log(props);
 
-    let userID = null;
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userID, setuserID] = useState();
+    const [isLoggedIn, setIsLoggedIn] = useState();
 
     useEffect(() => {
-        userID = window.sessionStorage.getItem('loggedInUserID');
+        setuserID(window.localStorage.getItem('loggedInUserID'));
         setIsLoggedIn(userID ? true : false);
+
     }, [isLoggedIn]);
 
     return (
@@ -39,10 +40,13 @@ export default function Dashboard(props) {
 
             <UserBox />
 
-            <SearchBar prevQuery="Search..." />
-            {isLoggedIn ? <CreatePost /> : null}
-            
-            <NewsFeed />
+            {isLoggedIn ? (
+                <React.Fragment>
+                <CreatePost /> 
+                <NewsFeed />
+                </React.Fragment>)
+            : <GlobalNewsFeed />
+            }
         </div>
     );
 }

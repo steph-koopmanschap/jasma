@@ -13,7 +13,7 @@ export default function BioPage(props) {
     const res = queryClient.getQueryData(`${username}`);
     const userID = res?.user_id;
 
-    const { status, isLoading, isError, data, error, refetch } = useQuery([`${username}`], 
+    const { status, isLoading, isError, data: dataUserInfo, error, refetch } = useQuery([`${username}`], 
     async () => {return await api.getUserInfo(userID)},
     {   
         enabled: true,

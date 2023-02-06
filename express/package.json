@@ -1,5 +1,5 @@
 {
-    "name": "jasmaserver",
+    "name": "jasma-server",
     "version": "1.0.0",
     "description": "API server/backend for JASMA",
     "homepage": "https://github.com/steph-koopmanschap/jasma#readme",

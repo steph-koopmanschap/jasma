@@ -33,7 +33,7 @@ export default function LoginPage() {
         //Because useEffect() itself can not be itself async, a self-executing async function is placed inside useEffect
         (async () => {
             const isLoggedIn = await api.checkAuthClientSide();
-            if (isLoggedIn === true) {
+            if (isLoggedIn === true && window.localStorage.getItem('loggedInUserID')) {
                 router.replace('/dashboard');
             }
         })();

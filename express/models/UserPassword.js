@@ -40,10 +40,11 @@ module.exports = (sequelize, DataTypes, Model) => {
             let hashedPassword = "";
             try {
                 hashedPassword = await bcrypt.hash(password, 10);
+                //return hashedPassword;
+            } catch (e) {
+                throw new Error(e.message);
             }
-            catch (e) {
-                return e;
-            }
+
             return hashedPassword;
         }
     }
@@ -51,8 +52,7 @@ module.exports = (sequelize, DataTypes, Model) => {
     UserPassword.init(columns, options);
 
     UserPassword.beforeCreate(async (entry) => {
-        //const hashedPassword = await bcrypt.hash(entry.user_password, 10);
-        const hashedPassword = await this.hashPassword(entry.user_password);
+        const hashedPassword = await UserPassword.hashPassword(entry.user_password);
         entry.user_password = hashedPassword;
     });
 };

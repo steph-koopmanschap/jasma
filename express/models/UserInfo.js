@@ -14,7 +14,8 @@ module.exports = (sequelize, DataTypes, Model) => {
         },
         profile_pic_url: {
             type: DataTypes.STRING(300),
-            defaultValue: "/media/users/00000000-0000-0000-0000-000000000000/profile-pic.webp",
+            defaultValue: `${process.env.HOSTNAME}:${process.env.PORT}/media/avatars/default-profile-pic.webp`
+            //defaultValue: "/media/users/00000000-0000-0000-0000-000000000000/profile-pic.webp",
         },
         given_name: {
             type: DataTypes.STRING(35)
@@ -46,7 +47,6 @@ module.exports = (sequelize, DataTypes, Model) => {
         static async getById(user_id)
         {
             const res = await sequelize.query(`SELECT * FROM users_info WHERE user_id = ?`, { replacements: [user_id] });
-            console.log(res);
             return res[0][0];
         }
 

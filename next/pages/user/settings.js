@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import api from "../../clientAPI/api.js";
 import HeaderMain from '../../components/HeaderMain';
+import UploadProfilePic from '../../components/UploadProfilePic';
 import ProfilePic from '../../components/ProfilePic';
 import ChangePasswordForm from '../../components/ChangePasswordForm';
+import FileUploader from '../../components/file-upload/FileUploader.js';
 
 
 //import FileUploader from "../../file-upload/FileUploader";
@@ -18,7 +20,7 @@ export default function Settings(props) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect( () => {
-        setUserID(window.sessionStorage.getItem('loggedInUserID'));
+        setUserID(window.localStorage.getItem('loggedInUserID'));
         setIsLoggedIn(userID ? true : false);
 
         console.log("userID from settings page?");
@@ -32,6 +34,12 @@ export default function Settings(props) {
 
     }, [isLoggedIn]);
 
+    const uploadProfilePic = () => {
+        const res = api.uploadProfilePic(file);
+        console.log("res from uploadProfilePic", res);
+        setFile(null);
+    }
+
     return (
         <div className='flex flex-col items-center'>
             <HeaderMain /> 
@@ -39,17 +47,8 @@ export default function Settings(props) {
             <React.Fragment>
             <h1 className='text-2xl text-center'>Settings</h1>
 
-            <p>Your current profile picture: </p>
-            <ProfilePic 
-                userID={userID}
-                width="250"
-                height="250"
-            />
-            <p>Change profile picture:</p>
-            {/* <FileUploader
-                file={file}
-                setFile={setFile}
-            /> */}
+            <UploadProfilePic userID={userID} />
+
             <ChangePasswordForm />
 
             </React.Fragment>

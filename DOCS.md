@@ -6,7 +6,9 @@ Frontend:
 - NextJS / React
 - TailwindCSS
 - React Query
+- Recoil
 - Axios
+- Font Awesome
 
 Backend:
 - ExpressJS
@@ -66,9 +68,8 @@ API server lives on [http://localhost:5000/api](http://localhost:5000/api)
 Create the database
 `npm run db:init`
 
- To populate the database with fake users, posts, and comments
-`npm run db:generate`
-<!--`npm run resetAndPopulateUsers normal 10` -->
+ To populate the database with fake users, posts, and comments. Replace 10 with the amount of each you want to generate.
+`npm run db:generate 10`
 
 ### Production
 
@@ -78,26 +79,48 @@ This will set up everything you need automatically.
 
 ## API Routes
 
-- POST /api/auth/login
+### Auth
+
 - POST /api/auth/register
+- POST /api/auth/login
 - POST /api/auth/logout
 - POST /api/auth/checkAuth
 - POST /api/auth/changePassword
 
+### Users
+
+- GET  /api/users/getClientUser
 - GET  /api/users/getUserId/${username}
 - GET  /api/users/${userID}/UserInfo
 - GET  /api/users/${userid}/profilepic
+- PUT  /api/users/uploadProfilePic
+- POST /api/users/addFollower
+- DELETE /api/users/removeFollower/${userID_two}
+- GET  /api/users/${userID}/getFollowers
+- GET  /api/users/${userID}/getFollowing
+- GET  /api/users/checkIsFollowing/${userID_two}
+
+### Posts
 
 - POST /api/posts/createPost
 - DELETE /api/posts/deletePost/${postID}
 - PUT  /api/posts/editPost
 - GET  /api/posts/getUserPosts?user_id=${user_id}&limit=${limit}
+- GET  /api/posts/getSinglePost/${post_id}
 - GET  /api/posts/getLatestPosts?limit=${limit}
+- GET  /api/posts/getNewsFeed
+- POST  /api/posts/addPostBookmark
+- DELETE  /api/posts/removePostBookmark/${post_id}
+- GET  /api/posts/getBookmarkedPosts
+
+### Comments
 
 - POST /api/comments/createComment
 - DELETE /api/comments/deleteComment/${commentID}
 - PUT  /api/comments/editComment
 - GET  /api/comments/getComments?post_id=${post_id}&limit=${limit}
+
+### Search
 
 - GET  /api/search/search?q=${keyword}&filter=${filter}
 
@@ -108,6 +131,7 @@ External documentation of 3rd party libraries and frameworks
 - [Next.js Docs](https://nextjs.org/docs)
 - [React.js Docs](https://reactjs.org/docs/getting-started.html)
 - [React Query Docs](https://react-query-v2.tanstack.com/overview)
+- [Recoil](https://recoiljs.org/docs/introduction/getting-started/)
 - [TailwindCSS Docs](https://tailwindcss.com/docs/installation)
 - [Axios Docs](https://axios-http.com/docs/intro)
 - [NPM Docs](https://docs.npmjs.com/)

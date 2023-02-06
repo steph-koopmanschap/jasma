@@ -42,10 +42,10 @@ class Api {
             success: response.data.success,
             user: {
                 user_id: response.data.user.user_id,
-                username: response.data.user.username,
+                username: response.data.user.username
             },
-            message: response.data.message,
-        }
+            message: response.data.message
+        };
 
         return returnData;
     }
@@ -88,7 +88,9 @@ class Api {
 
     //Get the userID from a username
     async getUserID(username) {
+        console.log("username from getUserID in api.js", username);
         const response = await this.api.get(`/api/users/getUserId/${username}`);
+        console.log("response.data from getUserID in api.js", response.data);
         return response.data;
     }
 
@@ -98,7 +100,49 @@ class Api {
     }
 
     async getProfilePic(userid) {
-        const response = await this.api.get(`/api/users/${userid}/profilepic`, { responseType: "blob" });
+        //const response = await this.api.get(`/api/users/${userid}/profilepic`, { responseType: "blob" });
+        const response = await this.api.get(`/api/users/${userid}/profilepic`);
+        return response.data;
+    }
+
+    async uploadProfilePic(file) {
+        const multipartData = createMultipartData({context: "avatar"}, file);
+        const response = await this.api.put(`/api/users/uploadProfilePic`, multipartData, {
+            headers: { "content-type": "multipart/form-data" }
+        });
+        return response.data;
+    }
+
+    async addFollower(userID_two) {
+        const response = await this.api.post(`/api/users/addFollower`, {
+            userID_two: userID_two
+        });
+        return response.data;
+    }
+
+    async removeFollower(userID_two) {
+        const response = await this.api.delete(`/api/users/removeFollower/${userID_two}`);
+        return response.data;
+    }
+
+    async getFollowers(userID) {
+        console.log("userID from getFollowers from api.js", userID);
+        const response = await this.api.get(`/api/users/${userID}/getFollowers`);
+        return response.data;
+    }
+
+    async getFollowing(userID) {
+        const response = await this.api.get(`/api/users/${userID}/getFollowing`);
+        return response.data;
+    }
+
+    async checkIsFollowing(userID_two) {
+        const response = await this.api.get(`/api/users/checkIsFollowing/${userID_two}`);
+        return response.data;
+    }
+
+    async getClientUser() {
+        const response = await this.api.get("/api/users/getClientUser");
         return response.data;
     }
 
@@ -119,7 +163,7 @@ class Api {
 
     //Not tested yet
     async editPost(postID) {
-        const response = await this.api.put(`/api/posts/editPost/`);
+        const response = await this.api.put(`/api/posts/editPost`);
         return response.data;
     }
 
@@ -128,8 +172,35 @@ class Api {
         return response.data;
     }
 
+    async getSinglePost(post_id) {
+        const response = await this.api.get(`/api/posts/getSinglePost/${post_id}`);
+        return response.data;
+    }
+
     async getLatestPosts(limit) {
         const response = await this.api.get(`/api/posts/getLatestPosts?limit=${limit}`);
+        return response.data;
+    }
+
+    async getNewsFeed() {
+        const response = await this.api.get(`/api/posts/getNewsFeed`);
+        return response.data;
+    }
+
+    async addPostBookmark(post_id) {
+        const response = await this.api.post(`/api/posts/addPostBookmark`, {
+            post_id: post_id
+        });
+        return response.data;
+    }
+
+    async removePostBookmark(post_id) {
+        const response = await this.api.delete(`/api/posts/removePostBookmark/${post_id}`);
+        return response.data;
+    }
+
+    async getBookmarkedPosts() {
+        const response = await this.api.get(`/api/posts/getBookmarkedPosts`);
         return response.data;
     }
 
@@ -150,7 +221,7 @@ class Api {
 
     //Not tested yet
     async editComment(commentID) {
-        const response = await this.api.put(`/api/comments/editComment/`);
+        const response = await this.api.put(`/api/comments/editComment`);
         return response.data;
     }
 
@@ -158,7 +229,7 @@ class Api {
         const response = await this.api.get(`/api/comments/getComments?post_id=${post_id}&limit=${limit}`);
         return response.data;
     }
-
+    
     async search(keyword, filter) {
         const response = await this.api.get(`/api/search/search?q=${keyword}&filter=${filter}`);
         return response.data;

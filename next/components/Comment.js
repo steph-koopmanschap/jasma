@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Link from "next/link";
 import Image from 'next/image';
 import { formatDistance } from 'date-fns';
+import { toast } from "react-toastify";
+import { toastSuccess } from "../utils/defaultToasts.js"
 import api from "../clientAPI/api.js";
 import ProfilePic from "./ProfilePic";
 import DropDownBtn from './DropDownBtn.js';
@@ -9,9 +11,15 @@ import DropDownBtn from './DropDownBtn.js';
 export default function Comment(props) {
     const { commentData } = props;
 
+    //React Toast
+    const toastId = useRef(null);
+    const notify = (text) => (toastId.current = toastSuccess(text));
+    const dismiss = () => toast.dismiss(toastId.current);
+
     const deleteComment = async () => {
         const res = await api.deleteComment(commentData.comment_id);
         console.log(res);
+        return notify("Comment deleted.");
     }
 
     const EditComment = () => {
@@ -23,8 +31,11 @@ export default function Comment(props) {
 
             <DropDownBtn 
                 style="flex flex-col" 
-                dropDownStyle="flex flex-col p-2 m-1 w-1/2 bg-gray-900 place-self-end">
-                {(window.sessionStorage.getItem('loggedInUserID') === commentData.user_id) ? (
+                dropDownStyle="flex flex-col p-2 m-1 w-1/2 bg-gray-900 place-self-end"
+                addIcon={true}
+                replacementIcon={null}
+            >
+                {(window.localStorage.getItem('loggedInUserID') === commentData.user_id) ? (
                     <React.Fragment>
                     <button className="formButtonDefault outline-white border my-1" onClick={deleteComment}>Delete</button>
                     <button className="formButtonDefault outline-white border my-1" onClick={EditComment}>Edit</button>
