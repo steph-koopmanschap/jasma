@@ -70,7 +70,7 @@ export default function ProfilePage(props) {
             </div>
 
             <main className="flex flex-col">
-                {loggedInUserID ? <CreatePost /> : null}
+                {(loggedInUserID && window.localStorage.getItem('loggedInUsername') === username) ? <CreatePost /> : null}
                 {data?.success ? <UserPostList userID={data?.user_id} /> : <p className='text-center'>Could not retrieve posts.</p>}
             </main>
 
