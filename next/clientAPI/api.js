@@ -172,6 +172,11 @@ class Api {
         return response.data;
     }
 
+    async getSinglePost(post_id) {
+        const response = await this.api.get(`/api/posts/getSinglePost/${post_id}`);
+        return response.data;
+    }
+
     async getLatestPosts(limit) {
         const response = await this.api.get(`/api/posts/getLatestPosts?limit=${limit}`);
         return response.data;

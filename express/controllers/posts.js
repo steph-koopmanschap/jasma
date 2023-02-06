@@ -85,6 +85,16 @@ async function getUserPosts(req, res) {
     return res.json({ success: true, posts: posts });
 }
 
+async function getSinglePost(req, res) {
+    const { post_id } = req.params;
+    let post;
+    post = await Post.findByPostId(post_id);
+    if (post.length === 0) {
+        return res.json({ success: false, message: "Could not find post.", posts: [] }); 
+    }
+    return res.json({ success: true, posts: post }); 
+}
+
 async function getLatestPosts(req, res) {
     const { limit } = req.query;
     const posts = await Post.getLatest(limit);
@@ -136,6 +146,7 @@ module.exports = {
     deletePost,
     editPost,
     getUserPosts,
+    getSinglePost,
     getLatestPosts,
     getNewsFeed,
     addPostBookmark,

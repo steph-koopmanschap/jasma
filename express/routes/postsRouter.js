@@ -4,7 +4,8 @@ const { multipartHandler } = require("../middleware/multipartHandler");
 const { createPost, 
         deletePost, 
         editPost, 
-        getUserPosts, 
+        getUserPosts,
+        getSinglePost, 
         getLatestPosts, 
         getNewsFeed,
         addPostBookmark,
@@ -18,11 +19,12 @@ postsRouter.delete("/deletePost/:postID", isAuth, deletePost);
 postsRouter.put("/editPost", isAuth, editPost);
 // api/posts/getUserPosts?user_id=UUID&limit=50
 postsRouter.get("/getUserPosts", getUserPosts);
+postsRouter.get("/getSinglePost/:post_id", getSinglePost);
 // api/posts/getLatestPosts?limit=50
 postsRouter.get("/getLatestPosts", getLatestPosts);
 postsRouter.get("/getNewsFeed", isAuth, getNewsFeed);
 postsRouter.post("/addPostBookmark", isAuth, addPostBookmark);
 postsRouter.delete("/removePostBookmark/:post_id", isAuth, removePostBookmark);
-postsRouter.get("/getBookmarkedPosts/", isAuth, getBookmarkedPosts);
+postsRouter.get("/getBookmarkedPosts", isAuth, getBookmarkedPosts);
 
 module.exports = { postsRouter };

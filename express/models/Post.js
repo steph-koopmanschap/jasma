@@ -29,6 +29,14 @@ module.exports = (sequelize, DataTypes, Model) => {
         },
         file_url: {
             type: DataTypes.STRING(100)
+        },
+        post_type: {
+            type: DataTypes.STRING(5),
+            defaultValue: "text",
+            allowNull: false,
+            validate: {
+                isIn: [["text", "image", "video", "audio"]]
+            }
         }
     };
 
@@ -46,6 +54,18 @@ module.exports = (sequelize, DataTypes, Model) => {
             const posts = Post.attachHashtags(res[0]);
 
             return posts;
+        }
+
+        static async findByPostId(post_id) {
+            let post = [];
+            if (post_id === undefined || post_id === 'undefined' || post_id === false || post_id === "") {
+                return [];
+            }
+            const res = await sequelize.query(`SELECT * FROM posts WHERE post_id = ?`, { replacements: [post_id] });
+            post.push(res[0][0]);
+            post = Post.attachHashtags(post);
+
+            return post;
         }
 
         //Get all the hashtags linked to post_id
