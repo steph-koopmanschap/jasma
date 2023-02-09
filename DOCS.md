@@ -25,56 +25,58 @@ Backend:
 - Install Redis
 - Install NodeJS
 - Install NPM
-- Install Nginx (For production deployment)
+- Install pm2, nginx (for production)
 
-### Frontend and Backend
+### Install node modules
 
-In the root folder:
-To install all node modules. 
+In the root folder: 
 `npm run installAll` 
-To run client and server at same time (in development mode)
-`npm run dev`
-See all available scripts
-`npm run`
 
 #### Setup environment variables
+
 Make sure to copy the following files and then edit them to setup the environment variables 
-/express/.env.example to /express/.env
-/next/.env.example to /next/.env.development
+`/express/.env.example` to `/express/.env`
+`/next/.env.example` to `/next/.env.development`
 
-### Frontend
+For local development you can keep the defaults.
+For production change HOSTNAME and NEXTJS_ORIGIN to your domain name or ip address.
+Change the ports accordingly as well as the PG_ADMIN_PASSWORD.
 
-Inside the /next/ folder:
-Run the development server:
-`npm run dev`
-To build and run regular server:
-`npm run build && npm run start`
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-### Backend
-
-Inside the /express/ folder:
-Development server (nodemon reloading):
-`npm run dev`
-Regular server
-`npm run start`
-
-API server lives on [http://localhost:5000/api](http://localhost:5000/api)
-
-### Database
+### Setting up the database
 
 <!-- First read /server/db/pg_hba.conf to read on what to add to your pg_hba.conf file. -->
-Create the database
-`npm run db:init`
-
+After you have installed PostGreSQL. You can execute the following command to change the PSQL root user password.
+- `sudo -u postgres psql --echo-queries -c "ALTER ROLE postgres WITH LOGIN PASSWORD 'example';"`
+Change 'example' into a password of your liking. Make sure its the same as in the `/express/.env` file.
+To create the database do the following command:
+- `npm run db:init`
  To populate the database with fake users, posts, and comments. Replace 10 with the amount of each you want to generate.
-`npm run db:generate 10`
+- `npm run db:generate 10`
 
-### Production
+### Starting the app
+
+There are several methods to start the app from the root directioy.
+- `npm run dev` Starts the API, media, and client servers in 1 terminal, with live reloading (nodemon/next).
+- `npm run start` Starts the API, media, and client servers in 1 terminal.
+- `npm run dev:all` Same npm run dev, but every server starts in its own terminal.
+- `npm run start:all` Same npm run start, but every server starts in its own terminal.
+- `npm run start:pm2` Starts all servers as background proccesses without terminals. Requires pm2 to be installed with.
+- Use `npm run` to see all available commands.
+- With `npm run check:services` you can see if Redis, PostgreSQL, Nginx, and pm2 are running and which ports are being listened on.
+- Make sure to use the command `npm run build` before starting NextJS in production mode. (any command with `start`).
+
+You can also independently start each server with the commands.
+- `cd express && npm run dev`
+- `cd next && npm run dev`
+- `cd media-server && npm run dev`
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the app.
+API server lives on [http://localhost:5000/api](http://localhost:5000/api)
+
+### Setting up production
 
 To get started with a production server you can run: 
-`sudo ./setup.sh`
+- `sudo ./setup.sh`
 This will set up everything you need automatically.
 
 ## API Routes
@@ -128,12 +130,12 @@ This will set up everything you need automatically.
 
 ## Learn More
 
-External documentation of 3rd party libraries and frameworks
+External documentation of 3rd party libraries, frameworks, and tools.
 
 - [Next.js Docs](https://nextjs.org/docs)
 - [React.js Docs](https://reactjs.org/docs/getting-started.html)
 - [React Query Docs](https://react-query-v2.tanstack.com/overview)
-- [Recoil](https://recoiljs.org/docs/introduction/getting-started/)
+- [Recoil Docs](https://recoiljs.org/docs/introduction/getting-started/)
 - [TailwindCSS Docs](https://tailwindcss.com/docs/installation)
 - [Axios Docs](https://axios-http.com/docs/intro)
 - [NPM Docs](https://docs.npmjs.com/)
@@ -142,3 +144,4 @@ External documentation of 3rd party libraries and frameworks
 - [Express.js Docs](https://expressjs.com/en/guide/routing.html)
 - [Date FNS Docs](https://date-fns.org/docs/Getting-Started)
 - [Font Awesome Docs](https://fontawesome.com/docs)
+- [Nginx Docs](https://nginx.org/en/docs/)
