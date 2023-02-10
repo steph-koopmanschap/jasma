@@ -1,6 +1,5 @@
 # JASMA - Just Another Social Media App
 
-
 ## Contributing
 
 Everyone is welcome to contribute to this open source project.
@@ -24,3 +23,8 @@ See [DOCS.md](https://github.com/steph-koopmanschap/jasma/blob/main/DOCS.md)
 ## Version history
 
 See [Version history](https://github.com/steph-koopmanschap/jasma/blob/main/VERSION-HISTORY.md)
+
+## Screenshots
+
+![Jasma screenshot0](/screenshot0.png?raw=true)
+![Jasma screenshot1](/screenshot1.png?raw=true)

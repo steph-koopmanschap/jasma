@@ -1,6 +1,10 @@
 #! /bin/bash
 
 echo "This script sets up the app. Installs all node modules and creates a database"
+echo "Note: You can get JASMA project folder with the following commands"
+echo "wget https://github.com/steph-koopmanschap/jasma/archive/refs/heads/main.zip"
+echo "sudo apt install unzip && unzip main.zip"
+echo "===================="
 echo "This script assumes your current working directory is jasma-main"
 echo "Current working directory:"
 pwd
@@ -48,20 +52,24 @@ sudo systemctl disable apache2
 
 echo "Creating self signed SSL Certificate..."
 openssl req -x509 -newkey rsa:4096 -keyout jasma-ssl-key.key -out jasma-ssl-cert.crt -days 7
+echo "example" > jasma-ssl-passwd.pass
 echo "SSL Certification done."
 
 echo "Prepare nginx configs..."
 sudo rm /etc/nginx/sites-enabled/default #Remove default conifg
-sudo mkdir /var/ww/jasma
+sudo mkdir -p /var/www/jasma
 sudo chown -R www-data: /var/www/jasma
-sudo mkdir /etc/nginx/ssl
+sudo mkdir -p /etc/nginx/ssl
 sudo mv ./jasma-ssl-cert.crt /etc/nginx/ssl/jasma-ssl-cert.crt
 sudo mv ./jasma-ssl-key.key /etc/nginx/ssl/jasma-ssl-key.key
+sudo mv ./jasma-ssl-passwd.pass /etc/nginx/ssl/jasma-ssl-passwd.pass
 sudo cp ./jasmaHTTPS.conf /etc/nginx/sites-available/jasma.conf #For Debian/Ubuntu systems. Copy jasma confHTTPS to nginx dir.
 sudo cp ./jasmaHTTPS.conf /etc/nginx/conf.d/jasma.conf #For RedHat/CentOS systems
 #sudo cp ./jasma.conf /etc/nginx/sites-available/jasma.conf #For Debian/Ubuntu systems. Copy jasma conf to nginx dir.
 #sudo cp ./jasma.conf /etc/nginx/conf.d/jasma.conf #For RedHat/CentOS systems
 sudo ln -s /etc/nginx/sites-available/jasma.conf /etc/nginx/sites-enabled/jasma.conf #Enable Jasma config.
+sudo nginx -s reload
+sudo nginx -t 
 sudo systemctl restart nginx
 
 echo "Prepare .env files..."
@@ -113,6 +121,8 @@ echo "The self signed SSL certificate is not valid for production and expires in
 echo "Replace the following files with a valid SSL Certificate:"
 echo "/etc/nginx/ssl/jasma-ssl-cert.crt"
 echo "/etc/nginx/ssl/jasma-ssl-key.key"
+echo "The following file needs to contain the passphrase you made when you made the SSL Certificate. Its currently 'example' "
+echo "/etc/nginx/ssl/jasma-ssl-passwd.pass"
 echo "------------"
 echo When everything is configured you can start the production server with the following command:
 echo npm run start:pm2
