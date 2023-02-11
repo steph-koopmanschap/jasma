@@ -29,6 +29,21 @@ module.exports = (sequelize, DataTypes, Model) => {
         date_of_birth: {
             type: DataTypes.DATEONLY
         },
+        gender: {
+            type: DataTypes.STRING(11),
+            validate: {
+                isIn: [["woman", "man", "trans woman", "trans man", "other"]]
+            }
+        },
+        relationship: {
+            type: DataTypes.STRING(11),
+            validate: {
+                isIn: [["single", "married", "partnership", "open", "poly", "other"]]
+            }
+        },
+        language: {
+            type: DataTypes.TEXT
+        },
         country: {
             type: DataTypes.TEXT
         },
@@ -64,6 +79,8 @@ module.exports = (sequelize, DataTypes, Model) => {
                 last_name: faker.name.lastName(),
                 bio: faker.lorem.paragraph(),
                 date_of_birth: faker.date.birthdate(),
+                gender: "other",
+                relationship: "single",
                 country: faker.address.country(),
                 city: faker.address.city(),
                 website: faker.internet.url()

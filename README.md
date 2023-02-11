@@ -7,11 +7,15 @@ To contribute send a message to Greylien#8501 on Discord for direct access,
 or create PR or Fork of this project.
 
 Currently looking for the following contributions:
- - Frontend design (UI/UX)
- - Logo and graphics art
- - Cybersecurity
- - Testing and bug reporting
- - Ideas and inspiration
+ - Frontend design (UI/UX).
+ - Logo and graphics art.
+ - Frontend development.
+ - Backend development.
+ - Cybersecurity.
+ - Testing and bug reporting.
+ - Ideas and inspiration.
+ - Legal advice. 
+ - Spreading the word :)
 
 Filling out this anonymous survey will help us a lot to improve JASMA.
 [Social Media Improvement Survey](https://forms.gle/wparXcH7FyNi6e27A)

@@ -55,12 +55,12 @@ To create the database do the following command:
 
 ### Starting the app
 
-There are several methods to start the app from the root directioy.
-- `npm run dev` Starts the API, media, and client servers in 1 terminal, with live reloading (nodemon/next).
-- `npm run start` Starts the API, media, and client servers in 1 terminal.
-- `npm run dev:all` Same npm run dev, but every server starts in its own terminal.
-- `npm run start:all` Same npm run start, but every server starts in its own terminal.
-- `npm run start:pm2` Starts all servers as background proccesses without terminals. Requires pm2 to be installed with.
+There are several methods to start the app from the root directory.
+- `npm run dev` Starts the API, media, and client servers in 1 terminal, in development mode with live reloading (nodemon/next).
+- `npm run start` Starts the API, media, and client servers in 1 terminal, in production mode.
+- `npm run dev:all` Same as `npm run dev`, but every server starts in its own terminal.
+- `npm run start:all` Same as `npm run start`, but every server starts in its own terminal.
+- `npm run start:pm2` Starts all servers as background proccesses without terminals. Requires pm2 to be installed.
 - Use `npm run` to see all available commands.
 - With `npm run check:services` you can see if Redis, PostgreSQL, Nginx, and pm2 are running and which ports are being listened on.
 - Make sure to use the command `npm run build` before starting NextJS in production mode. (any command with `start`).
