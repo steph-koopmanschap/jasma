@@ -5,6 +5,7 @@ const { usersRouter } = require("./usersRouter");
 const { postsRouter } = require("./postsRouter");
 const { commentsRouter } = require("./commentsRouter");
 const { searchRouter } = require("./searchRouter");
+const { paymentsRouter } = require("./searchRouter");
 // const { adsRouter } = require("./adsRouter");
 
 apiRouter.use("/auth", authRouter);
@@ -12,6 +13,7 @@ apiRouter.use("/users", usersRouter);
 apiRouter.use("/posts", postsRouter);
 apiRouter.use("/comments", commentsRouter);
 apiRouter.use("/search", searchRouter);
+apiRouter.use("/payments", paymentsRouter);
 // apiRouter.use("/ads", adsRouter);
 
 module.exports = { apiRouter };

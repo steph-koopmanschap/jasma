@@ -29,6 +29,7 @@
         "url": "https://github.com/steph-koopmanschap/jasma/issues"
     },
     "dependencies": {
+        "@paypal/checkout-server-sdk": "^1.0.3",
         "append-field": "^1.0.0",
         "bcrypt": "^5.1.0",
         "busboy": "^1.6.0",

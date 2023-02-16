@@ -145,3 +145,4 @@ External documentation of 3rd party libraries, frameworks, and tools.
 - [Date FNS Docs](https://date-fns.org/docs/Getting-Started)
 - [Font Awesome Docs](https://fontawesome.com/docs)
 - [Nginx Docs](https://nginx.org/en/docs/)
+- [Paypal Developer Docs](https://developer.paypal.com/docs/online/)
