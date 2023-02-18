@@ -33,6 +33,12 @@ If you like this project please give it a star :D
 
 Thank you.
 
+### How to contribute
+
+The `development` branch is usually the most updated and most recent version of the project.
+To contribute code, create a new branch from the development branch with an appropriate name for the bug or feature you are working on.
+Then create a PR for your branch to merge into the development (dev) branch. 
+
 ## Documentation
 
 See [DOCS.md](https://github.com/steph-koopmanschap/jasma/blob/main/DOCS.md)
