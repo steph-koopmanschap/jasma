@@ -12,6 +12,7 @@ Or improve yourself by fixing bugs and hunting for new ones.
 Everyone is welcome to contribute to this open source project.
 It doesn't matter if you are a complete beginner or a senior developer.
 To contribute send a message to Greylien#8501 on Discord for direct access.
+There is private kanban board and figma board for those who want contribute long term.
 Or feel free to create PR, issue, or Fork of this project.
 You're contributions will be recognized.
 
@@ -20,6 +21,7 @@ Currently looking for the following contributions:
  - Logo and graphics art.
  - Frontend development.
  - Backend development.
+ - DevOps.
  - Cybersecurity.
  - Testing and bug reporting.
  - Ideas and inspiration.
