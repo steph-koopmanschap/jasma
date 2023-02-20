@@ -1,20 +1,45 @@
 # JASMA - Just Another Social Media App
 
+## Why JASMA?
+
+JASMA is an open source community project for learning how to code on a real large project. <br />
+The sky is the limit! This is the space to implement any creative ideas you always wanted to see in Social Media. <br />
+By contributing you can challenge yourself by adding new features to JASMA. <br />
+Or improve yourself by fixing bugs and hunting for new ones.
+
 ## Contributing
 
-Everyone is welcome to contribute to this open source project.
-To contribute send a message to Greylien#8501 on Discord for direct access,
-or create PR or Fork of this project.
+Everyone is welcome to contribute to this open source project. <br />
+It doesn't matter if you are a complete beginner or a senior developer. <br />
+To contribute send a message to Greylien#8501 on Discord for direct access. <br />
+There is private kanban board and figma board for those who want contribute long term. <br />
+Or feel free to create PR, issue, or Fork of this project. <br />
+You're contributions will be recognized.
 
 Currently looking for the following contributions:
- - Frontend design (UI/UX)
- - Logo and graphics art
- - Cybersecurity
- - Testing and bug reporting
- - Ideas and inspiration
+ - Frontend design (UI/UX).
+ - Logo and graphics art.
+ - Frontend development.
+ - Backend development.
+ - DevOps.
+ - Cybersecurity.
+ - Testing and bug reporting.
+ - Ideas and inspiration.
+ - Legal advice. 
+ - Spreading the word :)
 
-Filling out this anonymous survey will help us a lot to improve JASMA.
+Filling out this anonymous survey will help us a lot to improve JASMA. <br />
 [Social Media Improvement Survey](https://forms.gle/wparXcH7FyNi6e27A)
+
+If you like this project please give it a star :D 
+
+Thank you.
+
+### How to contribute
+
+The `development` branch is usually the most updated and most recent version of the project. <br />
+To contribute code, create a new branch from the development branch with an appropriate name for the bug or feature you are working on. <br />
+Then create a PR for your branch to merge into the development (dev) branch. 
 
 ## Documentation
 

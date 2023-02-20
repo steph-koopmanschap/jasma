@@ -234,6 +234,22 @@ class Api {
         const response = await this.api.get(`/api/search/search?q=${keyword}&filter=${filter}`);
         return response.data;
     }
+
+    async paypalCreateOrder(cartData) {
+        const response = await this.api.post(`/api/payments/paypalCreateOrder`, {
+            cartData: cartData
+        });
+        return response.data.orderID;
+    }
+
+    async paypalCreateOrder(orderID) {
+        const response = await this.api.post(`/api/payments/paypalTransactionComplete`, {
+            orderID: orderID
+        });
+        return response.data;
+    }
+
+    
 }
 
 const jasmaApi = new Api();

@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes, Model) => {
     const columns = {
-        ad_id: {
+        transaction_id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
             primaryKey: true
@@ -13,38 +13,34 @@ module.exports = (sequelize, DataTypes, Model) => {
                 key: "user_id"
             }
         },
-        ad_file_url: {
+        transaction_type: {
+            type: DataTypes.STRING(11),
+            allowNull: false,
+            validate: {
+                isIn: [["credit_in", "credit_out", "advert", "asset"]]
+            }
+        },
+        price: {
+            type: DataTypes.DOUBLE,
+            allowNull: false
+        },
+        payment_method: {
             type: DataTypes.STRING(100),
-        },
-        //If the ad links to a website or page
-        ad_url: {
-            type: DataTypes.STRING(100)
-        },
-        expires_at: {
-            type: DataTypes.DATE,
             allowNull: false
         }
     };
 
     const options = {
         sequelize,
-        tableName: "ads",
+        tableName: "transactions",
         timestamps: true,
-        createdAt: "created_at",
+        createdAt: "transaction_date",
         updatedAt: false
     };
 
-    class Ad extends Model {
+    class Transaction extends Model {
 
-        static generate() {
-            return {
-                user_id: "",
-                ad_file_url: "",
-                ad_url: "",
-                expires_at: ""
-            };
-        }
     }
 
-    Ad.init(columns, options);
+    Transaction.init(columns, options);
 };

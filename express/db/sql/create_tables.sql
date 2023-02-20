@@ -127,10 +127,10 @@ CREATE TABLE IF NOT EXISTS ads(
 
 -- One to one relationship with ads
 -- Used for targeting demographics with ads
-CREATE TABLE IF NOT EXISTS ads_preferences(
+CREATE TABLE IF NOT EXISTS ad_targeting_preferences(
     ad_id           UUID REFERENCES ads(ad_id) ON DELETE CASCADE UNIQUE,
     age_start       SMALLINT,
-    age_end         SMALLINT
+    age_end         SMALLINT,
     country         TEXT,
     city            TEXT,
     keyword         VARCHAR(50)

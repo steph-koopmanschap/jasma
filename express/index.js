@@ -29,7 +29,7 @@ app.set("trust proxy", 1);
 //app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 customCors(app);
 //Set http security headers
-// app.use(helmet());
+app.use(helmet());
 // logging(app);
 let redisClient = new Redis();
 app.use(

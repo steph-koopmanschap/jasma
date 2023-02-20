@@ -34,6 +34,10 @@ module.exports = (sequelize, DataTypes, Model) => {
         },
         recovery_phone: {
             type: DataTypes.STRING(20)
+        },
+        //The amount of credit the user has
+        balance: {
+            type: DataTypes.STRING(20)
         }
     };
 
@@ -67,7 +71,8 @@ module.exports = (sequelize, DataTypes, Model) => {
                 recovery_email: faker.internet.email(),
                 user_password: "a", //faker.internet.password(),
                 phone: faker.phone.number("###-###-####"),
-                recovery_phone: faker.phone.number("###-###-####")
+                recovery_phone: faker.phone.number("###-###-####"),
+                balance: 0.0
             };
         }
     }
