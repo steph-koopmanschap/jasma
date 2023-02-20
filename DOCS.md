@@ -34,22 +34,22 @@ In the root folder:
 
 #### Setup environment variables
 
-Make sure to copy the following files and then edit them to setup the environment variables 
-`/express/.env.example` to `/express/.env`
-`/next/.env.example` to `/next/.env.development`
+Make sure to copy the following files and then edit them to setup the environment variables <br />
+from `/express/.env.example` to `/express/.env` <br />
+and from `/next/.env.example` to `/next/.env.development`
 
-For local development you can keep the defaults.
-For production change HOSTNAME and NEXTJS_ORIGIN to your domain name or ip address.
+For local development you can keep the defaults. <br />
+For production change HOSTNAME and NEXTJS_ORIGIN to your domain name or ip address. <br />
 Change the ports accordingly as well as the PG_ADMIN_PASSWORD.
 
 ### Setting up the database
 
 <!-- First read /server/db/pg_hba.conf to read on what to add to your pg_hba.conf file. -->
 After you have installed PostGreSQL. You can execute the following command to change the PSQL root user password.
-- `sudo -u postgres psql --echo-queries -c "ALTER ROLE postgres WITH LOGIN PASSWORD 'example';"`
-Change 'example' into a password of your liking. Make sure its the same as in the `/express/.env` file.
+- `sudo -u postgres psql --echo-queries -c "ALTER ROLE postgres WITH LOGIN PASSWORD 'example';"` <br />
+Change 'example' into a password of your liking. Make sure its the same as in the `/express/.env` file. <br />
 To create the database do the following command:
-- `npm run db:init`
+- `npm run db:init` <br />
  To populate the database with fake users, posts, and comments. Replace 10 with the amount of each you want to generate.
 - `npm run db:generate 10`
 
