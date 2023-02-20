@@ -21,11 +21,13 @@ Backend:
 
 ### Prerequisites
 
-- Install PostGreSQL
-- Install Redis
-- Install NodeJS
-- Install NPM
-- Install pm2, nginx (for production)
+- Install PostGreSQL `sudo apt install postgresql`
+- Install Redis `sudo apt install redis-server`
+- Install NPM `sudo apt install npm`
+- Install NodeJS `sudo apt install nodejs`
+- Install pm2, nginx (for production) `npm install pm2 -g`
+
+`sudo apt install nodejs npm redis-server postgresql` <br />
 
 ### Install node modules
 

@@ -23,6 +23,9 @@ module.exports = (sequelize, DataTypes, Model) => {
         last_name: {
             type: DataTypes.STRING(35)
         },
+        display_name: {
+            type: DataTypes.STRING(70)
+        },
         bio: {
             type: DataTypes.TEXT
         },
@@ -72,11 +75,17 @@ module.exports = (sequelize, DataTypes, Model) => {
         }
 
         static generate() {
+
+            const given_name = faker.name.firstName();
+            const last_name = faker.name.lastName();
+
+
             return {
                 user_id,
                 profile_pic: faker.image.avatar(),
-                given_name: faker.name.firstName(),
-                last_name: faker.name.lastName(),
+                given_name: given_name,
+                last_name: last_name,
+                display_name: `${given_name} ${last_name}`,
                 bio: faker.lorem.paragraph(),
                 date_of_birth: faker.date.birthdate(),
                 gender: "other",
