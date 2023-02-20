@@ -5,9 +5,18 @@ function customCors(app) {
         const { NEXTJS_ORIGIN, NEXTJS_PORT } = process.env;
         
         const allowedOrigins = [
-                                `http://127.0.0.1:${NEXTJS_PORT}`, 
+                                `http://127.0.0.1:${NEXTJS_PORT}`,
+                                `https://127.0.0.1:${NEXTJS_PORT}`,
+                                `http://127.0.0.1:80`,
+                                `https://127.0.0.1:443`,
                                 `http://localhost:${NEXTJS_PORT}`,
-                                `http://${NEXTJS_ORIGIN}:${NEXTJS_PORT}`
+                                `https://localhost:${NEXTJS_PORT}`,
+                                `http://localhost:80`,
+                                `https://localhost:443`,
+                                `http://${NEXTJS_ORIGIN}:${NEXTJS_PORT}`,
+                                `https://${NEXTJS_ORIGIN}:${NEXTJS_PORT}`,
+                                `http://${NEXTJS_ORIGIN}:80`,
+                                `https://${NEXTJS_ORIGIN}:443`,
                             ];
 
         const origin = req.headers.origin;
