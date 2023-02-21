@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes, Model) => {
         },
         //The amount of credit the user has
         balance: {
-            type: DataTypes.STRING(20)
+            type: DataTypes.DOUBLE
         }
     };
 

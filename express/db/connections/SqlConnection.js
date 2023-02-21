@@ -66,7 +66,7 @@ class SqlConnection extends Sequelize {
             IS_TEMPLATE = False;
     
         COMMENT ON DATABASE jasma_db
-        IS 'The Database for the JASMA App';
+        IS 'Primary PS-SQL Database of JASMA';
     
         DROP ROLE IF EXISTS jasma_admin;
         
