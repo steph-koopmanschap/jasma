@@ -1,3 +1,7 @@
+-- NOTE: THIS SQL FILE IS DEPRECATED / OUTDATED. IT HAS BEEN REPLACED BY db/scripts/generateDb.js
+-- USE `npm run db:init` to create the database and generate the tables.
+-- USE jasma_database.dbml as a new reference.
+
 -- Use this file to initialize the PostGreSQL database only once, before starting the server for the first time.
 
 -- Drop jasma_db database if exists
@@ -17,7 +21,7 @@ CREATE DATABASE jasma_db
 
 -- Comment on database
 COMMENT ON DATABASE jasma_db
-    IS 'The Database for the JASMA App';
+    IS 'Primary PS-SQL Database of JASMA';
 
 -- Drop jasma_admin role if exists
 DROP ROLE IF EXISTS jasma_admin;

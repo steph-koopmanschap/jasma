@@ -1,0 +1,175 @@
+/*
+    FK Relationship symbols
+    <: one-to-many. 
+    >: many-to-one. 
+    -: one-to-one. 
+    <>: many-to-many.
+*/
+
+Project jasma_database {
+    database_type: 'PostgreSQL'
+    Note: 'Primary PS-SQL Database of JASMA'
+}
+
+//Tables are ordered by alphabetic order
+
+Table ads {
+    ad_id uuid [pk]
+    user_id uuid [not null]
+    ad_file_url varchar(100)
+    ad_url varchar(100) [note: 'If the ad links to a website or page']
+    expires_at timestamp [not null]
+    created_at timestamp [not null]
+}
+
+Ref: ads.ad_id > users.user_id
+
+Table ad_targeting_preferences {
+    ad_id uuid [pk]
+    age_start smallint [note: 'For ad targeting users by age']
+    age_end smallint [note: 'For ad targeting users by age']
+    gender varchar(11) [note: 'For ad targeting users by gender']
+    Relationship varchar(11) [note: 'For ad targeting users by relationship']
+    country text [note: 'For ad targeting users by country']
+    city text [note: 'For ad targeting users by city']
+}
+
+Ref: ad_targeting_preferences.ad_id - ads.ad_id
+
+Table comments [headercolor: #ff9900] { 
+    comment_id uuid [pk]
+    post_id uuid [not null]
+    user_id uuid [not null]
+    username varchar(25) [not null]
+    comment_text varchar(10000)
+    file_url varchar(100)
+    created_at timestamp [not null]
+    updated_at timestamp
+}
+
+Ref: comments.post_id > posts.post_id [delete: cascade]
+Ref: comments.user_id > users.user_id [delete: cascade]
+Ref: comments.username > users.username [delete: cascade]
+
+Table hashtags {
+    hashtag varchar(50) [pk]
+}
+
+Table posts [headercolor: #006600] {
+    post_id uuid [pk]
+    user_id uuid [not null]
+    username varchar(25) [not null]
+    text_content varchar(40000)
+    file_url varchar(100)
+    post_type varchar(5) [not null, default: 'text']
+    created_at timestamp [not null]
+    last_edited_at timestamp
+}
+
+Ref: posts.user_id > users.user_id [delete: cascade]
+Ref: posts.username > users.username [delete: cascade]
+
+Table posts_hashtags {
+    hashtag varchar(50)
+    post_id uuid
+}
+
+Ref: posts_hashtags.hashtag > hashtags.hashtag
+Ref: posts_hashtags.post_id > posts.post_id [delete: cascade]
+
+Table transactions {
+    transaction_id uuid [pk]
+    user_id uuid [not null]
+    transaction_type varchar(11) [not null]
+    price double [not null]
+    payment_method varchar(100) [not null]
+    transaction_date timestamp [not null]
+}
+
+Ref: transactions.user_id > users.user_id
+
+Table users [headercolor: #ff0066] {
+    user_id uuid [pk]
+    username varchar(25) [not null, unique]
+    email varchar(50) [not null, unique]
+    recovery_email varchar(50) [not null]
+    phone varchar(20) [not null]
+    recovery_phone varchar(20) [not null]
+    balance double [note: 'The amount of credit the user has']
+
+    indexes {
+        username [unique]
+        email [unique]
+    }
+}
+
+Table user_bookmarks {
+    user_id uuid [not null]
+    post_id uuid [not null]
+}
+
+Ref: user_bookmarks.user_id - users.user_id [delete: cascade]
+Ref: user_bookmarks.post_id > posts.post_id [delete: cascade]
+
+Table users_following {
+    user_id uuid [pk]
+    follow_id uuid [pk, note: 'user_id follows follow_id. follow_id is followed by user_id']
+
+    indexes {
+      (user_id, follow_id) [pk] // composite primary key
+    }
+}
+
+Ref: users_following.user_id > users.user_id [delete: cascade]
+Ref: users_following.follow_id > users.user_id [delete: cascade]
+
+Table users_hashtags_preferences {
+    hashtag varchar(50)
+    user_id uuid
+}
+
+Ref: users_hashtags_preferences.hashtag > hashtags.hashtag
+Ref: users_hashtags_preferences.user_id > users.user_id [delete: cascade]
+
+Table users_info {
+    user_id uuid [pk]
+    profile_pic_url varchar(300) [default: '${process.env.HOSTNAME}:${process.env.PORT}/media/avatars/default-profile-pic.webp']
+    given_name varchar(35)
+    last_name varchar(35)
+    display_name varchar(70)
+    bio text
+    date_of_birth date
+    gender varchar(11)
+    relationship varchar(11)
+    language text
+    country text
+    city text
+    website text
+}
+
+Ref: users_info.user_id - users.user_id [delete: cascade]
+
+Table users_metadata {
+    user_id uuid [pk]
+    user_role varchar(10) [not null, default: 'normal']
+    last_login_date date
+    account_creation_date date [not null, default: 'DataTypes.NOW']
+    isverified_email boolean
+    last_ipv4 varchar(55)
+}
+
+Ref: users_metadata.user_id - users.user_id [delete: cascade]
+
+Table users_passwords {
+    user_email varchar(50) [pk]
+    user_password varchar(60) [not null]
+}
+
+Ref: users_passwords.user_email - users.email [delete: cascade]
+
+Table users_preferences {
+    user_id uuid [pk]
+    email_notifications boolean [not null, default: true]
+}
+
+Ref: users_preferences.user_id - users.user_id [delete: cascade]

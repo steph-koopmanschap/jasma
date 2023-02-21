@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes, Model) => {
         sequelize,
         tableName: "ad_targeting_preferences",
         timestamps: false,
-        createdAt: "created_at",
+        createdAt: false,
         updatedAt: false
     };
 
