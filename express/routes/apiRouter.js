@@ -13,7 +13,7 @@ apiRouter.use("/users", usersRouter);
 apiRouter.use("/posts", postsRouter);
 apiRouter.use("/comments", commentsRouter);
 apiRouter.use("/search", searchRouter);
-apiRouter.use("/payments", paymentsRouter);
+//apiRouter.use("/payments", paymentsRouter);
 // apiRouter.use("/ads", adsRouter);
 
 module.exports = { apiRouter };

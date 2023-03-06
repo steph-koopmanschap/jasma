@@ -1,4 +1,4 @@
--- NOTE: THIS SQL FILE IS DEPRECATED / OUTDATED. IT HAS BEEN REPLACED BY db/scripts/generateDb.js
+-- NOTE: THIS SQL FILE IS DEPRECATED / OUTDATED. IT HAS BEEN REPLACED BY db/scripts/initializeDb.js and db/connections/SqlConnection.js
 -- USE `npm run db:init` to create the database and generate the tables.
 -- USE jasma_database.dbml as a new reference.
 

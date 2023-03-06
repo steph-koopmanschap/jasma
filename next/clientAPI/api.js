@@ -16,8 +16,8 @@ function createMultipartData(data, file) {
     return formData;
 }
 
-const baseURL = '';
-if (NEXT_PUBLIC_NODE_ENV === 'development') {
+let baseURL = '';
+if (process.env.NEXT_PUBLIC_NODE_ENV === 'development') {
     baseURL = `http://${process.env.NEXT_PUBLIC_API_SERVER_URL}:${process.env.NEXT_PUBLIC_API_SERVER_PORT}`;
 }
 //In production the Nginx reverse proxy will redirect traffic to the correct port.

@@ -1,6 +1,7 @@
 const express = require("express");
 const { registrationLimiter } = require("../middleware/rateLimiters");
 const validateRegistration = require("../middleware/validation/register");
+const validateChangePassword = require("../middleware/validation/changePassword");
 const { checkValidation } = require("../middleware/validation/validationResult");
 const isAuth = require("../middleware/isAuth.js");
 const { register, login, logout, checkAuth, changePassword } = require("../controllers/auth");
@@ -11,6 +12,6 @@ authRouter.post("/register", registrationLimiter, validateRegistration, checkVal
 authRouter.post("/login", login);
 authRouter.post("/logout", logout);
 authRouter.post("/checkAuth", checkAuth);
-authRouter.post("/changePassword", isAuth, changePassword);
+authRouter.post("/changePassword", isAuth, validateChangePassword, checkValidation, changePassword);
 
 module.exports = { authRouter };

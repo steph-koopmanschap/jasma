@@ -28,8 +28,9 @@
 - Add personal user information, such as age, country, etc.
 - Privacy system. Private posts, private profiles, etc.
 - Notification system. (In app + email).
-- Uploading video audio files. (dedicated media server).
 - Reset password with email.
+- Uploading video audio files. (dedicated media server).
+- Livestreaming of both video and audio. (livestream server)
 - Content moderation system to delete posts and ban accounts.
 - Mobile responsive.
 - AI system to automatically ban accounts that posts porn.

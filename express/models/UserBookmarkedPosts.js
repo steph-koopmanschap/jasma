@@ -25,14 +25,14 @@ module.exports = (sequelize, DataTypes, Model) => {
 
     const options = {
         sequelize,
-        tableName: "user_bookmarks",
+        tableName: "user_bookmarked_posts",
         timestamps: false,
     };
 
-    class UserBookmarks extends Model {
+    class UserBookmarkedPosts extends Model {
 
     }
 
-    UserBookmarks.init(columns, options);
+    UserBookmarkedPosts.init(columns, options);
 };
 

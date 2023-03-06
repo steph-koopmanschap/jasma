@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes, Model) => {
         //AD TARGETING
         //For ad targeting users by age
         age_start: {
-            type: DataTypes.TINYINT.UNSIGNED
+            type: DataTypes.SMALLINT
         },
         //For ad targeting users by age
         age_end: {
-            type: DataTypes.TINYINT.UNSIGNED
+            type: DataTypes.SMALLINT
         },
         //For ad targeting users by gender
         gender: {

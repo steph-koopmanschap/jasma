@@ -59,8 +59,8 @@ class SqlConnection extends Sequelize {
             OWNER = postgres
             TEMPLATE = template0
             ENCODING = 'UTF8'
-            LC_COLLATE = 'en_US.UTF-8'
-            LC_CTYPE = 'en_US.UTF-8'
+            LC_COLLATE = 'C'
+            LC_CTYPE = 'C'
             TABLESPACE = pg_default
             CONNECTION LIMIT = -1
             IS_TEMPLATE = False;
