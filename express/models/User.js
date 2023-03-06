@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes, Model) => {
         },
         //The amount of credit the user has
         balance: {
-            type: DataTypes.DOUBLE
+            type: DataTypes.DECIMAL(19,4)
         }
     };
 
@@ -88,6 +88,7 @@ module.exports = (sequelize, DataTypes, Model) => {
                 user_id: user_id, 
             });
             await sequelize.models.UserPreferences.create({ user_id });
+            await sequelize.models.UserEmailPreferences.create({ user_id });
         } catch (err) {
             console.log(err);
             await t.rollback();

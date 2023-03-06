@@ -1,6 +1,6 @@
 const db = require("../db/connections/jasmaAdmin");
 const { deleteFile } = require("../utils/deleteFile.js");
-const { Post, Hashtag, PostHashtag, UserBookmarks } = db.models;
+const { Post, Hashtag, PostHashtag, UserBookmarkedPosts } = db.models;
 
 async function createPost(req, res) {
     const { text_content, hashtags, file, fileName } = req.body;
@@ -112,7 +112,7 @@ async function getNewsFeed(req, res) {
 async function addPostBookmark(req, res) {
     const { post_id } = req.body;
     const { user_id } = req.session;
-    const createdBookmark = await UserBookmarks.create({
+    const createdBookmark = await UserBookmarkedPosts.create({
         user_id: user_id,
         post_id: post_id
     });
@@ -123,7 +123,7 @@ async function addPostBookmark(req, res) {
 async function removePostBookmark(req, res) {
     const { post_id } = req.params;
     const { user_id } = req.session;
-    const removedBookmark = await UserBookmarks.destroy({
+    const removedBookmark = await UserBookmarkedPosts.destroy({
         where: {
             user_id: user_id,
             post_id: post_id

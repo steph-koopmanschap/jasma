@@ -13,6 +13,14 @@ module.exports = (sequelize, DataTypes, Model) => {
                 key: "user_id"
             }
         },
+        transaction_status: {
+            type: DataTypes.STRING(50),
+            allowNull: false,
+        },
+        status_reason: {
+            type: DataTypes.STRING(100),
+            allowNull: true,
+        },
         transaction_type: {
             type: DataTypes.STRING(11),
             allowNull: false,
@@ -21,7 +29,7 @@ module.exports = (sequelize, DataTypes, Model) => {
             }
         },
         price: {
-            type: DataTypes.DOUBLE,
+            type: DataTypes.DECIMAL(19,4),
             allowNull: false
         },
         payment_method: {
@@ -35,7 +43,7 @@ module.exports = (sequelize, DataTypes, Model) => {
         tableName: "transactions",
         timestamps: true,
         createdAt: "transaction_date",
-        updatedAt: false
+        updatedAt: "last_updated"
     };
 
     class Transaction extends Model {

@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes, Model) => {
             type: DataTypes.STRING(70)
         },
         bio: {
-            type: DataTypes.TEXT
+            type: DataTypes.STRING(5000)
         },
         date_of_birth: {
             type: DataTypes.DATEONLY
@@ -42,6 +42,14 @@ module.exports = (sequelize, DataTypes, Model) => {
             type: DataTypes.STRING(11),
             validate: {
                 isIn: [["single", "married", "partnership", "open", "poly", "other"]]
+            }
+        },
+        relationship_with: {
+            type: DataTypes.UUID,
+            allowNull: true,
+            references: {
+                model: "users",
+                key: "user_id"
             }
         },
         language: {

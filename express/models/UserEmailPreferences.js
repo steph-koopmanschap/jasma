@@ -10,15 +10,19 @@ module.exports = (sequelize, DataTypes, Model) => {
                 key: "user_id"
             }
         },
-        //Overrides and toggles off/on ALL email preferences from the users_email_preferences table
-        email_notifications: {
+        comment_on_post_notif: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
+            allowNull: false
+        },
+        new_follower_notif: {
             type: DataTypes.BOOLEAN,
             defaultValue: true,
             allowNull: false
         }
     };
 
-    const options = { sequelize, tableName: "users_preferences" };
-    class UserPreferences extends Model {}
-    UserPreferences.init(columns, options);
+    const options = { sequelize, tableName: "users_email_preferences" };
+    class UserEmailPreferences extends Model {}
+    UserEmailPreferences.init(columns, options);
 };

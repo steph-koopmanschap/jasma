@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes, Model) => {
                 key: "user_id"
             }
         },
+        text_content: {
+            type: DataTypes.STRING(1000),
+        },
+        //The image or video of the ad
         ad_file_url: {
             type: DataTypes.STRING(100),
         },
