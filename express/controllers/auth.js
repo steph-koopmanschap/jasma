@@ -72,6 +72,14 @@ async function checkAuth(req, res) {
     }
 }
 
+async function checkAuthMod(req, res) {
+    if (req.session && req.session.user_id && req.session.role === "mod") {
+        res.json({ isAuth: true });
+    } else {
+        res.json({ isAuth: false });
+    }
+}
+
 async function changePassword(req, res) {
     const { newPassword } = req.body;
     const email = req.session.email;
@@ -86,4 +94,4 @@ async function changePassword(req, res) {
     return res.json({ success: true, message: "Password changed." });
 }
 
-module.exports = { checkAuth, register, login, logout, changePassword };
+module.exports = { checkAuth, checkAuthMod, register, login, logout, changePassword };

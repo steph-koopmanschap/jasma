@@ -1,3 +1,4 @@
+//Check if the user is logged in
 async function isAuth(req, res, next) {
     if (req.session.user_id) {
         return next();

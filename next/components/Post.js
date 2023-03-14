@@ -20,7 +20,6 @@ export default function Post(props) {
 
     const deletePost = async () => {
         const res = await api.deletePost(postData.post_id);
-        console.log(res);
         return notify("Post deleted.");
     }
 
@@ -29,12 +28,17 @@ export default function Post(props) {
     }
 
     const reportPost = async () => {
-        console.log("Reporting posts does not work yet.");
+        const res = await api.createReport(postData.post_id);
+        if (res.message = "success") {
+            return notify("Post has been reported.");
+        }
     }
 
     const bookmarkPost = async () => {
         const res = await api.addPostBookmark(postData.post_id);
-        return notify("Post has been bookmarked.");
+        if (res.message = "success") {
+            return notify("Post has been bookmarked.");
+        }
     }
 
     const sharePost = async () => {

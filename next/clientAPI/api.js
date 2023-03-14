@@ -81,6 +81,11 @@ class Api {
         return response.data.isAuth;
     }
 
+    async checkAuthModClientSide() {
+        const response = await this.api.post("/api/auth/checkAuthMod");
+        return response.data.isAuth;
+    }
+
     async logout() {
         const response = await this.api.post("/api/auth/logout");
         return response.data;
@@ -249,10 +254,34 @@ class Api {
         return response.data.orderID;
     }
 
-    async paypalCreateOrder(orderID) {
+    async paypalTransactionComplete(orderID) {
         const response = await this.api.post(`/api/payments/paypalTransactionComplete`, {
             orderID: orderID
         });
+        return response.data;
+    }
+
+    async createReport(post_id, report_reason) {
+        const response = await this.api.post(`/api/reports/createReport`, {
+            post_id: post_id,
+            report_reason: report_reason
+        });
+        return response.data;
+    }
+
+    // If limit is 0 then all reports are fetched
+    async getReports(limit = 0) {
+        const response = await this.api.get(`/api/reports/getReports?limit=${limit}`);
+        return response.data;
+    }
+
+    async deleteReport(post_id) {
+        const response = await this.api.delete(`/api/reports/deleteReport/${post_id}`);
+        return response.data;
+    }
+
+    async ignoreReport(post_id) {
+        const response = await this.api.delete(`/api/reports/ignoreReport/${post_id}`);
         return response.data;
     }
 

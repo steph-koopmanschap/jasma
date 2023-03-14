@@ -34,7 +34,7 @@ export default function LoginPage() {
         (async () => {
             const isLoggedIn = await api.checkAuthClientSide();
             if (isLoggedIn === true && window.localStorage.getItem('loggedInUserID')) {
-                router.replace('/dashboard');
+                router.replace('/cms/cms-portal');
             }
         })();
         
