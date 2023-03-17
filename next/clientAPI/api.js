@@ -189,6 +189,13 @@ class Api {
         return response.data;
     }
 
+    async getMultiplePosts(post_ids) {
+        const response = await this.api.post(`/api/posts/getMultiplePosts`, {
+            post_ids: post_ids
+        });
+        return response.data;
+    }
+
     async getLatestPosts(limit) {
         const response = await this.api.get(`/api/posts/getLatestPosts?limit=${limit}`);
         return response.data;

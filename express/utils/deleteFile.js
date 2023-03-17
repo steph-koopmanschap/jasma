@@ -1,4 +1,6 @@
-const fs = require("fs");
+//const util = require('util');
+const fs = require('fs');
+//const unlink = util.promisify(fs.unlink);
 
 const serverURL = `${process.env.HOSTNAME}:${process.env.PORT}`;
 
@@ -10,15 +12,20 @@ async function deleteFile(filePath) {
     }
     const absolutePath = appRoot + filePath;
 
-    fs.unlink(absolutePath, err => {
-        if (err) {
-            console.log (err);
-            //File not deleted
-            return false;
-        }
-    });
-    //File deleted.
-    return true;
+    try {
+        //First check if the file exists before deleting it. 
+        //Or else we get the following error (if the file does not exist)
+        //Error: EISDIR: illegal operation on a directory, unlink. Errorno: 21
+        await fs.promises.access(absolutePath, fs.constants.F_OK);
+        //Delete the delete
+        fs.unlink(absolutePath);
+        //File deleted.
+        return true;
+    }
+    catch (err) {
+        console.error(err);
+        return false;
+    }
 }
 
 module.exports = {deleteFile};

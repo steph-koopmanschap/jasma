@@ -31,10 +31,10 @@ module.exports = (sequelize, DataTypes, Model) => {
             const numberOfHashtags = resHashtags[0].length;
 
             //Pick a random post from the database
-            const randomPostIndex = (Math.floor(Math.random() * (numberOfPosts - 2 + 1)) + 2) - 1;
+            const randomPostIndex = Math.floor(Math.random() * numberOfPosts);
             const postID = resPosts[0][randomPostIndex].post_id;
             //Pick a random hashtag from the database
-            const randomHashtagIndex = (Math.floor(Math.random() * (numberOfHashtags - 2 + 1)) + 2) - 1;
+            const randomHashtagIndex = Math.floor(Math.random() * numberOfHashtags);
             const hashtag = resHashtags[0][randomHashtagIndex].hashtag;
 
             //Check if the hashtag a

@@ -8,7 +8,6 @@ async function createReport(req, res) {
 
     //First check if the post has already been reported.
     const checkReportExists = await ReportedPost.getById(post_id);
-    console.log("checkReportExists", checkReportExists);
     if (checkReportExists === undefined) {
         //If the post has not yet been reported create a new report for it.
         const createdReport = await ReportedPost.create({
@@ -45,7 +44,14 @@ async function getReports(req, res) {
 async function deleteReport(req, res) {
     const { postID } = req.params;
 
-    //First delete the post and its file.
+    //First delete the report. (If the post is first deleted, then we'll get a PostGreSQL error)
+    const deletedReport = await ReportedPost.destroy({
+        where: {
+            post_id: postID
+        }
+    });
+
+    //Delete the post and its file.
     const resFileUrl = await db.query(`SELECT file_url FROM posts WHERE post_id = ?`, {
         replacements: [postID]
     });
@@ -58,12 +64,6 @@ async function deleteReport(req, res) {
     }
 
     const deletedPost = await Post.destroy({
-        where: {
-            post_id: postID
-        }
-    });
-
-    const deletedReport = await ReportedPost.destroy({
         where: {
             post_id: postID
         }

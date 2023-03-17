@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes, Model) => {
         createdAt: "report_time",
         updatedAt: false
     };
-
+    
     class ReportedPost extends Model {
 
         static async getReports(limit = 0) {
@@ -42,9 +42,52 @@ module.exports = (sequelize, DataTypes, Model) => {
 
         static async getById(post_id) {
             const resReport = await sequelize.query(`SELECT * FROM reported_posts WHERE post_id = ?  `, { replacements: [post_id] });
-            console.log("resReport: ", resReport);
-            console.log("resReport[0][0]: ", resReport[0][0]);
             return resReport[0][0];
+        }
+
+        static async generate() {
+            //Retrieve a list of postIDs from the database
+            const resPosts = await sequelize.query(`SELECT post_id FROM posts`);
+            const numberOfPosts = resPosts[0].length;
+
+            let randomPost = Math.floor(Math.random() * numberOfPosts);
+            let postID = ""
+
+            let postID_alreadyExists = true;
+            //Keep generating postIDs until a hashtag is made that does not exist in the database yet.
+            //Because postIDs are UNIQUE values.
+            while (postID_alreadyExists === true)
+            {
+                //create random postID
+                randomPost = Math.floor(Math.random() * numberOfPosts);
+                postID = resPosts[0][randomPost].post_id;
+                //Check if the postID exists in the database
+                const resReports = await sequelize.query(`SELECT post_id FROM reported_posts WHERE post_id = ?`, { replacements: [postID] });
+                //PostID does not exist
+                if (resReports[0].length === 0) {
+                    postID_alreadyExists = false;
+                    //break;
+                }
+            }
+
+            // Store a list of possible report reasons
+            const reportReasons = [
+                "This post is inappropriate",
+                "This post contains spam",
+                "This post violates the terms of service",
+                "This post is hateful",
+                "This post is misleading",
+            ];
+
+            //Select a random report reason
+            const reportReason = reportReasons[Math.floor(Math.random() * reportReasons.length)];
+
+            //Generate report
+            return {
+                post_id: postID,
+                report_reason: reportReason,
+                reported_x_times: Math.floor(Math.random() * 100) + 1 //Random integer between 1 and 100
+            };
         }
     }
 

@@ -68,6 +68,15 @@ module.exports = (sequelize, DataTypes, Model) => {
             return post;
         }
 
+        static async findByPostIds(post_ids) {
+            let posts = [];
+            for (let i = 0; i < post_ids.length; i++) {
+                const post = await Post.findByPostId(post_ids[i]);
+                posts.push(post[0]);
+            }  
+            return posts;
+        }
+
         //Get all the hashtags linked to post_id
         static async getHashtags(post_id) {
             const res = await sequelize.query(`SELECT hashtag FROM posts_hashtags WHERE post_id = ? LIMIT 5`, { replacements: [post_id] });
@@ -161,7 +170,7 @@ module.exports = (sequelize, DataTypes, Model) => {
             const numberOfUsers = res[0].length;
 
             //Pick a random userID from the database
-            const randomUser = (Math.floor(Math.random() * (numberOfUsers - 3 + 1)) + 3) - 1;
+            const randomUser = Math.floor(Math.random() * numberOfUsers);
 
             const userID = res[0][randomUser].user_id;
             const username = res[0][randomUser].username;

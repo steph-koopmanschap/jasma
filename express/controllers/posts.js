@@ -95,6 +95,32 @@ async function getSinglePost(req, res) {
     return res.json({ success: true, posts: post }); 
 }
 
+//Get mulitple specific posts by passing in an array of post_ids
+//Using a POST request, instead of GET (Advised by ChatGPT)
+//Because the array of post_ids might be too long to put into URL query parameters.
+async function getMultiplePosts(req, res) {
+    const { post_ids } = req.body;
+
+    if (post_ids === undefined) {
+        return res.json({ success: false, message: "post_ids is undefined. Can't retrieve posts.", posts: [] } );
+    }
+
+    let posts = null;
+    try {
+        posts = await Post.findByPostIds(post_ids);
+    }
+    catch(e) {
+        console.log(e);
+        return res.json({ success: false, message: "post_ids is undefined. Can't retrieve posts." } );
+    }
+
+    if (post_ids.length === 0) {
+        return res.json({ success: false, message: "Not posts could be retrieved.", posts: [] } );
+    }
+
+    return res.json({ success: true, posts: posts });
+}
+
 async function getLatestPosts(req, res) {
     const { limit } = req.query;
     const posts = await Post.getLatest(limit);
@@ -147,6 +173,7 @@ module.exports = {
     editPost,
     getUserPosts,
     getSinglePost,
+    getMultiplePosts,
     getLatestPosts,
     getNewsFeed,
     addPostBookmark,

@@ -6,6 +6,7 @@ const { createPost,
         editPost, 
         getUserPosts,
         getSinglePost, 
+        getMultiplePosts,
         getLatestPosts, 
         getNewsFeed,
         addPostBookmark,
@@ -20,6 +21,7 @@ postsRouter.put("/editPost", isAuth, editPost);
 // api/posts/getUserPosts?user_id=UUID&limit=50
 postsRouter.get("/getUserPosts", getUserPosts);
 postsRouter.get("/getSinglePost/:post_id", getSinglePost);
+postsRouter.post("/getMultiplePosts", getMultiplePosts);
 // api/posts/getLatestPosts?limit=50
 postsRouter.get("/getLatestPosts", getLatestPosts);
 postsRouter.get("/getNewsFeed", isAuth, getNewsFeed);
