@@ -24,6 +24,7 @@ async function searchHashtags(keyword) {
 /*
     NOTE:
     https://stackoverflow.com/questions/7005302/how-to-make-case-insensitive-query-in-postgresql
+    Also note that LOWER(text_content) LIKE ? is faster than ILIKE ?
 */
 
 async function searchPosts(keyword) {

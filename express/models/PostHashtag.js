@@ -21,6 +21,25 @@ module.exports = (sequelize, DataTypes, Model) => {
     const options = { sequelize, tableName: "posts_hashtags" };
 
     class PostHashtag extends Model {
+
+        //Get the most frequently used hashtags ordered from highest to lowest
+        static async getTopHashtags(limit) {
+            const resHashtags = await sequelize.query(`SELECT hashtag, COUNT(*) as count 
+                                                       FROM posts_hashtags
+                                                       GROUP BY hashtag 
+                                                       ORDER BY count DESC
+                                                       LIMIT ?`, 
+                                                       { replacements: [limit] }
+                                                     );
+            return resHashtags[0];
+        }
+
+        //Returns a count of how many times a hashtag appears in posts.
+        static async getHashtagCount(hashtag) {
+            const resCount = await sequelize.query(`SELECT COUNT(*) AS count FROM posts_hashtags where hashtag = ?;`, { replacements: [hashtag] });
+            return resCount[0][0].count;
+        }
+
         static async generate() {
             //Retrieve a list of PostIDs from the database
             const resPosts = await sequelize.query(`SELECT post_id FROM posts`);

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import Link from "next/link";
 import Image from 'next/image';
 import { formatDistance } from "date-fns";
@@ -9,6 +9,7 @@ import CreateComment from "./CreateComment";
 import CommentList from "./CommentList";
 import ProfilePic from "./ProfilePic";
 import DropDownBtn from './DropDownBtn.js';
+import Modal from './Modal.js';
 
 export default function Post(props) {
     const { postData } = props;
@@ -17,6 +18,14 @@ export default function Post(props) {
     const toastId = useRef(null);
     const notify = (text) => (toastId.current = toastSuccess(text));
     const dismiss = () => toast.dismiss(toastId.current);
+
+    const [reportModalState, setReportModalState] = useState(false);
+    const openReportModal = () => {
+        setReportModalState(true);
+    }
+    const closeReportModal = () => {
+        setReportModalState(false);
+    }
 
     const deletePost = async () => {
         const res = await api.deletePost(postData.post_id);
@@ -28,10 +37,13 @@ export default function Post(props) {
     }
 
     const reportPost = async () => {
-        const res = await api.createReport(postData.post_id);
+        const report_reason = document.getElementById("reportReasonInput").value;
+        console.log("report_reason", report_reason);
+        const res = await api.createReport(postData.post_id, report_reason);
         if (res.message = "success") {
             return notify("Post has been reported.");
         }
+        closeReportModal();
     }
 
     const bookmarkPost = async () => {
@@ -56,25 +68,44 @@ export default function Post(props) {
         <div className="mx-auto w-1/5 bg-gray-400 p-2 m-4">
             <div className="p-2 m-2 bg-gray-600">
                 
+                {/* Post menu */}
                 <DropDownBtn 
                     style="flex flex-col" 
                     dropDownStyle="flex flex-col p-2 m-1 w-1/2 bg-gray-900 place-self-end"
                     addIcon={true}
                     replacementIcon={null}
                 >
+                    {/* Rendered if user is logged in AND is owner of the post */}
                     {(window.localStorage.getItem('loggedInUserID') === postData.user_id) ? (
                         <React.Fragment>
                         <button className="formButtonDefault outline-white border my-1" onClick={deletePost}>Delete</button>
                         <button className="formButtonDefault outline-white border my-1" onClick={editPost}>Edit</button>
                         </React.Fragment>) 
                     : null}
+                    {/* Rendered if user is logged in*/}
                     {window.localStorage.getItem('loggedInUserID') ? 
                         <button className="formButtonDefault outline-white border my-1" onClick={bookmarkPost}>Bookmark</button>
                     : null}
+                    {/* Rendered if user is logged in AND is NOT owner of the post */}
                     {(window.localStorage.getItem('loggedInUserID') !== postData.user_id) ?
-                        <button className="formButtonDefault outline-white border my-1" onClick={reportPost}>Report</button>
+                        <React.Fragment>
+                        <button className="formButtonDefault outline-white border my-1" onClick={openReportModal}>Report</button>
+                        <Modal modalName="reportModal" isOpen={reportModalState} onClose={closeReportModal} >
+                            <p className='text-lg font-bold'>What is your reason for reporting this post?</p>
+                            <textarea
+                                className="my-2 p-1 mx-2"
+                                id="reportReasonInput"
+                                aria-label="Submit a report on a post."
+                                type="textarea"
+                                spellCheck="true"
+                                name="report_reason_input"
+                            />
+                            <button className="formButtonDefault outline-white border my-1" onClick={reportPost}>Submit report</button>
+                        </Modal>
+                        </React.Fragment>
                     : null}
 
+                    {/* Rendered if user is logged out */}
                     <DropDownBtn 
                         style="flex flex-col" 
                         dropDownStyle="flex flex-col p-2 m-1 bg-gray-600 border-2 border-solid border-black place-self-end"
@@ -87,6 +118,7 @@ export default function Post(props) {
                         </React.Fragment>
                     </DropDownBtn>
                 </DropDownBtn>
+                {/* Post menu -END */}
 
                 <ProfilePic
                     userID={postData.user_id}

@@ -5,7 +5,8 @@ export default function hashtagFormatter(hashtagsRaw) {
     //Each hashtag is seperated by a space. .filter removes empty hashtags created by double spaces
     let hashtagsArray = hashtagsModified.split(" ").filter(hashtag => hashtag.trim() != '');
     //remove duplicate hashtags
-    hashtagsArray = hashtagsArray.filter((hashtag, index) => hashtagsArray.indexOf(hashtag) === index);
+    //hashtagsArray = hashtagsArray.filter((hashtag, index) => hashtagsArray.indexOf(hashtag) === index); //OLD CODE (DO NOT DELETE)
+    hashtagsArray = [...new Set(hashtagsArray)]; //NEW CODE SUGGESTED BY CHATGPT
     //Limit the hashtags to only 5
     if (hashtagsArray.length > 5)
     {

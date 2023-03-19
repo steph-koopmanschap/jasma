@@ -20,7 +20,13 @@ export default function ProfilePage(props) {
     console.log("username: from profilePage)", username);
     
     const [loggedInUserID, setLoggedInUserID] = useState(null);
-    const [showModal, SetShowModal] = useState(false);
+    const [followerModalState, setFollowerModalState] = useState(false);
+    const openFollowerModal = () => {
+        setFollowerModalState(true);
+    }
+    const closeFollowerModal = () => {
+        setFollowerModalState(false);
+    }
 
     useEffect( () => {
         setLoggedInUserID(window.localStorage.getItem('loggedInUserID'));
@@ -59,14 +65,11 @@ export default function ProfilePage(props) {
                     : null
                 : null}
 
-                <button className='formButtonDefault m-2' onClick={() => {SetShowModal(true)}}>See followers</button>
-                <Modal modalName="test" modalState={showModal} >
-                    <p className='text-black'>Hello</p>
+                <button className='formButtonDefault m-2' onClick={openFollowerModal}>See followers</button>
+                <Modal modalName="followerModal" isOpen={followerModalState} onClose={closeFollowerModal} >
+                    <FollowersList userID={data ? data?.user_id : ""} />
+                    <FolloweesList userID={data ? data?.user_id : ""} />
                 </Modal>
-
-                <FollowersList userID={data ? data?.user_id : ""} />
-                <FolloweesList userID={data ? data?.user_id : ""} />
-
             </div>
 
             <main className="flex flex-col">

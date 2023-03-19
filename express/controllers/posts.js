@@ -79,7 +79,7 @@ async function getUserPosts(req, res) {
     }
     catch(e) {
         console.log(e);
-        return res.json({ success: false, message: "user_id is undefined. Can't retrieve posts." } );
+        return res.json({ success: false, message: "user_id is undefined. Could not retrieve posts" } );
     }
 
     return res.json({ success: true, posts: posts });
@@ -87,12 +87,21 @@ async function getUserPosts(req, res) {
 
 async function getSinglePost(req, res) {
     const { post_id } = req.params;
-    let post;
-    post = await Post.findByPostId(post_id);
-    if (post.length === 0) {
-        return res.json({ success: false, message: "Could not find post.", posts: [] }); 
+    
+    try {
+        const post = await Post.findByPostId(post_id);
+        if (!post || post.length === 0) {
+            //status 404
+            return res.json({ success: false, message: "Could not find post.", posts: [] }); 
+        }
+        //status 200
+        return res.json({ success: true, posts: post }); 
     }
-    return res.json({ success: true, posts: post }); 
+    catch(e) {
+        console.error(e);
+        //status 500
+        return res.json({ success: false, message: "Failed to retrieve post.", posts: [] }); 
+    }   
 }
 
 //Get mulitple specific posts by passing in an array of post_ids
@@ -101,8 +110,8 @@ async function getSinglePost(req, res) {
 async function getMultiplePosts(req, res) {
     const { post_ids } = req.body;
 
-    if (post_ids === undefined) {
-        return res.json({ success: false, message: "post_ids is undefined. Can't retrieve posts.", posts: [] } );
+    if (post_ids === undefined || post_ids?.length === 0) {
+        return res.json({ success: false, message: "post_ids is undefined or empty. Could not retrieve posts.", posts: [] } );
     }
 
     let posts = null;
@@ -110,12 +119,8 @@ async function getMultiplePosts(req, res) {
         posts = await Post.findByPostIds(post_ids);
     }
     catch(e) {
-        console.log(e);
-        return res.json({ success: false, message: "post_ids is undefined. Can't retrieve posts." } );
-    }
-
-    if (post_ids.length === 0) {
-        return res.json({ success: false, message: "Not posts could be retrieved.", posts: [] } );
+        console.error(e);
+        return res.json({ success: false, message: "post_ids is undefined. Failed to retrieve posts." } );
     }
 
     return res.json({ success: true, posts: posts });

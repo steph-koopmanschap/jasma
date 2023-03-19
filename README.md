@@ -9,10 +9,17 @@ Or improve yourself by fixing bugs and hunting for new ones.
 
 ## Contributing
 
+Filling out this anonymous survey will help us a lot to improve JASMA. <br />
+[Social Media Improvement Survey](https://forms.gle/wparXcH7FyNi6e27A)
+
+If you like this project please give it a star :D 
+
+The discord group of JASMA: <br/>
+https://discord.gg/7xHzmmVW4w
+
 Everyone is welcome to contribute to this open source project. <br />
 It doesn't matter if you are a complete beginner or a senior developer. <br />
-To contribute send a message to Greylien#8501 on Discord for direct access. <br />
-There is private kanban board and figma board for those who want contribute long term. <br />
+To contribute join the Discord group for direct access. <br />
 Or feel free to create PR, issue, or Fork of this project. <br />
 You're contributions will be recognized.
 
@@ -27,11 +34,6 @@ Currently looking for the following contributions:
  - Ideas and inspiration.
  - Legal advice. 
  - Spreading the word :)
-
-Filling out this anonymous survey will help us a lot to improve JASMA. <br />
-[Social Media Improvement Survey](https://forms.gle/wparXcH7FyNi6e27A)
-
-If you like this project please give it a star :D 
 
 Thank you.
 

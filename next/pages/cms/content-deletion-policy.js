@@ -11,8 +11,12 @@ export default function CMS_Login() {
         //Because useEffect() itself can not be itself async, a self-executing async function is placed inside useEffect
         (async () => {
             const isLoggedIn = await api.checkAuthClientSide();
-             // Replace above line of code with below line of code when page is done.
-            //const isLoggedIn = await api.checkAuthModClientSide();
+            // Replace above line of code with below code when page is done.
+            //const res = await api.checkAuthUserRole();
+            // let loggedIn = false;
+            // if (res.mod || res.admin) {
+            //     isLoggedIn = true;
+            // }
             if (isLoggedIn === false) {
                 router.replace('/cms/cms-login');
             }

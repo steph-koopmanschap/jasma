@@ -1,10 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from "next/router";
-import { useQuery } from 'react-query';
 import Link from "next/link";
+import { useQuery } from 'react-query';
+import { formatDistance } from "date-fns";
 import api from "../../clientAPI/api.js";
 import ReportsList from "../../components/cms/ReportsList";
 import Post from "../../components/Post";
+
+/*
+    This is a page for moderators to review flagged / reported content on JASMA
+    And to delete the content if needed or delete the report if the report was false.
+*/
 
 export default function CMS_Portal() {
 
@@ -20,8 +26,12 @@ export default function CMS_Portal() {
         //Because useEffect() itself can not be itself async, a self-executing async function is placed inside useEffect
         (async () => {
             const isLoggedIn = await api.checkAuthClientSide();
-            // Replace above line of code with below line of code when page is done.
-            //const isLoggedIn = await api.checkAuthModClientSide();
+            // Replace above line of code with below code when page is done.
+            //const res = await api.checkAuthUserRole();
+            // let loggedIn = false;
+            // if (res.mod || res.admin) {
+            //     isLoggedIn = true;
+            // }
             if (isLoggedIn === false) {
                 router.replace('/cms/cms-login');
             }
@@ -129,7 +139,9 @@ export default function CMS_Portal() {
                         <h2 className='font-bold mt-2 mb-2'>Report Details</h2>
                         <p>
                             <span className='font-bold'>Post_id:</span> {currentActiveReport ? currentActiveReport.post_id : "Null"}
-                            <span className='ml-4'><span className='font-bold'>Report time:</span> {currentActiveReport ? currentActiveReport.report_time : "Null"}</span>
+                            <span className='ml-4'><span className='font-bold mr-2'>Report time:</span> 
+                            {currentActiveReport ? formatDistance(new Date(currentActiveReport.report_time), new Date()) : "Null"} a go.
+                            ({currentActiveReport ? currentActiveReport.report_time : "Null"})</span>
                             <span className={`ml-4 ${(currentActiveReport?.reported_x_times > 3) ? 'text-red-700' : ""}`}><span className='font-bold'>Times reported:</span> {currentActiveReport ? currentActiveReport.reported_x_times : "0"}</span>
                         </p>
                         <p className='mt-2 mb-2 border p-2'>

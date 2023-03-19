@@ -58,6 +58,7 @@ module.exports = (sequelize, DataTypes, Model) => {
 
         static async findByPostId(post_id) {
             let post = [];
+            //Alternative if (!post_id) {return []};
             if (post_id === undefined || post_id === 'undefined' || post_id === false || post_id === "") {
                 return [];
             }

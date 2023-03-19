@@ -30,7 +30,7 @@ function generateConfig(role) {
             timestamps: false
         },
         pool: {
-            max: 100,
+            max: 300,
             idleTimeoutMillis: 30000,
             connectionTimeoutMillis: 2000
         }

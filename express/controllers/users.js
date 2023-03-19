@@ -1,20 +1,17 @@
 const db = require("../db/connections/jasmaAdmin");
 const { deleteFile } = require("../utils/deleteFile.js");
-const { User, UserInfo, UserFollowing } = db.models;
+const { User, UserInfo, UserFollowing, UserMetadata} = db.models;
 
 async function getUserIdByUsername(req, res) {
     const { username } = req.params;
-    console.log("username from getUserIdByUsername", username);
     let result = null;
     let userID = "";
     try {
         result = await User.getByUsername(username);
-        console.log("result from getUserIdByUsername", result);
         userID = result.user_id;
     } catch (e) {
         return res.json({ success: false, message: `User ${username} not found.` });
     }
-    console.log("user_id from getUserIdByUsername", userID);
 
     return res.json({ success: true, user_id: userID });
 }
@@ -24,6 +21,25 @@ async function getClientUser(req, res) {
     const user = await User.getById(user_id);
     return res.json({ success: true, user: user });
 }
+
+async function getUserIDsByRole(req, res) {
+    const { role } = req.params;
+    const users = await UserMetadata.getUsersByRole(role);
+    return res.json({ success: true, users: users });   
+}
+
+async function changeUserRole(req, res) {
+    const { user_id, role } = req.body;
+    const updatedRole = await UserMetadata.update({
+        user_role: role
+    }, 
+    {
+    where: 
+        { user_id: user_id } 
+    });
+    return res.json({ success: true, user_id: user_id, role: role });   
+}
+
 async function getUserInfo(req, res) {
     const { userID } = req.params;
     console.log("HELLO 0 FROM getUserInfo uers.js controller");
@@ -225,5 +241,7 @@ module.exports = {
     getFollowers,
     getFollowing,
     checkIsFollowing,
-    getClientUser
+    getClientUser,
+    getUserIDsByRole,
+    changeUserRole
 };
