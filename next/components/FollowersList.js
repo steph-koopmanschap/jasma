@@ -24,8 +24,8 @@ export default function FollowersList(props) {
 
     return ( 
         <div>
-            <p className="">People that follow this person: {data.followersCount}</p>
-            <UsersList users={data.followers} />
+            <p className="">People that follow this person: {data?.followersCount}</p>
+            <UsersList users={data?.followers} />
         </div>
     );
 }

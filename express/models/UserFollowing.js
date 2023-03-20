@@ -66,6 +66,10 @@ module.exports = (sequelize, DataTypes, Model) => {
                 return false;
             }
             const res = await sequelize.query(`SELECT * FROM users_following WHERE user_id = ? AND follow_id = ?`, { replacements: [userID_one, userID_two] });
+            //Alternative: Using COUNT(*) instead of selecting all columns. Suggested by ChatGPT
+            //const res = await sequelize.query(`SELECT COUNT(*) as count FROM users_following WHERE user_id = ? AND follow_id = ?`, { replacements: [userID_one, userID_two] });
+            //return Boolean(res[0][0].count);
+            
             if (res[0].length === 0) {
                 return false;
             }
@@ -82,8 +86,8 @@ module.exports = (sequelize, DataTypes, Model) => {
             while(userID_one === userID_two)
             {
                 //Pick two random user IDs from the database
-                const randomUserOne = (Math.floor(Math.random() * (numberOfUsers - 3 + 1)) + 3) - 1;
-                const randomUserTwo = (Math.floor(Math.random() * (numberOfUsers - 3 + 1)) + 3) - 1;
+                const randomUserOne = Math.floor(Math.random() * numberOfUsers);
+                const randomUserTwo = Math.floor(Math.random() * numberOfUsers);
                 userID_one = res[0][randomUserOne].user_id;
                 userID_two = res[0][randomUserTwo].user_id;
             }

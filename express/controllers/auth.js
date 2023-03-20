@@ -72,6 +72,18 @@ async function checkAuth(req, res) {
     }
 }
 
+//Mainly used for moderator and administrator auth
+async function checkAuthUserRole(req, res) {
+    if (req.session && req.session.user_id && req.session.role) {
+        return res.json({
+            "mod": (req.session.role === 'mod'),
+            "admin": (req.session.role === 'admin') 
+            //"guest":
+            //"normal": 
+        })
+    }   
+}
+
 async function changePassword(req, res) {
     const { newPassword } = req.body;
     const email = req.session.email;
@@ -86,4 +98,4 @@ async function changePassword(req, res) {
     return res.json({ success: true, message: "Password changed." });
 }
 
-module.exports = { checkAuth, register, login, logout, changePassword };
+module.exports = { checkAuth, checkAuthUserRole, register, login, logout, changePassword };

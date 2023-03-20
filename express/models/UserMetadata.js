@@ -49,6 +49,11 @@ module.exports = (sequelize, DataTypes, Model) => {
             const res = await sequelize.query(`SELECT * FROM users_metadata WHERE user_id = ?`, { replacements: [user_id] });
             return res[0][0];
         }
+
+        static async getUsersByRole(role) {
+            const res = await sequelize.query(`SELECT user_id, user_role FROM users_metadata WHERE user_role = ?`, { replacements: [role] });
+            return res[0];
+        }
     }
     UserMetadata.init(columns, options);
 };

@@ -78,6 +78,15 @@ Table posts_hashtags {
 Ref: posts_hashtags.hashtag > hashtags.hashtag
 Ref: posts_hashtags.post_id > posts.post_id [delete: cascade]
 
+Table reported_posts {
+    post_id [pk]
+    report_reason varchar(300)
+    reported_x_times: integer [not null, default: 1, note: 'This counter goes up if there is multiple reports of the same post']
+    report_time timestamp [not null]
+}
+
+Ref: reported_posts.post_id - posts.post_id
+
 Table transactions {
     transaction_id uuid [pk]
     user_id uuid [not null]
@@ -194,3 +203,9 @@ Table users_preferences {
 }
 
 Ref: users_preferences.user_id - users.user_id [delete: cascade]
+
+Table bug_reports {
+    bug_report_id uuid [pk]
+    report_description varchar(5000) [not null]
+    bug_report_time timestamp [not null]
+}

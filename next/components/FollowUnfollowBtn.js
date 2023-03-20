@@ -16,10 +16,9 @@ export default function FollowUnfollowBtn(props) {
     useEffect(() => {
         (async () => {
             const resIsFollow = await api.checkIsFollowing(userID_two);
-            console.log("resIsFollow from follow btn", resIsFollow);
             setIsFollowing(resIsFollow.isFollowing);
         })();
-    }, [isFollowing]);
+    }, [userID_two]); //old dependency: isFollowing (using isFollowing could cause an infinite loop)
 
     const follow = async () => {
         const resFollow = await api.addFollower(userID_two);

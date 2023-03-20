@@ -30,7 +30,7 @@ class Api {
         this._api = axios.create({
             baseURL: baseURL,
             withCredentials: true,
-            timeout: 2000 //Timeout response after 2 seconds
+            timeout: 9000 //Timeout response after 9 seconds
         });
     }
 
@@ -81,6 +81,11 @@ class Api {
         return response.data.isAuth;
     }
 
+    async checkAuthUserRole() {
+        const response = await this.api.post("/api/auth/checkAuthUserRole");
+        return response.data;
+    }
+
     async logout() {
         const response = await this.api.post("/api/auth/logout");
         return response.data;
@@ -89,6 +94,19 @@ class Api {
     async changePassword(newPassword) {
         const response = await this.api.post("/api/auth/changePassword", {
             newPassword: newPassword
+        });
+        return response.data;
+    }
+
+    async getUserIDsByRole(role) {
+        const response = await this.api.get(`/api/users/getUsersByRole/${role}`);
+        return response.data;
+    }
+
+    async changeUserRole(user_id, role) {
+        const response = await this.api.put(`/api/users/changeUserRole`, {
+            user_id: user_id,
+            role: role
         });
         return response.data;
     }
@@ -133,7 +151,6 @@ class Api {
     }
 
     async getFollowers(userID) {
-        console.log("userID from getFollowers from api.js", userID);
         const response = await this.api.get(`/api/users/${userID}/getFollowers`);
         return response.data;
     }
@@ -181,6 +198,14 @@ class Api {
 
     async getSinglePost(post_id) {
         const response = await this.api.get(`/api/posts/getSinglePost/${post_id}`);
+        return response.data;
+    }
+
+    async getMultiplePosts(post_ids) {
+        const response = await this.api.post(`/api/posts/getMultiplePosts`, {
+            post_ids: post_ids
+        });
+        console.log("response.data", response.data)
         return response.data;
     }
 
@@ -249,10 +274,34 @@ class Api {
         return response.data.orderID;
     }
 
-    async paypalCreateOrder(orderID) {
+    async paypalTransactionComplete(orderID) {
         const response = await this.api.post(`/api/payments/paypalTransactionComplete`, {
             orderID: orderID
         });
+        return response.data;
+    }
+
+    async createReport(post_id, report_reason) {
+        const response = await this.api.post(`/api/reports/createReport`, {
+            post_id: post_id,
+            report_reason: report_reason
+        });
+        return response.data;
+    }
+
+    // If limit is 0 then all reports are fetched
+    async getReports(limit = 0) {
+        const response = await this.api.get(`/api/reports/getReports?limit=${limit}`);
+        return response.data;
+    }
+
+    async deleteReport(post_id) {
+        const response = await this.api.delete(`/api/reports/deleteReport/${post_id}`);
+        return response.data;
+    }
+
+    async ignoreReport(post_id) {
+        const response = await this.api.delete(`/api/reports/ignoreReport/${post_id}`);
         return response.data;
     }
 

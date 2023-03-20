@@ -13,6 +13,7 @@
 # .next is the build directory of NextJS
 **/.next
 /out/
+/next/analyze/*
 
 # production
 /build

@@ -84,6 +84,7 @@ This will set up everything you need automatically.
 ## API Routes
 
 #### Routes marked with ! require authenthication/authorization.
+#### Routes marked with !! require moderator authenthication/authorization.
 
 ### Auth
 
@@ -91,6 +92,7 @@ This will set up everything you need automatically.
 - POST   /api/auth/login
 - POST   /api/auth/logout
 - POST   /api/auth/checkAuth
+- POST   /api/auth/checkAuthMod
 - ! POST /api/auth/changePassword
 
 ### Users
@@ -129,6 +131,11 @@ This will set up everything you need automatically.
 ### Search
 
 - GET /api/search/search?q=${keyword}&filter=${filter}
+
+### Hashtags
+
+- GET /api/hashtags/getTopHashtags?limit=${limit}
+- GET /api/hashtags/getHashtagCount/${hashtag}
 
 ## Learn More
 
