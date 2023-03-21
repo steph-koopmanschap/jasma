@@ -300,12 +300,18 @@ class Api {
         return response.data;
     }
 
-    async ignoreReport(post_id) {
-        const response = await this.api.delete(`/api/reports/ignoreReport/${post_id}`);
+    async getNotifications() {
+        const response = await this.api.get(`/api/notifications/getNotifications`);
+        console.log("response.data: from getNotifications", response.data)
         return response.data;
     }
 
-    
+    async readNotification(notif_id) {
+        const response = await this.api.put(`/api/notifications/readNotification`, {
+            notif_id: notif_id
+        });
+        return response.data;
+    }
 }
 
 const jasmaApi = new Api();

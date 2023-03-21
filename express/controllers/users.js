@@ -25,6 +25,7 @@ async function getClientUser(req, res) {
 async function getUserIDsByRole(req, res) {
     const { role } = req.params;
     const users = await UserMetadata.getUsersByRole(role);
+
     return res.json({ success: true, users: users });   
 }
 

@@ -14,13 +14,13 @@ export default function CMS_Login() {
             // Replace above line of code with below 2 lines of code when page is done.
             //const res = await api.checkAuthUserRole();
             // if (res.mod) {
-            //     router.replace('/cms/cms-portal');
+            //     router.replace('/cms/cms-panel');
             // }
             // else if (res.admin) {
-            //     router.replace('/cms/admin-portal');
+            //     router.replace('/cms/admin-panel');
             // }
             if (isLoggedIn === true && window.localStorage.getItem('loggedInUserID')) {
-                router.replace('/cms/cms-portal');
+                router.replace('/cms/cms-panel');
             }
         })();
         
@@ -28,7 +28,7 @@ export default function CMS_Login() {
 
     return (
     <div>
-        <h1 className="">Login</h1>
+        <h1 className="text-xl text-center mt-4">JASMA CONTENT MODERATION SYSTEM (J-CMS) LOGIN</h1>
         <h2>Nothing here yet...</h2>
     </div>
     );
