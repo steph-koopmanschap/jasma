@@ -306,9 +306,10 @@ class Api {
         return response.data;
     }
 
-    async readNotification(notif_id) {
+    async readNotification(notification_id, timestamp) {
         const response = await this.api.put(`/api/notifications/readNotification`, {
-            notif_id: notif_id
+            notification_id: notification_id,
+            timestamp: timestamp
         });
         return response.data;
     }

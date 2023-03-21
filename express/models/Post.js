@@ -78,6 +78,36 @@ module.exports = (sequelize, DataTypes, Model) => {
             return posts;
         }
 
+        static async getPostOwner(post_id) {
+            try {
+                //Get the user_id, username, and display_name with the post_id
+                // const res = await sequelize.query(`SELECT posts.user_id, users.username, users_info.display_name
+                //                                    FROM posts
+                //                                    JOIN users ON posts.user_id = users.user_id
+                //                                    JOIN users_info ON posts.user_id = users_info.user_id
+                //                                    WHERE posts.post_id = ?;`, 
+                //                                    { replacements: [post_id] });
+
+                const res = await sequelize.query(`SELECT posts.user_id, users.username, users_info.display_name FROM posts JOIN users ON posts.user_id = users.user_id JOIN users_info ON posts.user_id = users_info.user_id WHERE posts.post_id = ?;`, { replacements: [post_id] });
+
+                console.log("res from getPostOwner", res);
+                                                    
+                return {
+                    user_id: res[0][0].user_id,
+                    username: res[0][0].username,
+                    display_name: res[0][0].display_name
+                };
+            }
+            catch (err) {
+                console.error(err);
+                return {
+                    user_id: "",
+                    username: "",
+                    display_name: ""
+                };
+            }
+        }
+
         //Get all the hashtags linked to post_id
         static async getHashtags(post_id) {
             const res = await sequelize.query(`SELECT hashtag FROM posts_hashtags WHERE post_id = ? LIMIT 5`, { replacements: [post_id] });

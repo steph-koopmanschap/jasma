@@ -1,4 +1,4 @@
-const { redisClient } = require("../index");
+const { redisClient } = require("../db/connections/redisClient.js");
 //const db = require("../db/connections/jasmaAdmin");
 //const {  } = db.models;
 const { v4: uuidv4 } = require("uuid");
@@ -12,7 +12,7 @@ async function createNotification(user_id, notificationData) {
         {
             from: UUID (userID),
             event_type: STRING ("new_comment, new_follower")
-            event: UUID (Either PostID, or UserID depending on event)
+            event_reference: UUID (Either PostID, or UserID depending on event)
             message: "Something happened"
         }
     */
@@ -28,21 +28,21 @@ async function createNotification(user_id, notificationData) {
     {
         // We use Redis transactions (multi/exec) to execute multiple commands atomically. 
         // This ensures that all or none of the commands are executed, preventing any intermediate failures.
-        const multi = redisClient.multi();
+        const redisMulti = redisClient.multi();
         // Add the notification to a Redis Sorted Set with the timestamp as the score
-        multi.zadd(`notifications:${user_id}`, timestamp, encodedNotification);
+        redisMulti.zadd(`notifications:${user_id}`, timestamp, encodedNotification);
         // Set the TTL for the Sorted Set key in Redis
         // This means the notification will auto-delete after notifTTL
-        multi.expire(`notifications:${user_id}`, notifTTL);
+        redisMulti.expire(`notifications:${user_id}`, notifTTL);
         // Publish the notification to a Redis channel with the user ID as the channel name
-        multi.publish(`notifications:${user_id}`, encodedNotification);
-        await multi.exec();
+        redisMulti.publish(`notifications:${user_id}`, encodedNotification);
+        await redisMulti.exec();
 
         return { success: true };
     } 
     catch (err) 
     {
-        console.error('Error creating notification:', error);
+        console.error('Error creating notification:', err);
         return { success: false, message: 'Notification could not be created.' };
     }
 }
@@ -58,26 +58,49 @@ async function getNotifications(req, res) {
     {
         // Retrieve the notifications for a user from the last X hours in reverse order based on the timestamp score
         // WITHSCORES will include the timestamp in the returned data
-        const notifications = await redisClient.zrevrangebyscoreAsync(`notifications:${user_id}`, '+inf', timestampCutoff, 'WITHSCORES');
 
-        console.log("notifications", notifications);
+        // ERROR: redisClient.zrevrangebyscoreAsync is not a function.
+        // Using the callback version instead.
+        //const notifications = await redisClient.zrevrangebyscoreAsync(`notifications:${user_id}`, '+inf', timestampCutoff, 'WITHSCORES');
+
+        redisClient.zrevrangebyscore(`notifications:${user_id}`, '+inf', timestampCutoff, 'WITHSCORES', (err, notifications) => {
+            if (err) {
+                console.error('Error retrieving notifications:', err);
+                return res.json({ success: false, message: 'Notifications could not be found.' });
+            }
+
+        console.log("notifications RAW", notifications);
 
         //Format the data from Redis
         const formattedNotifications = [];
         for (let i = 0; i < notifications.length; i += 2) 
         {
-            const notification = JSON.parse(notifications[i]);
-            const timestamp = parseInt(notifications[i + 1]);
-            formattedNotifications.push({ notification, timestamp });
+            const notificationJSON = JSON.parse(notifications[i]);
+            console.log("notificationJSON", notificationJSON);
+
+            const notification = {
+                user_id: notificationJSON.user_id,
+                from: notificationJSON.notificationData.from,
+                event_type: notificationJSON.notificationData.event_type,
+                event_reference: notificationJSON.notificationData.event_reference,
+                message: notificationJSON.notificationData.message,
+                notification_id: notificationJSON.notificationData.notification_id,
+                timestamp: notificationJSON.timestamp,
+                read: notificationJSON.read
+            };
+
+            console.log("notification", notification);
+            formattedNotifications.push(notification);
         }
 
         console.log("formattedNotifications", formattedNotifications);
 
         return res.json({ success: true, notifications: formattedNotifications });
+    });
     }
     catch (err) 
     {
-        console.error('Error retrieving notifications:', error);
+        console.error('Error retrieving notifications:', err);
         return res.json({ success: false, message: 'Notifications could not be found.' });
     }
 }

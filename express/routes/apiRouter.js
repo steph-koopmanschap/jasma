@@ -9,6 +9,7 @@ const { paymentsRouter } = require("./paymentsRouter");
 // const { adsRouter } = require("./adsRouter");
 const { reportsRouter } = require("./reportsRouter");
 const { hashtagsRouter } = require("./hashtagsRouter");
+const { notificationsRouter } = require("./notificationsRouter");
 
 apiRouter.use("/auth", authRouter);
 apiRouter.use("/users", usersRouter);
@@ -19,5 +20,6 @@ apiRouter.use("/search", searchRouter);
 // apiRouter.use("/ads", adsRouter);
 apiRouter.use("/reports", reportsRouter);
 apiRouter.use("/hashtags", hashtagsRouter);
+apiRouter.use("/notifications", notificationsRouter);
 
 module.exports = { apiRouter };

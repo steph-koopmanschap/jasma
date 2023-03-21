@@ -59,6 +59,11 @@ module.exports = (sequelize, DataTypes, Model) => {
             return res[0][0];
         }
 
+        static async getUsernameById(user_id) {
+            const res = await sequelize.query(`SELECT username FROM users WHERE user_id = ?`, { replacements: [user_id] });
+            return res[0][0].username;
+        }
+
         static async getByUsername(username) {
             const res = await sequelize.query(`SELECT * FROM users WHERE username = ?`, { replacements: [username] });
             return res[0][0];
@@ -69,7 +74,7 @@ module.exports = (sequelize, DataTypes, Model) => {
                 username: faker.internet.userName(),
                 email: faker.internet.email(),
                 recovery_email: faker.internet.email(),
-                user_password: "a", //faker.internet.password(),
+                user_password: "test123", //faker.internet.password(),
                 phone: faker.phone.number("###-###-####"),
                 recovery_phone: faker.phone.number("###-###-####"),
                 balance: 0.0

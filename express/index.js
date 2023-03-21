@@ -6,7 +6,7 @@ require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
 let RedisStore = require("connect-redis")(session);
-const Redis = require("ioredis");
+const { redisClient } = require("./db/connections/redisClient.js");
 //const cors = require("cors");
 //middleware imports
 const csrf = require('csurf');
@@ -38,11 +38,6 @@ customCors(app);
 //Set http security headers
 app.use(helmet());
 // logging(app);
-
-//Use a URL for Redis in production mode 
-const redisClient = (process.env.NODE_ENV === 'production' && process.env.REDIS_URL !== "")
-    ? new Redis(process.env.REDIS_URL)
-    : new Redis();
 
 //Cookie sessions are stored in Redis
 app.use(
@@ -106,4 +101,4 @@ const server = app.listen(port, () => {
     `);
 });
 
-module.exports = { redisClient, server };
+module.exports = { server };
