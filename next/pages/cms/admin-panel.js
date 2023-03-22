@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useQuery } from 'react-query';
@@ -14,7 +14,10 @@ export default function AdminPanel() {
 
     const [roleFilter, setRoleFilter] = useState("mod");
     const [searchUserBoxValue, setSearchUserBoxValue] = useState("");
-    const [searchedUser, setSearchedUser] = useState("");
+    //Use useRef instead?
+    //Contains the the userID related to the username in the searchUserBoxValue
+    //const [searchedUser, setSearchedUser] = useState("");
+    const searchedUser = useRef("");
     
     useEffect( () => {
         //Check if user is already logged in. If yes, redirect them to admin portal.
@@ -61,8 +64,10 @@ export default function AdminPanel() {
         const username = searchUserBoxValue;
         console.log("username:", username)
         const res = await api.getUserID(username);
-        setSearchedUser(res.user_id);
-        console.log("searchedUser", searchedUser);        
+        searchedUser.current = res.user_id;
+        //setSearchedUser(res.user_id);
+        //console.log("searchedUser", searchedUser); 
+        console.log("searchedUser.current", searchedUser.current);    
     }
 
     const filterRoles = () => {
@@ -75,11 +80,12 @@ export default function AdminPanel() {
     const changeRole = async (e) => {
         e.preventDefault();
         let res = "";
-        if (searchedUser !== "" && searchedUser) {
-            console.log("Hello world")
+        //if (searchedUser !== "" && searchedUser) {
+        if (searchedUser.current !== "" && searchedUser.current) {
             const role = document.getElementById(`changeRoleSelect_search`).value;
             console.log("role", role);
-            res = await api.changeUserRole(searchedUser, role);
+            //res = await api.changeUserRole(searchedUser, role);
+            res = await api.changeUserRole(searchedUser.current, role);
         }
         else {
             const user_id = e.target.id.replace('form_', '');

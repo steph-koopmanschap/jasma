@@ -165,7 +165,7 @@ async function addFollower(req, res) {
     // We can either uset getUsernameById or getById 
     const username = await User.getUsernameById(user_id);
     //Do we actually need to await the createNotification????
-    const createdNotification = await createNotification(userID_two, {
+    const createdNotification = createNotification(userID_two, {
         from: user_id,
         event_type: "new_follower",
         event_reference: user_id,

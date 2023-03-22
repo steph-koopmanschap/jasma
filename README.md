@@ -28,11 +28,14 @@ Currently looking for the following contributions:
  - Logo and graphics art.
  - Frontend development.
  - Backend development.
+ - Android App development. (React Native)
+ - iOS App development.
  - DevOps.
  - Cybersecurity.
  - Testing and bug reporting.
  - Ideas and inspiration.
  - Legal advice. 
+ - Documentation writers.
  - Spreading the word :)
 
 Thank you.
