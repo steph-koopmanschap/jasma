@@ -52,6 +52,13 @@ module.exports = (sequelize, DataTypes, Model) => {
 
         static async getUsersByRole(role) {
             const res = await sequelize.query(`SELECT user_id, user_role FROM users_metadata WHERE user_role = ?`, { replacements: [role] });
+
+            //Attach usernames
+            for (let i = 0; i < res[0].length; i++) {
+                const resUsername = await sequelize.query(`SELECT username FROM users WHERE user_id = ?`, { replacements: [res[0][i].user_id] });
+                res[0][i].username = resUsername[0][0].username;
+            }
+
             return res[0];
         }
     }

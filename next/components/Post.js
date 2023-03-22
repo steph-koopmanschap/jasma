@@ -36,7 +36,10 @@ export default function Post(props) {
         console.log("Editing posts does not work yet.");
     }
 
-    const reportPost = async () => {
+    const reportPost = async (e) => {
+        //prevent page from refreshing
+        e.preventDefault();
+        //Get reason from input field
         const report_reason = document.getElementById("reportReasonInput").value;
         console.log("report_reason", report_reason);
         const res = await api.createReport(postData.post_id, report_reason);
@@ -92,15 +95,25 @@ export default function Post(props) {
                         <button className="formButtonDefault outline-white border my-1" onClick={openReportModal}>Report</button>
                         <Modal modalName="reportModal" isOpen={reportModalState} onClose={closeReportModal} >
                             <p className='text-lg font-bold'>What is your reason for reporting this post?</p>
-                            <textarea
-                                className="my-2 p-1 mx-2"
-                                id="reportReasonInput"
-                                aria-label="Submit a report on a post."
-                                type="textarea"
-                                spellCheck="true"
-                                name="report_reason_input"
-                            />
-                            <button className="formButtonDefault outline-white border my-1" onClick={reportPost}>Submit report</button>
+                            <form
+                                id="createReportForm"
+                                action="#"
+                                onSubmit={reportPost}
+                            >
+                                <textarea
+                                    className="my-2 p-1 mx-2"
+                                    id="reportReasonInput"
+                                    aria-label="Submit a report on a post."
+                                    type="textarea"
+                                    spellCheck="true"
+                                    name="report_reason_input"
+                                />
+                                <input
+                                    className="formButtonDefault outline-white border my-1"
+                                    type="submit"
+                                    value="Submit report"
+                                />
+                            </form>
                         </Modal>
                         </React.Fragment>
                     : null}

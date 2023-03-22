@@ -1,13 +1,15 @@
 const db = require("../db/connections/jasmaAdmin");
 const { deleteFile } = require("../utils/deleteFile.js");
-const { Comment } = db.models;
+const { createNotification } = require("./notifications.js");
+const { Comment, Post } = db.models;
 
 async function createComment(req, res) {
     const { post_id, comment_text, file, fileName } = req.body;
     const { user_id, username } = req.session;
     
+    let createdComment = null;
     try {
-        const createdComment = await Comment.create({ 
+        createdComment = await Comment.create({ 
             post_id: post_id, 
             user_id: user_id, 
             username: username, 
@@ -19,9 +21,18 @@ async function createComment(req, res) {
     catch (err) {
         return res.json({ success: false, message: err.message });
     }
+
+    //Create a notification towards the post owner
+    //Do we actually need to await the createNotification????
+    const postOwner = await Post.getPostOwner(post_id);
+    const createdNotification = createNotification(postOwner.user_id, {
+        from: user_id,
+        event_type: "new_comment",
+        event_reference: post_id,
+        message: `${username} created a new comment on your post.`
+    });
     
-    //TODO: Send back the created comment.
-    return res.json({ success: true });
+    return res.json({ success: true, createdComment: createdComment });
 }
 
 async function deleteComment(req, res) {

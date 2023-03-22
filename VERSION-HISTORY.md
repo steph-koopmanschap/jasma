@@ -1,6 +1,6 @@
 # JASMA Version History
 
-## March 19, 2023
+## March 22, 2023
 
 ### Features
 
@@ -17,7 +17,8 @@
 - Bookmark posts.
 - Dark and light theme.
 - Automatically generate random posts, users, followers, comments, and hashtags.
-- Content moderation system to delete posts.
+- Content moderation system to delete flagged/reported posts.
+- In app notification system.
 
 ### Planned potential future features
 
@@ -28,7 +29,7 @@
 - Editing posts.
 - Add personal user information, such as age, country, etc.
 - Privacy system. Private posts, private profiles, etc.
-- Notification system. (In app + email).
+- Email notification system.
 - Reset password with email.
 - Uploading video audio files. (dedicated media server).
 - Livestreaming of both video and audio. (livestream server).

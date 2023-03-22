@@ -6,9 +6,10 @@ require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
 let RedisStore = require("connect-redis")(session);
-const Redis = require("ioredis");
+const { redisClient } = require("./db/connections/redisClient.js");
 //const cors = require("cors");
 //middleware imports
+const csrf = require('csurf');
 const helmet = require("helmet");
 const { globalLimiter } = require("./middleware/rateLimiters.js");
 const customCors = require("./middleware/customCors.js");
@@ -19,6 +20,9 @@ var path = require("path");
 //Set the absolute directory path of the server(index.js) to the global namespace.
 //This is needed for the server to find files in the /media/ directory
 global.appRoot = path.resolve(__dirname);
+
+//CSRF (Cross-site request forgery) Protection
+const csrfProtection = csrf({ cookie: true })
 
 const app = express();
 //Number of proxies between express server and the client
@@ -34,11 +38,6 @@ customCors(app);
 //Set http security headers
 app.use(helmet());
 // logging(app);
-
-//Use a URL for Redis in production mode 
-const redisClient = (process.env.NODE_ENV === 'production' && process.env.REDIS_URL !== "")
-    ? new Redis(process.env.REDIS_URL)
-    : new Redis();
 
 //Cookie sessions are stored in Redis
 app.use(
@@ -102,4 +101,4 @@ const server = app.listen(port, () => {
     `);
 });
 
-module.exports = { redisClient, server };
+module.exports = { server };

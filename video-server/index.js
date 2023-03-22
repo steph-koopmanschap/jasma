@@ -28,6 +28,7 @@ app.use((req, res, next) => {
     next();
 });
 
+//Create uploads directory if it doesn't exist yet.
 if (!fs.existsSync("./uploads")) {
     fs.mkdirSync("./uploads");
 }
@@ -43,6 +44,7 @@ const getFileExtension = (info) => info.mimeType.match(/(?<=\/).+/)[0];
 
 async function videoToHls(filePath, folderPath, req, socketId) {
     try {
+        //Convert video to Hls format using ffmpeg
         const { stdout, stderr } = await exec(
             `ffmpeg -i ${filePath} -profile:v main -pix_fmt yuv420p -level 3.0 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ${folderPath}/index.m3u8`
         );
@@ -89,6 +91,7 @@ app.post("/upload", async (req, res) => {
                 req.io.to(socketId).emit("statusUpdate", "Upload complete");
             }
 
+            //Delete tempFilePath
             fs.unlinkSync(tempFilePath);
 
             res.json({ hlsURL: `http://localhost:4000/media/${mediaId}/index.m3u8` });

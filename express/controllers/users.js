@@ -1,5 +1,6 @@
 const db = require("../db/connections/jasmaAdmin");
 const { deleteFile } = require("../utils/deleteFile.js");
+const { createNotification } = require("./notifications.js");
 const { User, UserInfo, UserFollowing, UserMetadata} = db.models;
 
 async function getUserIdByUsername(req, res) {
@@ -25,6 +26,7 @@ async function getClientUser(req, res) {
 async function getUserIDsByRole(req, res) {
     const { role } = req.params;
     const users = await UserMetadata.getUsersByRole(role);
+
     return res.json({ success: true, users: users });   
 }
 
@@ -158,6 +160,17 @@ async function addFollower(req, res) {
     catch (err) {
         return res.json({ success: false, message: "You are already following this person." });
     }
+
+    //Create a notification towards the person being followed. 
+    // We can either uset getUsernameById or getById 
+    const username = await User.getUsernameById(user_id);
+    //Do we actually need to await the createNotification????
+    const createdNotification = createNotification(userID_two, {
+        from: user_id,
+        event_type: "new_follower",
+        event_reference: user_id,
+        message: `${username} started following you.`
+    });
 
     return res.json({ success: true, message: "Follower added." });
 }

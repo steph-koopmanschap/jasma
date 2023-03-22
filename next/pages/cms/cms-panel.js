@@ -12,7 +12,7 @@ import Post from "../../components/Post";
     And to delete the content if needed or delete the report if the report was false.
 */
 
-export default function CMS_Portal() {
+export default function CMS_Panel() {
 
     const router = useRouter();
 
@@ -28,9 +28,8 @@ export default function CMS_Portal() {
             const isLoggedIn = await api.checkAuthClientSide();
             // Replace above line of code with below code when page is done.
             //const res = await api.checkAuthUserRole();
-            // let loggedIn = false;
-            // if (res.mod || res.admin) {
-            //     isLoggedIn = true;
+            // if (res.mod === false || res.admin === false) {
+            //     let isLoggedIn = false;
             // }
             if (isLoggedIn === false) {
                 router.replace('/cms/cms-login');
@@ -122,7 +121,7 @@ export default function CMS_Portal() {
 
     return (
     <div className='mt-4'>
-        <h1 className="text-xl text-center mt-4">JASMA CONTENT MODERATION SYSTEM (J-CMS)</h1>
+        <h1 className="text-xl text-center mt-4">JASMA CONTENT MODERATION PANEL)</h1>
 
         <main className='flex mr-8 ml-8'>
             {/* main content */}

@@ -1,6 +1,6 @@
 # JASMA Documentation
 
-Tech Stack:
+## Tech Stack:
 
 Frontend:
 - NextJS / React
@@ -84,7 +84,7 @@ This will set up everything you need automatically.
 ## API Routes
 
 #### Routes marked with ! require authenthication/authorization.
-#### Routes marked with !! require moderator authenthication/authorization.
+#### Routes marked with !! require moderator/admin authenthication/authorization.
 
 ### Auth
 
@@ -92,7 +92,7 @@ This will set up everything you need automatically.
 - POST   /api/auth/login
 - POST   /api/auth/logout
 - POST   /api/auth/checkAuth
-- POST   /api/auth/checkAuthMod
+- POST   /api/auth/checkAuthUserRole
 - ! POST /api/auth/changePassword
 
 ### Users
@@ -107,6 +107,8 @@ This will set up everything you need automatically.
 - GET      /api/users/${userID}/getFollowers
 - GET      /api/users/${userID}/getFollowing
 - ! GET    /api/users/checkIsFollowing/${userID_two}
+- !! GET   /api/users/getUsersByRole
+- !! PUT   /api/users/changeUserRole
 
 ### Posts
 
@@ -137,6 +139,11 @@ This will set up everything you need automatically.
 - GET /api/hashtags/getTopHashtags?limit=${limit}
 - GET /api/hashtags/getHashtagCount/${hashtag}
 
+### Notifications
+
+- ! GET /api/notifications/getNotifications
+- ! PUT /api/notifications/readNotification
+
 ## Learn More
 
 External documentation of 3rd party libraries, frameworks, and tools.
@@ -150,6 +157,7 @@ External documentation of 3rd party libraries, frameworks, and tools.
 - [NPM Docs](https://docs.npmjs.com/)
 - [Sequelize SQL ORM Docs](https://sequelize.org/docs/v6/)
 - [PostGreSQL Docs](https://www.postgresql.org/docs/)
+- [Redis Docs](https://redis.io/docs/)
 - [Express.js Docs](https://expressjs.com/en/guide/routing.html)
 - [Date FNS Docs](https://date-fns.org/docs/Getting-Started)
 - [Font Awesome Docs](https://fontawesome.com/docs)

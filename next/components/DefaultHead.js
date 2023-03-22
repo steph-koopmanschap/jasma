@@ -2,18 +2,24 @@ import Head from 'next/head';
 
 //Default Head to provide page metadata
 
-export default function DefaultHead() {
+export default function DefaultHead(props) {
+
+    const { title } = props;
+
+    const csrfToken = "";
+
     return ( 
         <div>
             <Head>
                 <meta charSet="utf-8" />
                 
-                <title>JASMA</title>
+                <title>{title ? title : "JASMA"}</title>
                 
                 <meta name="description" content="JASMA - Just Another Social Media App" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <meta name="theme-color" content="#000000" />
                 <meta name="author" content="Steph Koopmanschap and others" />
+                <meta name="csrf-token" content={csrfToken}></meta>
                 
                 <meta property="og:title" content="Just Another Social Media App" />
                 <meta property="og:type" content="website" />
