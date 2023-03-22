@@ -313,6 +313,23 @@ class Api {
         });
         return response.data;
     }
+    
+    async getSubscribedHashtags() {
+        const response = await this.api.get(`/api/hashtags/getSubscribedHashtags`);
+        return response.data;        
+    }
+
+    async subscribeToHashtags(hashtags) {
+        const response = await this.api.post(`/api/hashtags/subscribeToHashtags`, {
+            hashtags: hashtags
+        });
+        return response.data;        
+    }
+
+    async unsubscribeFromHashtag(hashtag) {
+        const response = await this.api.delete(`/api/hashtags/unsubscribeFromHashtag/${hashtag}`);
+        return response.data;        
+    }
 }
 
 const jasmaApi = new Api();

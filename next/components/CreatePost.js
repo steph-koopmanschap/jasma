@@ -24,10 +24,10 @@ export default function CreatePost() {
     const createPost = async (e) => {
         //prevent page from refreshing
         e.preventDefault();
-        //TODO: Add file
 
         const createdPost = await api.createPost(postData, file);
 
+        //Empty the input fields after creating a post.
         setTextInput("");
         setHashtagInput("");
         setHashtagPreview("");
@@ -50,7 +50,8 @@ export default function CreatePost() {
         //get the hashtags
         else if (e.target.name === "hashtags") {
             setHashtagInput(e.target.value);
-            const hashtagsArray = hashtagFormatter(e.target.value);
+            //Only 5 hashtags per post.
+            const hashtagsArray = hashtagFormatter(e.target.value, 5);
             setHashtagPreview(hashtagsArray.join(" "));
             setPostData({
                 ...postData,

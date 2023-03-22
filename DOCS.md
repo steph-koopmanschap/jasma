@@ -136,8 +136,11 @@ This will set up everything you need automatically.
 
 ### Hashtags
 
-- GET /api/hashtags/getTopHashtags?limit=${limit}
-- GET /api/hashtags/getHashtagCount/${hashtag}
+- GET      /api/hashtags/getTopHashtags?limit=${limit}
+- GET      /api/hashtags/getHashtagCount/${hashtag}
+- ! GET    /api/hashtags/getSubscribedHashtags
+- ! POST   /api/hashtags/subscribeToHashtags
+- ! DELETE /api/hashtags/unsubscribeFromHashtag
 
 ### Notifications
 

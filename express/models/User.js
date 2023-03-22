@@ -74,7 +74,7 @@ module.exports = (sequelize, DataTypes, Model) => {
                 username: faker.internet.userName(),
                 email: faker.internet.email(),
                 recovery_email: faker.internet.email(),
-                user_password: "test123", //faker.internet.password(),
+                //user_password: "test123", //faker.internet.password(), //user_password is in a different table now.
                 phone: faker.phone.number("###-###-####"),
                 recovery_phone: faker.phone.number("###-###-####"),
                 balance: 0.0

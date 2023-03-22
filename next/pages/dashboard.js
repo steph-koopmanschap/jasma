@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import CreatePost from "../components/CreatePost";
 import HeaderMain from "../components/HeaderMain";
 import UserBox from "../components/UserBox";
+import CreatePost from "../components/CreatePost";
+import SubscribeHashtags from "../components/SubscribeHashtags";
 import NewsFeed from "../components/NewsFeed";
 import GlobalNewsFeed from "../components/GlobalNewsFeed";
-import { checkAuth } from "../session";
+//import { checkAuth } from "../session";
 
 // export async function getServerSideProps({ req, res }) {
 //     const isAuth = await checkAuth(req);
@@ -42,6 +43,7 @@ export default function Dashboard(props) {
             {isLoggedIn ? (
                 <React.Fragment>
                 <CreatePost /> 
+                <SubscribeHashtags />
                 <NewsFeed />
                 </React.Fragment>)
             : <GlobalNewsFeed />
