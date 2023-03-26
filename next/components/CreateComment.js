@@ -1,6 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { toast } from "react-toastify";
-import { toastSuccess } from "../utils/defaultToasts.js"
+import React, { useState } from 'react';
+import useToast from "../hooks/useToast";
 import api from "../clientAPI/api.js";
 import FileUploader from "./file-upload/FileUploader.js";
 
@@ -9,10 +8,7 @@ const initialCommentData = { post_id: "", comment_text: "", context: "comment" }
 export default function CreateComment(props) {
     const { postID } = props;
 
-    //React Toast
-    const toastId = useRef(null);
-    const notify = (text) => (toastId.current = toastSuccess(text));
-    const dismiss = () => toast.dismiss(toastId.current);
+    const { notifyToast } = useToast();
 
     const [commentData, setCommentData] = useState({
         ...initialCommentData,
@@ -35,7 +31,7 @@ export default function CreateComment(props) {
         setFile(null);
 
         console.log(createdComment);
-        return notify("Comment created.");
+        notifyToast("Comment created.");
     }
 
     const handleChange = (e) => {

@@ -1,16 +1,13 @@
-import React, { useState, useRef } from "react";
-import { toast } from "react-toastify";
-import { toastSuccess } from "../utils/defaultToasts.js"
+import React, { useState } from "react";
+import useToast from "../hooks/useToast";
 import hashtagFormatter from "../utils/hashtagFormatter.js";
 import api from "../clientAPI/api.js";
 import FileUploader from "./file-upload/FileUploader.js";
 
 const initialPostData = { text_content: "", hashtags: [], context: "post" };
 export default function CreatePost() {
-    //React Toast
-    const toastId = useRef(null);
-    const notify = (text) => (toastId.current = toastSuccess(text));
-    const dismiss = () => toast.dismiss(toastId.current);
+    
+    const { notifyToast } = useToast();
 
     const [postData, setPostData] = useState(initialPostData);
     const [file, setFile] = useState(null);
@@ -24,17 +21,18 @@ export default function CreatePost() {
     const createPost = async (e) => {
         //prevent page from refreshing
         e.preventDefault();
-        //TODO: Add file
 
         const createdPost = await api.createPost(postData, file);
 
+        //Empty the input fields after creating a post.
         setTextInput("");
         setHashtagInput("");
         setHashtagPreview("");
         setFile(null);
 
         console.log(createdPost);
-        return notify("Post created.");
+        notifyToast("Post created.");
+        //return notify();
     };
 
     const handleChange = (e) => {
@@ -50,7 +48,8 @@ export default function CreatePost() {
         //get the hashtags
         else if (e.target.name === "hashtags") {
             setHashtagInput(e.target.value);
-            const hashtagsArray = hashtagFormatter(e.target.value);
+            //Only 5 hashtags per post.
+            const hashtagsArray = hashtagFormatter(e.target.value, 5);
             setHashtagPreview(hashtagsArray.join(" "));
             setPostData({
                 ...postData,

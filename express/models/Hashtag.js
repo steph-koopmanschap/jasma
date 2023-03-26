@@ -11,8 +11,23 @@ module.exports = (sequelize, DataTypes, Model) => {
     const options = { sequelize, tableName: "hashtags" };
 
     class Hashtag extends Model {
-        static async generate() {
 
+        //return true if already exists
+        //return false if not yet exists
+        static async checkHashtagAlreadyExists(hashtag) {
+            //Check if the hashtag already exists.
+            const resHashtag = await sequelize.query(`SELECT hashtag FROM hashtags WHERE hashtag = ?`, {replacements: [hashtag]});
+            //Hashtag does not exist.
+            if (resHashtag[0].length === 0) {
+                return false;
+            }
+            //hashtag exists
+            else {
+                return true;
+            }
+        }
+
+        static async generate() {
             let hashtag = "";
             let hashtagAlreadyExists = true;
             //Keep generating hashtags until a hashtag is made that does not exist in the database yet.

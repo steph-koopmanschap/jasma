@@ -70,7 +70,7 @@ module.exports = (sequelize, DataTypes, Model) => {
         }
 
         static async findByPostIds(post_ids) {
-            let posts = [];
+            const posts = [];
             for (let i = 0; i < post_ids.length; i++) {
                 const post = await Post.findByPostId(post_ids[i]);
                 posts.push(post[0]);
@@ -78,9 +78,40 @@ module.exports = (sequelize, DataTypes, Model) => {
             return posts;
         }
 
+        static async getPostsByHashtag(hashtag, limit) {
+            const posts = [];
+            //Get all postIDs with hashtag.
+            const resHashtags = await db.query(`SELECT post_id FROM posts_hashtags WHERE hashtag = ? LIMIT ?`, { replacements: [hashtag, limit] });
+
+            //Get each post that contains the hashtag
+            for (let i = 0; i < resHashtags[0].length; i++)
+            {
+                const post = await Post.findByPostId(resHashtags[0][i]);
+                posts.push(post[0]);
+            }
+
+            return posts;
+        }
+
+        //Get all the posts that contain the hashtags that a user is subscribed to.
+        static async getPostsBySubscribedHashtag(user_id, limit) {
+            const posts = [];
+            //get the subscribed hashtags
+            const resHashtags = await sequelize.query(`SELECT hashtag FROM users_hashtags_preferences WHERE user_id = ?`, { replacements: [user_id] });
+            //Get posts for each hastag. Only get limit amount of posts per hashtag
+            for (let i = 0; i < resHashtags[0].length; i++)
+            {
+                //Get the posts for 1 hashtag
+                const postsOneHashtag = await Post.getPostsByHashtag(resHashtags[0][i].hashtag, limit);
+                posts.concat(postsOneHashtag);
+            }
+
+            return posts;
+        }
+
+        //Get the user_id, username, and display_name with the post_id
         static async getPostOwner(post_id) {
-            try {
-                //Get the user_id, username, and display_name with the post_id
+            try {   
                 // const res = await sequelize.query(`SELECT posts.user_id, users.username, users_info.display_name
                 //                                    FROM posts
                 //                                    JOIN users ON posts.user_id = users.user_id
@@ -140,20 +171,27 @@ module.exports = (sequelize, DataTypes, Model) => {
         }
 
         static async getNewsFeed(user_id) {
-            //1. Get the all the people that this user follows
-            const resFollowing = await sequelize.query(`SELECT follow_id AS user_id FROM users_following WHERE user_id = ?`, { replacements: [user_id] });
             let posts = [];
 
-            //1.5 If user is not following anyone. Get the global newsfeed instead.
-            if (resFollowing[0].length === 0) {
+            //1. Get the all the people that this user follows.
+            const resFollowing = await sequelize.query(`SELECT follow_id AS user_id FROM users_following WHERE user_id = ?`, { replacements: [user_id] });
+
+            //1.1 Get all the posts with hashtags this user is subscribed to.
+            //We'll try to get at least 5 posts per hashtag
+            let subscribedHashtagPosts = await Post.getPostsBySubscribedHashtag(user_id, 5);
+
+            //1.5 If user is not following anyone AND not subscribed to any hashtags. Get the global newsfeed instead.
+            if (resFollowing[0].length === 0 && subscribedHashtagPosts.length === 0) {
                 posts = await Post.getLatest(25);
                 return posts;
             }
 
+            //Get the posts from followers
             for (let i = 0; i < resFollowing[0].length; i++)
             {
                 //2. Get the latest post of each person
-                const resPost = await sequelize.query(`SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC LIMIT 1`, { replacements: [resFollowing[0][i].user_id] });
+                const resPost = await Post.findByUserId(resFollowing[0][i].user_id, 1);
+                //const resPost = await sequelize.query(`SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC LIMIT 1`, { replacements: [resFollowing[0][i].user_id] });
                 //2.5 The user has not made any posts at all. Skip. (Probably unlikely)
                 if (resPost[0].length === 0) {
                     continue;
@@ -162,14 +200,19 @@ module.exports = (sequelize, DataTypes, Model) => {
                 posts.push(resPost[0][0]);
             }
 
-            //4. If posts from followers is not enough
-            //   Either get posts from global (implemented) or get more posts from other users. (not implemented)
+            //3.5 Combine the posts of following and subscribed hashtags into one list.
+            posts.concat(subscribedHashtagPosts);
+
+            //4. If posts from followers and hashtags is not enough
+            //   Either get posts from global (implemented) or get more posts from other users. (not implemented yet)
             let additionalPosts = [];
-            if (posts.length < 25) {
-                additionalPosts = await Post.getLatest(25 - posts.length);
+            if (posts.length < 50) {
+                additionalPosts = await Post.getLatest(50 - posts.length);
             }
+            //Add the extra posts to the newsfeed list.
             posts = posts.concat(additionalPosts);
-            posts = await Post.attachHashtags(posts);
+            //NOTE: hashtags should already be attached from all the previous post queries so this should not be needed.
+            //posts = await Post.attachHashtags(posts);
 
             return posts;
         }

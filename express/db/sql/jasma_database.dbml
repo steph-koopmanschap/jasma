@@ -144,7 +144,7 @@ Table users_following {
     follow_id uuid [pk, note: 'user_id follows follow_id. follow_id is followed by user_id']
 
     indexes {
-      (user_id, follow_id) [pk] // composite primary key
+        (user_id, follow_id) [pk] // composite primary key
     }
 }
 
@@ -152,8 +152,12 @@ Ref: users_following.user_id > users.user_id [delete: cascade]
 Ref: users_following.follow_id > users.user_id [delete: cascade]
 
 Table users_hashtags_preferences {
-    hashtag varchar(50)
+    hashtag varchar(50) [note: "The hashtag the user is subscribed to for their newsfeed"]
     user_id uuid
+
+    indexes {
+        (hashtag, user_id) [pk]
+    }
 }
 
 Ref: users_hashtags_preferences.hashtag > hashtags.hashtag

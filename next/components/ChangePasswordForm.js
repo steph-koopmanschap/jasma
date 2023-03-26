@@ -1,13 +1,10 @@
-import React, { useState, useRef } from "react";
-import { toast } from "react-toastify";
-import { toastSuccess } from "../utils/defaultToasts.js"
+import React, { useState } from "react";
+import useToast from "../hooks/useToast";
 import api from "../clientAPI/api.js";
 
 export default function ChangePasswordForm() {
-    //React Toast
-    const toastId = useRef(null);
-    const notify = (text) => (toastId.current = toastSuccess(text));
-    const dismiss = () => toast.dismiss(toastId.current);
+
+    const { notifyToast } = useToast();
 
     const [passwordChangeState, setPasswordChangeState] = useState({
         newPasswordInput: "",
@@ -28,11 +25,11 @@ export default function ChangePasswordForm() {
         {
             const res = await api.changePassword(passwordChangeState.newPasswordInput);
             console.log(res);
-            return notify(res.message);
+            notifyToast(res.message);
         }
         else {
             console.log("Passwords do not match.");
-            return notify("Passwords do not match.");
+            notifyToast("Passwords do not match.");
         }
     };
 

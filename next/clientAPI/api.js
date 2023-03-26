@@ -281,6 +281,13 @@ class Api {
         return response.data;
     }
 
+    async stripeCreateCheckoutSession(cartData) {
+        const response = await this.api.post(`/api/payments/stripeCreateCheckoutSession`, {
+            cartData: cartData
+        });
+        return response.data.orderID;
+    }
+
     async createReport(post_id, report_reason) {
         const response = await this.api.post(`/api/reports/createReport`, {
             post_id: post_id,
@@ -312,6 +319,23 @@ class Api {
             timestamp: timestamp
         });
         return response.data;
+    }
+    
+    async getSubscribedHashtags() {
+        const response = await this.api.get(`/api/hashtags/getSubscribedHashtags`);
+        return response.data;        
+    }
+
+    async subscribeToHashtags(hashtags) {
+        const response = await this.api.post(`/api/hashtags/subscribeToHashtags`, {
+            hashtags: hashtags
+        });
+        return response.data;        
+    }
+
+    async unsubscribeFromHashtag(hashtag) {
+        const response = await this.api.delete(`/api/hashtags/unsubscribeFromHashtag/${hashtag}`);
+        return response.data;        
     }
 }
 

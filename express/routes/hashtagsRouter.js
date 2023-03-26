@@ -1,6 +1,11 @@
 const express = require("express");
+const isAuth = require("../middleware/isAuth.js");
 const { getTopHashtagsLimiter } = require("../middleware/rateLimiters");
-const { getTopHashtags, getHashtagCount } = require("../controllers/hashtags.js");
+const { getTopHashtags, 
+        getHashtagCount, 
+        getSubscribedHashtags,
+        subscribeToHashtags, 
+        unsubscribeFromHashtag } = require("../controllers/hashtags.js");
 
 const hashtagsRouter = express.Router();
 
@@ -9,5 +14,12 @@ const hashtagsRouter = express.Router();
 hashtagsRouter.get('/getTopHashtags', getTopHashtagsLimiter, getTopHashtags);
 // THIS IS PUBLIC API POINT
 hashtagsRouter.get("/getHashtagCount/:hashtag", getTopHashtagsLimiter, getHashtagCount);
+
+hashtagsRouter.get("/getSubscribedHashtags", isAuth, getSubscribedHashtags);
+hashtagsRouter.post("/subscribeToHashtags", isAuth, subscribeToHashtags);
+hashtagsRouter.delete("/unsubscribeFromHashtag/:hashtag", isAuth, unsubscribeFromHashtag);
+
+
+
 
 module.exports = { hashtagsRouter };

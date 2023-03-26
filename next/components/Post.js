@@ -1,9 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import Link from "next/link";
 import Image from 'next/image';
 import { formatDistance } from "date-fns";
-import { toast } from "react-toastify";
-import { toastSuccess } from "../utils/defaultToasts.js"
+import useToast from "../hooks/useToast";
 import api from "../clientAPI/api.js";
 import CreateComment from "./CreateComment";
 import CommentList from "./CommentList";
@@ -14,10 +13,7 @@ import Modal from './Modal.js';
 export default function Post(props) {
     const { postData } = props;
 
-    //React Toast
-    const toastId = useRef(null);
-    const notify = (text) => (toastId.current = toastSuccess(text));
-    const dismiss = () => toast.dismiss(toastId.current);
+    const { notifyToast } = useToast();
 
     const [reportModalState, setReportModalState] = useState(false);
     const openReportModal = () => {
@@ -29,7 +25,7 @@ export default function Post(props) {
 
     const deletePost = async () => {
         const res = await api.deletePost(postData.post_id);
-        return notify("Post deleted.");
+        notifyToast("Post deleted.");
     }
 
     const editPost = async () => {
@@ -44,7 +40,7 @@ export default function Post(props) {
         console.log("report_reason", report_reason);
         const res = await api.createReport(postData.post_id, report_reason);
         if (res.message = "success") {
-            return notify("Post has been reported.");
+            notifyToast("Post has been reported.");
         }
         closeReportModal();
     }
@@ -52,14 +48,14 @@ export default function Post(props) {
     const bookmarkPost = async () => {
         const res = await api.addPostBookmark(postData.post_id);
         if (res.message = "success") {
-            return notify("Post has been bookmarked.");
+            notifyToast("Post has been bookmarked.");
         }
     }
 
     const sharePost = async () => {
         navigator.clipboard.writeText(`${window.location.origin}/post/${postData.post_id}`).then(
             () => {
-                return notify("Link has been copied to your clipboard.");
+                notifyToast("Link has been copied to your clipboard.");
             },
             () => {
               /* clipboard write failed */

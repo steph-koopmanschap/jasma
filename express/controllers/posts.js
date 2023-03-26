@@ -20,11 +20,11 @@ async function createPost(req, res) {
         const post_id = createdPost.dataValues.post_id;
         for (let i = 0; i < hashtagsArray.length; i++) {
             //Check if the hashtag already exists.
-            const resHashtag = await db.query(`SELECT hashtag FROM hashtags WHERE hashtag = ?`, {
-                replacements: [hashtagsArray[i]]
-            });
+            const HashtagAlreadyExists = await Hashtag.checkHashtagAlreadyExists(hashtagsArray[i]);
+
             //Hashtag does not exist.
-            if (resHashtag[0].length === 0) {
+            if (HashtagAlreadyExists === false) {
+                //Add the hashtag to the Database
                 await Hashtag.create({ hashtag: hashtagsArray[i] });
             }
             await PostHashtag.create({ hashtag: hashtagsArray[i], post_id: post_id });
