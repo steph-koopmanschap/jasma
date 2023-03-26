@@ -35,6 +35,6 @@
         "url": "https://github.com/steph-koopmanschap/jasma/issues"
     },
     "dependencies": {
-        "nodemon": "^2.0.20"
+        "nodemon": "^2.0.21"
     }
 }
