@@ -5,11 +5,11 @@
 require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
-let RedisStore = require("connect-redis")(session);
 const { redisClient } = require("./db/connections/redisClient.js");
-//const cors = require("cors");
+let RedisStore = require("connect-redis").default;//(session);
 //middleware imports
-const csrf = require('csurf');
+const csrf = require('csurf'); //WARNING: csurf package is deprecated. Find an alternative ASAP
+const cookieParser = require('cookie-parser');
 const helmet = require("helmet");
 const { globalLimiter } = require("./middleware/rateLimiters.js");
 const customCors = require("./middleware/customCors.js");
@@ -21,9 +21,6 @@ var path = require("path");
 //This is needed for the server to find files in the /media/ directory
 global.appRoot = path.resolve(__dirname);
 
-//CSRF (Cross-site request forgery) Protection
-const csrfProtection = csrf({ cookie: true })
-
 const app = express();
 //Number of proxies between express server and the client
 //This is to make the rate limiter ignore proxy requests
@@ -33,23 +30,73 @@ app.set("trust proxy", 1);
 // LOAD MIDDLEWARES
 // Apply the global rate limiter to all routes
 app.use(globalLimiter);
-//app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 customCors(app);
 //Set http security headers
 app.use(helmet());
 // logging(app);
 
 //Cookie sessions are stored in Redis
+//Note:
+//We probably dont need to use 
+/*
+cookie: {
+            secure: true
+        }
+*/
+
+// Initialize the Redis store.
+let redisStore = new RedisStore({
+    client: redisClient,
+    //prefix: "myapp:",
+})
+
+//Because the express server is behind a HTTPS Nginx reverse proxy which will handle the SSL
 app.use(
     session({
-        store: new RedisStore({ client: redisClient }),
+        store: redisStore,
         saveUninitialized: false,
+        resave: false,
         secret: process.env.SESSION_SECRET,
-        resave: false
+        cookie: {
+            httpOnly: true,
+            sameSite: 'strict'
+        }
     })
 );
+
+//CSRF (Cross-site request forgery) Protection
+const csrfProtection = csrf({ cookie: true, key: 'XSRF-TOKEN' });
+// const csrfProtection = csrf({
+//     cookie: {
+//         secure: true,
+//         sameSite: 'strict'
+//     }
+// });
+
+// parse cookies
+// we need this because "cookie" is true in csrfProtection
+app.use(cookieParser());
+
 //For parsing application/json
 app.use(express.json());
+
+// Middleware for POST, PUT, and DELETE requests only
+// Used for checking the CSRF protection middleware only on resource modifying requests.
+// app.use((req, res, next) => {
+//     if (req.method === 'POST' || req.method === 'PUT' || req.method === 'DELETE') {
+//         csrfProtection(req, res, next);
+//         res.cookie('_csrf', req.csrfToken());
+//     }
+//     next();
+// });
+
+//Give the CSRF token to the client.
+app.get("/requestCSRF-TOKEN", csrfProtection, (req, res) => {
+    const token = req.csrfToken();
+    console.log("token: ", token);
+    res.cookie('_csrf', token);
+    res.json({ success: true, csrfToken: token });
+});
 
 // Mount router
 app.use("/api", apiRouter);

@@ -1,6 +1,6 @@
 const busboy = require("busboy");
 const { v4: uuidv4 } = require("uuid");
-const appendField = require("append-field");
+const appendField = require("append-field");//.default;
 const fs = require("fs");
 
 function logFileInfo(info) {

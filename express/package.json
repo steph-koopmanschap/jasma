@@ -30,10 +30,11 @@
     },
     "dependencies": {
         "@paypal/checkout-server-sdk": "^1.0.3",
-        "append-field": "^2.0.0",
+        "append-field": "^1.0.0",
         "bcrypt": "^5.1.0",
         "busboy": "^1.6.0",
         "connect-redis": "^7.0.1",
+        "cookie-parser": "^1.4.6",
         "cors": "^2.8.5",
         "csurf": "^1.11.0",
         "date-fns": "^2.29.3",

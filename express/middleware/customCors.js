@@ -1,6 +1,7 @@
 //A better custom implementation of cors.
 //Should be at or near the top of the middleware stack
 function customCors(app) {
+    //app.use(cors({ origin: allowedOrigins, credentials: true }));
     app.use((req, res, next) => {
         const { NEXTJS_ORIGIN, NEXTJS_PORT } = process.env;
         

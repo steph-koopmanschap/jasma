@@ -1,5 +1,6 @@
 import axios from "axios";
 import fetch from "node-fetch";
+import Cookies from 'js-cookie';
 
 function createMultipartData(data, file) {
     const formData = new FormData();
@@ -25,18 +26,92 @@ else if (NEXT_PUBLIC_NODE_ENV === 'production') {
     baseURL = `https://${process.env.NEXT_PUBLIC_API_SERVER_URL}`;
 }
 
+//Check if a cookie exists by name
+function checkCookieExists(name) {
+    //First get all the cookies in the current document
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) 
+    {
+        //Trim trailing whitespace
+        const cookie = cookies[i].trim();
+        //check if cookie equals the name.
+        if (cookie.startsWith(`${name}=`)) 
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+//Get the CSRF token from the cookie.
+async function get_CSRF_TOKEN_fromCookie() {
+    let token = "";
+   // The CSRF token already exists in the cookie
+    if (checkCookieExists('XSRF-TOKEN') === true) {
+        token = Cookies.get('XSRF-TOKEN');
+    }
+    // if (checkCookieExists('_csrf') === true)
+    // {
+    //     token = Cookies.get('_csrf');
+    // }
+    //The CSRF Token does not exist yet. Request server for a CSRF Token.
+    else {
+        token = await requestCSRF_TOKEN();
+    }
+    console.log("token:", token);
+    return token;
+}
+
+const axiosInstance = axios.create({
+    baseURL: baseURL,
+    withCredentials: true,
+    timeout: 9000 //Timeout response after 9 seconds
+});
+
+//Request a CSRF Token from the server.
+async function requestCSRF_TOKEN() {
+    const response = await axiosInstance.get("/requestCSRF-TOKEN");
+    console.log("requestCSRF_TOKEN: ", response.data);
+    return response.data;
+}
+
 class Api {
     constructor() {
-        this._api = axios.create({
-            baseURL: baseURL,
-            withCredentials: true,
-            timeout: 9000 //Timeout response after 9 seconds
-        });
+        this._api = axiosInstance;
+
+        //this.csrf_token = requestCSRF_TOKEN();
+
+        //Attach CSRF token to requests, except GET request.
+        //The request intercepter performs some code before every request.
+        
+        // this._api.interceptors.request.use((config) => {
+        //     // Only send CSRF token on POST, PUT, and DELETE requests
+        //     if (['post', 'put', 'delete'].includes(config.method.toLowerCase())) 
+        //     {
+        //         //config.headers['X-CSRF-Token'] = get_CSRF_TOKEN_fromCookie();
+        //         config.headers['_csrf'] = get_CSRF_TOKEN_fromCookie();
+        //     }
+        //     return config;
+        // },
+        //     // Do something with request error.
+        //     (error) => Promise.reject(error)
+        // );
     }
 
     get api() {
         return this._api;
     }
+
+    async getCSRF_TOKEN() {
+        return await get_CSRF_TOKEN_fromCookie();
+    }
+
+    // //Request a CSRF Token from the server.
+    // async requestCSRF_TOKEN() {
+    //     const response = await this.api.get("/requestCSRF-TOKEN");
+    //     console.log(response.data);
+    //     return response.data;
+    // }
 
     async login(email, password) {
         const response = await this.api.post("/api/auth/login", { email: email, password: password });

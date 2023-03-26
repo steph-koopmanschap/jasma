@@ -37,6 +37,7 @@ export default function ChangePasswordForm() {
         <div className="flex flex-col items-center justify-center my-14">
             <p className='my-2'>Change your password:</p>
             <form className='bg-gray-600 shadow-md rounded px-8 pt-6 pb-8 mb-4' action="#" onSubmit={changePassword}>
+                <input type="hidden" name="XSRF-TOKEN" value={api.getCSRF_TOKEN()} />
                 <div className="mb-2">
                     <label className='labelDefault' htmlFor="newPasswordInput">New password</label>
                     <input 
