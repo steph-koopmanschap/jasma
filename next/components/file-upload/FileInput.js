@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { toast } from "react-toastify";
+import useToast from "../../hooks/useToast";
 import checkFileTooLarge from "../../utils/checkFileTooLarge.js";
 
 function fileInputError(text) {
@@ -17,17 +17,13 @@ function fileInputError(text) {
 
 const FileInput = ({ file, setFile, accept }) => {
     const inputRef = useRef(null);
-    const toastId = useRef(null);
+    const { notifyToast, dismissToast } = useToast();
 
     useEffect(() => {
         if (!file) {
             inputRef.current.value = "";
         }
     }, [file]);
-
-    const notify = (text) => (toastId.current = fileInputError(text));
-
-    const dismiss = () => toast.dismiss(toastId.current);
 
     const handleChooseFileClick = (e) => {
         e.preventDefault();
@@ -43,13 +39,13 @@ const FileInput = ({ file, setFile, accept }) => {
         const sizeDoesntExist = !eventFile.size;
 
         if (sizeDoesntExist) {
-            return notify("No file size found. Invalid file.");
+            return notifyToast("No file size found. Invalid file.", true);
         }
 
         const fileIsTooLarge = checkFileTooLarge(eventFile.size);
 
         if (fileIsTooLarge) {
-            return notify("File is too Large!");
+            return notifyToast("File is too Large!", true);
         }
 
         setFile(eventFile);
@@ -79,7 +75,7 @@ const FileInput = ({ file, setFile, accept }) => {
                 name="file"
                 accept={accept ? accept : "image/*, video/*, audio/*"}
                 onInput={handleFile}
-                onClick={dismiss}
+                onClick={dismissToast}
                 style={{ display: "none" }}
             />
         </div>

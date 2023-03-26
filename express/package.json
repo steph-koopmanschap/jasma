@@ -48,7 +48,8 @@
         "nodemon": "^2.0.20",
         "pg": "^8.8.0",
         "rotating-file-stream": "^3.0.4",
-        "sequelize": "^6.25.8"
+        "sequelize": "^6.25.8",
+        "stripe": "^11.16.0"
     },
     "devDependencies": {
         "@faker-js/faker": "^7.6.0",

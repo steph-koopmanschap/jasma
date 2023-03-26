@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 import api from "../../clientAPI/api.js";
 import HeaderMain from '../../components/HeaderMain';
 import UploadProfilePic from '../../components/UploadProfilePic';
@@ -12,27 +11,18 @@ import FileUploader from '../../components/file-upload/FileUploader.js';
 
 //The Settings profile
 export default function Settings(props) {
-    const router = useRouter();
 
     const [file, setFile] = useState(null);
 
     const [userID, setUserID] = useState(null)
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+    //Redirect user to the dashboard if they are not logged in.
+    useRequireAuth('/dashboard');
+
     useEffect( () => {
         setUserID(window.localStorage.getItem('loggedInUserID'));
-        setIsLoggedIn(userID ? true : false);
-
-        console.log("userID from settings page?");
-        console.log(userID);
-        console.log("isLoggedIn from settings page?");
-        console.log(isLoggedIn, userID);
-
-        // if(isLoggedIn === false) {
-        //     router.replace("/dashboard");
-        // }
-
-    }, [isLoggedIn]);
+    }, []);
 
     const uploadProfilePic = () => {
         const res = api.uploadProfilePic(file);

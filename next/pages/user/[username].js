@@ -17,7 +17,6 @@ import FolloweesList from '../../components/FolloweesList.js';
 export default function ProfilePage(props) {
     const router = useRouter();
     const { username } = router.query;
-    console.log("username: from profilePage)", username);
     
     const [loggedInUserID, setLoggedInUserID] = useState(null);
     const [followerModalState, setFollowerModalState] = useState(false);

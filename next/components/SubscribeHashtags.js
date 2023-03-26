@@ -1,16 +1,13 @@
 import React from 'react';
 import { useQuery } from 'react-query';
-import { useState, useRef } from 'react';
-import { toast } from "react-toastify";
-import { toastSuccess } from "../utils/defaultToasts.js"
+import { useState } from 'react';
+import useToast from "../hooks/useToast";
 import hashtagFormatter from "../utils/hashtagFormatter.js";
 import api from "../clientAPI/api.js";
 
 export default function SubscribeHashtags(props) {
-    //React Toast
-    const toastId = useRef(null);
-    const notify = (text) => (toastId.current = toastSuccess(text));
-    const dismiss = () => toast.dismiss(toastId.current);
+
+    const { notifyToast } = useToast();
 
     //Raw input of hashtags
     const [subHashtagInput, setSubHashtagInput] = useState("");
@@ -52,7 +49,7 @@ export default function SubscribeHashtags(props) {
 
         refetch;
 
-        return notify("You have been subscribed to the hashtags.");
+        notifyToast("You have been subscribed to the hashtags.");
     }
 
     const unsubscribeFromHashtag = async (e) => {

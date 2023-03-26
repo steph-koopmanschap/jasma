@@ -281,6 +281,13 @@ class Api {
         return response.data;
     }
 
+    async stripeCreateCheckoutSession(cartData) {
+        const response = await this.api.post(`/api/payments/stripeCreateCheckoutSession`, {
+            cartData: cartData
+        });
+        return response.data.orderID;
+    }
+
     async createReport(post_id, report_reason) {
         const response = await this.api.post(`/api/reports/createReport`, {
             post_id: post_id,

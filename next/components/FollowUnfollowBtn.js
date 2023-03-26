@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
-import { toast } from "react-toastify";
-import { toastSuccess } from "../utils/defaultToasts.js"
+import React, { useEffect, useState } from "react";
+import useToast from "../hooks/useToast";
 import api from "../clientAPI/api.js";
 
 export default function FollowUnfollowBtn(props) {
@@ -8,10 +7,7 @@ export default function FollowUnfollowBtn(props) {
     //const loggedInUserID = window.localStorage.getItem('loggedInUserID');
     const [isFollowing, setIsFollowing] = useState(false);
 
-        //React Toast
-        const toastId = useRef(null);
-        const notify = (text) => (toastId.current = toastSuccess(text));
-        const dismiss = () => toast.dismiss(toastId.current);
+    const { notifyToast } = useToast();
 
     useEffect(() => {
         (async () => {
@@ -24,14 +20,14 @@ export default function FollowUnfollowBtn(props) {
         const resFollow = await api.addFollower(userID_two);
         setIsFollowing(true);
         console.log("resFollow from follow btn", resFollow);
-        return notify(`You are now following ${username}.`);
+        notifyToast(`You are now following ${username}.`);
     }
 
     const unfollow = async () => {
         const resUnfollow = await api.removeFollower(userID_two);
         setIsFollowing(false);
         console.log("resUnfollow from follow btn", resUnfollow);
-        return notify(`You have unfollowed ${username}.`);
+        notifyToast(`You have unfollowed ${username}.`);
     }
 
     return (

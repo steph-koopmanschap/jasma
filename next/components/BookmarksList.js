@@ -1,16 +1,11 @@
-import { useRef } from 'react';
 import { useQuery } from 'react-query';
-import { toast } from "react-toastify";
-import { toastSuccess } from "../utils/defaultToasts.js"
+import useToast from "../hooks/useToast";
 import api from "../clientAPI/api.js";
 import Post from "./Post";
 
 export default function BookmarksList(props) {
 
-    //React Toast
-    const toastId = useRef(null);
-    const notify = (text) => (toastId.current = toastSuccess(text));
-    const dismiss = () => toast.dismiss(toastId.current);
+    const { notifyToast } = useToast();
 
     const { status, isLoading, isError, data, error, refetch } = useQuery([`bookmarkedPosts`], 
     async () => {return await api.getBookmarkedPosts()},
@@ -23,7 +18,7 @@ export default function BookmarksList(props) {
     const removeBookmark = async (post_id) => {
         const res = await api.removePostBookmark(post_id);
         if (res.success) {
-            return notify("Bookmark has been removed.");
+            notifyToast("Bookmark has been removed.");
         }
     }
 
