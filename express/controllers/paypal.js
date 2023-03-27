@@ -1,4 +1,6 @@
 require("dotenv").config();
+const db = require("../db/connections/jasmaAdmin");
+const { UserInfo } = db.models;
 const paypal = require('@paypal/checkout-server-sdk');
 const { v4: uuidv4 } = require("uuid");
 
@@ -19,15 +21,23 @@ const paypalClient = new paypal.core.PayPalHttpClient(environment);
 
 async function paypalCreateOrder(req, res) {
     const { cartData } = req.body;
-    const { user_id, username } = req.session;
+    const { user_id, username, email } = req.session;
 
     const invoice_number = uuidv4();
+
+    console.log("cartData", cartData);
 
     //Example of cartData
     //cartData.currency = 'USD',
     //cartData.price = '100.00'
 
+
+
     try {
+
+        //Get given name and last name
+        const resUserInfo = await UserInfo.getById(user_id);
+        const { given_name, last_name } = resUserInfo;
 
         //return_url: "https://example.com/success",
         //cancel_url: "https://example.com/cancel",
@@ -58,11 +68,17 @@ async function paypalCreateOrder(req, res) {
         //rather than a simple reference or identifier.
         request.prefer("return=representation");
 
-        //Create the body for the request to paypal
-        request.requestBody({
+        const requestBody = {
             intent: "CAPTURE",
+            payer: {
+                name: {
+                    given_name: given_name,
+                    surname: last_name
+                },
+                email_address: email,
             application_context: {
-                shipping_preference: "NO_SHIPPING",
+                shipping_preference: "NO_SHIPPING"
+            },
             purchase_units: [
                 {
                     amount: {
@@ -70,7 +86,7 @@ async function paypalCreateOrder(req, res) {
                         "value": cartData.price,
                         breakdown: {
                             item_total: {
-                                currency_code: artData.currency,
+                                currency_code: cartData.currency,
                                 value: cartData.price
                             },
                             // shipping: {
@@ -112,7 +128,12 @@ async function paypalCreateOrder(req, res) {
                 },
             ]
             },
-        });
+        };
+
+        console.log("requestBody before sending: ", requestBody);
+
+        //Create the body for the request to paypal
+        request.requestBody(requestBody);
         // Get response with the order id
         const response = await paypalClient.execute(request);
         console.log(`Response: ${JSON.stringify(response)}`);

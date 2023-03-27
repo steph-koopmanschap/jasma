@@ -51,14 +51,16 @@ async function searchUsers(keyword) {
 
 async function search(req, res) {
     const { q, filter } = req.query;
-    //Make the search keyword lower case so the search becomes case insensitive
-    let keyword = q.toLowerCase(); 
+
     let result = "";
 
-    //Prevent server crash if keyword is undefined
-    if (!keyword || keyword === "") {
+    //Prevent server crash if keyword is undefined, empty, not a string
+    if (!q || (typeof q !== "string") || q === "" ) {
         return res.json({ success: false, message: `Nothing found.` });
     }
+
+    //Make the search keyword lower case so the search becomes case insensitive
+    let keyword = q.toLowerCase(); 
 
     //Filter which kind of specific search we need.
     switch (filter)

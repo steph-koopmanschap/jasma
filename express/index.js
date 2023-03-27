@@ -103,19 +103,20 @@ app.use("/api", apiRouter);
 //Media file fetching
 app.get("/media/:folderName/:fileName", (req, res) => {
     const { folderName, fileName } = req.params;
-    const folders = [
+    const allowedFolders = [
         "ads",
         "avatars",
         "posts",
         "comments"
-    ]
-    //Check if the folderName exists. Then send the file.
-    if (folders.indexOf(folderName) >= 0) {
+    ];
+    //Check if the supplied folder is allowed AND folderName exists. Then send the file.
+    if (allowedFolders.includes(folderName) && folders.indexOf(folderName) >= 0) {
         res.sendFile(`${__dirname}/media/${folderName}/${fileName}`)
     } 
     else 
     {
-        //Folder or file not found
+        //Folder or file not found OR not allowed.
+        //We won't sent a 403 Forbidden response, because we dont want the user to know  which folders are not allowed.
         res.sendStatus(404);
     }
 });

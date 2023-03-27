@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import useRequireAuth from '../hooks/useRequireAuth';
 import api from "../clientAPI/api.js";
 import HeaderMain from "../components/HeaderMain";
@@ -23,12 +24,12 @@ export default function PaymentPage() {
 
         const cartData = {
             currency: 'USD',
-            amount: paymentInput
+            price: paymentInput
         };
 
         console.log("cartData", cartData);
 
-        const res = await api.paypalCreateOrder();
+        const res = await api.paypalCreateOrder(cartData);
         console.log("res", res);
 
         if (res.ok) {
@@ -46,7 +47,7 @@ export default function PaymentPage() {
 
         const cartData = {
             currency: 'USD',
-            amount: paymentInput
+            price: paymentInput
         };
 
         console.log("cartData", cartData);
