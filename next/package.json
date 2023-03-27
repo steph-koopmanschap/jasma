@@ -25,7 +25,7 @@
         "axios": "^1.2.0",
         "compression-webpack-plugin": "^10.0.0",
         "date-fns": "^2.29.3",
-        "ioredis": "^5.2.4",
+        "ioredis": "^5.3.1",
         "next": "^13.1.6",
         "next-session": "^4.0.5",
         "node-fetch": "^2.6.1",
