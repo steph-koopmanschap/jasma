@@ -26,7 +26,7 @@
         "compression-webpack-plugin": "^10.0.0",
         "date-fns": "^2.29.3",
         "ioredis": "^5.2.4",
-        "next": "^13.1.6",
+        "next": "^13.2.3",
         "next-session": "^4.0.5",
         "node-fetch": "^2.6.1",
         "react": "18.2.0",
