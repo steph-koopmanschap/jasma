@@ -28,7 +28,7 @@
         "ioredis": "^5.2.4",
         "next": "^13.1.6",
         "next-session": "^4.0.5",
-        "node-fetch": "^2.6.1",
+        "node-fetch": "^2.6.9",
         "react": "18.2.0",
         "react-dom": "18.2.0",
         "react-query": "^3.39.2",
