@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  
+  jasma-pg-db:
+    image: postgres:14.7-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    networks:
+      jasma-network:
+        ipv4_address: 172.20.0.1
+    volumes: 
+      - jasma-storage:/var/lib/postgresql/data
+
+  jasma-redis-db:
+    image: redis:7.0.10-alpine
+    restart: always
+    command: redis-server --save 20 1 --loglevel warning
+    ports:
+      - '6379:6379'
+    networks:
+      jasma-network:
+        ipv4_address: 172.20.0.2
+    volumes: 
+      - jasma-storage:/redis-data
+
+  jasma-api-server:
+    container_name: jasma-api-server
+    build:
+      context: ./express
+      target: production
+    image: jasma-api-server
+    ports:
+      - '5000:5000'
+    networks:
+      jasma-network:
+        ipv4_address: 172.20.0.3
+    links:
+      - jasma-pg-db
+      - jasma-redis-db
+      - jasma-client
+    depends_on:
+      - jasma-pg-db
+      - jasma-redis-db
+
+  jasma-client:
+    container_name: jasma-client
+    build:
+      context: ./next
+      target: production
+    image: jasma-client
+    ports:
+      - '3000:3000'
+    networks:
+      jasma-network:
+        ipv4_address: 172.20.0.4
+      links:
+      - jasma-api-server
+    depends_on:
+      - jasma-api-server
+
+volumes:
+  jasma-storage:
+    driver: local
+
+networks:
+  jasma-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
