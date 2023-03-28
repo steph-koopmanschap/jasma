@@ -12,7 +12,7 @@ export default function Home({ initialTheme }) {
         <>
             <HeaderMain />
 
-            <main className={`flex flex-col items-center justify-center w-full h-fit jprimary`}>
+            <section className={`flex flex-col items-center justify-center w-full h-fit jprimary`}>
                 <h1 className="text-xl mt-5 mb-5 jprimary">
                     To explore JASMA go to the <br />
                     <Link
@@ -51,7 +51,7 @@ export default function Home({ initialTheme }) {
                     Because JASMA is currently in development your account or posts may be deleted at any time. Nothing
                     is guarenteed.
                 </p>
-            </main>
+            </section>
 
             <FooterMain />
         </>

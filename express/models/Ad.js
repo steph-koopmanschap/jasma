@@ -13,6 +13,12 @@ module.exports = (sequelize, DataTypes, Model) => {
                 key: "user_id"
             }
         },
+        //Ad name is only used as a front-end text reference for the user
+        //because the UUID of ad_id is difficult to read
+        ad_name: {
+            type: DataTypes.STRING(50),
+            allowNull: false,
+        },
         text_content: {
             type: DataTypes.STRING(1000),
         },

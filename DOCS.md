@@ -153,6 +153,14 @@ This will set up everything you need automatically.
 - ! GET /api/notifications/getNotifications
 - ! PUT /api/notifications/readNotification
 
+### Advertisements
+
+- ! POST   /api/ads/createAd
+- ! DELETE /api/ads/deleteAd/${adID}
+- ! PUT    /api/ads/editAd
+- ! GET    /api/ads/getAd/${adID} 
+- ! GET    /api/ads/getAds
+
 ## Learn More
 
 External documentation of 3rd party libraries, frameworks, and tools.

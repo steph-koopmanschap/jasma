@@ -45,21 +45,22 @@ function checkCookieExists(name) {
 
 //Get the CSRF token from the cookie.
 async function get_CSRF_TOKEN_fromCookie() {
-    let token = "";
-   // The CSRF token already exists in the cookie
-    if (checkCookieExists('XSRF-TOKEN') === true) {
-        token = Cookies.get('XSRF-TOKEN');
-    }
-    // if (checkCookieExists('_csrf') === true)
-    // {
-    //     token = Cookies.get('_csrf');
-    // }
-    //The CSRF Token does not exist yet. Request server for a CSRF Token.
-    else {
-        token = await requestCSRF_TOKEN();
-    }
-    console.log("token:", token);
-    return token;
+    console.log("This function is disabled for now...FROM: async function get_CSRF_TOKEN_fromCookie() in api.js");
+//     let token = "";
+//    // The CSRF token already exists in the cookie
+//     if (checkCookieExists('XSRF-TOKEN') === true) {
+//         token = Cookies.get('XSRF-TOKEN');
+//     }
+//     // if (checkCookieExists('_csrf') === true)
+//     // {
+//     //     token = Cookies.get('_csrf');
+//     // }
+//     //The CSRF Token does not exist yet. Request server for a CSRF Token.
+//     else {
+//         token = await requestCSRF_TOKEN();
+//     }
+//     console.log("token:", token);
+//     return token;
 }
 
 const axiosInstance = axios.create({
@@ -410,6 +411,35 @@ class Api {
 
     async unsubscribeFromHashtag(hashtag) {
         const response = await this.api.delete(`/api/hashtags/unsubscribeFromHashtag/${hashtag}`);
+        return response.data;        
+    }
+
+    async createAd(advertData) {
+        const response = await this.api.post(`/api/ads/createAd`, {
+            advertData: advertData
+        });
+        return response.data;        
+    }
+
+    async deleteAd(adID) {
+        const response = await this.api.delete(`/api/ads/deleteAd/${adID}`);
+        return response.data;        
+    }
+
+    async editAd(advertData) {
+        const response = await this.api.put(`/api/ads/editAd`, {
+            advertData: advertData
+        });
+        return response.data;        
+    }
+
+    async getAd(adID) {
+        const response = await this.api.get(`/api/ads/getAd/${adID}`);
+        return response.data;        
+    }
+
+    async getAds() {
+        const response = await this.api.get(`/api/ads/getAds`);
         return response.data;        
     }
 }

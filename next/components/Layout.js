@@ -52,11 +52,16 @@ export default function Layout({ children }) {
         <ThemeProvider theme={theme.styles}>
             <GlobalStyles isLoaded={isLoaded.current} />
             <DefaultHead />
-            <Nav
-                theme={theme}
-                toggleTheme={toggleTheme}
-            />
-            <main>{children}</main>
+            <header>
+                <Nav
+                    theme={theme}
+                    toggleTheme={toggleTheme}
+                />
+            </header>
+
+            <main>
+                {children}
+            </main>
         </ThemeProvider>
     );
 }

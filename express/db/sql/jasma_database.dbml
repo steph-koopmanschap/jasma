@@ -16,6 +16,7 @@ Project jasma_database {
 Table ads {
     ad_id uuid [pk]
     user_id uuid [not null]
+    ad_name varchar(50) [not null, note: 'Ad name is only used as a front-end text reference for the user. Because the UUID of ad_id is difficult to read']
     text_content varchar(1000)
     ad_file_url varchar(100) [note: 'The image or video of the ad']
     ad_url varchar(100) [note: 'If the ad links to a website or page']

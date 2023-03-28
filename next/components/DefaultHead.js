@@ -13,7 +13,7 @@ export default function DefaultHead(props) {
             <Head>
                 <meta charSet="utf-8" />
                 
-                <title>{title ? title : "JASMA"}</title>
+                <title>{title ? `${title} | JASMA` : "JASMA"}</title>
                 
                 <meta name="description" content="JASMA - Just Another Social Media App" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />

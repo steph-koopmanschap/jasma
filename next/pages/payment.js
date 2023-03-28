@@ -70,7 +70,7 @@ export default function PaymentPage() {
         <div className="">
             <HeaderMain />
 
-            <main className="flex flex-col items-center justify-center w-full h-fit">
+            <section className="flex flex-col items-center justify-center w-full h-fit">
                 <h1>Payment system... (in development)</h1>
 
                 <input
@@ -108,7 +108,7 @@ export default function PaymentPage() {
                         value="Pay with Stripe"
                     />
                 </form>
-            </main>
+            </section>
 
             <FooterMain />
         </div>

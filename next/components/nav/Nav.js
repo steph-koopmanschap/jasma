@@ -9,7 +9,7 @@ import NotificationList from '../NotificationList';
 
 const Nav = () => {
     return (
-        <div className="flex justify-between p-2.5 mb-2 h-14 border-solid border border-gray-500">
+        <nav className="flex justify-between p-2.5 mb-2 h-14 border-solid border border-gray-500">
             <div className="flex ml-2">
                 <Brand />
             </div>
@@ -32,7 +32,7 @@ const Nav = () => {
                     <ThemeSwitch />
                 </div>
             </div>
-        </div>
+        </nav>
     );
 };
 
