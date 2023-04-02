@@ -1,16 +1,65 @@
 FROM node:alpine AS development
+
+# Load the arguments which subsitute for environment variables.
+# Because RUN instructions do not receive env variables from the environment: instruction in docker compose.
+ARG START_FIRST_TIME
+ARG NODE_ENV
+ARG HOSTNAME
+ARG PORT
+ARG SESSION_SECRET
+ARG NEXTJS_ORIGIN
+ARG NEXTJS_PORT
+ARG PG_SUPER_USER
+ARG PG_SUPER_PASSWORD
+ARG PG_ADMIN_USER
+ARG PG_ADMIN_PASSWORD
+ARG PG_HOST
+ARG PG_PORT
+ARG PG_SUPER_DATABASE
+ARG PG_ADMIN_DATABASE
+ARG REDIS_URL
+ARG PAYPAL_SECRET
+ARG PAYPAL_CLIENT_ID_SANDBOX
+ARG PAYPAL_CLIENT_ID_PRODUCTION
+ARG STRIPE_SECRET_KEY
+
+ENV START_FIRST_TIME=${START_FIRST_TIME}
+ENV NODE_ENV=${NODE_ENV}
+ENV HOSTNAME=${HOSTNAME}
+ENV PORT=${PORT}
+ENV SESSION_SECRET=${SESSION_SECRET}
+ENV NEXTJS_ORIGIN=${NEXTJS_ORIGIN}
+ENV NEXTJS_PORT=${NEXTJS_PORT}
+ENV PG_SUPER_USER=${PG_SUPER_USER}
+ENV PG_SUPER_PASSWORD=${PG_SUPER_PASSWORD}
+ENV PG_ADMIN_USER=${PG_ADMIN_USER}
+ENV PG_ADMIN_PASSWORD=${PG_ADMIN_PASSWORD}
+ENV PG_HOST=${PG_HOST}
+ENV PG_PORT=${PG_PORT}
+ENV PG_SUPER_DATABASE=${PG_SUPER_DATABASE}
+ENV PG_ADMIN_DATABASE=${PG_ADMIN_DATABASE}
+ENV REDIS_URL=${REDIS_URL}
+ENV PAYPAL_SECRET=${PAYPAL_SECRET}
+ENV PAYPAL_CLIENT_ID_SANDBOX=${PAYPAL_CLIENT_ID_SANDBOX}
+ENV PAYPAL_CLIENT_ID_PRODUCTION=${PAYPAL_CLIENT_ID_PRODUCTION}
+ENV STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+
 COPY . /api-server
 WORKDIR /api-server
+# Install node modules
 RUN npm install
-RUN npm run db:init
-RUN npm run db:resetTables
-RUN npm run db:generate 100
-CMD ["npm", "run", "dev"]
+# Create the database
+#RUN npm run db:init
+    #npm run db:resetTables
+# Generate dummy data in the database
+#RUN npm run db:generate 100
+#CMD ["npm", "run", "dev"]
+CMD ["sh", "./scriptForDocker.sh", "$START_FIRST_TIME"]
 
 FROM node:alpine AS production
 COPY . /api-server
 WORKDIR /api-server
 RUN npm install
-RUN npm run db:init
-RUN npm run db:resetTables
+#RUN npm run db:init \
+#    npm run db:resetTables
 CMD ["npm", "run", "start"]

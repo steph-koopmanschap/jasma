@@ -1,4 +1,4 @@
-import {KB, MB, GB} from "../../constants/fileSizes";
+import {KB, MB, GB} from "../constants/fileSizes";
 
 //Returns a number in bytes to string in human readable format
 //Either bytes, KB, MB, or GB

@@ -2,51 +2,47 @@ version: '3.8'
 
 services:
   
-  jasma-pg-db:
+  jasma-pg-db-dev:
     image: postgres:14.7-alpine
     restart: always
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    expose: 
+      - 5432
     ports:
-      - '5432:5432'
-    networks:
-      jasma-network:
-        ipv4_address: 172.20.0.5
+      - "5432:5432"
     volumes: 
-      - jasma-storage:/var/lib/postgresql/data
+      - jasma-storage-dev:/var/lib/postgresql/data
 
-  jasma-redis-db:
+  jasma-redis-db-dev:
     image: redis:7.0.10-alpine
     restart: always
     command: redis-server --save 20 1 --loglevel warning
+    expose: 
+      - 6379
     ports:
       - '6379:6379'
-    networks:
-      jasma-network:
-        ipv4_address: 172.20.0.4
     volumes: 
-      - jasma-storage:/redis-data
+      - jasma-storage-dev:/redis-data
 
-  jasma-api-server:
-    container_name: jasma-api-server
+  jasma-api-server-dev:
     build:
       context: ./express
-      target: production
-    restart: always
-    image: jasma-api-server
-    environment:
-        - NODE_ENV=production
-        - HOSTNAME="http://localhost"
+      target: development
+      args:
+        - START_FIRST_TIME=false
+        - NODE_ENV=development
+        - HOSTNAME=http://localhost
         - PORT=5000
-        - SESSION_SECRET="keyboard cat"
-        - NEXTJS_ORIGIN="http://localhost"
+        - SESSION_SECRET=keyboard cat
+        - NEXTJS_ORIGIN=http://localhost
         - NEXTJS_PORT=3000
         - PG_SUPER_USER=postgres
         - PG_SUPER_PASSWORD=postgres
         - PG_ADMIN_USER=jasma_admin
         - PG_ADMIN_PASSWORD=a
-        - PG_HOST=jasma-pg-db
+        - PG_HOST=jasma-pg-db-dev
         - PG_PORT=5432
         - PG_SUPER_DATABASE=postgres
         - PG_ADMIN_DATABASE=jasma_db
@@ -55,74 +51,53 @@ services:
         - PAYPAL_CLIENT_ID_SANDBOX=''
         - PAYPAL_CLIENT_ID_PRODUCTION=''
         - STRIPE_SECRET_KEY=''
-    hostname: jasma-api-server
+    restart: always
+    image: jasma-api-server-dev
+    expose: 
+      - 5000
     ports:
       - '5000:5000'
-    networks:
-      jasma-network:
-        ipv4_address: 172.20.0.3
-    links:
-      - jasma-pg-db
-      - jasma-redis-db
-      - jasma-client
     depends_on:
-      - jasma-pg-db
-      - jasma-redis-db
+      jasma-pg-db-dev:
+        condition: service_completed_successfully
+      jasma-redis-db-dev:
+        condition: service_started
 
-  jasma-client:
-    container_name: jasma-client
+  jasma-client-dev:
     build:
       context: ./next
-      target: production
-    environment:
-      - BASE_URL='http://localhost'
-      - PORT=3000
-      - NEXT_PUBLIC_API_SERVER_URL='localhost'
-      - NEXT_PUBLIC_API_SERVER_PORT=5000
-      - NEXT_PUBLIC_NODE_ENV=production
-      - ANALYZE='false'
-      - SESSION_SECRET='thisisatemporarysecret'
-      - PAYPAL_SECRET=''
-      - NEXT_PUBLIC_PAYPAL_CLIENT_ID_SANDBOX=''
-      - NEXT_PUBLIC_PAYPAL_CLIENT_ID_PRODUCTION=''
-      - NEXT_TELEMETRY_DEBUG=1
-      - NEXT_TELEMETRY_DISABLED=1
+      target: development
+      args:
+        - BASE_URL=http://localhost
+        - PORT=3000
+        - NEXT_PUBLIC_API_SERVER_URL=localhost
+        - NEXT_PUBLIC_API_SERVER_PORT=5000
+        - NEXT_PUBLIC_NODE_ENV=development
+        - ANALYZE=false
+        - SESSION_SECRET=thisisatemporarysecret
+        - PAYPAL_SECRET=''
+        - NEXT_PUBLIC_PAYPAL_CLIENT_ID_SANDBOX=''
+        - NEXT_PUBLIC_PAYPAL_CLIENT_ID_PRODUCTION=''
+        - NEXT_TELEMETRY_DEBUG=1
+        - NEXT_TELEMETRY_DISABLED=1
     restart: always
-    image: jasma-client
-    hostname: jasma-client
+    image: jasma-client-dev
+    expose: 
+      - 3000
     ports:
       - '3000:3000'
-    networks:
-      jasma-network:
-        ipv4_address: 172.20.0.2
-    links:
-    - jasma-api-server
     depends_on:
-      - jasma-api-server
+      - jasma-api-server-dev
 
-  jasma-nginx:
+  jasma-nginx-dev:
     build:
       context: ./nginx
-      target: production
+      target: development
     restart: always
     ports:
     - '80:80'
-    depends_on:
-    - jasma-api-server
-    - jasma-client
-    networks:
-      jasma-network:
-        ipv4_address: 172.20.0.1
 
 volumes:
-  jasma-storage:
+  jasma-storage-dev:
     driver: local
 
-networks:
-  jasma-network:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.20.0.0/16
-          gateway: 172.20.0.1

@@ -1,4 +1,4 @@
-import {GB} from "../../constants/fileSizes";
+import {GB} from "../constants/fileSizes";
 
 //FileSize and limit are both in bytes
 //Returns true if file is too large
