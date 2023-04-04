@@ -1,5 +1,10 @@
 #! /bin/bash
 
+# WARNING: 
+# This file is deprecated. 
+# Use Docker instead for setting up the app in production mode. Instructions can be found in the documentation.
+# DO NOT DELETE THIS FILE. This code might be used later for references.
+
 echo "This script sets up the app. Installs all node modules and creates a database"
 echo "Note: You can get JASMA project folder with the following commands"
 echo "wget https://github.com/steph-koopmanschap/jasma/archive/refs/heads/main.zip"

@@ -22,7 +22,7 @@ if (process.env.NEXT_PUBLIC_NODE_ENV === 'development') {
     baseURL = `http://${process.env.NEXT_PUBLIC_API_SERVER_URL}:${process.env.NEXT_PUBLIC_API_SERVER_PORT}`;
 }
 //In production the Nginx reverse proxy will redirect traffic to the correct port.
-else if (NEXT_PUBLIC_NODE_ENV === 'production') {
+else if (process.env.NEXT_PUBLIC_NODE_ENV === 'production') {
     baseURL = `https://${process.env.NEXT_PUBLIC_API_SERVER_URL}`;
 }
 

@@ -3,6 +3,7 @@ version: '3.8'
 services:
   
   jasma-pg-db-dev:
+    container_name: jasma-pg-db-dev
     image: postgres:14.7-alpine
     restart: always
     environment:
@@ -12,10 +13,13 @@ services:
       - 5432
     ports:
       - "5432:5432"
+    networks:
+      - jasma-network-dev
     volumes: 
       - jasma-storage-dev:/var/lib/postgresql/data
 
   jasma-redis-db-dev:
+    container_name: jasma-redis-db-dev
     image: redis:7.0.10-alpine
     restart: always
     command: redis-server --save 20 1 --loglevel warning
@@ -23,15 +27,18 @@ services:
       - 6379
     ports:
       - '6379:6379'
+    networks:
+      - jasma-network-dev
     volumes: 
       - jasma-storage-dev:/redis-data
 
   jasma-api-server-dev:
+    container_name: jasma-api-server-dev
     build:
       context: ./express
       target: development
       args:
-        - START_FIRST_TIME=false
+        - START_FIRST_TIME=true
         - NODE_ENV=development
         - HOSTNAME=http://localhost
         - PORT=5000
@@ -46,7 +53,8 @@ services:
         - PG_PORT=5432
         - PG_SUPER_DATABASE=postgres
         - PG_ADMIN_DATABASE=jasma_db
-        - REDIS_URL=""
+        - REDIS_HOST=jasma-redis-db-dev
+        - REDIS_PORT=6379
         - PAYPAL_SECRET=''
         - PAYPAL_CLIENT_ID_SANDBOX=''
         - PAYPAL_CLIENT_ID_PRODUCTION=''
@@ -57,13 +65,14 @@ services:
       - 5000
     ports:
       - '5000:5000'
+    networks:
+      - jasma-network-dev
     depends_on:
-      jasma-pg-db-dev:
-        condition: service_completed_successfully
-      jasma-redis-db-dev:
-        condition: service_started
+      - jasma-pg-db-dev
+      - jasma-redis-db-dev
 
   jasma-client-dev:
+    container_name: jasma-client-dev
     build:
       context: ./next
       target: development
@@ -86,18 +95,26 @@ services:
       - 3000
     ports:
       - '3000:3000'
+    networks:
+      - jasma-network-dev
     depends_on:
       - jasma-api-server-dev
 
   jasma-nginx-dev:
+    container_name: jasma-nginx-dev
     build:
       context: ./nginx
       target: development
     restart: always
     ports:
     - '80:80'
+    networks:
+      - jasma-network-dev
 
 volumes:
   jasma-storage-dev:
     driver: local
 
+networks:
+  jasma-network-dev:
+    driver: bridge

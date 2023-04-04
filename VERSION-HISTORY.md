@@ -1,6 +1,6 @@
 # JASMA Version History
 
-## March 22, 2023
+## April 4, 2023
 
 ### Features
 
@@ -16,9 +16,10 @@
 - Simple share button.
 - Bookmark posts.
 - Dark and light theme.
-- Automatically generate random posts, users, followers, comments, and hashtags.
 - Content moderation system to delete flagged/reported posts.
 - In app notification system.
+- Automatically generate random posts, users, followers, comments, and hashtags. (Dev feature)
+- Dockerize the app. (Dev feature)
 
 ### Planned potential future features
 

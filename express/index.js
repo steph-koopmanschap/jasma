@@ -1,4 +1,27 @@
 /*
+    Create the database before starting the server
+*/
+
+/*
+const { exec } = require('child_process');
+
+console.log("Creating the database...");
+const child = exec(`npm run db:init && npm run db:resetTables`);
+
+child.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+});
+
+child.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+});
+
+child.on('close', (code) => {
+    console.log(`child process exited with code ${code}`);
+});
+*/
+
+/*
     ExpressJS Server initialization file
 */
 

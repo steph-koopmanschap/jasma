@@ -1,5 +1,6 @@
 const express = require("express");
 const isAuth = require("../middleware/isAuth.js");
+const { createAd, deleteAd, editAd, getAd, getAds } = require("../controllers/ads.js");
 
 const adsRouter = express.Router();
 

@@ -12,8 +12,17 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    //Alternative syntax with regex: [/^localhost:/, /^127.0.0.1:/, /^192.168.254.103/]
-    domains: ["http://localhost/", "http://127.0.0.1/", "http://192.168.254.103/", process.env.NEXT_PUBLIC_API_SERVER_URL]
+    //Alternative syntax with regex: [/^localhost:/, /^127.0.0.1:/]
+    domains: ["localhost",
+              "127.0.0.1",
+              `${process.env.NEXT_PUBLIC_API_SERVER_URL}`,
+              "http://localhost/",
+              "https://localhost/",
+              "http://127.0.0.1/",
+              "http://127.0.0.1/",
+              `http://${process.env.NEXT_PUBLIC_API_SERVER_URL}`,
+              `https://${process.env.NEXT_PUBLIC_API_SERVER_URL}`
+            ]
   },
   poweredByHeader: false, //remove "x-powered-by: NextJS" header (better cybersecurity)
   // Add compression to increase performance.
