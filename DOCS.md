@@ -2,12 +2,12 @@
 
 ## Table of Contents
 
-- [Tech Stack](#Tech Stack)
-- [Getting started](#Getting started)
-- [Getting started with Docker](#Getting started with Docker)
-- [Environment variables explained](#Environment variables explained)
-- [API Routes](#API Routes)
-- [External documentation of 3rd party libraries, frameworks, and tools.](#External documentation of 3rd party libraries, frameworks, and tools.)
+- [Tech Stack](#tech-stack)
+- [Getting started](#getting-started)
+- [Getting started with Docker](#getting-started-with-docker)
+- [Environment variables explained](#environment-variables-explained)
+- [API Routes](#api-routes)
+- [External documentation of 3rd party libraries, frameworks, and tools.](#external-documentation-of-3rd-party-libraries-frameworks-and-tools)
 
 ## Tech Stack:
 
@@ -106,10 +106,10 @@ For detailed installation instruction go to the [docker installation manual](htt
 
 Once docker is installed copy either `docker-compose-production.yml` or `docker-compose-development.yml` to `docker-compose.yml`.  <br />
 Use the following command to do so: <br />
-`cp docker-compose-development docker-compose.yml` <br />
+`cp docker-compose-development.yml docker-compose.yml` <br />
 
-NOTE: If you are running the postgresql, redis, or nginx services on your host machine you need to turn them off 
-      Or else you might connect to those services instead of the docker services.
+NOTE: If you are running the postgresql, redis, or nginx services on your host machine you need to turn them off  <br />  
+      Or else you might connect to those services instead of the docker services.  <br />
       You can stop those services with the following commands:
 ```
 sudo systemctl stop postgresql
@@ -120,23 +120,35 @@ sudo systemctl status postgresql
 sudo systemctl status redis-server
 sudo systemctl status nginx
 ```
-It may be possible run both these services on your host machine and in the docker containers,
+It may be possible run both these services on your host machine and in the docker containers,  <br />
 if the docker containers have differents (external) ports for those containers.
 
-#### Configure Docker environment variables
+### Configure Docker environment variables
 
-You may need to change a few environment variables in your `docker-compose.yml` file.
-If this is your very first time starting the app with Docker then you need to set the following environment variable to `true`
+You may need to change a few environment variables in your `docker-compose.yml` file. <br />
+If this is your very first time starting the app with Docker then you need to set the following environment variable to `true` <br />
 `START_FIRST_TIME=true` <br />
 After the containers have started you need to change it to `START_FIRST_TIME=false`. <br />
-This will env variable will delete any postgresql databases that exist for the app and then create a new one when it is set to `true`. 
+This will env variable will delete any postgresql databases that exist for the app and then create a new one when it is set to `true`. <br />
 
-If you are using Docker for production then change the following environment variables to your host machine IP address or your domain name. 
+If you are using Docker for production then change the following environment variables to your host machine IP address or your domain name. <br /> 
 Example:
 ```
 NEXTJS_ORIGIN=http://192.168.1.10
 NEXT_PUBLIC_API_SERVER_URL=192.168.1.10
 ```
+
+### Starting the app with docker.
+
+To start the app with docker and rebuild the docker images (if there are code changes or ENV variable changes) use the following command: <br />
+`docker compose up --build` <br />
+(Use CTRL+C to shut down the containers) <br />
+To start the app with docker without rebuilding the images use the following command: <br />
+`docker compose up` <br />
+To stop the app use the following command: <br />
+`docker compose down` <br />
+To check if the app containers are running and on which ports use the following command: <br />
+`docker ps`
 
 ## Environment variables explained
 
@@ -155,7 +167,7 @@ The env variables in the .env files might be slightly different.
 `PG_SUPER_USER` The username for logging in to postgresql as the root super user. `(String)` <br />
 `PG_SUPER_PASSWORD` The password for logging in to postgresql as the root super user. `(String)` <br /> 
 `PG_ADMIN_USER` The username for managing the jasma postgresql database. `(String)` <br />
-`PG_ADMIN_PASSWORD` The password for managing the jasma postgresql database. `(String)`` <br />
+`PG_ADMIN_PASSWORD` The password for managing the jasma postgresql database. `(String)` <br />
 `PG_HOST` The hostname for connecting to postgresql. `(IP address or domain)` <br />
 `PG_PORT` The port for connecting to postgresql. `(Integer)` <br />
 `PG_SUPER_DATABASE` The name of the root / super database in postgresql. `(String)` <br />
@@ -256,7 +268,7 @@ The env variables in the .env files might be slightly different.
 - ! GET    /api/ads/getAd/${adID} 
 - ! GET    /api/ads/getAds
 
-## External documentation of 3rd party libraries, frameworks, and tools.
+## External documentation of 3rd party libraries, frameworks, and tools
 
 - [Next.js Docs](https://nextjs.org/docs)
 - [React.js Docs](https://reactjs.org/docs/getting-started.html)
