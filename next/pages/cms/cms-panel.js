@@ -123,7 +123,7 @@ export default function CMS_Panel() {
     <div className='mt-4'>
         <h1 className="text-xl text-center mt-4">JASMA CONTENT MODERATION PANEL)</h1>
 
-        <main className='flex mr-8 ml-8'>
+        <section className='flex mr-8 ml-8'>
             {/* main content */}
             <section className="w-3/4 p-4">
                 <div className='h-screen'>
@@ -183,7 +183,7 @@ export default function CMS_Panel() {
                 
                 <ReportsList reports={reports} selectReport={selectReport} />
             </section>
-        </main>
+        </section>
     </div>
     );
 }

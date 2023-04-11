@@ -44,9 +44,9 @@ export default function LoginPage() {
         <div className="">
             <HeaderMain />
 
-            <main className="flex flex-col items-center justify-center w-full h-fit">
+            <section className="flex flex-col items-center justify-center w-full h-fit">
                 <LoginForm />
-            </main>
+            </section>
 
             <FooterMain />
         </div>

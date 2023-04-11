@@ -26,6 +26,10 @@
 .env*
 !.env*.example
 
+# docker compose files
+docker-compose-testing.yml
+docker-compose.yml
+
 # vercel
 .vercel
 

@@ -10,9 +10,9 @@ export default function PaymentFailure() {
         <div className="">
             <HeaderMain />
 
-            <main className="flex flex-col items-center justify-center w-full h-fit">
+            <section className="flex flex-col items-center justify-center w-full h-fit">
                 <h1 className='text-xl'>Payment failed.</h1>
-            </main>
+            </section>
 
             <FooterMain />
         </div>

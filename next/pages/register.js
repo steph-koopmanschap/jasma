@@ -8,9 +8,9 @@ export default function RegistrationPage() {
       <div className="">
         <HeaderMain/>
   
-        <main className='flex flex-col items-center justify-center w-full h-fit'>
+        <section className='flex flex-col items-center justify-center w-full h-fit'>
             <SignUpForm/>
-        </main>
+        </section>
   
         <FooterMain/>
       </div>

@@ -5,11 +5,16 @@ const { Post, Hashtag, PostHashtag, UserBookmarkedPosts } = db.models;
 async function createPost(req, res) {
     const { text_content, hashtags, file, fileName } = req.body;
     const { user_id, username } = req.session;
-    //Transform raw hashtags string to array
-    const hashtagsArray = hashtags.split(",");
 
     const t = await db.transaction();
     try {
+        //Make sure hashtags is an array or else hashtags.split won't work.
+        if (Array.isArray(hashtags) === false) {
+            throw new Error('hashtags is not an array');
+        }
+        //Transform raw hashtags string to array
+        const hashtagsArray = hashtags.split(",");
+
         const createdPost = await Post.create({
             user_id: user_id,
             username: username,
@@ -30,6 +35,7 @@ async function createPost(req, res) {
             await PostHashtag.create({ hashtag: hashtagsArray[i], post_id: post_id });
         }
     } catch (err) {
+        console.error(err.message);
         await t.rollback();
         return res.json({ success: false, message: err.message });
     }

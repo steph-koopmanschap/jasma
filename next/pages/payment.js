@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import useRequireAuth from '../hooks/useRequireAuth';
 import api from "../clientAPI/api.js";
 import HeaderMain from "../components/HeaderMain";
@@ -23,12 +24,12 @@ export default function PaymentPage() {
 
         const cartData = {
             currency: 'USD',
-            amount: paymentInput
+            price: paymentInput
         };
 
         console.log("cartData", cartData);
 
-        const res = await api.paypalCreateOrder();
+        const res = await api.paypalCreateOrder(cartData);
         console.log("res", res);
 
         if (res.ok) {
@@ -46,7 +47,7 @@ export default function PaymentPage() {
 
         const cartData = {
             currency: 'USD',
-            amount: paymentInput
+            price: paymentInput
         };
 
         console.log("cartData", cartData);
@@ -69,7 +70,7 @@ export default function PaymentPage() {
         <div className="">
             <HeaderMain />
 
-            <main className="flex flex-col items-center justify-center w-full h-fit">
+            <section className="flex flex-col items-center justify-center w-full h-fit">
                 <h1>Payment system... (in development)</h1>
 
                 <input
@@ -107,7 +108,7 @@ export default function PaymentPage() {
                         value="Pay with Stripe"
                     />
                 </form>
-            </main>
+            </section>
 
             <FooterMain />
         </div>

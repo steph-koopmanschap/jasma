@@ -1,0 +1,120 @@
+version: '3.8'
+
+services:
+  
+  jasma-pg-db-dev:
+    container_name: jasma-pg-db-dev
+    image: postgres:14.7-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    expose: 
+      - 5432
+    ports:
+      - "5432:5432"
+    networks:
+      - jasma-network-dev
+    volumes: 
+      - jasma-storage-dev:/var/lib/postgresql/data
+
+  jasma-redis-db-dev:
+    container_name: jasma-redis-db-dev
+    image: redis:7.0.10-alpine
+    restart: always
+    command: redis-server --save 20 1 --loglevel warning
+    expose: 
+      - 6379
+    ports:
+      - '6379:6379'
+    networks:
+      - jasma-network-dev
+    volumes: 
+      - jasma-storage-dev:/redis-data
+
+  jasma-api-server-dev:
+    container_name: jasma-api-server-dev
+    build:
+      context: ./express
+      target: development
+      args:
+        - START_FIRST_TIME=true
+        - NODE_ENV=development
+        - HOSTNAME=http://localhost
+        - PORT=5000
+        - SESSION_SECRET=keyboard cat
+        - NEXTJS_ORIGIN=http://localhost
+        - NEXTJS_PORT=3000
+        - PG_SUPER_USER=postgres
+        - PG_SUPER_PASSWORD=postgres
+        - PG_ADMIN_USER=jasma_admin
+        - PG_ADMIN_PASSWORD=a
+        - PG_HOST=jasma-pg-db-dev
+        - PG_PORT=5432
+        - PG_SUPER_DATABASE=postgres
+        - PG_ADMIN_DATABASE=jasma_db
+        - REDIS_HOST=jasma-redis-db-dev
+        - REDIS_PORT=6379
+        - PAYPAL_SECRET=''
+        - PAYPAL_CLIENT_ID_SANDBOX=''
+        - PAYPAL_CLIENT_ID_PRODUCTION=''
+        - STRIPE_SECRET_KEY=''
+    restart: always
+    image: jasma-api-server-dev
+    expose: 
+      - 5000
+    ports:
+      - '5000:5000'
+    networks:
+      - jasma-network-dev
+    depends_on:
+      - jasma-pg-db-dev
+      - jasma-redis-db-dev
+
+  jasma-client-dev:
+    container_name: jasma-client-dev
+    build:
+      context: ./next
+      target: development
+      args:
+        - BASE_URL=http://localhost
+        - PORT=3000
+        - NEXT_PUBLIC_API_SERVER_URL=localhost
+        - NEXT_PUBLIC_API_SERVER_PORT=5000
+        - NEXT_PUBLIC_NODE_ENV=development
+        - ANALYZE=false
+        - SESSION_SECRET=thisisatemporarysecret
+        - PAYPAL_SECRET=''
+        - NEXT_PUBLIC_PAYPAL_CLIENT_ID_SANDBOX=''
+        - NEXT_PUBLIC_PAYPAL_CLIENT_ID_PRODUCTION=''
+        - NEXT_TELEMETRY_DEBUG=1
+        - NEXT_TELEMETRY_DISABLED=1
+    restart: always
+    image: jasma-client-dev
+    expose: 
+      - 3000
+    ports:
+      - '3000:3000'
+    networks:
+      - jasma-network-dev
+    depends_on:
+      - jasma-api-server-dev
+
+  jasma-nginx-dev:
+    container_name: jasma-nginx-dev
+    build:
+      context: ./nginx
+      target: development
+    restart: always
+    ports:
+    - '80:80'
+    networks:
+      - jasma-network-dev
+
+volumes:
+  jasma-storage-dev:
+    driver: local
+
+networks:
+  jasma-network-dev:
+    driver: bridge

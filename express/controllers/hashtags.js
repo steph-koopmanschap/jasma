@@ -45,6 +45,11 @@ async function subscribeToHashtags(req, res) {
     const { hashtags } = req.body;
     console.log("hashtags", hashtags);
 
+    //No more than 100 hashtags allowed per request.
+    if (hashtags.length > 100) {
+        hashtagsArray.splice(100);
+    }
+
     const nonExistingHashtags = [];
     try {
         for (let i = 0; i < hashtags.length; i++)

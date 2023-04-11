@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import useRequireAuth from '../../hooks/useRequireAuth';
 import api from "../../clientAPI/api.js";
 import HeaderMain from '../../components/HeaderMain';
 import UploadProfilePic from '../../components/UploadProfilePic';

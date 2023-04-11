@@ -46,6 +46,7 @@ async function login(req, res) {
     //Get the user role
     const resMetadata = await UserMetadata.getById(user.user_id);
 
+    //Attach the info the session storage
     req.session.user_id = user.user_id;
     req.session.username = user.username;
     req.session.email = user.email;

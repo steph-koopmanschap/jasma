@@ -11,11 +11,14 @@ const {
     PG_PORT,
     PG_SUPER_DATABASE,
     PG_ADMIN_DATABASE,
-    NODE_ENV
+    NODE_ENV,
 } = process.env;
 
 function generateConfig(role) {
     const isSuperUser = role === "superUser" && NODE_ENV !== "production";
+
+    //console.log("PG_HOST: (from generateConfig in SqlConnection.js", PG_HOST);
+    
     return {
         username: isSuperUser ? PG_SUPER_USER : PG_ADMIN_USER,
         password: isSuperUser ? PG_SUPER_PASSWORD : PG_ADMIN_PASSWORD,

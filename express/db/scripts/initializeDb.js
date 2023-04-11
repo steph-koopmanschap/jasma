@@ -11,6 +11,7 @@ const { SqlConnection } = require("../connections/SqlConnection");
         await jasmaAdmin.createTables();
         await jasmaAdmin.close();
     } catch (err) {
+        console.error(err);
         throw new Error(err);
     }
 })();

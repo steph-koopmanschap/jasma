@@ -1,6 +1,7 @@
 //A better custom implementation of cors.
 //Should be at or near the top of the middleware stack
 function customCors(app) {
+    //app.use(cors({ origin: allowedOrigins, credentials: true }));
     app.use((req, res, next) => {
         const { NEXTJS_ORIGIN, NEXTJS_PORT } = process.env;
         
@@ -19,12 +20,16 @@ function customCors(app) {
                                 `https://${NEXTJS_ORIGIN}:443`,
                             ];
 
+        console.log("origin: ", req.headers.origin);
         const origin = req.headers.origin;
 
-        if (allowedOrigins.includes(origin)) 
-        {
-            res.set({'Access-Control-Allow-Origin': origin});
-        }
+        // if (allowedOrigins.includes(origin)) 
+        // {
+        //     res.set({'Access-Control-Allow-Origin': origin});
+        // }
+
+        //Uncomment the line below for testing purposes (same as Access-Control-Allow-Origin: *)
+        res.set({'Access-Control-Allow-Origin': origin}); 
 
         res.set({
             'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,HEAD,OPTIONS',

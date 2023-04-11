@@ -52,8 +52,9 @@ export default function CreateComment(props) {
                 id="createComment" 
                 className="flex flex-col mx-auto text-center justify-center rounded" 
                 action="#" 
-                onSubmit={createComment}>
-
+                onSubmit={createComment}
+            >
+                <input type="hidden" name="XSRF-TOKEN" value={api.getCSRF_TOKEN()} />
                 <textarea 
                     className="my-1 p-1 mx-1"
                     id="newPostText"
