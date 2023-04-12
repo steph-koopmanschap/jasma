@@ -86,6 +86,7 @@ export default function LoginForm() {
                         email
                     </label>
                     <input
+                        id="loginEmailInput"
                         type="email"
                         placeholder="Email"
                         name="emailInput"
@@ -102,6 +103,7 @@ export default function LoginForm() {
                         Password
                     </label>
                     <input
+                        id="loginPasswordInput"
                         type="password"
                         placeholder="Password"
                         name="passwordInput"
@@ -115,6 +117,7 @@ export default function LoginForm() {
 
                 <div className="flex flex-col items-center justify-between">
                     <button
+                        id="loginSubmitBtn"
                         className="formButtonDefault"
                         type="submit"
                         value="Log in"

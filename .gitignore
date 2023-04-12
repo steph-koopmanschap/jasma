@@ -8,6 +8,10 @@
 # testing
 /coverage
 /.nyc_output
+test/jasmatestenv
+
+#Python
+**/__pycache__
 
 # next.js
 # .next is the build directory of NextJS
