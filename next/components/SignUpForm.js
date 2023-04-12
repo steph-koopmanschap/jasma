@@ -91,7 +91,9 @@ export default function SignUpForm() {
                 </div>  
                 <div className="flex flex-col items-center justify-between">
                 
-                <input className="formButtonDefault"
+                <input
+                    id="signUpBtn"
+                    className="formButtonDefault"
                     type="submit" 
                     value="Sign up" 
                 />  

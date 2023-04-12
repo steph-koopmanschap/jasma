@@ -20,7 +20,7 @@ function customCors(app) {
                                 `https://${NEXTJS_ORIGIN}:443`,
                             ];
 
-        console.log("origin: ", req.headers.origin);
+        //console.log("origin: ", req.headers.origin);
         const origin = req.headers.origin;
 
         // if (allowedOrigins.includes(origin)) 
