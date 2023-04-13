@@ -9,6 +9,9 @@
 /coverage
 /.nyc_output
 test/jasmatestenv
+test/tests/*.png
+test/*.png
+test/test/reports/*
 
 #Python
 **/__pycache__

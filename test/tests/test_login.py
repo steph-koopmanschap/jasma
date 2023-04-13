@@ -1,15 +1,15 @@
 import time
 import unittest
-#import HtmlTestRunner # Used for getting html output instead of console output from unittest
 from selenium.webdriver.common.by import By
-from tests.webdrivers import getChromeDriver, getFirefoxDriver
+from tests.webdrivers import getWebDriver
 
 class LoginTests(unittest.TestCase):
 
     #This class method is started before ALL tests.
     @classmethod
     def setUpClass(inst):
-        print("Setting up all tests...")
+        inst.test_name = "Login"
+        print(f"Setting up all {inst.test_name} tests...")
 
         inst.BASE_URL = "http://localhost"
 
@@ -19,16 +19,15 @@ class LoginTests(unittest.TestCase):
             'password': "test123"
         }
 
-        inst.chrome = getChromeDriver()
-        inst.firefox = getFirefoxDriver()
+        inst.driver = getWebDriver()
 
         # Registering test user
-        inst.chrome.get(inst.BASE_URL + "/register")
+        inst.driver.get(inst.BASE_URL + "/register")
 
-        userNameInput = inst.chrome.find_element(By.ID, 'userNameInput')
-        emailInput = inst.chrome.find_element(By.ID, 'emailInput')
-        passwordInput = inst.chrome.find_element(By.ID, 'passwordInput')
-        signUpBtn = inst.chrome.find_element(By.ID, 'signUpBtn')
+        userNameInput = inst.driver.find_element(By.ID, 'userNameInput')
+        emailInput = inst.driver.find_element(By.ID, 'emailInput')
+        passwordInput = inst.driver.find_element(By.ID, 'passwordInput')
+        signUpBtn = inst.driver.find_element(By.ID, 'signUpBtn')
         
         userNameInput.send_keys(inst.test_user['username'])
         emailInput.send_keys(inst.test_user['email'])
@@ -44,16 +43,20 @@ class LoginTests(unittest.TestCase):
 
     def test_login_correct(self):
         # Open the browser
-        self.chrome.get(self.BASE_URL + "/login")
+        self.driver.get(self.BASE_URL + "/login")
 
-        print("self.chrome.current_url: ", self.chrome.current_url)
+        # Get a screenshot to make sure the page works.
+        self.driver.get_screenshot_as_file("screenshot_driver_login.png")
+        print(self.driver.get_screenshot_as_file("screenshot_driver_login.png"))
+
+        print("self.driver.current_url: ", self.driver.current_url)
 
         # Wait for a bit in case internet or response time is slow
         time.sleep(3)
 
-        emailInput = self.chrome.find_element(By.ID, 'loginEmailInput')
-        passwordInput = self.chrome.find_element(By.ID, 'loginPasswordInput')
-        loginBtn = self.chrome.find_element(By.ID, 'loginSubmitBtn')
+        emailInput = self.driver.find_element(By.ID, 'loginEmailInput')
+        passwordInput = self.driver.find_element(By.ID, 'loginPasswordInput')
+        loginBtn = self.driver.find_element(By.ID, 'loginSubmitBtn')
 
         emailInput.send_keys(self.test_user['email'])
         passwordInput.send_keys(self.test_user['password'])
@@ -63,7 +66,7 @@ class LoginTests(unittest.TestCase):
         time.sleep(5)
 
         #If user is moved to the dashboard login is correct.
-        self.assertEqual(self.chrome.current_url, f"{self.BASE_URL}/dashboard", f'Expected browser URL to be: {self.BASE_URL}/dashboard')
+        self.assertEqual(self.driver.current_url, f"{self.BASE_URL}/dashboard", f'Expected browser URL to be: {self.BASE_URL}/dashboard')
 
     # Executed after every test
     # Tear down the test
@@ -76,18 +79,7 @@ class LoginTests(unittest.TestCase):
     def tearDownClass(inst):
         print("Tear down all tests...")
         # Close the browsers
-        inst.chrome.quit()
-        inst.firefox.quit()
+        inst.driver.quit()
         print("Done tearing down all tests.")
-
-#Run the tests
-if __name__=='__main__':    
-    # Verbosity Levels
-    #   0 (quiet): you just get the total numbers of tests executed and the global result
-    #   1 (default): you get the same plus a dot for every successful test or a F for every failure
-    #   2 (verbose): you get the help string of every test and the result
-    unittest.main(verbosity=2)
-
-
 
 
