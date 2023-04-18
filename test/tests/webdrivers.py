@@ -6,38 +6,44 @@ from selenium.webdriver.firefox.options import Options as FireFoxOptions
 from msedge.selenium_tools import EdgeOptions 
 from msedge.selenium_tools import Edge #Deprecated, but works.
 
-def createDriverOptions(options):
-    # Run in headless mode (No GUI) NOTE: Some pages block headless mode.
-    options.add_argument('--headless') 
-    # Get a big size for the browser or else the page might run as mobile version 
-    options.add_argument("--window-size=1920,1080")
-    # Bypass SSL Certificates
-    options.add_argument('--ignore-certificate-errors')
-    options.add_argument('--allow-running-insecure-content')
+def createDriverOptions(optionsObject, options):
 
-def getWebDriver():
-    # Defaults back to chrome if no driver is given
-    preferred_driver = os.getenv('WEBDRIVER', 'chrome')
+    if options['headless'] == 'true':
+        # Run in headless mode (No GUI) NOTE: Some pages block headless mode.
+        optionsObject.add_argument('--headless') 
+    if options['device'] == 'desktop':
+        # Get a desktop size for the browser
+        optionsObject.add_argument("--window-size=1920,1080")
+    elif options['device'] == 'mobile':
+        optionsObject.add_argument("--window-size=360,760")
+    elif options['device'] == 'tablet':
+        optionsObject.add_argument("--window-size=810,1080")
+    # Bypass SSL Certificates
+    optionsObject.add_argument('--ignore-certificate-errors')
+    optionsObject.add_argument('--allow-running-insecure-content')
+
+def getWebDriver(preferred_driver='chrome', options={'headless': 'true', 'device': 'desktop'}):
     print(f"USING WEB DRIVER: {preferred_driver}")
+    print(f"Options: {options}")
 
     if preferred_driver == 'chrome':
-        options = ChromeOptions()
-        createDriverOptions(options)
+        optionsObject = ChromeOptions()
+        createDriverOptions(optionsObject, options)
         # Create a Chrome webdriver instance using the ChromeOptions object
-        current_driver = webdriver.Chrome(options=options)
+        current_driver = webdriver.Chrome(options=optionsObject)
         current_driver.implicitly_wait(1)
 
     elif preferred_driver == 'firefox':
-        options = FireFoxOptions()
-        createDriverOptions(options)
-        current_driver = webdriver.Firefox(options=options)
+        optionsObject = FireFoxOptions()
+        createDriverOptions(optionsObject, options)
+        current_driver = webdriver.Firefox(options=optionsObject)
 
     elif preferred_driver == 'edge':
-        options = EdgeOptions()
+        optionsObject = EdgeOptions()
         # MS Edge first needs to use chromium for the other driver options to work??
-        options.use_chromium = True
-        createDriverOptions(options)
-        current_driver = Edge(options=options)
+        optionsObject.use_chromium = True
+        createDriverOptions(optionsObject, options)
+        current_driver = Edge(options=optionsObject)
 
     else:
         # Raise an exception or return None to signal that the driver was not set

@@ -9,7 +9,8 @@ Or improve yourself by fixing bugs and hunting for new ones.
 
 ## Contributing
 
-Filling out this anonymous survey will help us a lot to improve JASMA. <br />
+Filling out these anonymous surveys will help us a lot to improve JASMA. <br />
+[Most important features in Social Media](https://forms.gle/XEmCFrifKmTAwMyv5)
 [Social Media Improvement Survey](https://forms.gle/wparXcH7FyNi6e27A)
 
 If you like this project please give it a star :D 
