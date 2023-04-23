@@ -26,7 +26,8 @@
         "start:pm2": "cd express && pm2 start npm --name \"JASMA-API\" -- start && cd ../next && pm2 start npm --name \"JASMA-NEXT\" -- start && cd ../video-server && pm2 start npm --name \"JASMA-MEDIA-SERVER\" -- start && cd ..",
         "stop:pm2": "pm2 stop JASMA-API && pm2 stop JASMA-NEXT && pm2 stop JASMA-MEDIA-SERVER",
         "restart:pm2": "npm run stop:pm2 && pm2 start JASMA-API && pm2 start JASMA-NEXT && pm2 start JASMA-MEDIA-SERVER",
-        "check:services": "systemctl status postgresql && systemctl status redis-server && systemctl status nginx && echo \"Current listening ports:\" && sudo ss -lntup && pm2 ls"
+        "check:services": "systemctl status postgresql && systemctl status redis-server && systemctl status nginx && echo \"Current listening ports:\" && sudo ss -lntup && pm2 ls",
+        "code": "code -n \"$PWD\""
     },
     "devDependencies": {
         "concurrently": "^7.6.0"
