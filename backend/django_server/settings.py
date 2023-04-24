@@ -31,6 +31,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+APPEND_SLASH = False
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -94,6 +96,9 @@ DATABASES = {
 #         'PORT': os.getenv('DB_PORT'),
 #     }
 # }
+
+AUTH_USER_MODEL = 'api.User'
+AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend", "api.backends.CustomUserModelBackend"]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

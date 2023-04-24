@@ -446,3 +446,31 @@ class Api {
 
 const jasmaApi = new Api();
 export default jasmaApi;
+
+
+
+/*
+
+You can check the status code of the HTTP response to determine whether it's an error response or not. 
+If the status code is between 200 and 299, it's a successful response, and you can return the data from the response. 
+Otherwise, if the status code is outside that range, you can return the error message from the response.
+
+Here's how you could modify the code to handle error responses:
+
+async addFollower(userID_two) {
+  try {
+    const response = await this.api.post(`/api/users/addFollower`, {
+      userID_two: userID_two
+    });
+
+    if (response.status >= 200 && response.status <= 299) {
+      return response.data;
+    } else {
+      throw new Error(response.data.message);
+    }
+  } catch (error) {
+    return{ error: error.response.data.message }
+  }
+}
+
+*/
