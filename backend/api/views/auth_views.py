@@ -1,9 +1,10 @@
+import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 #from django.contrib.auth.models import User
 from api.models import User
-import json
 from api.utils.request_method_wrappers import post_wrapper
 from api.constants.http_status import HTTP_STATUS
 
@@ -47,12 +48,15 @@ def login_view(request):
     user = authenticate(request, email=email, password=password)
     if user is not None:
         login(request, user)
+        # Add user data to the user session
+        request.session['id'] = user.id
+        request.session['username'] = user.username
+        request.session['email'] = user.email
+        return JsonResponse({"success": True, "user": {"id": user.id, "username": user.username, "email": user.email}, "message": "User logged in."},
+                        status=HTTP_STATUS['Created'])
     else:
         return JsonResponse({"success": False, "message": "Invalid email or password."},
                             status=HTTP_STATUS['Forbidden'])
-
-    return JsonResponse({"success": True, "user": {"id": user.id, "username": user.username, "email": user.email}, "message": "User logged in."},
-                        status=HTTP_STATUS['Created'])
 
 @csrf_exempt
 @post_wrapper
@@ -68,3 +72,16 @@ def check_auth(request):
     else:
         return JsonResponse({'isAuth': False},
                             status=HTTP_STATUS['OK'])
+
+@csrf_exempt
+@login_required
+@post_wrapper
+def change_password(request):
+    req = json.loads(request.body)
+    new_password = request['newPassword']
+    email = request.session.get('email')
+    user = User.objects.get(email=email)
+    user.set_password(new_password)
+    user.save()
+    return JsonResponse({'success': True, 'message': 'Password changed.'},
+                        status=HTTP_STATUS['Created'])
