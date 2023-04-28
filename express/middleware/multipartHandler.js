@@ -10,8 +10,8 @@ function logFileInfo(info) {
 }
 
 const acceptedImageFormats = ["image/gif", "image/jpeg", "image/jpg", "image/png", "image/webp"];
-const acceptedVideoFormats = [];
-const acceptedAudioFormats = [];
+const acceptedVideoFormats = ["video/mp4", "video/webm"];
+const acceptedAudioFormats = ["audio/mpeg", "audio/ogg", "audio/mp3"];
 
 const getFileExtension = (info) => info.mimeType.match(/(?<=\/).+/)[0];
 const isImage = (mimeType) => acceptedImageFormats.includes(mimeType);

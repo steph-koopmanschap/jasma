@@ -16,11 +16,20 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+if os.getenv('NODE_ENV') == 'production':
+    BASE_URL = "https://" + os.getenv('HOSTNAME')
+    DEBUG = False
+elif os.getenv('NODE_ENV') == 'development':
+    BASE_URL = "https://" + os.getenv('HOSTNAME') + ":" + os.getenv('PORT')
+    # SECURITY WARNING: don't run with debug turned on in production!
+    DEBUG = True
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -29,8 +38,7 @@ MEDIA_URL = '/media/'
 # Used for signing and hashing cookies and session secrets
 SECRET_KEY = os.getenv('SESSION_SECRET')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
 
 ALLOWED_HOSTS = []
 

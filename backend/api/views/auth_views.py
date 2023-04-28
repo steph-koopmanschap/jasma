@@ -3,9 +3,9 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-#from django.contrib.auth.models import User
 from api.models import User
 from api.utils.request_method_wrappers import post_wrapper
+from api.utils.get_client_ip import get_client_ip
 from api.constants.http_status import HTTP_STATUS
 
 @csrf_exempt
@@ -35,6 +35,7 @@ def register(request):
         email=email,
         password=password
     )
+    user.after_create()
     # return success response
     return JsonResponse({'success': True, 'message': f"User {username} registered successfully."},
                         status=HTTP_STATUS['Created'])
@@ -48,6 +49,9 @@ def login_view(request):
     user = authenticate(request, email=email, password=password)
     if user is not None:
         login(request, user)
+        ip = get_client_ip(request)
+        user.last_ipv4 = ip
+        user.save()
         # Add user data to the user session
         request.session['id'] = user.id
         request.session['username'] = user.username

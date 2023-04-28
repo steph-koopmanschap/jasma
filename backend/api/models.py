@@ -16,6 +16,7 @@ class User(AbstractUser):
     recovery_email = models.EmailField(max_length=55, null=True, blank=True)
     phone = models.CharField(max_length=55, null=True, blank=True)
     recovery_phone = models.CharField(max_length=55, null=True, blank=True)
+    balance = models.DecimalField(max_digits=19, decimal_places=4, default=0, validators=[MinValueValidator(0)])
     last_ipv4 = models.CharField(max_length=55, default="0.0.0.0", null=True, blank=True, validators=[validate_ipv4_address])
     user_role = models.CharField(max_length=10, default="normal", 
                                 choices=[
@@ -27,22 +28,11 @@ class User(AbstractUser):
     REQUIRED_FIELDS = [] 
 
     def after_create(self):
-        user_metadata = User_Metadata(user=self)
         user_profile = User_Profile(user=self)
         user_notification_preferences = User_Notification_Preferences(user=self)
         
-        user_metadata.save()
         user_profile.save()
         user_notification_preferences.save()
-
-class User_Metadata(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    last_login_date = models.DateField(null=True, blank=True)
-    account_creation_date = models.DateField(default=timezone.now)    
-        
-    class Meta:
-        db_table = "users_metadata"
-        verbose_name_plural = "UsersMetadata"
 
 class User_Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
@@ -69,7 +59,7 @@ class User_Profile(models.Model):
                                             ("poly", "Poly"), 
                                             ("other", "Other")])
     
-    relationship_with = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    relationship_with = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="relationships_with")
     language = models.CharField(max_length=100, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
@@ -136,8 +126,8 @@ class Ad(models.Model):
         return str(self.ad_name) + " ad_id: " + str(self.ad_id)
     
     class Meta:
-        db_table = "users_notification_preferences"
-        verbose_name_plural = "UsersNotificationPreferences"
+        db_table = "ads"
+        verbose_name_plural = "Ads"
 
 class Hashtag(models.Model):
     hashtag = models.CharField(max_length=50, primary_key=True)
@@ -153,7 +143,7 @@ class Post(models.Model):
     post_id = models.UUIDField(default=uuid4, primary_key=True, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text_content = models.CharField(max_length=40000)
-    file_url = models.URLField(max_length=300)
+    file_url = models.URLField(max_length=300, null=True, blank=True)
     post_type = models.CharField(max_length=5, default='text', 
                                     choices=[
                                         ("text", "Text"), 
@@ -163,10 +153,35 @@ class Post(models.Model):
     
     hashtags = models.ManyToManyField(Hashtag, related_name='posts', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    last_edited_at = models.DateTimeField(null=True)
+    last_edited_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return str(self.post_id)
+    
+    # Returns a list of post instances in a dict format with hashtags as an array
+    @staticmethod
+    def format_posts_dict(posts):
+        result = []
+        for post in posts:
+            post_dict = Post.format_post_dict(post)
+            result.append(post_dict)
+
+        return result
+    
+    # Returns a post instance in a dict format with hashtags as an array
+    @staticmethod
+    def format_post_dict(post):
+        post_dict = {
+            "post_id": post.post_id,
+            "user_id": post.user.id,
+            "text_content": post.text_content,
+            "file_url": post.file_url,
+            "post_type": post.post_type,
+            "created_at": post.created_at,
+            "last_edited_at": post.last_edited_at,
+            "hashtags": [hashtag.hashtag for hashtag in post.hashtags.all()]
+        }
+        return post_dict
     
     class Meta:
         db_table = "posts"
@@ -177,9 +192,9 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     comment_text = models.CharField(max_length=10000)
-    file_url = models.URLField(max_length=100, blank=True)
+    file_url = models.URLField(max_length=300, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return str(self.comment_id)
@@ -230,11 +245,11 @@ class Bookmarked_Post(models.Model):
     class Meta:
         db_table = 'bookmarked_posts'
         verbose_name_plural = 'BookmarkedPosts'
-        unique_together = ['user', 'post']
-        #constraints = [
-        #    models.UniqueConstraint(fields=['user', 'post'], name='composite primary key')
-        #   ]
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'post'], name='composite_pk_on_bookmarked_posts')
+        ]
 
+#user_id follows follow_id. follow_id is followed by user_id
 class Following(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fallowers')
     following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fallowings')
@@ -245,11 +260,22 @@ class Following(models.Model):
     class Meta:
         db_table = 'following'
         verbose_name_plural = 'followings'
-        unique_together = ['user', 'following']
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'following'], name='composite_pk_on_following')
+        ]
 
+# Is it possible for a user to be subscribed to hashtag that has been deleted or does not exist?
+# ---
+# it is not possible to keep a foreign key relationship intact after the referenced object has been deleted. 
+# When the hashtag is deleted, it will trigger a cascading delete of all related Subscribed_Hashtag objects.
+# However, you could create a custom delete method for the Hashtag model which marks the hashtag as deleted instead of deleting it. 
+# You could add a boolean field called is_deleted to the Hashtag model and set it to True when the delete method is called. 
+# Then, modify the queries in your views and templates to exclude any deleted hashtags.
+# Another option would be to create a separate table to store the subscription information, instead of using a foreign key relationship with the Hashtag model. 
+# This table could have a field for the hashtag name or ID, and the subscription status could be updated even if the original hashtag is deleted.
 class Subscribed_Hashtag(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    hashtag = models.ForeignKey(Hashtag)
+    hashtag = models.ForeignKey(Hashtag, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"User: {self.user.id} Subscribed to hashtag: {self.hashtag.hashtag}"
@@ -257,7 +283,9 @@ class Subscribed_Hashtag(models.Model):
     class Meta:
         db_table = 'subscribed_hashtags'
         verbose_name_plural = 'SubscribedHashtags'
-        unique_together = ['user', 'hashtag']
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'hashtag'], name='composite_pk_on_subscribed_hashtags')
+        ]
 
 class UserFeedback(models.Model):
     feedback_id = models.UUIDField(default=uuid4, primary_key=True, editable=False)
