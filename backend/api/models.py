@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.db import models
 from django.core.validators import validate_ipv4_address, MaxValueValidator, MinValueValidator
 from uuid import uuid4
+from api.constants.genders import GENDERS_MODEL
+from api.constants.relationships import RELATIONSHIPS_MODEL
 
 # Custom user model
 # Login:
@@ -30,7 +32,6 @@ class User(AbstractUser):
     def after_create(self):
         user_profile = User_Profile(user=self)
         user_notification_preferences = User_Notification_Preferences(user=self)
-        
         user_profile.save()
         user_notification_preferences.save()
 
@@ -42,23 +43,8 @@ class User_Profile(models.Model):
     display_name = models.CharField(max_length=70, null=True, blank=True)
     bio = models.CharField(max_length=5000, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    gender = models.CharField(max_length=11, null=True, blank=True,
-                                choices=[
-                                        ("woman", "Woman"),
-                                        ("man", "Man"),
-                                        ("trans woman", "Trans Woman"),
-                                        ("trans man", "Trans Man"), 
-                                        ("other", "Other")])
-    
-    relationship = models.CharField(max_length=11, null=True, blank=True,
-                                    choices=[
-                                            ("single", "Single"), 
-                                            ("married", "Married"), 
-                                            ("partnership", "Partnership"), 
-                                            ("open", "Open"), 
-                                            ("poly", "Poly"), 
-                                            ("other", "Other")])
-    
+    gender = models.CharField(max_length=11, null=True, blank=True, choices=GENDERS_MODEL)
+    relationship = models.CharField(max_length=11, null=True, blank=True, choices=RELATIONSHIPS_MODEL)
     relationship_with = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="relationships_with")
     language = models.CharField(max_length=100, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
@@ -102,23 +88,8 @@ class Ad(models.Model):
     created_at = models.DateTimeField() 
     targ_age_start = models.SmallIntegerField(null=True, blank=True, validators=[MinValueValidator(18), MaxValueValidator(125)])
     targ_age_end = models.SmallIntegerField(null=True, blank=True, validators=[MinValueValidator(18), MaxValueValidator(125)])
-    targ_gender = models.CharField(max_length=11, null=True, blank=True, 
-                                    choices=[
-                                        ("woman", "Woman"),
-                                        ("man", "Man"),
-                                        ("trans woman", "Trans Woman"),
-                                        ("trans man", "Trans Man"), 
-                                        ("other", "Other")]) 
-
-    targ_relationship = models.CharField(max_length=11, null=True, blank=True,
-                                        choices=[
-                                            ("single", "Single"), 
-                                            ("married", "Married"), 
-                                            ("partnership", "Partnership"), 
-                                            ("open", "Open"), 
-                                            ("poly", "Poly"), 
-                                            ("other", "Other")])
-    
+    targ_gender = models.CharField(max_length=11, null=True, blank=True, choices=GENDERS_MODEL) 
+    targ_relationship = models.CharField(max_length=11, null=True, blank=True, choices=RELATIONSHIPS_MODEL)
     targ_country = models.CharField(max_length=50, null=True, blank=True)
     targ_city = models.CharField(max_length=50, null=True, blank=True)
 
@@ -207,7 +178,7 @@ class Reported_Post(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     report_reason = models.CharField(max_length=300)
     reported_x_times = models.IntegerField(default=1, null=False, blank=False)
-    report_time = models.DateTimeField(null=False, blank=False)
+    report_time = models.DateTimeField(auto_now_add=True, null=False, blank=False)
 
     def __str__(self):
         return f"Reported post {self.post.post_id} - reported for {self.report_reason} ({self.reported_x_times} times)"

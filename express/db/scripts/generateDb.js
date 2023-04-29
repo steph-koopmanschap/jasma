@@ -55,7 +55,7 @@ async function generateReportedPosts(n) {
 async function generateDb(n) {
     console.log(`GENERATING ${n} users, ${n*2} posts, ${n*4} comments, ${n*3} followers and ${Math.floor(n * 0.5)} reported posts...`);
     await createUsers(n);
-    await generateHashtags(n * 2);
+    await generateHashtags(n * 3);
     await generatePosts(n * 2);
     await generatePostHashtags(n * 2);
     await generateComments(n * 4);
