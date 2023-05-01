@@ -1,11 +1,10 @@
 import json
-from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from api.utils.request_method_wrappers import post_wrapper, put_wrapper, get_wrapper, delete_wrapper
 from api.constants.http_status import HTTP_STATUS
-from api.models import User, Post, Hashtag, Comment
+from api.models import User, Post, Comment
 from api.utils.handle_file_save import handle_file_save
 from api.utils.handle_file_delete import handle_file_delete
 
@@ -66,7 +65,7 @@ def delete_comment(request, comment_id):
         comment = Post.objects.get(comment_id=comment_id)
     except Comment.DoesNotExist:
         return JsonResponse({'success': True, 'message': "Comment does not exist or already deleted."}, 
-                            status=HTTP_STATUS["Not Found"])
+                            status=HTTP_STATUS["Gone"])
     if comment.file_url != None:
         delete_file = handle_file_delete(comment.file_url)
     comment.delete()

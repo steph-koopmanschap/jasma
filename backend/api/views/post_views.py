@@ -114,7 +114,7 @@ def delete_post(request, post_id):
         post = Post.objects.get(post_id=post_id)
     except Post.DoesNotExist:
         return JsonResponse({'success': True, 'message': "Post does not exist or already deleted."}, 
-                            status=HTTP_STATUS["Not Found"])
+                            status=HTTP_STATUS["Gone"])
     if post.file_url != None:
         delete_file = handle_file_delete(post.file_url)
     post.delete()
@@ -148,6 +148,7 @@ def get_single_post(request, post_id):
     return JsonResponse({'success': True, 'post': post_formatted},
                         status=HTTP_STATUS["OK"]) 
 
+@csrf_exempt
 @login_required
 @post_wrapper
 def add_post_bookmark(request):
@@ -158,8 +159,9 @@ def add_post_bookmark(request):
     post = Post.objects.get(post_id=post_id)
     bookmarked_post = Bookmarked_Post.objects.create(user=user, post=post)
     return JsonResponse({'success': True, 'message': "Post bookmarked successfully."}, 
-                    status=HTTP_STATUS["Created"])
+                        status=HTTP_STATUS["Created"])
 
+@csrf_exempt
 @login_required
 @delete_wrapper
 def delete_post_bookmark(request, post_id):

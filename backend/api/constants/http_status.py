@@ -22,6 +22,7 @@ HTTP_STATUS = {
     'Precondition Failed': 412,
     'Request Entity Too Large': 413,
     'Unsupported Media Type': 415,
+    'Unprocessable Content': 422,
     'Internal Server Error': 500,
     'Service Unavailable': 503,
     'Gateway Timeout': 504
