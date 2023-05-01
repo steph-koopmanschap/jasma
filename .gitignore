@@ -53,9 +53,10 @@ next-env.d.ts
 *.log
 
 # Server media files
-**/media/posts/*
-**/media/comments/*
-**/media/avatars/*
+**/media/*/*/*
+!**/media/images/avatars/default-profile-pic.webp
+# OLD
+express/media/*/*
 !**/media/avatars/default-profile-pic.webp
 
 # dumprdb

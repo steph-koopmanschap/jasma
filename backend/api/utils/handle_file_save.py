@@ -2,13 +2,10 @@ import os
 import mimetypes
 from django.conf import settings
 from uuid import uuid4
+from api.constants.files import *
 #from django.core.files.storage import default_storage
 #from django.core.files.base import ContentFile
 #from django.core.files.uploadedfile import InMemoryUploadedFile
-
-acceptedImageFormats = ["image/gif", "image/jpeg", "image/jpg", "image/png", "image/webp"]
-acceptedVideoFormats = ["video/mp4", "video/webm"]
-acceptedAudioFormats = ["audio/mpeg", "audio/ogg", "audio/mp3"]
 
 # Returns the MIME type of a file as a string in the format type/subtype wrappen in an object
 # If the MIME type cannot be determined from the file name, the function returns a default MIME type of octet-stream
@@ -30,14 +27,14 @@ def generate_new_fileName(file):
 def determine_save_location(file, file_type, context):
     save_location = ""
     try:
-        if file_type["mime_type"] in acceptedImageFormats:
+        if file_type["mime_type"] in ACCEPTED_IMAGE_FORMATS:
             save_location += "images"
-        elif file_type["mime_type"] in acceptedVideoFormats:
+        elif file_type["mime_type"] in ACCEPTED_VIDEO_FORMATS:
             save_location += "videos"
-        elif file_type["mime_type"] in acceptedAudioFormats:
+        elif file_type["mime_type"] in ACCEPTED_AUDIO_FORMATS:
             save_location += "audios"
         else:
-            raise Exception("Wrong mime type. " + file_type["mime_type"] +  " not allowed.")
+            raise Exception("Wrong mime type. " + file_type["mime_type"] +  " not allowed. File saving failed.")
     except Exception as e:
         print(e)
         return None
@@ -52,23 +49,28 @@ def determine_save_location(file, file_type, context):
         elif context == "ad":
             save_location += "/ads"
         else:
-            raise Exception("Wrong context. " + context +  " not allowed.")
+            raise Exception("Wrong context. " + context +  " not allowed. File saving failed.")
     except Exception as e:
         print(e)
         return None
     
     filename = generate_new_fileName(file)
-    return os.path.join(settings.MEDIA_ROOT, save_location, filename)
+    # Absolute path
+    location = os.path.join(settings.MEDIA_ROOT, save_location, filename)
+    URL = settings.BASE_URL + settings.MEDIA_URL + os.path.join(save_location, filename)
+    return {"location": location, "URL": URL}
 
 def handle_file_save(file, context):
     try:
         file_type = get_file_mime_type(file)
         save_location = determine_save_location(file, file_type, context)
-        with open(save_location, 'wb+') as destination:
-            for chunk in file.chunks():
+        with open(save_location["location"], 'wb+') as destination:
+            for chunk in file.chunks(): 
                 destination.write(chunk)
         # File save successful
-        return {"location": save_location, "file_type":  file_type}
+        result = {"location": save_location["location"], "URL": save_location["URL"], "file_type":  file_type}
+        return result
     except Exception as e:
+        print("File saving failed.")
         print(e)
         return False

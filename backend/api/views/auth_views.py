@@ -53,10 +53,10 @@ def login_view(request):
         user.last_ipv4 = ip
         user.save()
         # Add user data to the user session
-        request.session['id'] = user.id
+        request.session['id'] = str(user.id)
         request.session['username'] = user.username
         request.session['email'] = user.email
-        return JsonResponse({"success": True, "user": {"id": user.id, "username": user.username, "email": user.email}, "message": "User logged in."},
+        return JsonResponse({"success": True, "user": {"id": str(user.id), "username": user.username, "email": user.email}, "message": "User logged in."},
                         status=HTTP_STATUS['Created'])
     else:
         return JsonResponse({"success": False, "message": "Invalid email or password."},

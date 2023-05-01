@@ -20,7 +20,7 @@ if os.getenv('NODE_ENV') == 'production':
     BASE_URL = "https://" + os.getenv('HOSTNAME')
     DEBUG = False
 elif os.getenv('NODE_ENV') == 'development':
-    BASE_URL = "https://" + os.getenv('HOSTNAME') + ":" + os.getenv('PORT')
+    BASE_URL = "http://" + os.getenv('HOSTNAME') + ":" + os.getenv('PORT')
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
 
@@ -38,7 +38,22 @@ DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 # Used for signing and hashing cookies and session secrets
 SECRET_KEY = os.getenv('SESSION_SECRET')
 
-
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'class': 'logging.handlers.WatchedFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/server_logfile.log'),
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+        },
+    },
+}
 
 ALLOWED_HOSTS = []
 
