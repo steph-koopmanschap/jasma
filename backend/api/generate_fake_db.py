@@ -3,6 +3,7 @@ import math
 import datetime
 import random
 from faker import Faker
+from django.db.utils import IntegrityError
 from api.models import User, Post, Comment, Hashtag, User_Profile, Reported_Post, Following, Subscribed_Hashtag, Bookmarked_Post, Ad
 from api.constants.genders import GENDERS
 from api.constants.relationships import RELATIONSHIPS
@@ -21,20 +22,24 @@ def pick_random_post():
 
 def generate_user():
     created = False
-    username = fake.user_name()[0]
-    email = fake.email()[0]
-    phone = fake.phone_number()[0]
-    recovery_email = fake.email()[0]
-    recovery_phone = fake.phone_number()
     while created == False:
-        user, created = User.objects.get_or_create(
-            username=username,
-            email=email,
-            password='X',
-            phone=phone,
-            recovery_email=recovery_email,
-            recovery_phone=recovery_phone,
-        )
+        username = fake.user_name()
+        email = fake.email()
+        phone = fake.phone_number()
+        recovery_email = fake.email()
+        recovery_phone = fake.phone_number()
+        try:
+            user, created = User.objects.get_or_create(
+                username=username,
+                email=email,
+                password='X',
+                phone=phone,
+                recovery_email=recovery_email,
+                recovery_phone=recovery_phone,
+            )
+        except IntegrityError:
+            # If the email already exists, try again with a new email
+            continue
     #if created == False:
     user.after_create()
 
