@@ -44,6 +44,9 @@ def create_post(request):
             hashtag, created = Hashtag.objects.get_or_create(hashtag=tag)
             post.hashtags.add(hashtag)
         post.save()
+        # TODO: Create a notification towards followers of the post's user. (in Redis)
+
+
         return JsonResponse({'successs': True, 'message': "Post created successfully."}, 
                             status=HTTP_STATUS["Created"])
     except Exception as e:
@@ -100,7 +103,6 @@ def edit_post(request):
     post.file_url = file_url
     post.post_type = post_type
     post.save()
-
     return JsonResponse({'success': True, 'message': "Post updated successfully."}, 
                         status=HTTP_STATUS["Created"])
 

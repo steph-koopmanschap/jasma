@@ -121,10 +121,9 @@ class Post(models.Model):
                                         ("image", "Image"), 
                                         ("video", "Video"),
                                         ("audio", "Audio")])
-    
     hashtags = models.ManyToManyField(Hashtag, related_name='posts', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    last_edited_at = models.DateTimeField(auto_now=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return str(self.post_id)
@@ -149,7 +148,7 @@ class Post(models.Model):
             "file_url": post.file_url,
             "post_type": post.post_type,
             "created_at": post.created_at,
-            "last_edited_at": post.last_edited_at,
+            "updated_at": post.updated_at,
             "hashtags": [hashtag.hashtag for hashtag in post.hashtags.all()]
         }
         return post_dict
@@ -162,13 +161,37 @@ class Comment(models.Model):
     comment_id = models.UUIDField(default=uuid4, primary_key=True, editable=False)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    comment_text = models.CharField(max_length=10000)
+    text_content = models.CharField(max_length=10000)
     file_url = models.URLField(max_length=300, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return str(self.comment_id)
+    
+    # Returns a list of comment instances in a dict format.
+    @staticmethod
+    def format_comments_dict(comments):
+        result = []
+        for comment in comments:
+            comment_dict = Comment.format_comment_dict(comment)
+            result.append(comment_dict)
+
+        return result
+    
+    # Returns a comment instance in a dict format.
+    @staticmethod
+    def format_comment_dict(comment):
+        comment_dict = {
+            "comment_id": comment.comment_id,
+            "post_id": comment.post.post_id,
+            "user_id": comment.user.id,
+            "text_content": comment.text_content,
+            "file_url": comment.file_url,
+            "created_at": comment.created_at,
+            "updated_at": comment.updated_at
+        }
+        return comment_dict
 
     class Meta:
         db_table = "comments"

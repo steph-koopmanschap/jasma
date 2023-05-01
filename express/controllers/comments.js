@@ -23,7 +23,6 @@ async function createComment(req, res) {
     }
 
     //Create a notification towards the post owner
-    //Do we actually need to await the createNotification????
     const postOwner = await Post.getPostOwner(post_id);
     const createdNotification = createNotification(postOwner.user_id, {
         from: user_id,
