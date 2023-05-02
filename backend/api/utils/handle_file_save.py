@@ -45,7 +45,9 @@ def determine_save_location(file, file_type, context):
         elif context == "comment":
             save_location += "/comments"
         elif context == "avatar":
-            save_location += "/avatars"
+            if save_location == "images":
+                save_location += "/avatars"
+            raise Exception("Avatars can only be images.")
         elif context == "ad":
             save_location += "/ads"
         else:
@@ -57,7 +59,7 @@ def determine_save_location(file, file_type, context):
     filename = generate_new_fileName(file)
     # Absolute path
     location = os.path.join(settings.MEDIA_ROOT, save_location, filename)
-    URL = settings.BASE_URL + settings.MEDIA_URL + os.path.join(save_location, filename)
+    URL = settings.MEDIA_URL + os.path.join(save_location, filename)
     return {"location": location, "URL": URL}
 
 def handle_file_save(file, context):

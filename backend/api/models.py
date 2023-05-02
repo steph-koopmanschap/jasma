@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.db import models
@@ -37,7 +38,7 @@ class User(AbstractUser):
 
 class User_Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    profile_pic_url = models.URLField(max_length=300, default="http://localhost:8000/media/avatars/default-profile-pic.webp")
+    profile_pic_url = models.URLField(max_length=300, default=f"{settings.MEDIA_URL}images/avatars/default-profile-pic.webp")
     given_name = models.CharField(max_length=35, null=True, blank=True)
     last_name = models.CharField(max_length=35, null=True, blank=True)
     display_name = models.CharField(max_length=70, null=True, blank=True)
@@ -198,17 +199,41 @@ class Comment(models.Model):
         verbose_name_plural = "Comments"
 
 class Reported_Post(models.Model):
+    report_id = models.UUIDField(default=uuid4, primary_key=True, editable=False)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     report_reason = models.CharField(max_length=300)
     reported_x_times = models.IntegerField(default=1, null=False, blank=False)
-    report_time = models.DateTimeField(auto_now_add=True, null=False, blank=False)
+    first_report_time = models.DateTimeField(auto_now_add=True, null=False, blank=False)
+    last_report_time = models.DateField(auto_now=True, null=True)
 
     def __str__(self):
         return f"Reported post {self.post.post_id} - reported for {self.report_reason} ({self.reported_x_times} times)"
 
+    staticmethod
+    def format_reported_post_dict(reported_posts):
+        result = []
+        for reported_post in reported_posts:
+            reported_post_dict = Reported_Post.format_reported_post_dict(reported_post)
+            result.append(reported_post_dict)
+        return result
+
+    @staticmethod
+    def format_reported_post_dict(reported_post):
+        reported_post_dict = {
+            "post_id": reported_post.post.post_id,
+            "report_reason": reported_post.report_reason,
+            "reported_x_times": reported_post.reported_x_times,
+            "first_report_time": reported_post.first_report_time,
+            "last_report_time": reported_post.last_report_time
+        }
+        return reported_post_dict
+
     class Meta:
         db_table = 'reported_posts'
         verbose_name_plural = 'ReportedPosts'
+        constraints = [
+            models.UniqueConstraint(fields=['post'], name='unique_reported_post')
+        ]
 
 class Transaction(models.Model):
     transaction_id = models.UUIDField(default=uuid4, primary_key=True, editable=False)

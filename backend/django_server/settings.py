@@ -28,6 +28,7 @@ elif os.getenv('NODE_ENV') == 'development':
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#MEDIA_URL = f"{BASE_URL}/media/"
 MEDIA_URL = '/media/'
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
