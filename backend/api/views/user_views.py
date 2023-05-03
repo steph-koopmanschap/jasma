@@ -9,6 +9,60 @@ from api.models import User, User_Profile, Post
 from api.utils.handle_file_save import handle_file_save
 from api.utils.handle_file_delete import handle_file_delete
 
+# NOTE: NOT DONE YET
+@get_wrapper
+def get_user(request):
+    pass
+
+# NOTE: NOT DONE YET?
+@login_required
+@get_wrapper
+def get_loggedin_user(request):
+    user = request.user
+    #limit = int(request.GET.get('limit', 0))
+    formatted_user = User.format_user_dict(user)
+    return JsonResponse({"success": True, "user": formatted_user},
+                        status=HTTP_STATUS["OK"])
+
+# NOTE: NOT DONE YET
+@login_required
+@put_wrapper
+def update_user(request):
+    req = json.loads(request.body)
+    user = request.user
+    email = req['email']
+    recovery_email = ""
+    phone = ""
+    recovery_phone = ""
+    given_name = ""
+    last_name = ""
+    display_name = ""
+    bio = ""
+    date_of_birth = ""
+    gender = ""
+    relationship = ""
+    relationship_with = ""
+    language = ""
+    country = ""
+    city = ""
+    website = ""
+
+    is_all_email = ""
+    is_all_push = ""
+    is_all_inapp = ""
+    is_comment_on_post_email = ""
+    is_new_follower_email = ""
+    is_comment_on_post_push = ""
+    is_new_follower_push = ""
+    is_comment_on_post_inapp = ""
+    is_new_follower_inapp = ""
+
+# NOTE: NOT DONE YET
+@login_required
+@delete_wrapper
+def delete_user(request):
+    user = request.user
+
 @get_wrapper
 def get_profile_pic(request, user_id):
     if not user_id:

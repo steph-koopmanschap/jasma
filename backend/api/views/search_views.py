@@ -4,6 +4,7 @@ from api.models import User, Post, Comment, Hashtag
 from django.http import JsonResponse
 from django.db.models import Q
 
+# TODO: ADD Post type filtering
 def search_hashtags(keyword):
     # Get all hashtags that contain the keyword
     hashtags = Hashtag.objects.filter(hashtag__icontains=keyword)
@@ -12,6 +13,7 @@ def search_hashtags(keyword):
     posts_formatted = Post.format_posts_dict(posts)
     return posts_formatted
 
+# TODO: ADD Post type filtering
 def search_posts(keyword):
     posts = Post.objects.filter(Q(text_content__icontains=keyword))
     posts_formatted = Post.format_posts_dict(posts)
@@ -30,6 +32,7 @@ def search_users(keyword):
 def search(request):
     q = request.GET.get('q', "")
     filter = int(request.GET.get('filter'))
+    post_type = request.GET.get('post_type')
     if not q:
         return JsonResponse({ "success": False, "message": "Nothing found." }, 
                             status=HTTP_STATUS["Not Found"])
@@ -38,9 +41,9 @@ def search(request):
     q = q.lower()
     # Filter which kind of specific search we need.
     if filter == "hashtags":
-        result = search_hashtags(q)
+        result = search_hashtags(q, post_type)
     elif filter == "posts":
-        result = search_posts(q)
+        result = search_posts(q, post_type)
     elif filter == "comments":
         result = search_comments(q)
     elif filter == "users":

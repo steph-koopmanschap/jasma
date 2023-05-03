@@ -8,6 +8,7 @@ from api.constants.http_status import HTTP_STATUS
 from api.models import User, Post, Hashtag, Bookmarked_Post
 from api.utils.handle_file_save import handle_file_save
 from api.utils.handle_file_delete import handle_file_delete
+from flask import request
 
 @csrf_exempt
 @login_required
@@ -147,6 +148,44 @@ def get_single_post(request, post_id):
                             status=HTTP_STATUS["Not Found"])
     return JsonResponse({'success': True, 'post': post_formatted},
                         status=HTTP_STATUS["OK"]) 
+
+# Get mulitple specific posts by passing in an array of post_ids
+# Using a POST request, instead of GET
+# Because the array of post_ids might be too long to put into URL query parameters.
+@post_wrapper
+def get_multiple_posts(request):
+    req = json.loads(request.body)
+    post_ids = req['post_ids']
+    posts = Post.objects.filter(post_id__in=post_ids)
+    posts_formatted = Post.format_posts_dict(posts)
+    return JsonResponse({'success': True, 'posts': posts_formatted},
+                        status=HTTP_STATUS["OK"])
+
+# NOTE: NOT COMPLETE YET
+@get_wrapper
+def get_global_newsfeed(request):
+    # Get the latest posts of all users
+    limit = int(request.GET.get('limit', 1))
+    # Filter posts by type
+    post_type_filter = request.GET.get('post_type', 'all')
+    posts = Post.objects.all().order_by('-created_at')[:limit]
+    posts_formatted = Post.format_posts_dict(posts)
+    return JsonResponse({'success': True, 'posts': posts_formatted},
+                        status=HTTP_STATUS["OK"])
+
+# NOTE: NOT COMPLETE YET
+@login_required
+@get_wrapper
+def get_newsfeed(request):
+    # Get the posts of the user's followers
+    followers = Follower.objects.filter(user=request.user)
+    posts = Post.objects.filter(user__in=followers)
+    # Order the posts by the date
+    posts = posts.order_by('-created_at')
+    # Format the posts
+    posts_formatted = Post.format_posts_dict(posts)
+    return JsonResponse({'success': True, 'posts': posts_formatted},
+                        status=HTTP_STATUS["OK"])
 
 @csrf_exempt
 @login_required

@@ -36,6 +36,14 @@ class User(AbstractUser):
         user_profile.save()
         user_notification_preferences.save()
 
+    def format_user_dict(user):
+        return {
+            "user_id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "user_role": user.user_role
+        }
+
 class User_Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     profile_pic_url = models.URLField(max_length=300, default=f"{settings.MEDIA_URL}images/avatars/default-profile-pic.webp")
@@ -55,6 +63,23 @@ class User_Profile(models.Model):
     def __str__(self):
         return str(self.given_name) + " " + str(self.last_name) + " " + str(self.user.id)
     
+    def format_user_profile_dict(user_profile):
+        return {
+            "user_id": user_profile.user.id,
+            "given_name": user_profile.given_name,
+            "last_name": user_profile.last_name,
+            "display_name": user_profile.display_name,
+            "bio": user_profile.bio,
+            "date_of_birth": user_profile.date_of_birth,
+            "gender": user_profile.gender,
+            "relationship": user_profile.relationship,
+            "relationship_with": user_profile.relationship_with,
+            "language": user_profile.language,
+            "country": user_profile.country,
+            "city": user_profile.city,
+            "website": user_profile.website
+        }
+
     class Meta:
         db_table = "users_profiles"
         verbose_name_plural = "UsersProfiles"
