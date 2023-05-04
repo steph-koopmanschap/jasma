@@ -217,6 +217,15 @@ def generate_fake_db(n):
         generate_ad()
     print(f"{OK} Done ad generation.")
 
+    print("Creating admin account...")
+    admin = User.objects.create(
+        username="admintest",
+        email="admintest@gmail.com",
+        password="admin",        
+    )
+    admin.after_create()
+    print("Admin account created.")
+
     print(f"{OK} Fake DB generated. Done.")
 
 if __name__ == "__main__":

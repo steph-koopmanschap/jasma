@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from api.utils.request_method_wrappers import post_wrapper, get_wrapper, delete_wrapper
 from api.utils.handle_file_delete import handle_file_delete
+from api.utils.staff_auth_wrappers import staff_required
 from api.constants.http_status import HTTP_STATUS
 from api.models import Post, Reported_Post
 
@@ -26,7 +27,7 @@ def create_report(request):
                         status=HTTP_STATUS["Created"])
 
 # If limit is 0 then all reports are fetched
-# TODO: ADD Admin Login
+@staff_required
 @get_wrapper
 def get_reports(request):
     # If limit is 0 then all reports are fetched
@@ -39,7 +40,7 @@ def get_reports(request):
                         status=HTTP_STATUS["OK"])
 
 # Delete a report AND delete the linked post
-# TODO: ADD Admin Login
+@staff_required
 @delete_wrapper
 def delete_report(request, post_id):
     post = Post.objects.get(post_id=post_id)
@@ -51,7 +52,7 @@ def delete_report(request, post_id):
                         status=HTTP_STATUS["OK"])
 
 # Delete a report, but do not delete the linked post. (Used for false reports)
-# TODO: ADD Admin Login
+@staff_required
 @delete_wrapper
 def ignore_report(request, post_id):
     post = Post.objects.get(post_id=post_id)

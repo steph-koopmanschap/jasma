@@ -74,9 +74,10 @@ def check_auth(request):
         return JsonResponse({'isAuth': True}, 
                             status=HTTP_STATUS['OK'])
     else:
+        # Could also return a 404 not found reponse?
         return JsonResponse({'isAuth': False},
                             status=HTTP_STATUS['OK'])
-
+    
 @csrf_exempt
 @login_required
 @post_wrapper

@@ -23,10 +23,13 @@ class User(AbstractUser):
     last_ipv4 = models.CharField(max_length=55, default="0.0.0.0", null=True, blank=True, validators=[validate_ipv4_address])
     user_role = models.CharField(max_length=10, default="normal", 
                                 choices=[
+                                        ("deleted", "Deleted"),
+                                        ("suspended", "Suspended"),
                                         ("guest", "Guest"), 
                                         ("normal", "Normal"), 
                                         ("mod", "Moderator"), 
                                         ("admin", "Administrator")])
+    deleted_at = models.DateTimeField(null=True, blank=True)
     # removes email from REQUIRED_FIELDS
     REQUIRED_FIELDS = [] 
 
