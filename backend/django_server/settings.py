@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import dj_database_url
 import os
+import redis
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -28,8 +29,8 @@ elif os.getenv('NODE_ENV') == 'development':
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-#MEDIA_URL = f"{BASE_URL}/media/"
-MEDIA_URL = '/media/'
+MEDIA_URL = f"{BASE_URL}/media/"
+#MEDIA_URL = '/media/'
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 # Quick-start development settings - unsuitable for production
@@ -112,7 +113,6 @@ DATABASES = {
     }
 }
 
-
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
@@ -123,6 +123,31 @@ DATABASES = {
 #         'PORT': os.getenv('DB_PORT'),
 #     }
 # }
+
+REDIS_HOST = os.getenv('REDIS_HOST')
+REDIS_PORT = os.get_env('REDIS_HOST')
+
+REDIS_CLIENT = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': f"redis://{REDIS_HOST}:{REDIS_PORT}/0",
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}   
+
+SESSION_COOKIE_NAME = 'sessionid'
+SESSION_COOKIE_AGE = 86400
+SESSION_COOKIE_PATH = '/'
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
 
 AUTH_USER_MODEL = 'api.User'
 AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend", "api.backends.CustomUserModelBackend"]

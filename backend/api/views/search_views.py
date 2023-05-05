@@ -4,18 +4,23 @@ from api.models import User, Post, Comment, Hashtag
 from django.http import JsonResponse
 from django.db.models import Q
 
-# TODO: ADD Post type filtering
-def search_hashtags(keyword):
+def search_hashtags(keyword, post_type):
     # Get all hashtags that contain the keyword
     hashtags = Hashtag.objects.filter(hashtag__icontains=keyword)
     # Get all posts that contain any of the hashtags
     posts = Post.objects.filter(hashtags__in=hashtags)
+    if post_type != "all":
+        posts = posts.filter(post_type=post_type)
     posts_formatted = Post.format_posts_dict(posts)
     return posts_formatted
 
-# TODO: ADD Post type filtering
-def search_posts(keyword):
-    posts = Post.objects.filter(Q(text_content__icontains=keyword))
+def search_posts(keyword, post_type):
+    if post_type !=  "all":
+        posts = Post.objects.filter(
+                        Q(text_content__icontains=keyword),
+                        Q(post_type=post_type))
+    else:
+        posts = Post.objects.filter(Q(text_content__icontains=keyword))
     posts_formatted = Post.format_posts_dict(posts)
     return posts_formatted
 
