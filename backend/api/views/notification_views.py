@@ -15,18 +15,21 @@ from api.constants.http_status import HTTP_STATUS
 # {
 #     from: UUID (userID),
 #     event_type: STRING ("new_comment, new_follower")
-#     event_reference: UUID (Either PostID, or UserID depending on event)
+#     event_reference: UUID (Either PostID, CommentID or UserID depending on event)
 #     message: "Something happened"
 # }
 def create_notification(user_id, notification_data):
     notification_id = uuid4
     timestamp = datetime.now()
-    notification_data['notification_id'] = notification_id
     # Set a TTL of 48 hours (in seconds). This is the time when the notification will be deleted.
     notifTTL = 48 * 60 * 60
     encodedNotification = json.dumps({ 
-                                    "user_id": user_id, 
-                                    "notification_data": notification_data, 
+                                    "to_user_id": user_id, 
+                                    "notification_id": notification_id,
+                                    "from": notification_data["from"],
+                                    "event_type": notification_data["event_type"],
+                                    "event_reference": notification_data["event_reference"],
+                                    "message": notification_data["message"],
                                     "timestamp": timestamp, 
                                     "read": False })
     try:
@@ -35,7 +38,7 @@ def create_notification(user_id, notification_data):
         pipe = settings.REDIS_CLIENT.pipeline()
         # Add the notification to a Redis Sorted Set with the timestamp as the score
         # Where the latest notification is at the top of the Sorted Set
-        pipe.zadd(f"notifications:{user_id}", {encodedNotification: timestamp}, desc=True)
+        pipe.zadd(f"notifications:{user_id}", timestamp, encodedNotification, desc=True)
         # Set the TTL for the Sorted Set key in Redis
         # This means the notification will auto-delete after notifTTL
         pipe.expire(f"notifications:{user_id}", notifTTL)
@@ -55,44 +58,39 @@ def create_notification(user_id, notification_data):
 @login_required
 @get_wrapper
 def get_notifications(request):
-    
     user_id = request.session.get('user_id')
-    if not user_id:
-        return JsonResponse({'success': False, 'message': 'User not authenticated.'}, status=401)
-
     # Set the timestamp score to 47 hours
     timestamp_cutoff = datetime.now() - timedelta(hours=47)
-
     try:
         # Retrieve the notifications for a user from the last X hours in reverse order based on the timestamp score
         # WITHSCORES will include the timestamp in the returned data
-
-        # https://redis.io/commands/zrevrangebyscore/
-        # zrevrangebyscore is DEPRECATED!
-        notifications = settings.REDIS_CLIENT.zrevrangebyscore(f'notifications:{user_id}', '+inf', timestamp_cutoff, withscores=True)
+        notifications = settings.REDIS_CLIENT.zrevrange(f'notifications:{user_id}', timestamp_cutoff, '+inf')
+        # NOTE: Not sure yet to use zrevrange or zrange
+        #notifications = settings.REDIS_CLIENT.zrange(f'notifications:{user_id}', timestamp_cutoff, '+inf')
 
         # Format the data from Redis
         formatted_notifications = []
-        for i in range(0, len(notifications), 2):
-            notification_json = json.loads(notifications[i])
-            notification = {
-                'user_id': notification_json['user_id'],
-                'from': notification_json['notificationData']['from'],
-                'event_type': notification_json['notificationData']['event_type'],
-                'event_reference': notification_json['notificationData']['event_reference'],
-                'message': notification_json['notificationData']['message'],
-                'notification_id': notification_json['notificationData']['notification_id'],
-                'timestamp': int(notifications[i+1]),
-                'read': notification_json.get('read', False)
+        for notification in notifications:
+            notification_json = json.loads(notification)
+            notification_formatted = {
+                'notification_id': notification_json['notification_id'],
+                'to_user_id': notification_json['to_user_id'],
+                'from': notification_json['from'],
+                'event_type': notification_json['event_type'],
+                'event_reference': notification_json['event_reference'],
+                'message': notification_json['message'],
+                'timestamp': notifications["timestamp"],
+                'read': notification_json["read"]
             }
             formatted_notifications.append(notification)
 
         return JsonResponse({'success': True, 'notifications': formatted_notifications})
     except Exception as e:
         print(f'Error retrieving notifications: {e}')
-        return JsonResponse({'success': False, 'message': 'Notifications could not be found.'}, status=500)
+        return JsonResponse({'success': False, 'message': 'Notifications could not be found.'},
+                            status=HTTP_STATUS["Internal Server Error"])
 
-# NOTE: NOT DONE YET
+# Update the "read" flag for the notification with the given timestamp and user_id
 @csrf_exempt
 @login_required
 @put_wrapper
@@ -102,8 +100,31 @@ def read_notification(request):
     notification_id = req['notification_id']
     timestamp = req['timestamp']
 
-    # Update the "read" flag for the notification with the given timestamp and user_id
-    
+    # It is not possible to update the values in a member of a Redis sorted set,
+    # It is only possible to update the score.
+    # The alternative is to remove the entire member and then re-add the the member with 
+    # the update value, but with the same score.
+
+    # First get the old notification
+    notification = settings.REDIS_CLIENT.ZRANGE(f'notifications:{user_id}', timestamp, timestamp)
+    # Mare sure we only have 1 notification
+    if len(notification) > 1:
+        for notif in notification:
+            if notification["notification_id"] == notification_id:
+                notification = notif
+                break
+    notificationJSON = json.dumps(notification)
+    try: 
+        pipe = settings.REDIS_CLIENT.pipeline()
+        # Delete the old member
+        pipe.zrem(f"notifications:{user_id}", notificationJSON)
+        # Add the new member
+        pipe.zadd(f"notifications:{user_id}", timestamp, notificationJSON, desc=True)
+        result = pipe.execute()
+    except Exception as e:
+        print(f'Error updating notification: {e}')
+        return JsonResponse({'success': False, 'message': 'Notification could not be updated.'},
+                            status=HTTP_STATUS["Internal Server Error"])
     return JsonResponse({'success': True, 'message': 'Notification read successfully'}, 
                         status=HTTP_STATUS["No Content"])
 

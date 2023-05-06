@@ -6,6 +6,7 @@ from django.core.validators import validate_ipv4_address, MaxValueValidator, Min
 from uuid import uuid4
 from api.constants.genders import GENDERS_MODEL
 from api.constants.relationships import RELATIONSHIPS_MODEL
+from api.constants.user_roles import USER_ROLES_MODEL
 
 # Custom user model
 # Login:
@@ -21,14 +22,7 @@ class User(AbstractUser):
     recovery_phone = models.CharField(max_length=55, null=True, blank=True)
     balance = models.DecimalField(max_digits=19, decimal_places=4, default=0, validators=[MinValueValidator(0)])
     last_ipv4 = models.CharField(max_length=55, default="0.0.0.0", null=True, blank=True, validators=[validate_ipv4_address])
-    user_role = models.CharField(max_length=10, default="normal", 
-                                choices=[
-                                        ("deleted", "Deleted"),
-                                        ("suspended", "Suspended"),
-                                        ("guest", "Guest"), 
-                                        ("normal", "Normal"), 
-                                        ("mod", "Moderator"), 
-                                        ("admin", "Administrator")])
+    user_role = models.CharField(max_length=10, default="normal", choices=USER_ROLES_MODEL)
     deleted_at = models.DateTimeField(null=True, blank=True)
     # removes email from REQUIRED_FIELDS
     REQUIRED_FIELDS = [] 
