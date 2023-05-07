@@ -1,5 +1,6 @@
 import json
 from django.conf import settings
+from django_redis import cache
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -8,7 +9,6 @@ from api.constants.http_status import HTTP_STATUS
 from api.models import User, Post, Hashtag, Bookmarked_Post
 from api.utils.handle_file_save import handle_file_save
 from api.utils.handle_file_delete import handle_file_delete
-from flask import request
 
 @csrf_exempt
 @login_required
@@ -156,6 +156,11 @@ def get_single_post(request, post_id):
 def get_multiple_posts(request):
     req = json.loads(request.body)
     post_ids = req['post_ids']
+    # Check if the posts are in Redis Cache
+    # TODO: FINISH CACHING!
+    for post_id in post_ids:
+        pass
+
     posts = Post.objects.filter(post_id__in=post_ids)
     posts_formatted = Post.format_posts_dict(posts)
     return JsonResponse({'success': True, 'posts': posts_formatted},
