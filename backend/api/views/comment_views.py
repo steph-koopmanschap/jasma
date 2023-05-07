@@ -111,16 +111,16 @@ def get_comments(request):
     post_id = request.GET.get('post_id', None)
     limit = int(request.GET.get('limit', 1))
 
-    try:
-        post = Post.objects.get(post_id=post_id)
-    except Post.DoesNotExist:
-        return JsonResponse({'success': False, 'message': "Post does not exist."}, 
-                            status=HTTP_STATUS["Not Found"])
     # First get the comments from the Redis cache.
     cache_key = f"comments_{post_id}_{limit}"
     comments = cache.get(cache_key)
     # If no comments in cache
     if not comments:
+        try:
+            post = Post.objects.get(post_id=post_id)
+        except Post.DoesNotExist:
+            return JsonResponse({'success': False, 'message': "Post does not exist."}, 
+                                status=HTTP_STATUS["Not Found"])
         # Get the comments of the post from postgresql db with the limit.
         comments = Comment.objects.filter(post=post).order_by('-created_at')[:limit]
         comments_formatted = Comment.format_comments_dict(comments)

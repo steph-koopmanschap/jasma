@@ -9,6 +9,7 @@ urlpatterns = [
     path('search/', include('api.urls.search_urls')),
     path('reports/', include('api.urls.report_urls')),
     path('hashtags/', include('api.urls.hashtag_urls')),
-    path('notifications/', include('api.urls.notification_urls'))
+    path('notifications/', include('api.urls.notification_urls')),
+    path('ads/', include('api.urls.advertisement_urls'))
 ]
 
