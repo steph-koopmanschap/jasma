@@ -1,0 +1,1 @@
+# Use urls/__init__.py instead

@@ -1,4 +1,6 @@
-# JASMA Documentation
+# JASMA (OLD) Documentation
+
+## NOTE: THIS DOCUMENTATION IS DEPRECATED
 
 ## Table of Contents
 
@@ -260,6 +262,13 @@ The env variables in the .env files might be slightly different.
 - ! GET /api/notifications/getNotifications
 - ! PUT /api/notifications/readNotification
 
+### Reports
+
+- POST /api/reports/createReport
+- !! GET /api/reports/getReports
+- !! DELETE /api/reports/deleteReport/${postID}
+- !! DELETE /api/reports/ignoreReport/${postID}
+
 ### Advertisements
 
 - ! POST   /api/ads/createAd
@@ -267,6 +276,10 @@ The env variables in the .env files might be slightly different.
 - ! PUT    /api/ads/editAd
 - ! GET    /api/ads/getAd/${adID} 
 - ! GET    /api/ads/getAds
+
+### Media
+
+- GET /media/${mediaType}/${context}/${fileName}
 
 ## External documentation of 3rd party libraries, frameworks, and tools
 

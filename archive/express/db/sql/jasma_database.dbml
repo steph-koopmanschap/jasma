@@ -1,0 +1,204 @@
+/*
+    FK Relationship symbols
+    <: one-to-many. 
+    >: many-to-one. 
+    -: one-to-one. 
+    <>: many-to-many.
+*/
+
+Project jasma_database {
+    database_type: 'PostgreSQL'
+    Note: 'Primary PS-SQL Database of JASMA'
+}
+
+//Tables are ordered by alphabetic order
+
+Table ads {
+    ad_id uuid [pk]
+    user_id uuid [not null]
+    ad_name varchar(50) [not null, note: 'Ad name is only used as a front-end text reference for the user. Because the UUID of ad_id is difficult to read']
+    text_content varchar(1000)
+    ad_file_url varchar(300) [note: 'The image or video of the ad']
+    ad_url varchar(300) [note: 'If the ad links to a website or page']
+    expires_at timestamp [not null]
+    created_at timestamp [not null]
+    // Ad targeting preferences
+    targ_age_start smallint [note: 'For ad targeting users by age']
+    targ_age_end smallint [note: 'For ad targeting users by age']
+    targ_gender varchar(11) [note: 'For ad targeting users by gender']
+    targ_relationship varchar(11) [note: 'For ad targeting users by relationship']
+    targ_country text [note: 'For ad targeting users by country']
+    targ_city text [note: 'For ad targeting users by city']
+}
+
+Ref: ads.ad_id > users.user_id
+
+Table comments [headercolor: #ff9900] { 
+    comment_id uuid [pk]
+    post_id uuid [not null]
+    user_id uuid [not null]
+    comment_text varchar(10000)
+    file_url varchar(100)
+    created_at timestamp [not null]
+    updated_at timestamp
+}
+
+Ref: comments.post_id > posts.post_id [delete: cascade]
+Ref: comments.user_id > users.user_id [delete: cascade]
+
+Table hashtags {
+    hashtag varchar(50) [pk]
+}
+
+Table posts [headercolor: #006600] {
+    post_id uuid [pk]
+    user_id uuid [not null]
+    text_content varchar(40000)
+    file_url varchar(100)
+    post_type varchar(5) [not null, default: 'text']
+    created_at timestamp [not null]
+    last_edited_at timestamp
+}
+
+Ref: posts.user_id > users.user_id [delete: cascade]
+
+Table posts_hashtags {
+    hashtag varchar(50)
+    post_id uuid
+}
+
+Ref: posts_hashtags.hashtag > hashtags.hashtag
+Ref: posts_hashtags.post_id > posts.post_id [delete: cascade]
+
+Table reported_posts {
+    post_id [pk]
+    report_reason varchar(300)
+    reported_x_times: integer [not null, default: 1, note: 'This counter goes up if there is multiple reports of the same post']
+    report_time timestamp [not null]
+}
+
+Ref: reported_posts.post_id - posts.post_id
+
+Table transactions {
+    transaction_id uuid [pk]
+    user_id uuid [not null]
+    transaction_status varchar(50) [not null] 
+    status_reason varchar(100)
+    transaction_type varchar(11) [not null, note: 'credit_in, credit_out, advert, asset']
+    price DECIMAL(19,4) [not null]
+    payment_method varchar(100) [not null]
+    transaction_date timestamp [not null]
+    last_updated timestamp
+}
+
+Ref: transactions.user_id > users.user_id
+
+Table users [headercolor: #ff0066] {
+    user_id uuid [pk]
+    username varchar(25) [not null, unique]
+    email varchar(50) [not null, unique]
+    user_password varchar(255) [not null]
+    recovery_email varchar(50) [not null]
+    phone varchar(20) [not null]
+    recovery_phone varchar(20) [not null]
+    balance DECIMAL(19,4) [note: 'The amount of credit the user has']
+
+    indexes {
+        username [unique]
+        email [unique]
+    }
+}
+
+Table bookmarked_posts {
+    user_id uuid [pk, not null]
+    post_id uuid [pk, not null]
+    bookmarked_at timestamp [not null, note: "Useful for ordering bookmarks"]
+}
+
+Ref: bookmarked_posts.user_id > users.user_id [delete: cascade]
+Ref: bookmarked_posts.post_id > posts.post_id [delete: cascade]
+
+Table users_notification_preferences {
+    user_id uuid [pk]
+    is_all_email boolean [not null, default: true, note: 'Overrides and toggles off/on ALL email notif preferences']
+    is_all_push boolean [not null, default: true, note: 'Overrides and toggles off/on ALL push notif preferences']
+    is_all_inapp boolean [not null, default: true, note: 'Overrides and toggles off/on ALL inapp notif preferences']
+    is_comment_on_post_email boolean [not null, default: true]
+    is_new_follower_email boolean [not null, default: true]
+    is_comment_on_post_push boolean [not null, default: true]
+    is_new_follower_push boolean [not null, default: true]
+    is_comment_on_post_inapp boolean [not null, default: true]
+    is_new_follower_inapp boolean [not null, default: true]
+}
+
+Ref: users_notification_preferences.user_id - users.user_id [delete: cascade]
+
+Table userfeedback {
+    feedback_id uuid [pk]
+    rating smallint [not null, note: 'Rating is between 1 and 5']
+    review varchar(750) [not null]
+    feedback_date timestamp [not null]
+}
+
+Table users_following {
+    user_id uuid [pk]
+    follow_id uuid [pk, note: 'user_id follows follow_id. follow_id is followed by user_id']
+
+    indexes {
+        (user_id, follow_id) [pk] // composite primary key
+    }
+}
+
+Ref: users_following.user_id > users.user_id [delete: cascade]
+Ref: users_following.follow_id > users.user_id [delete: cascade]
+
+Table subscribed_hashtags {
+    user_id uuid
+    hashtag varchar(50) [note: "The hashtag the user is subscribed to for their newsfeed"]
+
+    indexes {
+        (user_id, hashtag) [pk]
+    }
+}
+
+Ref: subscribed_hashtags.hashtag > hashtags.hashtag
+Ref: subscribed_hashtags.user_id > users.user_id [delete: cascade]
+
+Table users_profile {
+    user_id uuid [pk]
+    profile_pic_url varchar(300) [default: '${process.env.HOSTNAME}:${process.env.PORT}/media/avatars/default-profile-pic.webp']
+    given_name varchar(35)
+    last_name varchar(35)
+    display_name varchar(70)
+    bio varchar(5000)
+    date_of_birth date
+    gender varchar(11) [note: 'woman, man, trans woman, trans man, other']
+    relationship varchar(11) [note: 'single, married, partnership, open, poly, other']
+    relationship_with uuid [note: 'The person that this user has a relationship with']
+    language text
+    country text
+    city text
+    website text
+}
+
+Ref: users_profile.user_id - users.user_id [delete: cascade]
+Ref: users_profile.relationship_with > users.user_id
+
+Table users_metadata {
+    user_id uuid [pk]
+    user_role varchar(10) [not null, default: 'normal', note: 'guest, normal, mod, admin']
+    last_login_date date
+    account_creation_date date [not null, default: 'DataTypes.NOW']
+    is_verified_email boolean
+    last_ipv4 varchar(55)
+}
+
+Ref: users_metadata.user_id - users.user_id [delete: cascade]
+
+Ref: users_passwords.user_email - users.email [delete: cascade]
+
+Table bug_reports {
+    bug_report_id uuid [pk]
+    report_description varchar(5000) [not null]
+    bug_report_time timestamp [not null]
+}

@@ -1,0 +1,121 @@
+.
+├── clientAPI
+│   └── api.js
+├── components
+│   ├── BookmarksList.js
+│   ├── brand
+│   │   ├── Brand.js
+│   │   ├── BrandName.js
+│   │   └── Logo.js
+│   ├── ChangePasswordForm.js
+│   ├── cms
+│   │   └── ReportsList.js
+│   ├── Comment.js
+│   ├── CommentList.js
+│   ├── CreateComment.js
+│   ├── CreatePost.js
+│   ├── DefaultHead.js
+│   ├── DropDownBtn.js
+│   ├── ErrorBoundary.js
+│   ├── file-upload
+│   │   ├── FileInput.js
+│   │   ├── FilePreview.js
+│   │   └── FileUploader.js
+│   ├── FolloweesList.js
+│   ├── FollowersList.js
+│   ├── FollowUnfollowBtn.js
+│   ├── FooterMain.js
+│   ├── GlobalNewsFeed.js
+│   ├── HeaderMain.js
+│   ├── Layout.js
+│   ├── LoginForm.js
+│   ├── LogInOutBtn.js
+│   ├── Modal.js
+│   ├── nav
+│   │   └── Nav.js
+│   ├── NewsFeed.js
+│   ├── NotFound.js
+│   ├── NotificationList.js
+│   ├── PasswordReset.js
+│   ├── PaypalBtn.js
+│   ├── Post.js
+│   ├── profile
+│   │   └── NavProfile.js
+│   ├── ProfilePic.js
+│   ├── SearchBar.js
+│   ├── SignUpForm.js
+│   ├── SubscribeHashtags.js
+│   ├── ThemeSwitch.js
+│   ├── UploadProfilePic.js
+│   ├── UserBox.js
+│   ├── UserFeedback.js
+│   ├── UserPostList.js
+│   └── UsersList.js
+├── constants
+│   ├── countries.js
+│   └── fileSizes.js
+├── Dockerfile
+├── hooks
+│   ├── useRequireAuth.js
+│   └── useToast.js
+├── next.config.js
+├── package.json
+├── package-lock.json
+├── pages
+│   ├── about.js
+│   ├── advertisement-control-center
+│   │   ├── ad-control-panel.js
+│   │   ├── [adID].js
+│   │   └── create-ad.js
+│   ├── api
+│   │   └── testNext.js
+│   ├── _app.js
+│   ├── cms
+│   │   ├── admin-panel.js
+│   │   ├── cms-login.js
+│   │   ├── cms-panel.js
+│   │   └── content-deletion-policy.js
+│   ├── dashboard.js
+│   ├── index.js
+│   ├── legal
+│   │   ├── privacy-policy.js
+│   │   └── terms-of-service.js
+│   ├── login.js
+│   ├── payment
+│   │   ├── failure.js
+│   │   └── success.js
+│   ├── payment.js
+│   ├── post
+│   │   └── [postID].js
+│   ├── register.js
+│   ├── search.js
+│   └── user
+│       ├── settings.js
+│       ├── [username]
+│       │   └── bio.js
+│       └── [username].js
+├── postcss.config.js
+├── public
+│   ├── ads.txt
+│   ├── favicon.ico
+│   ├── humans.txt
+│   ├── manifest.json
+│   ├── robots.txt
+│   └── vercel.svg
+├── session.js
+├── state
+│   ├── themeState.js
+│   └── userState.js
+├── styles
+│   ├── globals.css
+│   ├── GlobalStyles.js
+│   └── themes.js
+├── tailwind.config.js
+└── utils
+    ├── bytesToHuman.js
+    ├── checkFileTooLarge.js
+    ├── defaultToasts.js
+    ├── formatLargeNumber.js
+    └── hashtagFormatter.js
+
+4615 directories, 31256 files
