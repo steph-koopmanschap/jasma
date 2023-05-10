@@ -57,7 +57,7 @@ LOGGING = {
     },
 }
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
 
 APPEND_SLASH = False
 
@@ -70,7 +70,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'api'
+
 ]
 
 MIDDLEWARE = [
@@ -125,7 +127,7 @@ DATABASES = {
 # }
 
 REDIS_HOST = os.getenv('REDIS_HOST')
-REDIS_PORT = os.get_env('REDIS_HOST')
+REDIS_PORT = os.getenv('REDIS_HOST')
 
 REDIS_CLIENT = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 

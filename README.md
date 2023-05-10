@@ -1,11 +1,32 @@
 # JASMA - Just Another Social Media App
 
+## Table of Contents
+
+- [JASMA - Just Another Social Media App](#jasma---just-another-social-media-app)
+  - [Table of Contents](#table-of-contents)
+  - [Why JASMA?](#why-jasma)
+  - [Screenshots](#screenshots)
+  - [Contributing](#contributing)
+    - [How to contribute](#how-to-contribute)
+  - [Documentation](#documentation)
+  - [Version history](#version-history)
+  - [The Purpose of JASMA](#the-purpose-of-jasma)
+    - [1. Dedicated Learning](#1-dedicated-learning)
+    - [2. Collaboration](#2-collaboration)
+    - [3. Creativity](#3-creativity)
+    - [4. Mentorship and Guidance](#4-mentorship-and-guidance)
+    - [5. Challenging and Inspiring](#5-challenging-and-inspiring)
+    - [6. Fair Compensation](#6-fair-compensation)
+
 ## Why JASMA?
 
-JASMA is an open source community project for learning how to code on a real large project. <br />
-The sky is the limit! This is the space to implement any creative ideas you always wanted to see in Social Media. <br />
-By contributing you can challenge yourself by adding new features to JASMA. <br />
-Or improve yourself by fixing bugs and hunting for new ones.
+JASMA is an open source social media platform.
+The purpose of JASMA is for learning how to code on a large collaborative project.
+
+## Screenshots
+
+![Jasma screenshot0](/screenshot0.png?raw=true)
+![Jasma screenshot1](/screenshot1.png?raw=true)
 
 ## Contributing
 
@@ -55,7 +76,42 @@ See [DOCS.md](https://github.com/steph-koopmanschap/jasma/blob/main/DOCS.md)
 
 See [Version history](https://github.com/steph-koopmanschap/jasma/blob/main/VERSION-HISTORY.md)
 
-## Screenshots
+## The Purpose of JASMA
 
-![Jasma screenshot0](/screenshot0.png?raw=true)
-![Jasma screenshot1](/screenshot1.png?raw=true)
+In the interest of fostering a learning environment for developers of all experience levels, the purpose of JASMA, has been established to meet the following six points:
+
+### 1. Dedicated Learning
+
+The goal of Jasma is to facilitate the acquisition of new skills, which can extend beyond web development to other areas such as devops, UI/graphics design, data science, cybersecurity, AI, project management, systems design, marketing, and more.
+The dedicated aspect of this learning means that it is intended to achieve practical goals that can be applied in production projects.
+
+### 2. Collaboration
+
+Collaboration is an important component of the learning process, and it is especially relevant to software development, which relies heavily on communication and teamwork to produce a functioning system.
+Multiple perspectives on a given problem can be useful in identifying the best solutions, and collaboration can inspire motivation and support within the group.
+It is important to maintain a blameless culture, in which members work together to solve problems without assigning blame.
+
+### 3. Creativity
+
+Creativity is an essential part of learning and can serve as an inspiration for further learning opportunities.
+JASMA encourages creative thinking and experimentation, allowing members to add novel features to the project that may be experimental, unconventional, or innovative.
+For example, custom colors, fonts, and page/post customizations were discussed as potential features, as well as the ability to write posts in markup.
+
+### 4. Mentorship and Guidance
+
+Mentorship and guidance can help accelerate the learning process and make it more enjoyable.
+Members can benefit from having a mentor or guide who can provide answers to their questions and help steer them in the right direction.
+Mentorship does not necessarily imply that the mentor is more experienced, but rather that they have a different perspective to offer.
+
+### 5. Challenging and Inspiring
+
+Learning to create a social media platform or any large software project is a difficult and challenging task.
+JASMA aims to challenge its members and inspire them to develop their skills with confidence.
+Breaking down complex problems into smaller, more manageable steps and learning from mistakes is an important part of the learning process.
+
+### 6. Fair Compensation
+
+In the event that JASMA gains a significant user base and generates revenue beyond operational costs, fair compensation for active members will be considered.
+This compensation could include educational resources such as CodeCademy subscriptions, Coursera, Udemy, Google courses, certificates, books, and other resources that foster learning opportunities.
+
+

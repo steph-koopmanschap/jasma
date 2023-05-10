@@ -1,4 +1,6 @@
-# JASMA Documentation
+# JASMA (OLD) Documentation
+
+## NOTE: THIS DOCUMENTATION IS DEPRECATED
 
 ## Table of Contents
 

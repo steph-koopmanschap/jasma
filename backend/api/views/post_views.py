@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from api.utils.request_method_wrappers import post_wrapper, put_wrapper, get_wrapper, delete_wrapper
 from api.constants.http_status import HTTP_STATUS
-from api.models import User, Post, Hashtag, Bookmarked_Post
+from api.models import User, Post, Hashtag, Bookmarked_Post, Following, Subscribed_Hashtag
 from api.utils.handle_file_save import handle_file_save
 from api.utils.handle_file_delete import handle_file_delete
 
@@ -166,26 +166,53 @@ def get_multiple_posts(request):
     return JsonResponse({'success': True, 'posts': posts_formatted},
                         status=HTTP_STATUS["OK"])
 
-# NOTE: NOT COMPLETE YET
+# TODO: Ad injection
+# TODO: Caching?
+# Get the latest posts of all users
+# If no limit given, the limit is 1
 @get_wrapper
 def get_global_newsfeed(request):
-    # Get the latest posts of all users
     limit = int(request.GET.get('limit', 1))
     # Filter posts by type
     post_type_filter = request.GET.get('post_type', 'all')
-    posts = Post.objects.all().order_by('-created_at')[:limit]
+    if post_type_filter == 'all':
+        posts = Post.objects.all().order_by('-created_at')[:limit]
+    else:
+        posts = Post.objects.all().order_by('-created_at').filter(post_type=post_type_filter)[:limit]
+        
     posts_formatted = Post.format_posts_dict(posts)
     return JsonResponse({'success': True, 'posts': posts_formatted},
                         status=HTTP_STATUS["OK"])
 
-# NOTE: NOT COMPLETE YET
+# TODO: Ad injection
+# TODO: Caching?
+# If no limit given, the limit is 50
 @login_required
 @get_wrapper
 def get_newsfeed(request):
-    # Get the posts of the user's followers
-    followers = Follower.objects.filter(user=request.user)
-    posts = Post.objects.filter(user__in=followers)
-    # Order the posts by the date
+    limit = int(request.GET.get('limit', 50))
+    user = request.user
+    # Get the users that this user is following
+    following = Following.objects.filter(user=user)
+    # Get the hashtags that this user is subscribed to.
+    subscribed_hashtags = Subscribed_Hashtag.objects.filter(user=user)
+    hashtags = [subscription.hashtag.hashtag for subscription in subscribed_hashtags]
+    # For each hashtag get the 5 latest posts.
+    for hashtag in hashtags:
+        posts_subbed_hashtags = Post.objects.filter(hashtags__hashtag=hashtag).order_by('-created_at')[:5]
+    # Get latest the posts of the users that the user is following
+    posts_following = Post.objects.filter(user__in=following).order_by('-created_at')[:limit]
+    # Combine the posts_following and posts_subbed_hashtags into a new QuerySet
+    posts = posts_following | posts_subbed_hashtags
+    # If the combined following and subbed hashtags posts are less than the limit.
+    if posts.count() < limit:
+        # Get the latest posts from the global newsfeed
+        num_posts_to_get = limit - posts.count()
+        posts_global = Post.objects.all().order_by('-created_at')[:num_posts_to_get]
+        # Add the global posts to the posts
+        posts = posts | posts_global
+    
+    # Sort the posts by date
     posts = posts.order_by('-created_at')
     # Format the posts
     posts_formatted = Post.format_posts_dict(posts)

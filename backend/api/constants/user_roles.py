@@ -1,5 +1,5 @@
 # For use in the choices= field in Django models
-USER_ROLES_MODELS = [
+USER_ROLES_MODEL = [
                 ("deleted", "Deleted"),
                 ("suspended", "Suspended"),
                 ("guest", "Guest"), 
