@@ -44,6 +44,17 @@ def create_comment(request):
                                             "event_reference": post_id,
                                             "message": f"{user.username} commented on your post"
                                             })
+        # Add the comment to the redis cache
+        # Get the previous comments from the cache
+        cache_key = f"comments_{comment.post.post_id}"
+        previous_comments = cache.get(cache_key)
+        comment_formatted = Comment.format_comments_dict()
+        # If there are no previous comments, set the new comment as the first comment.
+        if previous_comments == None:
+            cache.set(cache_key, comment_formatted, timeout=60)
+        else:
+            previous_comments.append(comment_formatted)
+            cache.set(cache_key, previous_comments, timeout=60)
         return JsonResponse({'successs': True, 'message': "Comment created successfully."}, 
                             status=HTTP_STATUS["Created"])
     except Exception as e:
@@ -69,6 +80,17 @@ def delete_comment(request, comment_id):
                             status=HTTP_STATUS["Gone"])
     if comment.file_url != None:
         delete_file = handle_file_delete(comment.file_url)
+    # Delete the comment from the cache
+    # Get the previous comments from the redis Cache
+    cache_key = f"comments_{comment.post.post_id}"
+    previous_comments = cache.get(cache_key)
+    if previous_comments == None:
+        pass
+    else:
+        # Filter out the deleted post
+        previous_comments = list(filter(lambda x: x["comment_id"] != comment_id, previous_comments))
+        # Insert the comments back into the cache
+        cache.set(cache_key, previous_comments, timeout=60)
     comment.delete()
     return JsonResponse({'successs': True, 'message': "Comment deleted successfully."}, 
                         status=HTTP_STATUS["OK"])
@@ -110,9 +132,9 @@ def edit_comment(request):
 def get_comments(request):
     post_id = request.GET.get('post_id', None)
     limit = int(request.GET.get('limit', 1))
-
     # First get the comments from the Redis cache.
-    cache_key = f"comments_{post_id}_{limit}"
+    #cache_key = f"comments_{post_id}_{limit}"
+    cache_key = f"comments_{post_id}"
     comments = cache.get(cache_key)
     # If no comments in cache
     if not comments:

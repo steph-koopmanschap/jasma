@@ -91,7 +91,7 @@ def generate_comment():
     comment = Comment.objects.create(
                         user=pick_random_user(), 
                         post=pick_random_post(), 
-                        comment_text=fake.text(),
+                        text_content=fake.text(),
                         file_url=None)
     
 def generate_reported_post():
@@ -102,13 +102,20 @@ def generate_reported_post():
         "This post is hateful",
         "This post is misleading",
     ]
-
-    reported_post, created = Reported_Post.objects.get_or_create(
-                                    post=pick_random_post(),
-                                    report_reason=random.choice(report_reasons))
-    if created == False:
-        reported_post.reported_x_times += 1
-        reported_post.save()
+    post = pick_random_post()
+    report_reason = random.choice(report_reasons)
+    try:
+        # First check if the post has already been reported
+        reported_post = Reported_Post.objects.get(post=post)
+        if reported_post is not None:
+            # if it has already been reported then increase the number of reports
+            reported_post.reported_x_times += 1
+            reported_post.save()
+    except Reported_Post.DoesNotExist:
+        # If not reported, create a new report for the post
+        reported_post = Reported_Post.objects.create(
+                                        post=post,
+                                        report_reason=report_reason)
 
 def generate_follower():
     user = None
@@ -121,7 +128,7 @@ def generate_follower():
             following, created = Following.objects.get_or_create(
                                             user=user,
                                             following=follow_new_person)
-    
+
 def generate_subscribed_hashtag():
     created = False
     while created == False:
@@ -139,7 +146,7 @@ def generate_bookmarked_post():
         bookmarked_post, created = Bookmarked_Post.objects.get_or_create(
                                         user=user,
                                         post=post)
-        
+
 def generate_ad():
     now = datetime.datetime.now()
     one_year_future = now + datetime.timedelta(days=365)

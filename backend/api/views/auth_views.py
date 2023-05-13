@@ -3,8 +3,9 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.middleware.csrf import get_token
 from api.models import User
-from api.utils.request_method_wrappers import post_wrapper
+from api.utils.request_method_wrappers import get_wrapper, post_wrapper
 from api.utils.get_client_ip import get_client_ip
 from api.constants.http_status import HTTP_STATUS
 
@@ -71,12 +72,17 @@ def logout_view(request):
 
 def check_auth(request):
     if 'id' in request.session:
-        return JsonResponse({'isAuth': True}, 
+        return JsonResponse({"success": True, 'isAuth': True}, 
                             status=HTTP_STATUS['OK'])
     else:
         # Could also return a 404 not found reponse?
-        return JsonResponse({'isAuth': False},
+        return JsonResponse({"success": False, 'isAuth': False},
                             status=HTTP_STATUS['OK'])
+
+@get_wrapper
+def get_csrf_token(request):
+    token = get_token(request)
+    return JsonResponse({'csrfToken': token})
     
 @csrf_exempt
 @login_required
@@ -90,3 +96,5 @@ def change_password(request):
     user.save()
     return JsonResponse({'success': True, 'message': 'Password changed.'},
                         status=HTTP_STATUS['Created'])
+
+

@@ -252,7 +252,6 @@ def get_newsfeed(request):
         posts_global = Post.objects.all().order_by('-created_at')[:num_posts_to_get]
         # Add the global posts to the posts
         posts = posts | posts_global
-    
     # Sort the posts by date
     posts = posts.order_by('-created_at')
     # Format the posts
