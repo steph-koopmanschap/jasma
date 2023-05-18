@@ -77,10 +77,8 @@ def subscribe_to_hashtags(request):
 @csrf_exempt
 @login_required
 @delete_wrapper
-def unsubscribe_from_hashtag(request, hashtag): # hashtag is either an argument or in the request or both.
+def unsubscribe_from_hashtag(request, hashtag):
     user = request.user
-    req = json.loads(request.body)
-    hashtag = req['hashtag']
     try:
         subscribed_hashtags = SubscribedHashtag.objects.filter(user=user, hashtag=hashtag)
         subscribed_hashtags.delete()

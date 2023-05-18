@@ -48,7 +48,7 @@ def register(request):
 #@csrf_exempt
 #@post_wrapper
 @csrf_exempt
-@api_view(["POST", "GET"])
+@api_view(["POST"])
 def login_view(request):
     # req = json.loads(request.body)
     body = request.body
