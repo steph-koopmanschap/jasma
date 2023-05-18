@@ -83,9 +83,7 @@ def delete_comment(request, comment_id):
     # Get the previous comments from the redis Cache
     cache_key = f"comments_{comment.post.post_id}"
     previous_comments = cache.get(cache_key)
-    if previous_comments == None:
-        pass  #TODO: Is there something missing here?
-    else:
+    if previous_comments is not None:
         # Filter out the deleted post
         previous_comments = list(filter(lambda x: x["comment_id"] != comment_id, previous_comments))
         # Insert the comments back into the cache
