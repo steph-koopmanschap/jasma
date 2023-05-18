@@ -59,7 +59,7 @@ class TestApi(TestCase):
                                             "password": test_user["password"]
                                     }))
         if self.response.status_code != 201:
-            return self.assertTrue(False)  # This is really disturbing logic. What are you trying to do?
+            self.assertEqual(self.response.status_code, HTTP_STATUS["Created"])
         response_body = self.response.json()
         
         self.assertEqual(self.response.status_code, HTTP_STATUS["Created"])
@@ -130,7 +130,7 @@ class TestApi(TestCase):
                                     "password": test_user["password"]
                             }))
         if self.response.status_code != 201:
-            return self.assertTrue(False) # This is really disturbing logic. What are you trying to do?
+            self.assertEqual(self.response.status_code, HTTP_STATUS["Created"])
         response_body = self.response.json()
         
         self.assertEqual(self.response.status_code, HTTP_STATUS["Created"])
