@@ -28,20 +28,20 @@ class User(AbstractUser):
     REQUIRED_FIELDS = [] 
 
     def after_create(self):
-        user_profile = User_Profile(user=self)
-        user_notification_preferences = User_Notification_Preferences(user=self)
+        user_profile = UserProfile(user=self)
+        user_notification_preferences = UserNotificationPreferences(user=self)
         user_profile.save()
         user_notification_preferences.save()
 
-    def format_user_dict(user):
+    def format_user_dict(self):
         return {
-            "user_id": user.id,
-            "username": user.username,
-            "email": user.email,
-            "user_role": user.user_role
+            "user_id": self.id,
+            "username": self.username,
+            "email": self.email,
+            "user_role": self.user_role
         }
 
-class User_Profile(models.Model):
+class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     profile_pic_url = models.URLField(max_length=300, default=f"{settings.MEDIA_URL}images/avatars/default-profile-pic.webp")
     given_name = models.CharField(max_length=35, null=True, blank=True)
@@ -60,28 +60,28 @@ class User_Profile(models.Model):
     def __str__(self):
         return str(self.given_name) + " " + str(self.last_name) + " " + str(self.user.id)
     
-    def format_user_profile_dict(user_profile):
+    def format_user_profile_dict(self):
         return {
-            "user_id": user_profile.user.id,
-            "given_name": user_profile.given_name,
-            "last_name": user_profile.last_name,
-            "display_name": user_profile.display_name,
-            "bio": user_profile.bio,
-            "date_of_birth": user_profile.date_of_birth,
-            "gender": user_profile.gender,
-            "relationship": user_profile.relationship,
-            "relationship_with": user_profile.relationship_with,
-            "language": user_profile.language,
-            "country": user_profile.country,
-            "city": user_profile.city,
-            "website": user_profile.website
+            "user_id": self.user.id,
+            "given_name": self.given_name,
+            "last_name": self.last_name,
+            "display_name": self.display_name,
+            "bio": self.bio,
+            "date_of_birth": self.date_of_birth,
+            "gender": self.gender,
+            "relationship": self.relationship,
+            "relationship_with": self.relationship_with,
+            "language": self.language,
+            "country": self.country,
+            "city": self.city,
+            "website": self.website
         }
 
     class Meta:
         db_table = "users_profiles"
         verbose_name_plural = "UsersProfiles"
     
-class User_Notification_Preferences(models.Model):
+class UserNotificationPreferences(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     is_all_email = models.BooleanField(default=True)
     is_all_push = models.BooleanField(default=True)
@@ -179,6 +179,7 @@ class Post(models.Model):
     class Meta:
         db_table = "posts"
         verbose_name_plural = "Posts"
+        ordering = ["-created_at"]
 
 class Comment(models.Model):
     comment_id = models.UUIDField(default=uuid4, primary_key=True, editable=False)
@@ -219,8 +220,9 @@ class Comment(models.Model):
     class Meta:
         db_table = "comments"
         verbose_name_plural = "Comments"
+        ordering = ["-created_at"]
 
-class Reported_Post(models.Model):
+class ReportedPost(models.Model):
     report_id = models.UUIDField(default=uuid4, primary_key=True, editable=False)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     report_reason = models.CharField(max_length=300)
@@ -231,11 +233,11 @@ class Reported_Post(models.Model):
     def __str__(self):
         return f"Reported post {self.post.post_id} - reported for {self.report_reason} ({self.reported_x_times} times)"
 
-    staticmethod
+    @staticmethod
     def format_reported_post_dict(reported_posts):
         result = []
         for reported_post in reported_posts:
-            reported_post_dict = Reported_Post.format_reported_post_dict(reported_post)
+            reported_post_dict = ReportedPost.format_reported_post_dict(reported_post)
             result.append(reported_post_dict)
         return result
 
@@ -275,7 +277,7 @@ class Transaction(models.Model):
         db_table = 'transactions'
         verbose_name_plural = 'Transactions'
 
-class Bookmarked_Post(models.Model):
+class BookmarkedPost(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     bookmarked_at = models.DateTimeField(auto_now_add=True)
@@ -308,13 +310,13 @@ class Following(models.Model):
 # Is it possible for a user to be subscribed to hashtag that has been deleted or does not exist?
 # ---
 # it is not possible to keep a foreign key relationship intact after the referenced object has been deleted. 
-# When the hashtag is deleted, it will trigger a cascading delete of all related Subscribed_Hashtag objects.
+# When the hashtag is deleted, it will trigger a cascading delete of all related SubscribedHashtag objects.
 # However, you could create a custom delete method for the Hashtag model which marks the hashtag as deleted instead of deleting it. 
 # You could add a boolean field called is_deleted to the Hashtag model and set it to True when the delete method is called. 
 # Then, modify the queries in your views and templates to exclude any deleted hashtags.
 # Another option would be to create a separate table to store the subscription information, instead of using a foreign key relationship with the Hashtag model. 
 # This table could have a field for the hashtag name or ID, and the subscription status could be updated even if the original hashtag is deleted.
-class Subscribed_Hashtag(models.Model):
+class SubscribedHashtag(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     hashtag = models.ForeignKey(Hashtag, on_delete=models.CASCADE)
 
@@ -340,7 +342,7 @@ class UserFeedback(models.Model):
     class Meta:
         db_table = "userfeedback"
 
-class Bug_Report(models.Model):
+class BugReport(models.Model):
     bug_report_id = models.UUIDField(default=uuid4, primary_key=True, editable=False)
     report_description = models.CharField(max_length=5000, null=False)
     bug_report_time = models.DateTimeField(auto_now_add=True)

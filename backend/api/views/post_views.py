@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from api.utils.request_method_wrappers import post_wrapper, put_wrapper, get_wrapper, delete_wrapper
 from api.constants.http_status import HTTP_STATUS
 from api.constants.times import MONTH_IN_SECONDS
-from api.models import User, Post, Hashtag, Bookmarked_Post, Following, Subscribed_Hashtag
+from api.models import User, Post, Hashtag, BookmarkedPost, Following, SubscribedHashtag
 from api.utils.handle_file_save import handle_file_save
 from api.utils.handle_file_delete import handle_file_delete
 from api.views.notification_views import create_notification
@@ -236,7 +236,7 @@ def get_newsfeed(request):
     # Get the users that this user is following
     following = Following.objects.filter(user=user)
     # Get the hashtags that this user is subscribed to.
-    subscribed_hashtags = Subscribed_Hashtag.objects.filter(user=user)
+    subscribed_hashtags = SubscribedHashtag.objects.filter(user=user)
     hashtags = [subscription.hashtag.hashtag for subscription in subscribed_hashtags]
     # For each hashtag get the 5 latest posts.
     for hashtag in hashtags:
@@ -268,7 +268,7 @@ def add_post_bookmark(request):
     post_id = req['post_id']
 
     post = Post.objects.get(post_id=post_id)
-    bookmarked_post = Bookmarked_Post.objects.create(user=user, post=post)
+    BookmarkedPost.objects.create(user=user, post=post)
     return JsonResponse({'success': True, 'message': "Post bookmarked successfully."}, 
                         status=HTTP_STATUS["Created"])
 
@@ -277,7 +277,7 @@ def add_post_bookmark(request):
 @delete_wrapper
 def delete_post_bookmark(request, post_id):
     user = request.user
-    bookmark = Bookmarked_Post.objects.filter(user=user, post_id=post_id)
+    bookmark = BookmarkedPost.objects.filter(user=user, post_id=post_id)
     bookmark.delete()
     return JsonResponse({'success': True, 'message': "Post bookmark deleted successfully."},
                         status=HTTP_STATUS["OK"])
@@ -286,7 +286,7 @@ def delete_post_bookmark(request, post_id):
 @get_wrapper
 def get_bookmarked_posts(request):
     user = request.user
-    bookmarks = Bookmarked_Post.objects.filter(user=user).order_by('-bookmarked_at')
+    bookmarks = BookmarkedPost.objects.filter(user=user).order_by('-bookmarked_at')
     posts = []
     for bookmark in bookmarks:
         posts.append(Post.objects.get(post_id=bookmark.post))

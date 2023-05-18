@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 function MyApp({ Component, pageProps }) {
     const [queryClient] = React.useState(() => new QueryClient());
 
-    const paypalClientID = (process.env.NEXT_PUBLIC_NODE_ENV === 'production') ? 
+    const paypalClientID = (process.env.NEXT_PUBLIC_STAGE === 'production') ? 
                                 process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID_PRODUCTION 
                             :   process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID_SANDBOX;
 

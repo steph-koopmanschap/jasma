@@ -1,64 +1,74 @@
 version: '3.8'
 
+# This could be seen as both advantage / disadvantage of having all container share the same.
+# We could find a way to reduce the scope of some variables
+x-environment: 
+    &dev-environment
+    - STAGE=development
+    # POSTGRES DB
+    - PG_PORT=5432
+    - PG_HOST=jasma-pg-db   
+    - POSTGRES_DB=jasma_dev
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=postgres
+    # REDIS DB
+    - REDIS_HOST=jasma-redis-db
+    - REDIS_PORT=6379
+    # DJANGO backend
+    - HOSTNAME=localhost
+    - BACKEND_HOST=jasma-api-server
+    - BACKEND_PORT=5000
+    - SESSION_SECRET="keyboard cat"
+    # NEXTJS frontend
+    - NEXTJS_HOST=jasma-client
+    - NEXTJS_PORT=3000
+    # Paypal
+    - PAYPAL_SECRET=''
+    - PAYPAL_CLIENT_ID_SANDBOX=''
+    - PAYPAL_CLIENT_ID_PRODUCTION=''
+    - STRIPE_SECRET_KEY=''
+
 services:
-  
-  jasma-pg-db-dev:
+
+  # POSTGRES
+  jasma-pg-db:
     container_name: jasma-pg-db-dev
-    image: postgres:14.7-alpine
+    image: postgres:14-alpine  # I think we can afford to go with lastest major version (TBD)
     restart: always
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+        *dev-environment
     expose: 
       - 5432
     ports:
-      - "5432:5432"
+      - "6432:5432"  # For people that run postgres on their linus machine :)
     networks:
       - jasma-network-dev
-    volumes: 
-      - jasma-storage-dev:/var/lib/postgresql/data
+    volumes:
+      - jasma-storage-dev:/var/lib/postgresql/data  #Check that this works
 
-  jasma-redis-db-dev:
+  # REDIS
+  jasma-redis-db:
     container_name: jasma-redis-db-dev
-    image: redis:7.0.10-alpine
+    image: redis:7-alpine  # I think we can afford to go with lastest major version (TBD)
     restart: always
     command: redis-server --save 20 1 --loglevel warning
     expose: 
       - 6379
     ports:
-      - '6379:6379'
+      - '6379:6379'  # Do we need to expose port outside docker?
     networks:
       - jasma-network-dev
     volumes: 
       - jasma-storage-dev:/redis-data
 
-  jasma-api-server-dev:
+  # DJANGO
+  jasma-api-server:
     container_name: jasma-api-server-dev
     build:
-      context: ./express
-      target: development
-      args:
-        - START_FIRST_TIME=true
-        - NODE_ENV=development
-        - HOSTNAME=http://localhost
-        - PORT=5000
-        - SESSION_SECRET=keyboard cat
-        - NEXTJS_ORIGIN=http://localhost
-        - NEXTJS_PORT=3000
-        - PG_SUPER_USER=postgres
-        - PG_SUPER_PASSWORD=postgres
-        - PG_ADMIN_USER=jasma_admin
-        - PG_ADMIN_PASSWORD=a
-        - PG_HOST=jasma-pg-db-dev
-        - PG_PORT=5432
-        - PG_SUPER_DATABASE=postgres
-        - PG_ADMIN_DATABASE=jasma_db
-        - REDIS_HOST=jasma-redis-db-dev
-        - REDIS_PORT=6379
-        - PAYPAL_SECRET=''
-        - PAYPAL_CLIENT_ID_SANDBOX=''
-        - PAYPAL_CLIENT_ID_PRODUCTION=''
-        - STRIPE_SECRET_KEY=''
+        context: ./backend
+      # target: development  # This will be unused for now
+    environment:
+        *dev-environment
     restart: always
     image: jasma-api-server-dev
     expose: 
@@ -68,10 +78,13 @@ services:
     networks:
       - jasma-network-dev
     depends_on:
-      - jasma-pg-db-dev
-      - jasma-redis-db-dev
+      - jasma-pg-db
+      - jasma-redis-db
+    volumes:
+      - ./backend:/backend  # This allows for realtime changes to be effective
 
-  jasma-client-dev:
+  # NODEJS frontend
+  jasma-client:
     container_name: jasma-client-dev
     build:
       context: ./next
@@ -81,7 +94,7 @@ services:
         - PORT=3000
         - NEXT_PUBLIC_API_SERVER_URL=localhost
         - NEXT_PUBLIC_API_SERVER_PORT=5000
-        - NEXT_PUBLIC_NODE_ENV=development
+        - NEXT_PUBLIC_STAGE=development
         - ANALYZE=false
         - SESSION_SECRET=thisisatemporarysecret
         - PAYPAL_SECRET=''
@@ -89,6 +102,8 @@ services:
         - NEXT_PUBLIC_PAYPAL_CLIENT_ID_PRODUCTION=''
         - NEXT_TELEMETRY_DEBUG=1
         - NEXT_TELEMETRY_DISABLED=1
+    environment:
+        *dev-environment
     restart: always
     image: jasma-client-dev
     expose: 
@@ -98,8 +113,9 @@ services:
     networks:
       - jasma-network-dev
     depends_on:
-      - jasma-api-server-dev
+      - jasma-api-server
 
+  # NGINX webserver?
   jasma-nginx-dev:
     container_name: jasma-nginx-dev
     build:

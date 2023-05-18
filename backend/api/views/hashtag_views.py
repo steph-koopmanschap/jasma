@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from api.utils.request_method_wrappers import post_wrapper, get_wrapper, delete_wrapper
 from api.constants.http_status import HTTP_STATUS
-from api.models import User, Post, Hashtag, Subscribed_Hashtag
+from api.models import User, Post, Hashtag, SubscribedHashtag
 from django.db.models import Count
 
 # Get the most frequently used hashtags ordered from highest to lowest
@@ -36,7 +36,7 @@ def get_hashtag_count(request, hashtag):
 def get_subscribed_hashtags(request):
     try: 
         user = request.user
-        subscribed_hashtags = Subscribed_Hashtag.objects.filter(user=user).values_list('hashtag__hashtag', flat=True)
+        subscribed_hashtags = SubscribedHashtag.objects.filter(user=user).values_list('hashtag__hashtag', flat=True)
         return JsonResponse({'success': True, "hashtags": subscribed_hashtags},
                             status=HTTP_STATUS["OK"])
     except Exception as e:
@@ -65,7 +65,7 @@ def subscribe_to_hashtags(request):
             if not hashtag_already_exists:
                 non_existing_hashtags.append(hashtag)
             else:
-                Subscribed_Hashtag.objects.create(user=user, hashtag=hashtag)
+                SubscribedHashtag.objects.create(user=user, hashtag=hashtag)
         # We also return the non existing hashtags so the client can tell the user which hashtags do not exist and can not be subscribed to.
         return JsonResponse({'success': True, 'non_existing_hashtags': non_existing_hashtags},
                             status=HTTP_STATUS["Created"])
@@ -77,13 +77,13 @@ def subscribe_to_hashtags(request):
 @csrf_exempt
 @login_required
 @delete_wrapper
-def unsubscribe_from_hashtag(request, hashtag):
+def unsubscribe_from_hashtag(request, hashtag): # hashtag is either an argument or in the request or both.
     user = request.user
     req = json.loads(request.body)
     hashtag = req['hashtag']
     try:
-        subscribed_hashtag = Subscribed_Hashtag.objects.filter(user=user, hashtag=hashtag)
-        subscribed_hashtag.delete()
+        subscribed_hashtags = SubscribedHashtag.objects.filter(user=user, hashtag=hashtag)
+        subscribed_hashtags.delete()
         return JsonResponse({'success': True, 'message': "Successfully unsubscribed from hashtag."},
                             status=HTTP_STATUS["OK"])
     except Exception as e:

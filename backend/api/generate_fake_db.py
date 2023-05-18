@@ -4,7 +4,7 @@ import datetime
 import random
 from faker import Faker
 from django.db.utils import IntegrityError
-from api.models import User, Post, Comment, Hashtag, User_Profile, Reported_Post, Following, Subscribed_Hashtag, Bookmarked_Post, Ad
+from api.models import User, Post, Comment, Hashtag, UserProfile, ReportedPost, Following, SubscribedHashtag, BookmarkedPost, Ad
 from api.constants.genders import GENDERS
 from api.constants.relationships import RELATIONSHIPS
 from api.constants.countries import COUNTRIES
@@ -43,7 +43,7 @@ def generate_user():
     #if created == False:
     user.after_create()
 
-    user_profile = User_Profile.objects.get(user=user)
+    user_profile = UserProfile.objects.get(user=user)
     user_profile.given_name = fake.first_name()
     user_profile.last_name = fake.last_name()
     user_profile.bio = fake.text()
@@ -62,7 +62,7 @@ def generate_user_relationship():
         user = pick_random_user()
         relationship_with = pick_random_user()
 
-    user_profile = User_Profile.objects.get(user=user)
+    user_profile = UserProfile.objects.get(user=user)
     user_profile.relationship_with = relationship_with
     user_profile.save()
 
@@ -81,14 +81,13 @@ def generate_post():
                         file_url=None,
                         post_type="text")
     
-    for i in range(random.randint(1, 5)):
-        #hashtag = generate_hashtag()
+    for _ in range(random.randint(1, 5)):
         hashtag = pick_random_hashtag()
         post.hashtags.add(hashtag)
     post.save()
 
 def generate_comment():
-    comment = Comment.objects.create(
+    Comment.objects.create(
                         user=pick_random_user(), 
                         post=pick_random_post(), 
                         text_content=fake.text(),
@@ -106,16 +105,15 @@ def generate_reported_post():
     report_reason = random.choice(report_reasons)
     try:
         # First check if the post has already been reported
-        reported_post = Reported_Post.objects.get(post=post)
+        reported_post = ReportedPost.objects.get(post=post)
         if reported_post is not None:
             # if it has already been reported then increase the number of reports
             reported_post.reported_x_times += 1
             reported_post.save()
-    except Reported_Post.DoesNotExist:
+    except ReportedPost.DoesNotExist:
         # If not reported, create a new report for the post
-        reported_post = Reported_Post.objects.create(
-                                        post=post,
-                                        report_reason=report_reason)
+        ReportedPost.objects.create(post=post,
+                                    report_reason=report_reason)
 
 def generate_follower():
     user = None
@@ -125,16 +123,16 @@ def generate_follower():
         user = pick_random_user()
         follow_new_person = pick_random_user()
         if user != follow_new_person:
-            following, created = Following.objects.get_or_create(
+            _, created = Following.objects.get_or_create(
                                             user=user,
                                             following=follow_new_person)
 
-def generate_subscribed_hashtag():
+def generate_subscribed_hashtags():
     created = False
     while created == False:
         user = pick_random_user()
         hashtag = pick_random_hashtag()
-        subscribed_hashtag, created = Subscribed_Hashtag.objects.get_or_create(
+        _, created = SubscribedHashtag.objects.get_or_create(
                                         user=user, 
                                         hashtag=hashtag)
 
@@ -143,7 +141,7 @@ def generate_bookmarked_post():
     while created == False:
         user = pick_random_user()
         post = pick_random_post()
-        bookmarked_post, created = Bookmarked_Post.objects.get_or_create(
+        _, created = BookmarkedPost.objects.get_or_create(
                                         user=user,
                                         post=post)
 
@@ -156,7 +154,7 @@ def generate_ad():
     while age_start != age_end and age_start <  age_end:
         age_start = random.randint(18, 100)
         age_end = random.randint(18, 100)
-    ad = Ad.objects.get_or_create(
+    Ad.objects.get_or_create(
                                 user=pick_random_user(),
                                 ad_name=fake.word(),
                                 text_content=fake.text(),
@@ -174,53 +172,53 @@ def generate_fake_db(n):
     print(f"GENERATING {n} users, {n*3} hashtags, {n*2} posts, {n*4} comments, {n*3} followers, {math.floor(n * 0.1)} ads, {n*3} followers, {n*3} bookmarked posts, and {math.floor(n * 0.5)} reported posts...")
 
     print("Generating fake users...")
-    for i in range(n):
+    for _ in range(n):
         generate_user()
 
     # 20% of users are in a relationship with another user
-    for i in range(math.floor(n * 0.2)):
+    for _ in range(math.floor(n * 0.2)):
         generate_user_relationship()
     print(f"{OK} Done user generation.")
 
     print("Generating fake hashtags...")
-    for i in range(n*3):
+    for _ in range(n*3):
         generate_hashtag()
     print(f"{OK} Done hashtag generation.")
     
     print("Generating fake posts...")
-    for i in range(n*2):
+    for _ in range(n*2):
         generate_post()
     print(f"{OK} Done post generation.")
 
     print("Generating fake comments...")
-    for i in range(n*4):
+    for _ in range(n*4):
         generate_comment()
     print(f"{OK} Done comment generation.")
 
     # 25% of posts
     print("Generating fake reported posts...")
-    for i in range(math.floor(n * 0.5)):
+    for _ in range(math.floor(n * 0.5)):
         generate_reported_post()
     print(f"{OK} Done reported post generation.")
 
     print("Generating fake followers...")
-    for i in range(n*3):
+    for _ in range(n*3):
         generate_follower()
     print(f"{OK} Done follower generation.")
 
     print("Generating fake subscribed hashtags...")
-    for i in range(n*2):
-        generate_subscribed_hashtag()
+    for _ in range(n*2):
+        generate_subscribed_hashtags()
     print(f"{OK} Done subscribed hashtag generation.")
 
     print("Generating fake bookmarked posts...")
-    for i in range(n*3):
+    for _ in range(n*3):
         generate_bookmarked_post()
     print(f"{OK} Done bookmarked post generation.")
 
     # 10% of users
     print("Generating fake ads...")
-    for i in range(math.floor(n * 0.1)):
+    for _ in range(math.floor(n * 0.1)):
         generate_ad()
     print(f"{OK} Done ad generation.")
 

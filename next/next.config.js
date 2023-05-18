@@ -4,7 +4,7 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: (process.env.ANALYZE === 'true')
 });
 
-const isProd = (process.env.NEXT_PUBLIC_NODE_ENV === 'production');
+const isProd = (process.env.NEXT_PUBLIC_STAGE === 'production');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

@@ -22,8 +22,8 @@ def create_notification(user_id, notification_data):
     notification_id = uuid4
     timestamp = datetime.now()
     # Set a TTL of 48 hours (in seconds). This is the time when the notification will be deleted.
-    notifTTL = 48 * 60 * 60
-    encodedNotification = json.dumps({ 
+    NOTIF_TTL = 48 * 60 * 60
+    encoded_notification = json.dumps({ 
                                     "to_user_id": user_id, 
                                     "notification_id": notification_id,
                                     "from": notification_data["from"],
@@ -38,14 +38,14 @@ def create_notification(user_id, notification_data):
         pipe = settings.REDIS_CLIENT.pipeline()
         # Add the notification to a Redis Sorted Set with the timestamp as the score
         # Where the latest notification is at the top of the Sorted Set
-        pipe.zadd(f"notifications:{user_id}", timestamp, encodedNotification, desc=True)
+        pipe.zadd(f"notifications:{user_id}", timestamp, encoded_notification, desc=True)
         # Set the TTL for the Sorted Set key in Redis
-        # This means the notification will auto-delete after notifTTL
-        pipe.expire(f"notifications:{user_id}", notifTTL)
+        # This means the notification will auto-delete after NOTIF_TTL
+        pipe.expire(f"notifications:{user_id}", NOTIF_TTL)
         # Publish the notification to a Redis channel with the user ID as the channel name
-        pipe.publish(f"notifications:{user_id}", encodedNotification)
+        pipe.publish(f"notifications:{user_id}", encoded_notification)
         # Execute the transaction
-        result = pipe.execute()
+        pipe.execute()
         return {'success': True}
     
     except  Exception as e:
@@ -72,6 +72,7 @@ def get_notifications(request):
         formatted_notifications = []
         for notification in notifications:
             notification_json = json.loads(notification)
+            # TODO: Why?
             notification_formatted = {
                 'notification_id': notification_json['notification_id'],
                 'to_user_id': notification_json['to_user_id'],
@@ -113,14 +114,14 @@ def read_notification(request):
             if notification["notification_id"] == notification_id:
                 notification = notif
                 break
-    notificationJSON = json.dumps(notification)
+    notification_json = json.dumps(notification)
     try: 
         pipe = settings.REDIS_CLIENT.pipeline()
         # Delete the old member
-        pipe.zrem(f"notifications:{user_id}", notificationJSON)
+        pipe.zrem(f"notifications:{user_id}", notification_json)
         # Add the new member
-        pipe.zadd(f"notifications:{user_id}", timestamp, notificationJSON, desc=True)
-        result = pipe.execute()
+        pipe.zadd(f"notifications:{user_id}", timestamp, notification_json, desc=True)
+        pipe.execute()
     except Exception as e:
         print(f'Error updating notification: {e}')
         return JsonResponse({'success': False, 'message': 'Notification could not be updated.'},

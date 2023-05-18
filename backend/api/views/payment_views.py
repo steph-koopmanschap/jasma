@@ -15,11 +15,11 @@ from api.models import User
 # https://developer.paypal.com/api/rest/authentication/
 
 # Set up PayPal API credentials
-if os.getenv('NODE_ENV') == 'production':
+if os.getenv('STAGE') == 'production':
     client_id = os.getenv('PAYPAL_CLIENT_ID_PRODUCTION')
     endpoint = 'https://api.paypal.com'
     stripe.api_key = "YOUR_STRIPE_SECRET_KEY"
-elif os.getenv('NODE_ENV') == 'development':
+elif os.getenv('STAGE') == 'development':
     client_id = os.getenv('PAYPAL_CLIENT_ID_SANDBOX')
     endpoint = 'https://api.sandbox.paypal.com'
     stripe.api_key = "YOUR_STRIPE_SECRET_KEY"

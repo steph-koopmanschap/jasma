@@ -1,27 +1,27 @@
 import time
 import unittest
 from selenium.webdriver.common.by import By
-from tests.webdrivers import getWebDriver
+from tests.webdrivers import get_webdriver
 
 class RegistrationTests(unittest.TestCase):
 
     #This class method is started before ALL tests.
     @classmethod
-    def setUpClass(inst):
-        inst.test_name = "Login"
-        print(f"Setting up all {inst.test_name} tests...")
+    def setUpClass(cls):
+        cls.test_name = "Login"
+        print(f"Setting up all {cls.test_name} tests...")
 
-        inst.BASE_URL = "http://localhost"
+        cls.BASE_URL = "http://localhost"
 
-        inst.test_user = {
+        cls.test_user = {
             'username': "test123",
             'email': "test@gmail.com",
             'password': "test123"
         }
 
-        inst.driver = getWebDriver()
+        cls.driver = get_webdriver()
 
-        print(f"Done setting up all {inst.test_name} tests.")
+        print(f"Done setting up all {cls.test_name} tests.")
 
     # Executed before every test.
     def setUp(self):
@@ -34,15 +34,15 @@ class RegistrationTests(unittest.TestCase):
 
         print("self.driver.current_url: ", self.driver.current_url)
 
-        userNameInput = self.driver.find_element(By.ID, 'userNameInput')
-        emailInput = self.driver.find_element(By.ID, 'emailInput')
-        passwordInput = self.driver.find_element(By.ID, 'passwordInput')
-        signUpBtn = self.driver.find_element(By.ID, 'signUpBtn')
+        username_input = self.driver.find_element(By.ID, 'userNameInput')
+        email_input = self.driver.find_element(By.ID, 'emailInput')
+        password_input = self.driver.find_element(By.ID, 'passwordInput')
+        signup_btn = self.driver.find_element(By.ID, 'signUpBtn')
         
-        userNameInput.send_keys(self.test_user['username'])
-        emailInput.send_keys(self.test_user['email'])
-        passwordInput.send_keys(self.test_user['password'])
-        signUpBtn.click()
+        username_input.send_keys(self.test_user['username'])
+        email_input.send_keys(self.test_user['email'])
+        password_input.send_keys(self.test_user['password'])
+        signup_btn.click()
 
         #If user is moved to the dashboard login is correct.
         self.assertEqual(self.driver.current_url, f"{self.BASE_URL}/dashboard", f'Expected browser URL to be: {self.BASE_URL}/dashboard. NOTE: THIS TEST DOES NOT WORK YET')
@@ -55,9 +55,9 @@ class RegistrationTests(unittest.TestCase):
     # This class method is started after ALL tests.
     # NOTE: Make sure the class_name is the same as in setUpClass()
     @classmethod
-    def tearDownClass(inst):
+    def tearDownClass(cls):
         print("Tear down all tests...")
         # Close the browsers
-        inst.driver.quit()
+        cls.driver.quit()
         print("Done tearing down all tests.")
 

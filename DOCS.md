@@ -160,7 +160,7 @@ The env variables in the .env files might be slightly different.
 ### jasma-api-server  
 
 `START_FIRST_TIME` Controls if the PSQL database is re-created on server startup. `(true / false)` <br />
-`NODE_ENV` Controls if the app is started in dev or production mode. `(development / production)` <br />
+`STAGE` Controls if the app is started in dev or production mode. `(development / production)` <br />
 `HOSTNAME` Controls the hostname of the server. NOT USED (YET?). <br />
 `PORT` Controls the port of the API server. `(Integer)` <br />
 `SESSION_SECRET` Controls the session secret of the cookies stored in Redis. `(String)` <br />
@@ -187,7 +187,7 @@ The env variables in the .env files might be slightly different.
 `PORT` The port of NextJS. Used to connect the user/browser to the client. NextJS Server Side Rendering. `(Integer)` <br />
 `NEXT_PUBLIC_API_SERVER_URL` The IP address or domain of the API server. Used for connecting client to backend. `(IP address or domain)` <br />
 `NEXT_PUBLIC_API_SERVER_PORT` The port the API server. Used for connecting client to backend. `(Integer)` <br />
-`NEXT_PUBLIC_NODE_ENV` Controls if the app is started in dev or production mode. `(development / production)` <br />
+`NEXT_PUBLIC_STAGE` Controls if the app is started in dev or production mode. `(development / production)` <br />
 `ANALYZE` Controls if the NextJS document size analyzer should be turned on. Setting this to true might crash the browser. `(true / false)` <br />
 `SESSION_SECRET` NextJS session secret. NOT USED. `(String)` <br />
 `PAYPAL_SECRET` Paypal secret of your paypal account. NOT USED. `(String)` <br />
