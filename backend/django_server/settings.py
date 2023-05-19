@@ -17,7 +17,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from django.core.management.commands.runserver import Command as runserver
-runserver.default_addr = "0.0.0.0"
+runserver.default_addr = os.getenv('BACKEND_HOST')
 runserver.default_port = os.getenv('BACKEND_PORT')
 
 if os.getenv('STAGE') == 'production':
