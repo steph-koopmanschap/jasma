@@ -2,7 +2,7 @@ import os
 from django.conf import settings
 from django.http import FileResponse, HttpResponseNotFound, HttpResponseForbidden
 from api.utils.request_method_wrappers import get_wrapper
-from api.constants.files import *
+from api.constants import files
 
 @get_wrapper
 def get_file(request, filepath):
@@ -12,8 +12,8 @@ def get_file(request, filepath):
     file_path_dissected = filepath.split("/")
     file_type = file_path_dissected[1]
     context = file_path_dissected[2]
-    if file_type not in ALLOWED_FILE_TYPE_PATHS:
-        if context not in ALLOWED_CONTEXT_PATHS:
+    if file_type not in files.ALLOWED_FILE_TYPE_PATHS:
+        if context not in files.ALLOWED_CONTEXT_PATHS:
             return HttpResponseForbidden('403: File path not allowed.')
     fullpath = os.path.join(settings.MEDIA_ROOT, filepath)
     if os.path.exists(fullpath):

@@ -11,23 +11,24 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-import dj_database_url
 import os
 import redis
 from dotenv import load_dotenv
 load_dotenv()
 
-if os.getenv('NODE_ENV') == 'production':
-    BASE_URL = "https://" + os.getenv('HOSTNAME')
-    DEBUG = False
-elif os.getenv('NODE_ENV') == 'development':
-    BASE_URL = "http://" + os.getenv('HOSTNAME') + ":" + os.getenv('PORT')
+from django.core.management.commands.runserver import Command as runserver
+runserver.default_port = os.getenv('BACKEND_PORT')
+
+if os.getenv('STAGE') == 'production':
+    BASE_URL = "https://" + os.getenv('BACKEND_HOST')
+    DEBUG = False 
+elif os.getenv('STAGE') == 'development':
+    BASE_URL = "http://" + os.getenv('BACKEND_HOST') + ":" + os.getenv('BACKEND_PORT')
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = f"{BASE_URL}/media/"
 #MEDIA_URL = '/media/'
@@ -69,7 +70,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    # 'django.contrib.staticfiles', # Not needed if frontend
     'django_extensions',
     'api'
 ]
@@ -108,14 +109,22 @@ WSGI_APPLICATION = 'django_server.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'jasma_db.sqlite3'
-    },
-    "test": {
-        "ENGINE": "django.db.backends.sqlite3",
-        'NAME': BASE_DIR / 'jasma_testdb.sqlite3'
+    'default' : {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('PG_HOST'),
+        'PORT': os.getenv('PG_PORT')
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'jasma_db.sqlite3'
+    # },
+    # "test": {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     'NAME': BASE_DIR / 'jasma_testdb.sqlite3'
+    # }
 }
 
 #DATABASES = {
@@ -201,7 +210,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/' # Not needed if frontend
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

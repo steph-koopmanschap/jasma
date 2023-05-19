@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "jasma django api server"
+version = "0.1.0"
+description = "Django API server for JASMA project"
+authors = ["Steph Koopmanschap <stephkoopmanschap@protonmail.com>", "François Florent <francois.florent.01@gmail.com>"]
+license = "Apache License 2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+asgiref = "3.6.0"
+django = "4.2"
+sqlparse = "0.4.4"
+djangorestframework = "^3.14.0"
+faker = "^18.7.0"
+redis = "^4.5.5"
+django-redis = "^5.2.0"
+stripe = "^5.4.0"
+python-dotenv = "^1.0.0"
+django-extensions = "^3.2.1"
+psycopg2-binary = "^2.9.6"
+
+
+[tool.poetry.group.dev.dependencies]
+requests = "^2.30.0"
+html-testrunner = "^1.2.1"
+selenium = "^4.9.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

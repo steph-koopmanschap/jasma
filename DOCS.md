@@ -160,7 +160,7 @@ The env variables in the .env files might be slightly different.
 ### jasma-api-server  
 
 `START_FIRST_TIME` Controls if the PSQL database is re-created on server startup. `(true / false)` <br />
-`NODE_ENV` Controls if the app is started in dev or production mode. `(development / production)` <br />
+`STAGE` Controls if the app is started in dev or production mode. `(development / production)` <br />
 `HOSTNAME` Controls the hostname of the server. NOT USED (YET?). <br />
 `PORT` Controls the port of the API server. `(Integer)` <br />
 `SESSION_SECRET` Controls the session secret of the cookies stored in Redis. `(String)` <br />

@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from api.utils.request_method_wrappers import post_wrapper, put_wrapper, get_wrapper, delete_wrapper
 from api.constants.http_status import HTTP_STATUS
 from api.constants.user_roles import USER_ROLES
-from api.models import User, User_Profile, User_Notification_Preferences
+from api.models import User, UserProfile, UserNotificationPreferences
 from api.utils.handle_file_save import handle_file_save
 from api.utils.handle_file_delete import handle_file_delete
 from api.utils.staff_auth_wrappers import admin_required
@@ -27,8 +27,8 @@ def get_user(request, user_id):
         return JsonResponse({"success": False, "message": "No user found"},
                             status=HTTP_STATUS["NOT_FOUND"])
     
-    user_profile = User_Profile.objects.get(user=user)
-    user_notif_preferences = User_Notification_Preferences.objects.get(user=user)
+    user_profile = UserProfile.objects.get(user=user)
+    user_notif_preferences = UserNotificationPreferences.objects.get(user=user)
 
     returned_dict = {
         "id": user.id,
@@ -53,8 +53,8 @@ def get_user(request, user_id):
 @get_wrapper
 def get_loggedin_user(request):
     user = request.user
-    user_profile = User_Profile.objects.get(user=user)
-    user_notif_preferences = User_Notification_Preferences.objects.get(user=user)
+    user_profile = UserProfile.objects.get(user=user)
+    user_notif_preferences = UserNotificationPreferences.objects.get(user=user)
 
     returned_dict = {
         "id": user.id,
@@ -81,10 +81,10 @@ def get_loggedin_user(request):
 def update_user(request):
     req = json.loads(request.body)
     user = request.user
-    user_profile = User_Profile.objects.get(user=user)
-    user_notif_preferences = User_Notification_Preferences.objects.get(user=user)
+    user_profile = UserProfile.objects.get(user=user)
+    user_notif_preferences = UserNotificationPreferences.objects.get(user=user)
 
-        #User_Profile.objects.get(user=user).update(**req)
+        #UserProfile.objects.get(user=user).update(**req)
     # TODO: Add some email verification first?
     email = req['email']
     if email:
@@ -211,7 +211,7 @@ def delete_user(request):
     user.is_active = False
     user.deleted_at = datetime.datetime.now()
 
-    user_profile = User_Profile.objects.get(user=user)
+    user_profile = UserProfile.objects.get(user=user)
     user_profile.profile_pic_url = f"{settings.MEDIA_URL}images/avatars/default-profile-pic.webp"
     user_profile.given_name = "Deleted User"
     user_profile.last_name = "Deleted User"
@@ -226,7 +226,7 @@ def delete_user(request):
     user_profile.city = None
     user_profile.website = None
 
-    user_notification_preferences = User_Notification_Preferences.objects.get(user=user)
+    user_notification_preferences = UserNotificationPreferences.objects.get(user=user)
     user_notification_preferences.is_all_email = False
     user_notification_preferences.is_all_push = False
     user_notification_preferences.is_all_inapp = False
@@ -278,7 +278,7 @@ def get_profile_pic(request, user_id):
         return JsonResponse({"success": False, "message": "User ID is None or undefined."},
                             status=HTTP_STATUS["Bad Request"])
     user = User.objects.get(id=user_id)
-    user_profile = User_Profile.objects.get(user=user)
+    user_profile = UserProfile.objects.get(user=user)
     return JsonResponse({"success": True, 'profile_pic_url': user_profile.profile_pic_url})
 
 @csrf_exempt
@@ -286,7 +286,7 @@ def get_profile_pic(request, user_id):
 @post_wrapper
 def upload_profile_pic(request):
     user = request.user
-    user_profile = User_Profile.objects.get(user=user)
+    user_profile = UserProfile.objects.get(user=user)
     uploaded_file = request.FILES.get('file')
     if uploaded_file:
         saved_file = handle_file_save(uploaded_file, "avatar")

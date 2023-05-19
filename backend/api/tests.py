@@ -16,12 +16,12 @@ test_post = {
     "hashtags": "test, fire, bridge, sky"
 }
 
-class test_A_api(TestCase):
+class TestApi(TestCase):
     @classmethod
-    def setUpClass(inst):
+    def setUpClass(cls):
         #generate_fake_db(10)
         # Create a session object
-        inst.session = requests.Session()
+        cls.session = requests.Session()
         print("BASE_URL: ", settings.BASE_URL)
 
         headers = {
@@ -32,13 +32,13 @@ class test_A_api(TestCase):
             'Connection': 'keep-alive',
             #'DNT': '1',
         }
-        inst.session.headers.update(headers)
+        cls.session.headers.update(headers)
 
         print("======SETTING UP TEST ENVIRONMENT=======")
 
     @classmethod
-    def tearDownClass(inst):
-        inst.session.close()
+    def tearDownClass(cls):
+        cls.session.close()
 
     def setUp(self):
         print("======SETTING UP INDIVIDUAL TEST========")
@@ -59,7 +59,7 @@ class test_A_api(TestCase):
                                             "password": test_user["password"]
                                     }))
         if self.response.status_code != 201:
-            return self.assertTrue(False)
+            self.assertEqual(self.response.status_code, HTTP_STATUS["Created"])
         response_body = self.response.json()
         
         self.assertEqual(self.response.status_code, HTTP_STATUS["Created"])
@@ -130,7 +130,7 @@ class test_A_api(TestCase):
                                     "password": test_user["password"]
                             }))
         if self.response.status_code != 201:
-            return self.assertTrue(False)
+            self.assertEqual(self.response.status_code, HTTP_STATUS["Created"])
         response_body = self.response.json()
         
         self.assertEqual(self.response.status_code, HTTP_STATUS["Created"])
