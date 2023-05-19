@@ -7,7 +7,7 @@ x-environment:
     # POSTGRES DB
     - PG_PORT=5432
     - PG_HOST=jasma-pg-db   
-    - POSTGRES_DB=jasma_dev
+    - POSTGRES_DB=postgres
     - POSTGRES_USER=postgres
     - POSTGRES_PASSWORD=postgres
     # REDIS DB
@@ -39,7 +39,7 @@ services:
     expose: 
       - 5432
     ports:
-      - "6432:5432"  # For people that run postgres on their linus machine :)
+      - "6432:5432"  # For people that run postgres on their linux machine :)
     networks:
       - jasma-network-dev
     volumes:
