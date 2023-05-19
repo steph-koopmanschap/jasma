@@ -7,7 +7,7 @@ x-environment:
     # POSTGRES DB
     - PG_PORT=5432
     - PG_HOST=jasma-pg-db   
-    - POSTGRES_DB=jasma_dev
+    - POSTGRES_DB=postgres
     - POSTGRES_USER=postgres
     - POSTGRES_PASSWORD=postgres
     # REDIS DB
@@ -15,7 +15,7 @@ x-environment:
     - REDIS_PORT=6379
     # DJANGO backend
     - HOSTNAME=localhost
-    - BACKEND_HOST=0.0.0.0
+    - BACKEND_HOST=jasma-api-server
     - BACKEND_PORT=8000
     - SESSION_SECRET="keyboard cat"
     # NEXTJS frontend
