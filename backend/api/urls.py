@@ -1,8 +1,6 @@
 from django.urls import path, include
 from .views import auth_views
 
-
-
 urlpatterns = [
     # auth_urls
     path("auth/login/", auth_views.login_view),
