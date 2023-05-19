@@ -13,6 +13,7 @@ from api.constants.user_roles import USER_ROLES_MODEL
 # authenticate(email=email, password=password)
 class User(AbstractUser):
     USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
     # changes email to unique and blank to false
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     email = models.EmailField(('email address'), max_length=50, unique=True) 
@@ -24,8 +25,7 @@ class User(AbstractUser):
     last_ipv4 = models.CharField(max_length=55, default="0.0.0.0", null=True, blank=True, validators=[validate_ipv4_address])
     user_role = models.CharField(max_length=10, default="normal", choices=USER_ROLES_MODEL)
     deleted_at = models.DateTimeField(null=True, blank=True)
-    # removes email from REQUIRED_FIELDS
-    REQUIRED_FIELDS = [] 
+    
 
     def after_create(self):
         user_profile = UserProfile(user=self)

@@ -20,7 +20,7 @@ from api.views.media_views import get_file
 
 urlpatterns = [
     #path('', include('api.urls')),
-    path('admin/', admin.site.urls),
+    path('admin', admin.site.urls),
     path('api/', include('api.urls')),
     path('media/<path:filepath>', get_file)
 ]
