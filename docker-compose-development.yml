@@ -15,7 +15,7 @@ x-environment:
     - REDIS_PORT=6379
     # DJANGO backend
     - HOSTNAME=localhost
-    - BACKEND_HOST=jasma-api-server
+    - BACKEND_HOST=0.0.0.0
     - BACKEND_PORT=8000
     - SESSION_SECRET="keyboard cat"
     # NEXTJS frontend
@@ -39,7 +39,7 @@ services:
     expose: 
       - 5432
     ports:
-      - "6432:5432"  # For people that run postgres on their linus machine :)
+      - "6432:5432"  # For people that run postgres on their linux machine :)
     networks:
       - jasma-network-dev
     volumes:
