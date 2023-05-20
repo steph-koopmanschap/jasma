@@ -1,10 +1,12 @@
 {
     "test_user_one": {
+        "user_id": "",
         "username": "test123",
         "email": "testone@gmail.com",
         "password": "test123"
     },
     "test_user_two": {
+        "user_id": "",
         "username": "test987",
         "email": "testtwo@gmail.com",
         "password": "test987"
@@ -13,9 +15,11 @@
         "test", "fire", "bridge", "sky"
     ],
     "test_post": {
+        "post_id": "",
         "text_content": "This is a test post."
     },
     "test_comment": {
+        "comment_id": "",
         "text_content": "This is a test comment."
     }
 }

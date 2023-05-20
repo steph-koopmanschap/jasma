@@ -60,9 +60,9 @@ class TestApi(TestCase):
     def test_A_auth_register_correct(self):
         self.response = self.session.post(f"{settings.BASE_URL}/api/auth/register/", 
                                     data=json.dumps({
-                                            "username": test_user["username"],
-                                            "email": test_user["email"],
-                                            "password": test_user["password"]
+                                            "username": test_user_one["username"],
+                                            "email": test_user_one["email"],
+                                            "password": test_user_one["password"]
                                     }))
         if self.response.status_code != 201:
             self.assertEqual(self.response.status_code, HTTP_STATUS["Created"])
@@ -70,14 +70,14 @@ class TestApi(TestCase):
         
         self.assertEqual(self.response.status_code, HTTP_STATUS["Created"])
         self.assertTrue(response_body['success'])
-        self.assertEqual(response_body['message'], f"User {test_user['username']} registered successfully.")
+        self.assertEqual(response_body['message'], f"User {test_user_one['username']} registered successfully.")
 
     def test_B_auth_register_email_taken(self):
         self.response = self.session.post(f"{settings.BASE_URL}/api/auth/register/", 
                                     data=json.dumps({
                                             "username": "helloworld",
-                                            "email": test_user["email"],
-                                            "password": test_user["password"]
+                                            "email": test_user_one["email"],
+                                            "password": test_user_one["password"]
                                     }))
         response_body = self.response.json()
         
@@ -88,9 +88,9 @@ class TestApi(TestCase):
     def test_C_auth_register_username_taken(self):
         self.response = self.session.post(f"{settings.BASE_URL}/api/auth/register/", 
                                     data=json.dumps({
-                                            "username": test_user["username"],
+                                            "username": test_user_one["username"],
                                             "email": "helloworld@gmail.com",
-                                            "password": test_user["password"]
+                                            "password": test_user_one["password"]
                                     }))
         response_body = self.response.json()
         
@@ -102,7 +102,7 @@ class TestApi(TestCase):
         self.response = self.session.post(f"{settings.BASE_URL}/api/auth/login/", 
                             data=json.dumps({
                                     "email": "helloworld@gmail.com",
-                                    "password": test_user["password"]
+                                    "password": test_user_one["password"]
                             }))
         response_body = self.response.json()
         
@@ -113,7 +113,7 @@ class TestApi(TestCase):
     def test_E_auth_login_wrong_passwd(self):
         self.response = self.session.post(f"{settings.BASE_URL}/api/auth/login/", 
                             data=json.dumps({
-                                    "email": test_user["email"],
+                                    "email": test_user_one["email"],
                                     "password": "helloworld"
                             }))
         response_body = self.response.json()
@@ -132,15 +132,18 @@ class TestApi(TestCase):
     def test_G_auth_login_correct(self):
         self.response = self.session.post(f"{settings.BASE_URL}/api/auth/login/", 
                             data=json.dumps({
-                                    "email": test_user["email"],
-                                    "password": test_user["password"]
+                                    "email": test_user_one["email"],
+                                    "password": test_user_one["password"]
                             }))
         if self.response.status_code != 201:
             self.assertEqual(self.response.status_code, HTTP_STATUS["Created"])
         response_body = self.response.json()
+        test_user_one['user_id'] = response_body['user']['id']
         
         self.assertEqual(self.response.status_code, HTTP_STATUS["Created"])
         self.assertTrue(response_body['success'])
+        self.assertEqual(response_body['user']['username'], test_user_one['username'])
+        self.assertEqual(response_body['user']['email'], test_user_one['email'])
         self.assertEqual(response_body['message'], "User logged in.")
 
     def test_H_auth_check_auth_true(self):
@@ -150,7 +153,29 @@ class TestApi(TestCase):
         self.assertTrue(response_body['success'])
         self.assertTrue(response_body['isAuth'])
 
-    def test_I_auth_create_post(self):
+    def test_I_posts_create_post_image(self):
+        self.response = self.session.post(f"{settings.BASE_URL}/api/posts/createPost/",
+                                        data=json.dumps({
+                                            "text_content": test_post["text_content"],
+                                            "hashtags": test_hashtags,
+                                            "file":  test_file_post
+                                        }))
+        response_body = self.response.json()
+        self.assertEqual(self.response.status_code, HTTP_STATUS["Created"])
+        self.assertTrue(response_body['success'])
+        self.assertEqual(response_body['message'], "Post created successfully.")
+
+    def test_J_posts_get_user_posts(self):
+        self.response = self.session.post(f"{settings.BASE_URL}/api/posts/getUserPosts/?user_id={test_user_one['user_id']}&limit=1")
+        response_body = self.response.json()
+        self.assertEqual(self.response.status_code, HTTP_STATUS["OK"])
+        self.assertTrue(response_body['success'])
+        self.assertEqual(response_body['posts'][0]['text_content'], test_post["text_content"])
+        self.assertEqual(response_body['posts'][0]['hashtags'], test_hashtags)
+        self.assertEqual(response_body['posts'][0]['file_url'], test_hashtags)
+        self.assertEqual(response_body['posts'][0]['post_type'], "image")
+
+    def test_X_auth_logout(self):
         self.response = self.session.post(f"{settings.BASE_URL}/api/auth/logout/")
         response_body = self.response.json()
         self.assertEqual(self.response.status_code, HTTP_STATUS["OK"])
