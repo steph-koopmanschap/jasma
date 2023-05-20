@@ -3,6 +3,7 @@ from django.conf import settings
 from django.http import FileResponse, HttpResponseNotFound, HttpResponseForbidden
 from api.utils.request_method_wrappers import get_wrapper
 from api.constants import files
+from api.constants import files
 
 @get_wrapper
 def get_file(request, filepath):

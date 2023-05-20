@@ -135,6 +135,7 @@ coverage.xml
 *.log
 #local_settings.py
 db.sqlite3
+jasma_db.sqlite3
 db.sqlite3-journal
 
 # Flask stuff:
@@ -195,5 +196,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Poetry lock file 
-poetry.lock
+# Poetry
+backend/poetry.lock

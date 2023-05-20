@@ -151,11 +151,8 @@ async function paypalCreateOrder(req, res) {
 
 /*
 This JavaScript function uses the NodeJS NPM @paypal/checkout-server-sdk package to complete a PayPal transaction by capturing the payment for a given order ID.
-
 The function takes in the order ID from the request body, as well as the user ID and username from the session. It then creates a new request to capture the payment for the given order ID using the OrdersCaptureRequest method provided by the PayPal SDK. The requestBody method is called on the request object to specify any additional data that needs to be sent with the request.
-
 Once the request has been set up, the execute method is called on the client object to send the request to PayPal for processing. The response is then captured and logged to the console for debugging purposes, and the result field of the response is extracted and sent back as a JSON response to the client.
-
 If there is an error during the execution of the request, the catch block is triggered and the error is logged to the console. A 500 error is also sent back to the client to indicate that there was an issue with the server.
 */
 async function paypalTransactionComplete(req, res) {

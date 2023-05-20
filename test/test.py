@@ -36,7 +36,7 @@ if __name__=='__main__':
             output='reports', 
             combine_reports=True,
             report_title="JASMA Tests",
-            report_name=f"test_report.html",
+            report_name="test_report.html",
             add_timestamp=True,
             verbosity=verbosity
             )

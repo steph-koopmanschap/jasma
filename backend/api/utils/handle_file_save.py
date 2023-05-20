@@ -16,7 +16,7 @@ def get_file_mime_type(file):
     return {"mime_type": mime_type,  "encoding": encoding}
 
 # generate a unique uuidv4 filename
-def generate_new_fileName(file):
+def generate_new_filename(file):
     file_str = str(file)
     # Splits the filename into its base name and extension.
     name, ext = os.path.splitext(file_str)
@@ -56,7 +56,7 @@ def determine_save_location(file, file_type, context):
         print(e)
         return None
     
-    filename = generate_new_fileName(file)
+    filename = generate_new_filename(file)
     # Absolute path
     location = os.path.join(settings.MEDIA_ROOT, save_location, filename)
     URL = settings.MEDIA_URL + os.path.join(save_location, filename)

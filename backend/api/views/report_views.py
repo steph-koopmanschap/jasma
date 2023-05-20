@@ -6,7 +6,7 @@ from api.utils.request_method_wrappers import post_wrapper, get_wrapper, delete_
 from api.utils.handle_file_delete import handle_file_delete
 from api.utils.staff_auth_wrappers import staff_required
 from api.constants.http_status import HTTP_STATUS
-from api.models import Post, Reported_Post
+from api.models import Post, ReportedPost
 
 # User creates a report on a post
 @csrf_exempt
@@ -18,7 +18,7 @@ def create_report(request):
     post = Post.objects.get(post_id=post_id)
     # If post has not been reported yet, create a report for it.
     # If it has already been reported, increase the report counter for it.
-    report, created = Reported_Post.objects.get_or_create(post=post, 
+    report, created = ReportedPost.objects.get_or_create(post=post, 
                                                         report_reason=report_reason)
     if created == False:
         report.reported_x_times += 1
@@ -32,9 +32,10 @@ def create_report(request):
 def get_reports(request):
     # If limit is 0 then all reports are fetched
     limit = int(request.GET.get('limit', 0))
-    if limit == 0:
-        reports = Reported_Post.objects.all()
-    reports = Reported_Post.objects.all()[:limit]
+    if limit:
+        reports = ReportedPost.objects.all()[:limit]
+    else:
+        reports = ReportedPost.objects.all()
     reports_formatted = Post.format_reported_post_dict(reports)
     return JsonResponse({"success": True, "reports": reports_formatted},
                         status=HTTP_STATUS["OK"])
@@ -44,7 +45,7 @@ def get_reports(request):
 @delete_wrapper
 def delete_report(request, post_id):
     post = Post.objects.get(post_id=post_id)
-    reported_post = Reported_Post.objects.get(post=post)
+    reported_post = ReportedPost.objects.get(post=post)
     handle_file_delete(post.file_url)
     post.delete()
     reported_post.delete()
@@ -56,7 +57,7 @@ def delete_report(request, post_id):
 @delete_wrapper
 def ignore_report(request, post_id):
     post = Post.objects.get(post_id=post_id)
-    reported_post = Reported_Post.objects.get(post=post)
+    reported_post = ReportedPost.objects.get(post=post)
     reported_post.delete()
     return JsonResponse({"success": True, "message": "Report deleted successfully."}, 
                         status=HTTP_STATUS["OK"])

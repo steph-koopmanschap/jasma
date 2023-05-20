@@ -31,7 +31,8 @@ The purpose of JASMA is for learning how to code on a large collaborative projec
 ## Contributing
 
 Filling out these anonymous surveys will help us a lot to improve JASMA. <br />
-[Most important features in Social Media](https://forms.gle/XEmCFrifKmTAwMyv5)
+[Most important features in Social Media](https://forms.gle/XEmCFrifKmTAwMyv5) <br />
+<br />
 [Social Media Improvement Survey](https://forms.gle/wparXcH7FyNi6e27A)
 
 If you like this project please give it a star :D 

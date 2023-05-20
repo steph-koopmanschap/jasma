@@ -2,8 +2,15 @@ import os
 import logging
 from django.conf import settings
 from api.constants import files
+from api.constants import files
 
 logger = logging.getLogger(__name__)
+
+# This would be best practice
+class FilePathNotAllowed(Exception):
+    """ Exception raised to inform that a path is not allowed. """
+    pass
+
 
 def handle_file_delete(file_path):
     try:
@@ -16,9 +23,9 @@ def handle_file_delete(file_path):
             file_path_dissected = file_path.split("/")
             file_type = file_path_dissected[1]
             context = file_path_dissected[2]
-            if file_type not in files.ALLOWED_TYPES:
-                if context not in files.ALLOWED_CONTEXT:
-                    raise Exception("File path not allowed.")
+            if file_type not in files.files.ALLOWED_TYPES:
+                if context not in files.files.ALLOWED_CONTEXT:
+                    raise FilePathNotAllowed("File path not allowed.")
             # Create absolute file path
             file_path = os.path.join(settings.MEDIA_ROOT, file_path)
 

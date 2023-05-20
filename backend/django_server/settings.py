@@ -11,23 +11,25 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-import dj_database_url
 import os
 import redis
 from dotenv import load_dotenv
 load_dotenv()
 
-if os.getenv('NODE_ENV') == 'production':
-    BASE_URL = "https://" + os.getenv('HOSTNAME')
-    DEBUG = False
-elif os.getenv('NODE_ENV') == 'development':
-    BASE_URL = "http://" + os.getenv('HOSTNAME') + ":" + os.getenv('PORT')
+from django.core.management.commands.runserver import Command as runserver
+runserver.default_addr = os.getenv('BACKEND_HOST')
+runserver.default_port = os.getenv('BACKEND_PORT')
+
+if os.getenv('STAGE') == 'production':
+    BASE_URL = "https://" + os.getenv('BACKEND_HOST')
+    DEBUG = False 
+elif os.getenv('STAGE') == 'development':
+    BASE_URL = "http://" + os.getenv('BACKEND_HOST') + ":" + os.getenv('BACKEND_PORT')
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = f"{BASE_URL}/media/"
 #MEDIA_URL = '/media/'
@@ -72,7 +74,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'api'
-
 ]
 
 MIDDLEWARE = [
@@ -109,25 +110,47 @@ WSGI_APPLICATION = 'django_server.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    'default' : {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('PG_HOST'),
+        'PORT': os.getenv('PG_PORT')
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'jasma_db.sqlite3'
+    # },
+    # "test": {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     'NAME': BASE_DIR / 'jasma_testdb.sqlite3'
+    # }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.getenv('DB_NAME'),
-#         'USER': os.getenv('DB_USER'),
-#         'PASSWORD': os.getenv('DB_PASSWORD'),
-#         'HOST': os.getenv('DB_HOST'),
-#         'PORT': os.getenv('DB_PORT'),
-#     }
-# }
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': os.getenv('DB_NAME'),
+#        'USER': os.getenv('PG_SUPER_USER'),
+#        'PASSWORD': os.getenv('PG_SUPER_PASSWORD'),
+#        'HOST': os.getenv('PG_HOST'),
+#        'PORT': os.getenv('PG_PORT'),
+#    },
+#    'test': {
+#    'ENGINE': 'django.db.backends.postgresql',
+#    'NAME': "jasma_test_db",
+#    'USER': os.getenv('DB_USER'),
+#    'PASSWORD': os.getenv('DB_PASSWORD'),
+#    'HOST': os.getenv('DB_HOST'),
+#    'PORT': os.getenv('DB_PORT'),
+#    }
+#}
+
+TEST_NAME = 'test'
 
 REDIS_HOST = os.getenv('REDIS_HOST')
-REDIS_PORT = os.getenv('REDIS_HOST')
+REDIS_PORT = os.getenv('REDIS_PORT')
 
 REDIS_CLIENT = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 
@@ -147,7 +170,7 @@ CACHES = {
 SESSION_COOKIE_NAME = 'sessionid'
 SESSION_COOKIE_AGE = 86400
 SESSION_COOKIE_PATH = '/'
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False #Send cookie over HTTPS only?
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 
