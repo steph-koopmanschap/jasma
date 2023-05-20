@@ -1,0 +1,21 @@
+{
+    "test_user_one": {
+        "username": "test123",
+        "email": "testone@gmail.com",
+        "password": "test123"
+    },
+    "test_user_two": {
+        "username": "test987",
+        "email": "testtwo@gmail.com",
+        "password": "test987"
+    },
+    "test_hashtags": [
+        "test", "fire", "bridge", "sky"
+    ],
+    "test_post": {
+        "text_content": "This is a test post."
+    },
+    "test_comment": {
+        "text_content": "This is a test comment."
+    }
+}

@@ -1,3 +1,4 @@
+import os
 import requests
 import json
 from django.test import TestCase
@@ -5,16 +6,21 @@ from django.conf import settings
 from api.constants.http_status import HTTP_STATUS
 from api.generate_fake_db import generate_fake_db
 
-test_user = {
-    "username": "test123",
-    "email": "test@gmail.com",
-    "password": "test123"
-}
+#filepath_dummydata = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'dummy_test_data.json')
+filepath_dummydata = 'dummy_test_data.json'
+with open(filepath_dummydata, 'r') as f:
+    dummy_data = json.load(f)
 
-test_post = {
-    "text_content": "This is a test post",
-    "hashtags": "test, fire, bridge, sky"
-}
+test_user_one = dummy_data["test_user_one"]
+test_user_two = dummy_data["test_user_two"]
+test_hashtags = dummy_data["test_hashtags"]
+test_post = dummy_data["test_post"]
+test_comment = dummy_data["test_comment"]
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+test_file_post = os.path.join(script_dir, 'dummy_test_pic_post.jpg')
+# test_file_comment = os.path.join(script_dir, 'dummy_test_file_comment.jpg')
+# test_file_profile = os.path.join(script_dir, 'dummy_test_file_profile_pic.jpg')
 
 class TestApi(TestCase):
     @classmethod
