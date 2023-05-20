@@ -1,7 +1,7 @@
 # A key value store of all countries with their country codes.
 # The countries are sorted alphabetically
 # Updated as of September 2021
-COUNTRIES = {
+NAME_ABBR = {
     "Afghanistan": "AF",
     "Albania": "AL",
     "Algeria": "DZ",
