@@ -10,30 +10,33 @@ from api.utils.get_client_ip import get_client_ip
 from api.constants.http_status import HTTP_STATUS
 
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
+from rest_framework.request import Request
 
-@csrf_exempt
-@post_wrapper
+
+@api_view(["POST"])
+@authentication_classes([])  # TODO: Confirm if really needed to bypass csrf token error
 def register(request):
     # get the user input data from the request body
-    req = json.loads(request.body)
-    username = req['username']
-    email = req['email']
-    password = req['password']
+    username = request.data.get('username')
+    email = request.data.get('email')
+    password = request.data.get('password')
     
     # Perform basic validation of input data
-    # all() is a built-in Python function that returns True if all the elements in an iterable are considered True, and False otherwise. 
+    # all() is a built-in Python function that returns True if all the elements in an iterable are considered True, and False otherwise.
+    message = ""
     if not all([username, email, password]):
-        return JsonResponse({'success': False, 'message': 'All fields are required.'},
-                            status=status.HTTP_400_BAD_REQUEST)
-    if User.objects.filter(email=email).exists():
-        return JsonResponse({'success': False, 'message': 'Email already exists.'},
-                            status=status.HTTP_400_BAD_REQUEST)
-    if User.objects.filter(username=username).exists():
-        return JsonResponse({'success': False, 'message': 'Username already exists.'},
-                            status=status.HTTP_400_BAD_REQUEST)
+        message = 'All fields are required.'
+    elif User.objects.filter(email=email).exists():
+        message = 'Email already exists.'
+    elif User.objects.filter(username=username).exists():
+        message = 'Username already exists.'
     
+    if message:
+        data = {'success': False, 'message': message}
+        return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
     # create the user object
     user = User.objects.create_user(
         username=username,
@@ -42,71 +45,65 @@ def register(request):
     )
     user.after_create()
     # return success response
-    return JsonResponse({'success': True, 'message': f"User {username} registered successfully."},
-                        status=status.HTTP_201_CREATED)
+    data = {'success': True, 'message': f"User {username} registered successfully."}
+    return JsonResponse(data, status=status.HTTP_201_CREATED)
 
-#@csrf_exempt
-#@post_wrapper
-@csrf_exempt
 @api_view(["POST"])
+@authentication_classes([])  # TODO: Confirm if really needed to bypass csrf token error
 def login_view(request):
-    # req = json.loads(request.body)
-    body = request.body
-    email = body.get('email')
-    password = body.get('password')
-    user = authenticate(request, email=email, password=password)
-    if user is not None:
+    email = request.data.get('email')
+    password = request.data.get('password')
+    user = authenticate(request, username=email, password=password)
+    if user:
         login(request, user)
-        ip = get_client_ip(request)
-        user.last_ipv4 = ip
+        user.last_ipv4 = get_client_ip(request)
         user.save()
         # Add user data to the user session
-        request.session['id'] = str(user.id)
-        request.session['username'] = user.username
-        request.session['email'] = user.email
-        res = {"success": True, "user": {"id": str(user.id), "username": user.username, "email": user.email}, "message": "User logged in."}
-
-        return Response(res, status=status.HTTP_201_CREATED)
-        
-        # return JsonResponse({"success": True, "user": {"id": str(user.id), "username": user.username, "email": user.email}, "message": "User logged in."},
-        #                 status=HTTP_STATUS['Created'])
+        user_info = {
+            'id': str(user.id),
+            'username': user.username,
+            'email': user.email
+        }
+        request.session.update(user_info)
+        data = {"success": True, "user": user_info, "message": "User logged in."}
+        return Response(data)
     else:
-        return Response({"success": False, "message": "Invalid email or password."}, status=status.HTTP_403_FORBIDDEN)
-        # return JsonResponse({"success": False, "message": "Invalid email or password."},
-        #                     status=HTTP_STATUS['Forbidden'])
+        data = {"success": False, "message": "Invalid email or password."}
+        return Response(data, status=status.HTTP_403_FORBIDDEN)
 
-@csrf_exempt
-@post_wrapper
+
+@api_view(["POST"])
+@authentication_classes([])  # TODO: Confirm if really needed to bypass csrf token error
 def logout_view(request):
     logout(request)
-    return JsonResponse({"success": True, "message": "Logged out."},
-                        status=HTTP_STATUS['Created'])
+    data = {"success": True, "message": "Logged out."}
+    return Response(data)
 
+# Not sure do we ever check auth on unthenticated?
+@api_view(["GET"])
 def check_auth(request):
     if 'id' in request.session:
-        return JsonResponse({"success": True, 'isAuth': True}, 
-                            status=HTTP_STATUS['OK'])
+        data = {"success": True, 'isAuth': True}
+        return Response(data)
     else:
-        # Could also return a 404 not found reponse?
-        return JsonResponse({"success": False, 'isAuth': False},
-                            status=HTTP_STATUS['OK'])
+        # Should we log out?
+        data = {"success": False, 'isAuth': False}
+        return Response(data, status=status.HTTP_401_UNAUTHORIZED)
 
-@get_wrapper
+@api_view(["GET"])
 def get_csrf_token(request):
-    token = get_token(request)
-    return JsonResponse({'csrfToken': token})
+    data = {'csrfToken': get_token(request)}
+    return Response(data)
     
-@csrf_exempt
 @login_required
-@post_wrapper
+@api_view(["POST"])
 def change_password(request):
-    req = json.loads(request.body)
-    new_password = request['newPassword']
+    new_password = request.data.get('newPassword')
     email = request.session.get('email')
     user = User.objects.get(email=email)
     user.set_password(new_password)
     user.save()
-    return JsonResponse({'success': True, 'message': 'Password changed.'},
-                        status=HTTP_STATUS['Created'])
+    data = {'success': True, 'message': 'Password changed.'}
+    return Response(data)
 
 
