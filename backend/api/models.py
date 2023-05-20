@@ -4,9 +4,7 @@ from django.utils import timezone
 from django.db import models
 from django.core.validators import validate_ipv4_address, MaxValueValidator, MinValueValidator
 from uuid import uuid4
-from api.constants.genders import GENDERS_MODEL
-from api.constants.relationships import RELATIONSHIPS_MODEL
-from api.constants.user_roles import USER_ROLES_MODEL
+from api.constants  import user_roles, relationships, genders
 
 # Custom user model
 # Login:
@@ -23,7 +21,7 @@ class User(AbstractUser):
     recovery_phone = models.CharField(max_length=55, null=True, blank=True)
     balance = models.DecimalField(max_digits=19, decimal_places=4, default=0, validators=[MinValueValidator(0)])
     last_ipv4 = models.CharField(max_length=55, default="0.0.0.0", null=True, blank=True, validators=[validate_ipv4_address])
-    user_role = models.CharField(max_length=10, default="normal", choices=USER_ROLES_MODEL)
+    user_role = models.CharField(max_length=10, default="normal", choices=user_roles.CHOICES)
     deleted_at = models.DateTimeField(null=True, blank=True)
     
 
@@ -42,6 +40,7 @@ class User(AbstractUser):
         }
 
 class UserProfile(models.Model):
+class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     profile_pic_url = models.URLField(max_length=300, default=f"{settings.MEDIA_URL}images/avatars/default-profile-pic.webp")
     given_name = models.CharField(max_length=35, null=True, blank=True)
@@ -49,8 +48,8 @@ class UserProfile(models.Model):
     display_name = models.CharField(max_length=70, null=True, blank=True)
     bio = models.CharField(max_length=5000, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    gender = models.CharField(max_length=11, null=True, blank=True, choices=GENDERS_MODEL)
-    relationship = models.CharField(max_length=11, null=True, blank=True, choices=RELATIONSHIPS_MODEL)
+    gender = models.CharField(max_length=11, null=True, blank=True, choices=genders.CHOICES)
+    relationship = models.CharField(max_length=11, null=True, blank=True, choices=relationships.CHOICES)
     relationship_with = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="relationships_with")
     language = models.CharField(max_length=100, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
@@ -111,8 +110,8 @@ class Ad(models.Model):
     created_at = models.DateTimeField(auto_now_add=True) 
     targ_age_start = models.SmallIntegerField(null=True, blank=True, validators=[MinValueValidator(18), MaxValueValidator(125)])
     targ_age_end = models.SmallIntegerField(null=True, blank=True, validators=[MinValueValidator(18), MaxValueValidator(125)])
-    targ_gender = models.CharField(max_length=11, null=True, blank=True, choices=GENDERS_MODEL) 
-    targ_relationship = models.CharField(max_length=11, null=True, blank=True, choices=RELATIONSHIPS_MODEL)
+    targ_gender = models.CharField(max_length=11, null=True, blank=True, choices=genders.CHOICES) 
+    targ_relationship = models.CharField(max_length=11, null=True, blank=True, choices=relationships.CHOICES)
     targ_country = models.CharField(max_length=100, null=True, blank=True)
     targ_city = models.CharField(max_length=100, null=True, blank=True)
 

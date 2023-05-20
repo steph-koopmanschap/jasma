@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from api.utils.request_method_wrappers import post_wrapper, put_wrapper, get_wrapper, delete_wrapper
 from api.constants.http_status import HTTP_STATUS
-from api.constants.user_roles import USER_ROLES
+from api.constants import user_roles
 from api.models import User, UserProfile, UserNotificationPreferences
 from api.utils.handle_file_save import handle_file_save
 from api.utils.handle_file_delete import handle_file_delete
@@ -212,6 +212,7 @@ def delete_user(request):
     user.deleted_at = datetime.datetime.now()
 
     user_profile = UserProfile.objects.get(user=user)
+    user_profile = UserProfile.objects.get(user=user)
     user_profile.profile_pic_url = f"{settings.MEDIA_URL}images/avatars/default-profile-pic.webp"
     user_profile.given_name = "Deleted User"
     user_profile.last_name = "Deleted User"
@@ -263,7 +264,7 @@ def change_user_role(request):
     req = json.loads(request.body)
     user_id = req['user_id']
     role = req['role']
-    if role not in USER_ROLES or not user_id:
+    if role not in user_roles.LIST or not user_id:
         return JsonResponse({"success": False, "message": "Invalid user role."},
                             status=HTTP_STATUS["Bad Request"])
     user = User.objects.get(id=user_id)
@@ -279,6 +280,7 @@ def get_profile_pic(request, user_id):
                             status=HTTP_STATUS["Bad Request"])
     user = User.objects.get(id=user_id)
     user_profile = UserProfile.objects.get(user=user)
+    user_profile = UserProfile.objects.get(user=user)
     return JsonResponse({"success": True, 'profile_pic_url': user_profile.profile_pic_url})
 
 @csrf_exempt
@@ -286,6 +288,7 @@ def get_profile_pic(request, user_id):
 @post_wrapper
 def upload_profile_pic(request):
     user = request.user
+    user_profile = UserProfile.objects.get(user=user)
     user_profile = UserProfile.objects.get(user=user)
     uploaded_file = request.FILES.get('file')
     if uploaded_file:
