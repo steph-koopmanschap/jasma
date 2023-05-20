@@ -9,7 +9,7 @@ CHOICES = [
 ]
 
 # For use an an iterator or validator
-GENDERS = [
+LIST = [
     "woman",
     "man",
     "trans woman",

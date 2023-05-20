@@ -1,6 +1,3 @@
-
-# Not done as this will probably gradually phase out
-# Also would be too long
 HTTP_STATUS = {
     'OK': 200,
     'Created': 201,

@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from api.utils.request_method_wrappers import post_wrapper, put_wrapper, get_wrapper, delete_wrapper
 from api.constants.http_status import HTTP_STATUS
-from api.constants import user_s
+from api.constants import user_roles
 from api.models import User, UserProfile, User_Notification_Preferences
 from api.utils.handle_file_save import handle_file_save
 from api.utils.handle_file_delete import handle_file_delete
