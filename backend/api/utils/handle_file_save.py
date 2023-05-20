@@ -2,7 +2,7 @@ import os
 import mimetypes
 from django.conf import settings
 from uuid import uuid4
-from api.constants.files import *
+from api.constants import files
 #from django.core.files.storage import default_storage
 #from django.core.files.base import ContentFile
 #from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -27,11 +27,11 @@ def generate_new_fileName(file):
 def determine_save_location(file, file_type, context):
     save_location = ""
     try:
-        if file_type["mime_type"] in ACCEPTED_IMAGE_FORMATS:
+        if file_type["mime_type"] in files.ACCEPTED_IMAGE_FORMATS:
             save_location += "images"
-        elif file_type["mime_type"] in ACCEPTED_VIDEO_FORMATS:
+        elif file_type["mime_type"] in files.ACCEPTED_VIDEO_FORMATS:
             save_location += "videos"
-        elif file_type["mime_type"] in ACCEPTED_AUDIO_FORMATS:
+        elif file_type["mime_type"] in files.ACCEPTED_AUDIO_FORMATS:
             save_location += "audios"
         else:
             raise Exception("Wrong mime type. " + file_type["mime_type"] +  " not allowed. File saving failed.")

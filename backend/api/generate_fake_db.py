@@ -4,10 +4,8 @@ import datetime
 import random
 from faker import Faker
 from django.db.utils import IntegrityError
-from api.models import User, Post, Comment, Hashtag, User_Profile, Reported_Post, Following, Subscribed_Hashtag, Bookmarked_Post, Ad
-from api.constants.genders import GENDERS
-from api.constants.relationships import RELATIONSHIPS
-from api.constants.countries import COUNTRIES
+from api.models import User, Post, Comment, Hashtag, UserProfile, Reported_Post, Following, Subscribed_Hashtag, Bookmarked_Post, Ad
+from api.constants import countries, genders, relationships
 
 fake = Faker()
 
@@ -43,14 +41,14 @@ def generate_user():
     #if created == False:
     user.after_create()
 
-    user_profile = User_Profile.objects.get(user=user)
+    user_profile = UserProfile.objects.get(user=user)
     user_profile.given_name = fake.first_name()
     user_profile.last_name = fake.last_name()
     user_profile.bio = fake.text()
     user_profile.date_of_birth = fake.date_of_birth(minimum_age=8, maximum_age=115)
-    user_profile.gender = random.choice(GENDERS)
-    user_profile.relationship = random.choice(RELATIONSHIPS)
-    user_profile.country = random.choice(list(COUNTRIES.keys()))
+    user_profile.gender = random.choice(genders.LIST)
+    user_profile.relationship = random.choice(relationships.LIST)
+    user_profile.country = random.choice(list(countries.NAME_ABBR.keys()))
     user_profile.website = fake.url()
     user_profile.save()
 
@@ -62,7 +60,7 @@ def generate_user_relationship():
         user = pick_random_user()
         relationship_with = pick_random_user()
 
-    user_profile = User_Profile.objects.get(user=user)
+    user_profile = UserProfile.objects.get(user=user)
     user_profile.relationship_with = relationship_with
     user_profile.save()
 
@@ -157,9 +155,9 @@ def generate_ad():
                                 ad_url=None,
                                 expires_at=expires_at,                                targ_age_start=age_start,
                                 targ_age_end=age_end,
-                                targ_gender=random.choice(GENDERS),
-                                targ_relationship=random.choice(RELATIONSHIPS),
-                                targ_country=random.choice(list(COUNTRIES.keys())),
+                                targ_gender=random.choice(genders.LIST),
+                                targ_relationship=random.choice(relationships.LIST),
+                                targ_country=random.choice(list(countries.NAME_ABBR.keys())),
                                 targ_city=fake.city())
 
 def generate_fake_db(n):

@@ -231,7 +231,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='User_Profile',
+            name='UserProfile',
             fields=[
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
                 ('profile_pic_url', models.URLField(default='http://localhost:8000/media/avatars/default-profile-pic.webp', max_length=300)),
