@@ -31,7 +31,7 @@ def determine_save_location(file, file_type, context):
             save_location += "images"
         elif file_type["mime_type"] in files.ACCEPTED_VIDEO_FORMATS:
             save_location += "videos"
-        elif file_type["mime_type"] in ACCEPTED_AUDIO_FORMATS:
+        elif file_type["mime_type"] in files.ACCEPTED_AUDIO_FORMATS:
             save_location += "audios"
         else:
             raise Exception("Wrong mime type. " + file_type["mime_type"] +  " not allowed. File saving failed.")
