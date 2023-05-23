@@ -40,7 +40,6 @@ class User(AbstractUser):
         }
 
 class UserProfile(models.Model):
-class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     profile_pic_url = models.URLField(max_length=300, default=f"{settings.MEDIA_URL}images/avatars/default-profile-pic.webp")
     given_name = models.CharField(max_length=35, null=True, blank=True)

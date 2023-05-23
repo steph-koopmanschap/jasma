@@ -3,6 +3,10 @@
 # Allow to run command everytime the server gets restarted
 # We could expand upon this using STAGE?
 
+set -o errexit
+set -o pipefail
+set -o nounset
+
 echo "Prepare database migrations"
 python manage.py makemigrations
 

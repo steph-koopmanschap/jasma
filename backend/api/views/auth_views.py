@@ -105,5 +105,3 @@ def change_password(request):
     user.save()
     data = {'success': True, 'message': 'Password changed.'}
     return Response(data)
-
-
