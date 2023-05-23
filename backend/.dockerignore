@@ -1,4 +1,4 @@
 # Ignores python byte code
-**__pycache__
+**/__pycache__
 # Ignore content of log file
 logs/*
