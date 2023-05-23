@@ -27,7 +27,11 @@ test/test/reports/*
 *.pem
 
 # Environments
-.env*
+# This will need cleanup
+
+.env
+!/.env
+!/.env/.local/**/*.env
 !.env*.example
 !.env.example
 .venv
