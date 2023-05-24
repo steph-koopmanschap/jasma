@@ -268,7 +268,10 @@ def add_post_bookmark(request):
     post_id = req['post_id']
 
     post = Post.objects.get(post_id=post_id)
-    BookmarkedPost.objects.create(user=user, post=post)
+    _, created = BookmarkedPost.objects.get_or_create(user=user, post=post)
+    if not created:
+        return JsonResponse({'success': True, 'message': "Post already bookmarked."}, 
+                            status=HTTP_STATUS["OK"])
     return JsonResponse({'success': True, 'message': "Post bookmarked successfully."}, 
                         status=HTTP_STATUS["Created"])
 

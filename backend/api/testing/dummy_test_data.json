@@ -14,12 +14,29 @@
     "test_hashtags": [
         "test", "fire", "bridge", "sky"
     ],
-    "test_post": {
+    "test_post_text": {
         "post_id": "",
-        "text_content": "This is a test post."
+        "text_content": "This is a text post.",
+        "file_url": ""
+    },
+    "test_post_image": {
+        "post_id": "",
+        "text_content": "This is a image post.",
+        "file_url": ""
+    },
+    "test_post_video": {
+        "post_id": "",
+        "text_content": "This is a video post.",
+        "file_url": ""
+    },
+    "test_post_audio": {
+        "post_id": "",
+        "text_content": "This is a audio post.",
+        "file_url": ""
     },
     "test_comment": {
         "comment_id": "",
-        "text_content": "This is a test comment."
+        "text_content": "This is a test comment.",
+        "file_url": ""
     }
 }
