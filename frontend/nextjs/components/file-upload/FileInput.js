@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
-import useToast from "../../hooks/useToast";
-import checkFileTooLarge from "../../utils/checkFileTooLarge.js";
+import { useToast } from "@/shared/model/hooks/useToast.js";
+import { checkFileTooLarge } from "@/shared/utils";
 
 function fileInputError(text) {
     toast.error(text, {

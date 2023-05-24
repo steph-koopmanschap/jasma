@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import useToast from "../hooks/useToast";
-import api from "../../frontend/nextjs/clientAPI/api.js";
 import FileUploader from "./file-upload/FileUploader.js";
+import jasmaApi from "@/clientAPI/api";
+import { useToast } from "@/shared/model/hooks/useToast.js";
 
 const initialCommentData = { post_id: "", comment_text: "", context: "comment" };
 
@@ -25,7 +25,7 @@ export default function CreateComment(props) {
         e.preventDefault();
 
         //TODO: Send file too.
-        const createdComment = await api.createComment(commentData, file);
+        const createdComment = await jasmaApi.createComment(commentData, file);
 
         setTextInput("");
         setFile(null);

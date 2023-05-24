@@ -11,11 +11,11 @@ const defaultOptions = {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    theme: defaultTheme,
+    theme: defaultTheme
 };
 
 export function toastSuccess(text) {
-    toast.success(text, { 
+    toast.success(text, {
         position: defaultPosition,
         autoClose: false,
         hideProgressBar: true,
@@ -23,12 +23,12 @@ export function toastSuccess(text) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: defaultTheme,
+        theme: defaultTheme
     });
 }
 
 export function toastError(text) {
-    toast.error(text, { 
+    toast.error(text, {
         position: defaultPosition,
         autoClose: false,
         hideProgressBar: true,
@@ -36,6 +36,6 @@ export function toastError(text) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: defaultTheme, 
+        theme: defaultTheme
     });
 }

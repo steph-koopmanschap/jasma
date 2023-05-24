@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { useQuery } from "react-query";
-import api from "../../frontend/nextjs/clientAPI/api.js";
+import api from "../../nextjs/clientAPI/api.js";
 
 export default function ProfilePic(props) {
     //rounded-t-full (css)

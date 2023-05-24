@@ -1,6 +1,6 @@
 import axios from "axios";
 import fetch from "node-fetch";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 function createMultipartData(data, file) {
     const formData = new FormData();
@@ -17,26 +17,24 @@ function createMultipartData(data, file) {
     return formData;
 }
 
-let baseURL = '';
-if (process.env.NEXT_PUBLIC_NODE_ENV === 'development') {
+let baseURL = "";
+if (process.env.NEXT_PUBLIC_NODE_ENV === "development") {
     baseURL = `http://${process.env.NEXT_PUBLIC_API_SERVER_URL}:${process.env.NEXT_PUBLIC_API_SERVER_PORT}`;
 }
 //In production the Nginx reverse proxy will redirect traffic to the correct port.
-else if (process.env.NEXT_PUBLIC_NODE_ENV === 'production') {
+else if (process.env.NEXT_PUBLIC_NODE_ENV === "production") {
     baseURL = `https://${process.env.NEXT_PUBLIC_API_SERVER_URL}`;
 }
 
 //Check if a cookie exists by name
 function checkCookieExists(name) {
     //First get all the cookies in the current document
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) 
-    {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
         //Trim trailing whitespace
         const cookie = cookies[i].trim();
         //check if cookie equals the name.
-        if (cookie.startsWith(`${name}=`)) 
-        {
+        if (cookie.startsWith(`${name}=`)) {
             return true;
         }
     }
@@ -46,21 +44,21 @@ function checkCookieExists(name) {
 //Get the CSRF token from the cookie.
 async function get_CSRF_TOKEN_fromCookie() {
     console.log("This function is disabled for now...FROM: async function get_CSRF_TOKEN_fromCookie() in api.js");
-//     let token = "";
-//    // The CSRF token already exists in the cookie
-//     if (checkCookieExists('XSRF-TOKEN') === true) {
-//         token = Cookies.get('XSRF-TOKEN');
-//     }
-//     // if (checkCookieExists('_csrf') === true)
-//     // {
-//     //     token = Cookies.get('_csrf');
-//     // }
-//     //The CSRF Token does not exist yet. Request server for a CSRF Token.
-//     else {
-//         token = await requestCSRF_TOKEN();
-//     }
-//     console.log("token:", token);
-//     return token;
+    //     let token = "";
+    //    // The CSRF token already exists in the cookie
+    //     if (checkCookieExists('XSRF-TOKEN') === true) {
+    //         token = Cookies.get('XSRF-TOKEN');
+    //     }
+    //     // if (checkCookieExists('_csrf') === true)
+    //     // {
+    //     //     token = Cookies.get('_csrf');
+    //     // }
+    //     //The CSRF Token does not exist yet. Request server for a CSRF Token.
+    //     else {
+    //         token = await requestCSRF_TOKEN();
+    //     }
+    //     console.log("token:", token);
+    //     return token;
 }
 
 const axiosInstance = axios.create({
@@ -84,10 +82,10 @@ class Api {
 
         //Attach CSRF token to requests, except GET request.
         //The request intercepter performs some code before every request.
-        
+
         // this._api.interceptors.request.use((config) => {
         //     // Only send CSRF token on POST, PUT, and DELETE requests
-        //     if (['post', 'put', 'delete'].includes(config.method.toLowerCase())) 
+        //     if (['post', 'put', 'delete'].includes(config.method.toLowerCase()))
         //     {
         //         //config.headers['X-CSRF-Token'] = get_CSRF_TOKEN_fromCookie();
         //         config.headers['_csrf'] = get_CSRF_TOKEN_fromCookie();
@@ -207,7 +205,7 @@ class Api {
     }
 
     async uploadProfilePic(file) {
-        const multipartData = createMultipartData({context: "avatar"}, file);
+        const multipartData = createMultipartData({ context: "avatar" }, file);
         const response = await this.api.put(`/api/users/uploadProfilePic`, multipartData, {
             headers: { "content-type": "multipart/form-data" }
         });
@@ -281,7 +279,7 @@ class Api {
         const response = await this.api.post(`/api/posts/getMultiplePosts`, {
             post_ids: post_ids
         });
-        console.log("response.data", response.data)
+        console.log("response.data", response.data);
         return response.data;
     }
 
@@ -337,7 +335,7 @@ class Api {
         const response = await this.api.get(`/api/comments/getComments?post_id=${post_id}&limit=${limit}`);
         return response.data;
     }
-    
+
     async search(keyword, filter) {
         const response = await this.api.get(`/api/search/search?q=${keyword}&filter=${filter}`);
         return response.data;
@@ -385,7 +383,7 @@ class Api {
 
     async getNotifications() {
         const response = await this.api.get(`/api/notifications/getNotifications`);
-        console.log("response.data: from getNotifications", response.data)
+        console.log("response.data: from getNotifications", response.data);
         return response.data;
     }
 
@@ -396,58 +394,56 @@ class Api {
         });
         return response.data;
     }
-    
+
     async getSubscribedHashtags() {
         const response = await this.api.get(`/api/hashtags/getSubscribedHashtags`);
-        return response.data;        
+        return response.data;
     }
 
     async subscribeToHashtags(hashtags) {
         const response = await this.api.post(`/api/hashtags/subscribeToHashtags`, {
             hashtags: hashtags
         });
-        return response.data;        
+        return response.data;
     }
 
     async unsubscribeFromHashtag(hashtag) {
         const response = await this.api.delete(`/api/hashtags/unsubscribeFromHashtag/${hashtag}`);
-        return response.data;        
+        return response.data;
     }
 
     async createAd(advertData) {
         const response = await this.api.post(`/api/ads/createAd`, {
             advertData: advertData
         });
-        return response.data;        
+        return response.data;
     }
 
     async deleteAd(adID) {
         const response = await this.api.delete(`/api/ads/deleteAd/${adID}`);
-        return response.data;        
+        return response.data;
     }
 
     async editAd(advertData) {
         const response = await this.api.put(`/api/ads/editAd`, {
             advertData: advertData
         });
-        return response.data;        
+        return response.data;
     }
 
     async getAd(adID) {
         const response = await this.api.get(`/api/ads/getAd/${adID}`);
-        return response.data;        
+        return response.data;
     }
 
     async getAds() {
         const response = await this.api.get(`/api/ads/getAds`);
-        return response.data;        
+        return response.data;
     }
 }
 
 const jasmaApi = new Api();
 export default jasmaApi;
-
-
 
 /*
 

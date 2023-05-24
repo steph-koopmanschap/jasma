@@ -2,7 +2,7 @@ import { KB, MB, GB } from "../constants/fileSizes";
 
 //Returns a number in bytes to string in human readable format
 //Either bytes, KB, MB, or GB
-export default function bytesToHuman(bytes) {
+export function bytesToHuman(bytes) {
     if (bytes < KB) {
         return `${bytes} bytes`;
     } else if (bytes >= KB && bytes < MB) {

@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import useToast from "../hooks/useToast";
-import hashtagFormatter from "../utils/hashtagFormatter.js";
-import api from "../clientAPI/api.js";
 import FileUploader from "./file-upload/FileUploader.js";
+import { useToast } from "@/shared/model/hooks/useToast.js";
+import jasmaApi from "@/clientAPI/api.js";
+import { hashtagFormatter } from "@/shared/utils/index.js";
 
 const initialPostData = { text_content: "", hashtags: [], context: "post" };
 export default function CreatePost() {
-    
     const { notifyToast } = useToast();
 
     const [postData, setPostData] = useState(initialPostData);
@@ -22,7 +21,7 @@ export default function CreatePost() {
         //prevent page from refreshing
         e.preventDefault();
 
-        const createdPost = await api.createPost(postData, file);
+        const createdPost = await jasmaApi.createPost(postData, file);
 
         //Empty the input fields after creating a post.
         setTextInput("");
@@ -67,7 +66,11 @@ export default function CreatePost() {
                 action="#"
                 onSubmit={createPost}
             >
-                <input type="hidden" name="XSRF-TOKEN" value={api.getCSRF_TOKEN()} />
+                <input
+                    type="hidden"
+                    name="XSRF-TOKEN"
+                    value={api.getCSRF_TOKEN()}
+                />
                 <textarea
                     className="my-2 p-1 mx-2"
                     id="newPostText"

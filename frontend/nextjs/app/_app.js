@@ -7,21 +7,26 @@ import { RecoilRoot } from "recoil";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import Layout from "../components/Layout";
 import "react-toastify/dist/ReactToastify.css";
+
 function MyApp({ Component, pageProps }) {
     const [queryClient] = React.useState(() => new QueryClient());
 
-    const paypalClientID = (process.env.NEXT_PUBLIC_NODE_ENV === 'production') ? 
-                                process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID_PRODUCTION 
-                            :   process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID_SANDBOX;
+    const paypalClientID =
+        process.env.NEXT_PUBLIC_NODE_ENV === "production"
+            ? process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID_PRODUCTION
+            : process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID_SANDBOX;
 
     return (
         <RecoilRoot>
-            <QueryClientProvider client={queryClient}>
+            <QueryClientProvider
+                contextSharing={true}
+                client={queryClient}
+            >
                 <ToastContainer />
-                <PayPalScriptProvider options= {{"client-id": paypalClientID}}>
-                <Layout>
-                    <Component {...pageProps} />
-                </Layout>
+                <PayPalScriptProvider options={{ "client-id": paypalClientID }}>
+                    <Layout>
+                        <Component {...pageProps} />
+                    </Layout>
                 </PayPalScriptProvider>
                 <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>

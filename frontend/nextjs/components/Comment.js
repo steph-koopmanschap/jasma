@@ -2,10 +2,10 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { formatDistance } from "date-fns";
-import useToast from "../hooks/useToast";
-import api from "../../frontend/nextjs/clientAPI/api.js";
 import ProfilePic from "./ProfilePic";
 import DropDownBtn from "./DropDownBtn.js";
+import { useToast } from "@/shared/model/hooks/useToast.js";
+import { api } from "@/shared/api/axios";
 
 export default function Comment(props) {
     const { commentData } = props;

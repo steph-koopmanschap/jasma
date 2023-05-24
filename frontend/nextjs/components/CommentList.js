@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "react-query";
-import api from "../../frontend/nextjs/clientAPI/api.js";
 import Comment from "./Comment";
+import jasmaApi from "@/clientAPI/api";
 
 export default function CommentList(props) {
     const { postID } = props;
@@ -10,7 +10,7 @@ export default function CommentList(props) {
     const { status, isLoading, isError, data, error, refetch } = useQuery(
         [`comments_${postID}`],
         async () => {
-            return await api.getComments(postID, 25);
+            return await jasmaApi.getComments(postID, 25);
         },
         {
             enabled: true,

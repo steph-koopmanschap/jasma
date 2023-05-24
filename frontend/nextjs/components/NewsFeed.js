@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { useQuery } from 'react-query';
-import api from "../clientAPI/api.js";
+import React, { useState, useEffect } from "react";
+import { useQuery } from "react-query";
 import Post from "./Post";
+import jasmaApi from "@/clientAPI/api";
 
 export default function NewsFeed() {
-
     const [posts, setPosts] = useState([]);
 
-    const { status, isLoading, isError, data, error, refetch } = useQuery(["newsFeed"], 
-    async () => {return await api.getNewsFeed()},
-    {   
-        enabled: true,
-        refetchOnWindowFocus: false
-    }
+    const { status, isLoading, isError, data, error, refetch } = useQuery(
+        ["newsFeed"],
+        async () => {
+            return await jasmaApi.getNewsFeed();
+        },
+        {
+            enabled: true,
+            refetchOnWindowFocus: false
+        }
     );
 
     //console.log("HELLO FROM NEWSFEED");
@@ -24,9 +26,9 @@ export default function NewsFeed() {
     //Refresh newsfeed without reloading the page????
     const refresh = () => {
         refetch();
-    }
-    
-    // useEffect(() => { 
+    };
+
+    // useEffect(() => {
     //     console.log("test");
     //     console.log(data);
     //     //refetch();
@@ -35,27 +37,34 @@ export default function NewsFeed() {
     //         console.log(data);
     //         setPosts(data.posts);
     //     }
-    // }, []);   
+    // }, []);
 
     if (isLoading) {
-        return (<h1>Retrieving posts...</h1>);
+        return <h1>Retrieving posts...</h1>;
     }
 
     if (isError) {
-        return (<h1>{error}</h1>);
+        return <h1>{error}</h1>;
     }
 
-    return ( 
+    return (
         <div>
-            <button className='formButtonDefault py-2 px-2 m-2 outline-white border flex mx-auto' onClick={refresh}>Refresh</button>
-            {data ? data.posts.map((post) => (
-                <Post
-                    key={post.post_id}
-                    postData={post}
-                />
-            ))
-            :
-            <p>No posts found...</p>}
+            <button
+                className="formButtonDefault py-2 px-2 m-2 outline-white border flex mx-auto"
+                onClick={refresh}
+            >
+                Refresh
+            </button>
+            {data ? (
+                data.posts.map((post) => (
+                    <Post
+                        key={post.post_id}
+                        postData={post}
+                    />
+                ))
+            ) : (
+                <p>No posts found...</p>
+            )}
         </div>
     );
 }

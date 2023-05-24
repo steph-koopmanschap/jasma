@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { formatDistance } from "date-fns";
-import useToast from "../hooks/useToast";
-import api from "../../frontend/nextjs/clientAPI/api.js";
 import CreateComment from "./CreateComment";
 import CommentList from "./CommentList";
 import ProfilePic from "./ProfilePic";
 import DropDownBtn from "./DropDownBtn.js";
 import Modal from "./Modal.js";
+import { AddBookmark } from "@/features/bookmark/add-mark";
+import SharePostBtn from "@/features/post/ui/share/SharePostBtn";
+import { DeletePostBtn, EditPostBtn } from "@/features/post";
+import jasmaApi from "@/clientAPI/api";
+import { useToast } from "@/shared/model/hooks";
 
 export default function Post(props) {
     const { postData } = props;
@@ -23,44 +26,17 @@ export default function Post(props) {
         setReportModalState(false);
     };
 
-    const deletePost = async () => {
-        const res = await api.deletePost(postData.post_id);
-        notifyToast("Post deleted.");
-    };
-
-    const editPost = async () => {
-        console.log("Editing posts does not work yet.");
-    };
-
     const reportPost = async (e) => {
         //prevent page from refreshing
         e.preventDefault();
         //Get reason from input field
         const report_reason = document.getElementById("reportReasonInput").value;
         console.log("report_reason", report_reason);
-        const res = await api.createReport(postData.post_id, report_reason);
+        const res = await jasmaApi.createReport(postData.post_id, report_reason);
         if ((res.message = "success")) {
             notifyToast("Post has been reported.");
         }
         closeReportModal();
-    };
-
-    const bookmarkPost = async () => {
-        const res = await api.addPostBookmark(postData.post_id);
-        if ((res.message = "success")) {
-            notifyToast("Post has been bookmarked.");
-        }
-    };
-
-    const sharePost = async () => {
-        navigator.clipboard.writeText(`${window.location.origin}/post/${postData.post_id}`).then(
-            () => {
-                notifyToast("Link has been copied to your clipboard.");
-            },
-            () => {
-                /* clipboard write failed */
-            }
-        );
     };
 
     return (
@@ -76,29 +52,12 @@ export default function Post(props) {
                     {/* Rendered if user is logged in AND is owner of the post */}
                     {window.localStorage.getItem("loggedInUserID") === postData.user_id ? (
                         <React.Fragment>
-                            <button
-                                className="formButtonDefault outline-white border my-1"
-                                onClick={deletePost}
-                            >
-                                Delete
-                            </button>
-                            <button
-                                className="formButtonDefault outline-white border my-1"
-                                onClick={editPost}
-                            >
-                                Edit
-                            </button>
+                            <DeletePostBtn post_id={postData.post_id} />
+                            <EditPostBtn post_id={postData.post_id} />
                         </React.Fragment>
                     ) : null}
                     {/* Rendered if user is logged in*/}
-                    {window.localStorage.getItem("loggedInUserID") ? (
-                        <button
-                            className="formButtonDefault outline-white border my-1"
-                            onClick={bookmarkPost}
-                        >
-                            Bookmark
-                        </button>
-                    ) : null}
+                    {window.localStorage.getItem("loggedInUserID") ? <AddBookmark post_id={postData.post_id} /> : null}
                     {/* Rendered if user is logged in AND is NOT owner of the post */}
                     {window.localStorage.getItem("loggedInUserID") !== postData.user_id ? (
                         <React.Fragment>
@@ -145,12 +104,7 @@ export default function Post(props) {
                         replacementIcon={<button className="formButtonDefault outline-white border my-1">Share</button>}
                     >
                         <React.Fragment>
-                            <p
-                                className="formButtonDefault outline-black border my-1"
-                                onClick={sharePost}
-                            >
-                                Copy link
-                            </p>
+                            <SharePostBtn post_id={postData.post_id} />
                             <p className="text-black bg-white border-2 border-black p-2">{`${window.location.origin}/post/${postData.post_id}`}</p>
                         </React.Fragment>
                     </DropDownBtn>
