@@ -1,21 +1,23 @@
-import React from 'react';
-import Image from 'next/image';
-import { useQuery } from 'react-query';
-import api from "../clientAPI/api.js";
+import React from "react";
+import Image from "next/image";
+import { useQuery } from "react-query";
+import api from "../../frontend/nextjs/clientAPI/api.js";
 
 export default function ProfilePic(props) {
-
     //rounded-t-full (css)
 
     const { userID } = props;
 
     //Fetch profile pic from server
-    const { status, isLoading, isError, data, error, refetch } = useQuery([`profilePic_${userID}`], 
-    async () => {return await api.getProfilePic(userID)},
-    {   
-        enabled: true,
-        refetchOnWindowFocus: false
-    }
+    const { status, isLoading, isError, data, error, refetch } = useQuery(
+        [`profilePic_${userID}`],
+        async () => {
+            return await api.getProfilePic(userID);
+        },
+        {
+            enabled: true,
+            refetchOnWindowFocus: false
+        }
     );
 
     // if (data) {
@@ -27,10 +29,10 @@ export default function ProfilePic(props) {
     //     //Create url from blob for img src={profilePic}
     //     profilePicSrc = window.URL.createObjectURL(data);
     // }
-    
+
     return (
         <React.Fragment>
-            <Image 
+            <Image
                 className=" m-2"
                 src={data ? data.file_url : "/"}
                 width={props.width}

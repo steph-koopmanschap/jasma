@@ -1,11 +1,11 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBell } from '@fortawesome/free-solid-svg-icons'
-import Brand from "../brand/Brand";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
+import Brand from "../../widgets/brand/index";
 import SearchBar from "../SearchBar";
 import ThemeSwitch from "../ThemeSwitch";
 import NavProfile from "../profile/NavProfile";
 import DropDownBtn from "../DropDownBtn";
-import NotificationList from '../NotificationList';
+import NotificationList from "../NotificationList";
 
 const Nav = () => {
     return (
@@ -20,15 +20,15 @@ const Nav = () => {
 
             <div className="flex">
                 <DropDownBtn
-                    style="flex flex-col hover:text-sky-400" 
+                    style="flex flex-col hover:text-sky-400"
                     dropDownStyle="flex flex-col p-2 m-1 w-1/2 bg-gray-900 place-self-end "
                     addIcon={false}
-                    replacementIcon={<FontAwesomeIcon icon={faBell} />} 
+                    replacementIcon={<FontAwesomeIcon icon={faBell} />}
                 >
                     <NotificationList />
                 </DropDownBtn>
                 <NavProfile />
-                <div className='flex self-center'>
+                <div className="flex self-center">
                     <ThemeSwitch />
                 </div>
             </div>

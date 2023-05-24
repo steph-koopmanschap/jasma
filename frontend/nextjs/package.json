@@ -1,14 +1,7 @@
 {
-    "name": "jasma-next",
+    "name": "nextjs",
     "version": "0.1.0",
     "private": true,
-    "description": "JASMA-next",
-    "homepage": "https://github.com/steph-koopmanschap/jasma#readme",
-    "author": "Steph Koopmanschap and Others",
-    "license": "Apache-2.0",
-    "keywords": [
-        "socialmedia"
-    ],
     "scripts": {
         "dev": "RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED=false next dev",
         "build": "next build",
@@ -27,16 +20,16 @@
         "date-fns": "^2.29.3",
         "ioredis": "^5.2.4",
         "js-cookie": "^3.0.1",
-        "next": "^13.1.6",
         "next-session": "^4.0.5",
         "node-fetch": "^2.6.1",
-        "react": "18.2.0",
-        "react-dom": "18.2.0",
         "react-query": "^3.39.2",
         "react-toastify": "^9.1.1",
         "recoil": "^0.7.6",
         "sharp": "^0.31.3",
-        "styled-components": "^5.3.6"
+        "styled-components": "^5.3.6",
+        "next": "13.4.3",
+        "react": "18.2.0",
+        "react-dom": "18.2.0"
     },
     "devDependencies": {
         "autoprefixer": "^10.4.13",

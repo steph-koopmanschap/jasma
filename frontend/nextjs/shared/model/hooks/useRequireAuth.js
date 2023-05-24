@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
-import api from '../clientAPI/api.js';
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import api from "../../../clientAPI/api.js";
 
 //Check if a page requires auth.
 
@@ -12,7 +12,7 @@ const useRequireAuth = (redirectUrl) => {
     useEffect(() => {
         const checkAuth = async () => {
             const isLoggedIn = await api.checkAuthClientSide();
-            if (isLoggedIn === false && !window.localStorage.getItem('loggedInUserID')) {
+            if (isLoggedIn === false && !window.localStorage.getItem("loggedInUserID")) {
                 router.replace(redirectUrl);
             }
         };
@@ -20,4 +20,4 @@ const useRequireAuth = (redirectUrl) => {
     }, [router, redirectUrl]);
 };
 
-export default useRequireAuth;
+export { useRequireAuth };
