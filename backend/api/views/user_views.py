@@ -16,17 +16,19 @@ from api.utils.staff_auth_wrappers import admin_required
 # What info is returned is provided by the query
 # ID, Usermame, email, and role are provided automatically
 # NOTE: Make sure no private data of the user can be obtained
+
+
 @get_wrapper
 def get_user(request, user_id):
     if not user_id:
         return JsonResponse({"success": False, "message": "No valid user id provided"},
                             status=HTTP_STATUS["BAD_REQUEST"])
-    
+
     user = User.objects.get(id=user_id)
     if not user:
         return JsonResponse({"success": False, "message": "No user found"},
                             status=HTTP_STATUS["NOT_FOUND"])
-    
+
     user_profile = UserProfile.objects.get(user=user)
     user_notif_preferences = UserNotificationPreferences.objects.get(user=user)
 
@@ -44,10 +46,12 @@ def get_user(request, user_id):
         if hasattr(user_profile, attribute):
             returned_dict[attribute] = getattr(user_profile, attribute)
         if hasattr(user_notif_preferences, attribute):
-            returned_dict[attribute] = getattr(user_notif_preferences, attribute)
+            returned_dict[attribute] = getattr(
+                user_notif_preferences, attribute)
 
     return JsonResponse({"success": True, "user": returned_dict},
                         status=HTTP_STATUS["OK"])
+
 
 @login_required
 @get_wrapper
@@ -70,12 +74,15 @@ def get_loggedin_user(request):
         if hasattr(user_profile, attribute):
             returned_dict[attribute] = getattr(user_profile, attribute)
         if hasattr(user_notif_preferences, attribute):
-            returned_dict[attribute] = getattr(user_notif_preferences, attribute)
+            returned_dict[attribute] = getattr(
+                user_notif_preferences, attribute)
 
     return JsonResponse({"success": True, "user": returned_dict},
                         status=HTTP_STATUS["OK"])
 
 # NOTE: NOT DONE YET
+
+
 @login_required
 @put_wrapper
 def update_user(request):
@@ -84,7 +91,7 @@ def update_user(request):
     user_profile = UserProfile.objects.get(user=user)
     user_notif_preferences = UserNotificationPreferences.objects.get(user=user)
 
-        #UserProfile.objects.get(user=user).update(**req)
+    # UserProfile.objects.get(user=user).update(**req)
     # TODO: Add some email verification first?
     email = req['email']
     if email:
@@ -95,7 +102,7 @@ def update_user(request):
         user.recovery_email = recovery_email
 
     phone = req["phone"]
-    if phone: 
+    if phone:
         user.phone = phone
 
     recovery_phone = req["recovery_phone"]
@@ -153,7 +160,7 @@ def update_user(request):
     website = req["website"]
     if website:
         user_profile.website = website
-    
+
     # Update notification settings
     is_all_email = req["is_all_email"]
     if is_all_email:
@@ -194,10 +201,12 @@ def update_user(request):
     user.save()
     user_profile.save()
     user_notif_preferences.save()
-    return JsonResponse({"success": True, "message": "User updated successfully."}, 
+    return JsonResponse({"success": True, "message": "User updated successfully."},
                         status=HTTP_STATUS["Created"])
 
 # Soft delete a user.
+
+
 @login_required
 @delete_wrapper
 def delete_user(request):
@@ -227,7 +236,8 @@ def delete_user(request):
     user_profile.city = None
     user_profile.website = None
 
-    user_notification_preferences = UserNotificationPreferences.objects.get(user=user)
+    user_notification_preferences = UserNotificationPreferences.objects.get(
+        user=user)
     user_notification_preferences.is_all_email = False
     user_notification_preferences.is_all_push = False
     user_notification_preferences.is_all_inapp = False
@@ -237,7 +247,7 @@ def delete_user(request):
     user_notification_preferences.is_new_follower_push = False
     user_notification_preferences.is_comment_on_post_inapp = False
     user_notification_preferences.is_new_follower_inapp = False
-    
+
     user_notification_preferences.save()
     user_profile.save()
     user.save()
@@ -257,6 +267,7 @@ def delete_user(request):
 #     expiration_date = req['expiration_date']
 #     user = User.objects.get(id=user_id)
 
+
 @login_required
 @admin_required
 @put_wrapper
@@ -273,6 +284,7 @@ def change_user_role(request):
     return JsonResponse({"success": True, "message": "User role changed successfully."},
                         status=HTTP_STATUS["OK"])
 
+
 @get_wrapper
 def get_profile_pic(request, user_id):
     if not user_id:
@@ -282,6 +294,7 @@ def get_profile_pic(request, user_id):
     user_profile = UserProfile.objects.get(user=user)
     user_profile = UserProfile.objects.get(user=user)
     return JsonResponse({"success": True, 'profile_pic_url': user_profile.profile_pic_url})
+
 
 @csrf_exempt
 @login_required
@@ -294,8 +307,8 @@ def upload_profile_pic(request):
     if uploaded_file:
         saved_file = handle_file_save(uploaded_file, "avatar")
         if saved_file == False:
-            return JsonResponse({'successs': False, 'message': "File upload failed."}, 
-                    status=HTTP_STATUS["Internal Server Error"])
+            return JsonResponse({'successs': False, 'message': "File upload failed."},
+                                status=HTTP_STATUS["Internal Server Error"])
         # Delete the old profile pic, but only if its not the default avatar
         # Default profile pic is shared by all accounts without profile pic and should never be deleted
         if user_profile.profile_pic_url != f"{settings.MEDIA_URL}images/avatars/default-profile-pic.webp":

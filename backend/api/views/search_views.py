@@ -4,6 +4,7 @@ from api.models import User, Post, Comment, Hashtag
 from django.http import JsonResponse
 from django.db.models import Q
 
+
 def search_hashtags(keyword, post_type):
     # Get all hashtags that contain the keyword
     hashtags = Hashtag.objects.filter(hashtag__icontains=keyword)
@@ -14,24 +15,29 @@ def search_hashtags(keyword, post_type):
     posts_formatted = Post.format_posts_dict(posts)
     return posts_formatted
 
+
 def search_posts(keyword, post_type):
-    if post_type !=  "all":
+    if post_type != "all":
         posts = Post.objects.filter(
-                        Q(text_content__icontains=keyword),
-                        Q(post_type=post_type))
+            Q(text_content__icontains=keyword),
+            Q(post_type=post_type))
     else:
         posts = Post.objects.filter(Q(text_content__icontains=keyword))
     posts_formatted = Post.format_posts_dict(posts)
     return posts_formatted
+
 
 def search_comments(keyword):
     comments = Comment.objects.filter(Q(text_content__icontains=keyword))
     comments_formatted = Post.format_posts_dict(comments)
     return comments_formatted
 
+
 def search_users(keyword):
-    users = list(User.objects.filter(username__icontains=keyword).values('user_id', 'username'))
+    users = list(User.objects.filter(
+        username__icontains=keyword).values('user_id', 'username'))
     return users
+
 
 @get_wrapper
 def search(request):
@@ -39,7 +45,7 @@ def search(request):
     filter = int(request.GET.get('filter'))
     post_type = request.GET.get('post_type')
     if not q:
-        return JsonResponse({ "success": False, "message": "Nothing found." }, 
+        return JsonResponse({"success": False, "message": "Nothing found."},
                             status=HTTP_STATUS["Not Found"])
     result = ""
     # Search is case insensitive
@@ -55,8 +61,7 @@ def search(request):
         result = search_users(q)
 
     if not result:
-        return JsonResponse({ "success": False, "message": f"Search for {q} gave no results. Nothing found." }, 
+        return JsonResponse({"success": False, "message": f"Search for {q} gave no results. Nothing found."},
                             status=HTTP_STATUS["Not Found"])
-    return JsonResponse({ "success": False, "result": result },
-                    status=HTTP_STATUS["OK"])
-    
+    return JsonResponse({"success": False, "result": result},
+                        status=HTTP_STATUS["OK"])

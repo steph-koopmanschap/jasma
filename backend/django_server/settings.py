@@ -10,21 +10,22 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from django.core.management.commands.runserver import Command as runserver
 from pathlib import Path
 import os
 import redis
 from dotenv import load_dotenv
 load_dotenv()
 
-from django.core.management.commands.runserver import Command as runserver
 runserver.default_addr = os.getenv('BACKEND_HOST')
 runserver.default_port = os.getenv('BACKEND_PORT')
 
 if os.getenv('STAGE') == 'production':
     BASE_URL = "https://" + os.getenv('BACKEND_HOST')
-    DEBUG = False 
+    DEBUG = False
 elif os.getenv('STAGE') == 'development':
-    BASE_URL = "http://" + os.getenv('BACKEND_HOST') + ":" + os.getenv('BACKEND_PORT')
+    BASE_URL = "http://" + \
+        os.getenv('BACKEND_HOST') + ":" + os.getenv('BACKEND_PORT')
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
 
@@ -32,7 +33,7 @@ elif os.getenv('STAGE') == 'development':
 BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = f"{BASE_URL}/media/"
-#MEDIA_URL = '/media/'
+# MEDIA_URL = '/media/'
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 # Quick-start development settings - unsuitable for production
@@ -110,7 +111,7 @@ WSGI_APPLICATION = 'django_server.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default' : {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv('POSTGRES_DB'),
         'USER': os.getenv('POSTGRES_USER'),
@@ -128,7 +129,7 @@ DATABASES = {
     # }
 }
 
-#DATABASES = {
+# DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.postgresql',
 #        'NAME': os.getenv('DB_NAME'),
@@ -145,7 +146,7 @@ DATABASES = {
 #    'HOST': os.getenv('DB_HOST'),
 #    'PORT': os.getenv('DB_PORT'),
 #    }
-#}
+# }
 
 TEST_NAME = 'test'
 
@@ -165,17 +166,18 @@ CACHES = {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
     }
-}   
+}
 
 SESSION_COOKIE_NAME = 'sessionid'
 SESSION_COOKIE_AGE = 86400
 SESSION_COOKIE_PATH = '/'
-SESSION_COOKIE_SECURE = False #Send cookie over HTTPS only?
+SESSION_COOKIE_SECURE = False  # Send cookie over HTTPS only?
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 
 AUTH_USER_MODEL = 'api.User'
-AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend", "api.backends.CustomUserModelBackend"]
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend", "api.backends.CustomUserModelBackend"]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

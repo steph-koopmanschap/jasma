@@ -12,6 +12,7 @@ from api.utils.handle_file_save import handle_file_save
 from api.utils.handle_file_delete import handle_file_delete
 from api.views.notification_views import create_notification
 
+
 @csrf_exempt
 @login_required
 @post_wrapper
@@ -26,7 +27,7 @@ def create_post(request):
             uploaded_file = request.FILES.get('file')
             saved_file = handle_file_save(uploaded_file, "post")
             if saved_file == False:
-                return JsonResponse({'successs': False, 'message': "File upload failed."}, 
+                return JsonResponse({'successs': False, 'message': "File upload failed."},
                                     status=HTTP_STATUS["Internal Server Error"])
             file_url = saved_file["URL"]
             # Deterimine the type of post based on the file type
@@ -35,12 +36,12 @@ def create_post(request):
         else:
             file_url = None
             post_type = "text"
-        
-        post = Post.objects.create( 
-                                user=user, 
-                                text_content=text_content, 
-                                file_url=file_url,
-                                post_type=post_type)
+
+        post = Post.objects.create(
+            user=user,
+            text_content=text_content,
+            file_url=file_url,
+            post_type=post_type)
         # Loop through the hashtags and add them to the post instance
         for tag in hashtags:
             # If the hashtag does not exist yet, create it and then get it.
@@ -57,24 +58,27 @@ def create_post(request):
             if saved_file != False:
                 handle_file_delete(saved_file["location"])
         print(e)
-        return JsonResponse({'successs': False, 'message': e.args[0]}, 
+        return JsonResponse({'successs': False, 'message': e.args[0]},
                             status=HTTP_STATUS["Internal Server Error"])
     # Create a notification towards followers of the post's user. (in Redis)
-    following = Following.objects.filter(following=user).values_list('user', flat=True)
+    following = Following.objects.filter(
+        following=user).values_list('user', flat=True)
     followers_users = User.objects.filter(id__in=following).values('id')
     for follower in followers_users:
         create_notification(follower.id, {
-                                    "from": user.id,
-                                    "event_type": "new_post",
-                                    "event_reference": post.post_id,
-                                    "message": f"{user.username} published a new post."
-                                    })
+            "from": user.id,
+            "event_type": "new_post",
+            "event_reference": post.post_id,
+            "message": f"{user.username} published a new post."
+        })
     # Store post in the cache
     post_formatted = Post.format_post_dict(post)
-    cache.set(f"posts_{post.post_id}", post_formatted, timeout=MONTH_IN_SECONDS)
+    cache.set(f"posts_{post.post_id}", post_formatted,
+              timeout=MONTH_IN_SECONDS)
 
-    return JsonResponse({'successs': True, 'message': "Post created successfully."}, 
+    return JsonResponse({'successs': True, 'message': "Post created successfully."},
                         status=HTTP_STATUS["Created"])
+
 
 @csrf_exempt
 @login_required
@@ -83,9 +87,9 @@ def edit_post(request):
     try:
         post_id = request.POST.get('post_id')
         post = Post.objects.get(post_id=post_id)
-        old_post = post # Save the old post in case edit fails?
+        old_post = post  # Save the old post in case edit fails?
     except Post.DoesNotExist:
-        return JsonResponse({'success': False, 'message': "Post does not exist."}, 
+        return JsonResponse({'success': False, 'message': "Post does not exist."},
                             status=HTTP_STATUS["Not Found"])
     # Try edit the post
     try:
@@ -106,7 +110,7 @@ def edit_post(request):
             uploaded_file = request.FILES.get('file')
             saved_file = handle_file_save(uploaded_file, "post")
             if saved_file == False:
-                return JsonResponse({'successs': False, 'message': "File upload failed."}, 
+                return JsonResponse({'successs': False, 'message': "File upload failed."},
                                     status=HTTP_STATUS["Internal Server Error"])
             file_url = saved_file["URL"]
             # Determine the type of post based on the file type
@@ -135,7 +139,7 @@ def edit_post(request):
             if saved_file != False:
                 handle_file_delete(saved_file["location"])
         print(e)
-        return JsonResponse({'successs': False, 'message': e.args[0]}, 
+        return JsonResponse({'successs': False, 'message': e.args[0]},
                             status=HTTP_STATUS["Internal Server Error"])
     # Delete the old post from the cache
     cache_key = f"posts_{post.post_id}"
@@ -144,24 +148,26 @@ def edit_post(request):
     post_formatted = Post.format_post_dict(post)
     cache.set(cache_key, post_formatted, timeout=MONTH_IN_SECONDS)
 
-    return JsonResponse({'success': True, 'message': "Post updated successfully."}, 
-                    status=HTTP_STATUS["Created"])
+    return JsonResponse({'success': True, 'message': "Post updated successfully."},
+                        status=HTTP_STATUS["Created"])
+
 
 @csrf_exempt
 @login_required
 @delete_wrapper
 def delete_post(request, post_id):
-    try: 
+    try:
         post = Post.objects.get(post_id=post_id)
     except Post.DoesNotExist:
-        return JsonResponse({'success': True, 'message': "Post does not exist or already deleted."}, 
+        return JsonResponse({'success': True, 'message': "Post does not exist or already deleted."},
                             status=HTTP_STATUS["Gone"])
     if post.file_url != None:
         delete_file = handle_file_delete(post.file_url)
     cache.delete(f"posts_{post.post_id}")
     post.delete()
-    return JsonResponse({'successs': True, 'message': "Post deleted successfully."}, 
-                    status=HTTP_STATUS["OK"])
+    return JsonResponse({'successs': True, 'message': "Post deleted successfully."},
+                        status=HTTP_STATUS["OK"])
+
 
 @get_wrapper
 def get_user_posts(request):
@@ -170,7 +176,7 @@ def get_user_posts(request):
     try:
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
-        return JsonResponse({'success': False, 'message': "User does not exist."}, 
+        return JsonResponse({'success': False, 'message': "User does not exist."},
                             status=HTTP_STATUS["Not Found"])
     # Get the latest posts of the user with the limit.
     posts = Post.objects.filter(user=user).order_by('-created_at')[:limit]
@@ -179,20 +185,23 @@ def get_user_posts(request):
     return JsonResponse({'success': True, 'posts': posts_formatted},
                         status=HTTP_STATUS["OK"])
 
+
 @get_wrapper
 def get_single_post(request, post_id):
     try:
         post = Post.objects.get(post_id=post_id)
         post_formatted = Post.format_post_dict(post)
     except Post.DoesNotExist:
-        return JsonResponse({'success': False, 'message': "Post does not exist."}, 
+        return JsonResponse({'success': False, 'message': "Post does not exist."},
                             status=HTTP_STATUS["Not Found"])
     return JsonResponse({'success': True, 'post': post_formatted},
-                        status=HTTP_STATUS["OK"]) 
+                        status=HTTP_STATUS["OK"])
 
 # Get mulitple specific posts by passing in an array of post_ids
 # Using a POST request, instead of GET
 # Because the array of post_ids might be too long to put into URL query parameters.
+
+
 @post_wrapper
 def get_multiple_posts(request):
     req = json.loads(request.body)
@@ -211,6 +220,8 @@ def get_multiple_posts(request):
 # TODO: Caching?
 # Get the latest posts of all users
 # If no limit given, the limit is 1
+
+
 @get_wrapper
 def get_global_newsfeed(request):
     limit = int(request.GET.get('limit', 1))
@@ -219,8 +230,9 @@ def get_global_newsfeed(request):
     if post_type_filter == 'all':
         posts = Post.objects.all().order_by('-created_at')[:limit]
     else:
-        posts = Post.objects.all().order_by('-created_at').filter(post_type=post_type_filter)[:limit]
-        
+        posts = Post.objects.all().order_by(
+            '-created_at').filter(post_type=post_type_filter)[:limit]
+
     posts_formatted = Post.format_posts_dict(posts)
     return JsonResponse({'success': True, 'posts': posts_formatted},
                         status=HTTP_STATUS["OK"])
@@ -228,6 +240,8 @@ def get_global_newsfeed(request):
 # TODO: Ad injection
 # TODO: Caching?
 # If no limit given, the limit is 50
+
+
 @login_required
 @get_wrapper
 def get_newsfeed(request):
@@ -237,19 +251,23 @@ def get_newsfeed(request):
     following = Following.objects.filter(user=user)
     # Get the hashtags that this user is subscribed to.
     subscribed_hashtags = SubscribedHashtag.objects.filter(user=user)
-    hashtags = [subscription.hashtag.hashtag for subscription in subscribed_hashtags]
+    hashtags = [
+        subscription.hashtag.hashtag for subscription in subscribed_hashtags]
     # For each hashtag get the 5 latest posts.
     for hashtag in hashtags:
-        posts_subbed_hashtags = Post.objects.filter(hashtags__hashtag=hashtag).order_by('-created_at')[:5]
+        posts_subbed_hashtags = Post.objects.filter(
+            hashtags__hashtag=hashtag).order_by('-created_at')[:5]
     # Get latest the posts of the users that the user is following
-    posts_following = Post.objects.filter(user__in=following).order_by('-created_at')[:limit]
+    posts_following = Post.objects.filter(
+        user__in=following).order_by('-created_at')[:limit]
     # Combine the posts_following and posts_subbed_hashtags into a new QuerySet
     posts = posts_following | posts_subbed_hashtags
     # If the combined following and subbed hashtags posts are less than the limit.
     if posts.count() < limit:
         # Get the latest posts from the global newsfeed
         num_posts_to_get = limit - posts.count()
-        posts_global = Post.objects.all().order_by('-created_at')[:num_posts_to_get]
+        posts_global = Post.objects.all().order_by(
+            '-created_at')[:num_posts_to_get]
         # Add the global posts to the posts
         posts = posts | posts_global
     # Sort the posts by date
@@ -258,6 +276,7 @@ def get_newsfeed(request):
     posts_formatted = Post.format_posts_dict(posts)
     return JsonResponse({'success': True, 'posts': posts_formatted},
                         status=HTTP_STATUS["OK"])
+
 
 @csrf_exempt
 @login_required
@@ -270,10 +289,11 @@ def add_post_bookmark(request):
     post = Post.objects.get(post_id=post_id)
     _, created = BookmarkedPost.objects.get_or_create(user=user, post=post)
     if not created:
-        return JsonResponse({'success': True, 'message': "Post already bookmarked."}, 
+        return JsonResponse({'success': True, 'message': "Post already bookmarked."},
                             status=HTTP_STATUS["OK"])
-    return JsonResponse({'success': True, 'message': "Post bookmarked successfully."}, 
+    return JsonResponse({'success': True, 'message': "Post bookmarked successfully."},
                         status=HTTP_STATUS["Created"])
+
 
 @csrf_exempt
 @login_required
@@ -285,11 +305,13 @@ def delete_post_bookmark(request, post_id):
     return JsonResponse({'success': True, 'message': "Post bookmark deleted successfully."},
                         status=HTTP_STATUS["OK"])
 
+
 @login_required
 @get_wrapper
 def get_bookmarked_posts(request):
     user = request.user
-    bookmarks = BookmarkedPost.objects.filter(user=user).order_by('-bookmarked_at')
+    bookmarks = BookmarkedPost.objects.filter(
+        user=user).order_by('-bookmarked_at')
     posts = []
     for bookmark in bookmarks:
         posts.append(Post.objects.get(post_id=bookmark.post))

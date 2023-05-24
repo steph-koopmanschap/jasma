@@ -12,7 +12,10 @@
         "password": "test987"
     },
     "test_hashtags": [
-        "test", "fire", "bridge", "sky"
+        "test",
+        "fire",
+        "bridge",
+        "sky"
     ],
     "test_post_text": {
         "post_id": "",
