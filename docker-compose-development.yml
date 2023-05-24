@@ -4,20 +4,9 @@ version: '3.8'
 x-environment: 
     &dev-environment
     - STAGE=development
-    # POSTGRES DB
-    - PG_PORT=5432
-    - PG_HOST=jasma-pg-db   
-    - POSTGRES_DB=postgres
-    - POSTGRES_USER=postgres
-    - POSTGRES_PASSWORD=postgres
     # REDIS DB
     - REDIS_HOST=jasma-redis-db
     - REDIS_PORT=6379
-    # DJANGO backend
-    - HOSTNAME=localhost
-    - BACKEND_HOST=jasma-api-server
-    - BACKEND_PORT=8000
-    - SESSION_SECRET="keyboard cat"
     # NEXTJS frontend
     - NEXTJS_HOST=jasma-client
     - NEXTJS_PORT=3000
@@ -36,6 +25,8 @@ services:
     restart: always
     environment:
         *dev-environment
+    env_file:
+        - .env/.local/.postgres/.env
     expose: 
       - 5432
     ports:
@@ -54,7 +45,7 @@ services:
     expose: 
       - 6379
     ports:
-      - '6379:6379'  # Do we need to expose port outside docker?
+      - '6379:6379'
     networks:
       - jasma-network-dev
     volumes: 
@@ -62,14 +53,19 @@ services:
 
   # DJANGO
   jasma-api-server:
+    image: jasma-api-server-dev
     container_name: jasma-api-server-dev
     build:
-        context: ./backend
+        context: .
+        dockerfile: compose/local/django/Dockerfile
       # target: development  # This will be unused for now
     environment:
         *dev-environment
+    env_file:
+        - .env/.local/.django/.env
+        - .env/.local/.django/.secrets.env
+        - .env/.local/.postgres/.env
     restart: always
-    image: jasma-api-server-dev
     expose: 
       - 8000
     ports:
@@ -80,7 +76,7 @@ services:
       - jasma-pg-db
       - jasma-redis-db
     volumes:
-      - ./backend:/backend  # This allows for realtime changes to be effective
+      - ./backend:/backend:z  # This allows for realtime changes to be effective
 
   # NODEJS frontend
   jasma-client:
