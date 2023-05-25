@@ -70,7 +70,7 @@ def login_view(request):
         request.session.update(user_info)
         data = {"success": True, "user": user_info,
                 "message": "User logged in."}
-        return Response(data)
+        return Response(data, status=status.HTTP_201_CREATED)
     else:
         data = {"success": False, "message": "Invalid email or password."}
         return Response(data, status=status.HTTP_403_FORBIDDEN)
@@ -82,10 +82,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     data = {"success": True, "message": "Logged out."}
-    return Response(data)
-
-# Not sure do we ever check auth on unthenticated?
-
+    return Response(data, status=status.HTTP_200_OK)
 
 @api_view(["GET"])
 def check_auth(request):
@@ -93,16 +90,13 @@ def check_auth(request):
         data = {"success": True, 'isAuth': True}
         return Response(data)
     else:
-        # Should we log out?
         data = {"success": False, 'isAuth': False}
         return Response(data, status=status.HTTP_401_UNAUTHORIZED)
-
 
 @api_view(["GET"])
 def get_csrf_token(request):
     data = {'csrfToken': get_token(request)}
-    return Response(data)
-
+    return Response(data, status=status.HTTP_200_OK)
 
 @login_required
 @api_view(["POST"])
@@ -113,4 +107,4 @@ def change_password(request):
     user.set_password(new_password)
     user.save()
     data = {'success': True, 'message': 'Password changed.'}
-    return Response(data)
+    return Response(data, status=status.HTTP_201_CREATED)
