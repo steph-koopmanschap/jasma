@@ -1,0 +1,55 @@
+{
+    "name": "jasma-next",
+    "version": "0.1.0",
+    "private": true,
+    "description": "JASMA-next",
+    "homepage": "https://github.com/steph-koopmanschap/jasma#readme",
+    "author": "Steph Koopmanschap and Others",
+    "license": "Apache-2.0",
+    "keywords": [
+        "socialmedia"
+    ],
+    "scripts": {
+        "dev": "RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED=false next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^6.2.1",
+        "@fortawesome/free-regular-svg-icons": "^6.2.1",
+        "@fortawesome/free-solid-svg-icons": "^6.2.1",
+        "@fortawesome/react-fontawesome": "^0.2.0",
+        "@next/bundle-analyzer": "^13.2.4",
+        "@paypal/react-paypal-js": "^7.8.2",
+        "axios": "^1.2.0",
+        "compression-webpack-plugin": "^10.0.0",
+        "date-fns": "^2.29.3",
+        "ioredis": "^5.2.4",
+        "js-cookie": "^3.0.1",
+        "next": "^13.1.6",
+        "next-session": "^4.0.5",
+        "node-fetch": "^2.6.1",
+        "react": "18.2.0",
+        "react-dom": "18.2.0",
+        "react-query": "^3.39.2",
+        "react-toastify": "^9.1.1",
+        "recoil": "^0.7.6",
+        "sharp": "^0.31.3",
+        "styled-components": "^5.3.6"
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.4.13",
+        "eslint": "8.26.0",
+        "eslint-config-next": "13.0.0",
+        "postcss": "^8.4.18",
+        "tailwindcss": "^3.2.1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/steph-koopmanschap/jasma.git"
+    },
+    "bugs": {
+        "url": "https://github.com/steph-koopmanschap/jasma/issues"
+    }
+}
