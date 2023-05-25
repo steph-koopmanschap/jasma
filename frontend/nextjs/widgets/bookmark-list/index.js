@@ -1,1 +1,3 @@
-export { BookmarksList } from "./BookmarkList";
+import { BookmarksList } from "./BookmarkList";
+
+export default { BookmarksList };

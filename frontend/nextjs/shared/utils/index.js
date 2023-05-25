@@ -1,5 +1,7 @@
-export { bytesToHuman } from "./bytesToHuman";
-export { hashtagFormatter } from "./hashtagFormatter";
-export { formatLargeNumber } from "./formatLargeNumber";
-export { toastSuccess, toastError } from "./defaultToasts";
-export { checkFileTooLarge } from "./checkFileTooLarge";
+import { bytesToHuman } from "./bytesToHuman";
+import { hashtagFormatter } from "./hashtagFormatter";
+import { formatLargeNumber } from "./formatLargeNumber";
+import { toastSuccess, toastError } from "./defaultToasts";
+import { checkFileTooLarge } from "./checkFileTooLarge";
+
+export default { bytesToHuman, hashtagFormatter, formatLargeNumber, toastError, toastSuccess, checkFileTooLarge };

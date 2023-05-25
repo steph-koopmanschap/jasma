@@ -1,4 +1,4 @@
-import { useToast } from "@/shared/model/hooks";
+import { useToast } from "@/shared/model";
 import React from "react";
 import { handleDeletePost } from "../../model/actions";
 

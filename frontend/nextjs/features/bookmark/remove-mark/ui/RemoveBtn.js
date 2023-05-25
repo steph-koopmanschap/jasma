@@ -1,4 +1,4 @@
-import { useToast } from "@/shared/model/hooks";
+import { useToast } from "@/shared/model";
 import { removeBookmark } from "../model/actions";
 
 export const RemoveBookmark = (props) => {

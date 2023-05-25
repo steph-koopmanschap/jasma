@@ -11,7 +11,7 @@ import { AddBookmark } from "@/features/bookmark/add-mark";
 import SharePostBtn from "@/features/post/ui/share/SharePostBtn";
 import { DeletePostBtn, EditPostBtn } from "@/features/post";
 import jasmaApi from "@/clientAPI/api";
-import { useToast } from "@/shared/model/hooks";
+import { useToast } from "@/shared/model";
 
 export default function Post(props) {
     const { postData } = props;

@@ -1,5 +1,9 @@
 /* UI wrapper where we create slots for different actions and other ui elements */
 
+import { DropDownBtn } from "@/shared/ui";
+import Image from "next/image";
+import Link from "next/link";
+
 export const PostShell = (props) => {
     const {
         authOwnerActions,

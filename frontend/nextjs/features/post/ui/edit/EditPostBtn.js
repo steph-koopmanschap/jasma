@@ -1,6 +1,6 @@
 import React from "react";
 import { handleEditPost } from "../../model/actions";
-import { useToast } from "@/shared/model/hooks";
+import { useToast } from "@/shared/model";
 
 export const EditPostBtn = ({ post_id }) => {
     const { notifyToast } = useToast();

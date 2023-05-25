@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import jasmaApi from "@/clientAPI/api";
-import { useToast } from "@/shared/model/hooks";
+import { useToast } from "@/shared/model";
 
 export default function SignUpForm() {
     const { notifyToast } = useToast();

@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { useState } from "react";
 import jasmaApi from "@/clientAPI/api";
 import { hashtagFormatter } from "@/shared/utils";
-import { useToast } from "@/shared/model/hooks";
+import { useToast } from "@/shared/model";
 
 export default function SubscribeHashtags(props) {
     const { notifyToast } = useToast();
