@@ -26,9 +26,10 @@ elif os.getenv('STAGE') == 'development':
 
 client_secret = os.getenv('PAYPAL_SECRET')
 
+
 @csrf_exempt
 @post_wrapper
-def stripe_create_payment_intent(request):  
+def stripe_create_payment_intent(request):
     req = json.loads(request.body)
     amount = req["amount"]
     currency = req["currency"]
@@ -41,6 +42,8 @@ def stripe_create_payment_intent(request):
     })
 
 # Get the bearer token
+
+
 def paypal_get_access_token():
     headers = {
         "Content-Type": "application/x-www-form-urlencoded"
@@ -50,17 +53,18 @@ def paypal_get_access_token():
     }
     try:
         # Send a request for the access token.
-        response = requests.post(f'{endpoint}/v1/oauth2/token', headers=headers, auth=(client_id, client_secret), data=data)
+        response = requests.post(
+            f'{endpoint}/v1/oauth2/token', headers=headers, auth=(client_id, client_secret), data=data)
 
         # example expected response:
-        #{
+        # {
         #    "scope": "https://uri.paypal.com/services/invoicing https://uri.paypal.com/services/disputes/read-buyer https://uri.paypal.com/services/payments/realtimepayment https://uri.paypal.com/services/disputes/update-seller https://uri.paypal.com/services/payments/payment/authcapture openid https://uri.paypal.com/services/disputes/read-seller https://uri.paypal.com/services/payments/refund https://api-m.paypal.com/v1/vault/credit-card https://api-m.paypal.com/v1/payments/.* https://uri.paypal.com/payments/payouts https://api-m.paypal.com/v1/vault/credit-card/.* https://uri.paypal.com/services/subscriptions https://uri.paypal.com/services/applications/webhooks",
         #    "access_token": "A21AAFEpH4PsADK7qSS7pSRsgzfENtu-Q1ysgEDVDESseMHBYXVJYE8ovjj68elIDy8nF26AwPhfXTIeWAZHSLIsQkSYz9ifg",
         #    "token_type": "Bearer",
         #    "app_id": "APP-80W284485P519543T",
         #    "expires_in": 31668,
         #    "nonce": "2020-04-03T15:35:36ZaYZlGvEkV4yVSz8g6bAKFoGSEzuy3CQcz3ljhibkOHg"
-        #}
+        # }
 
         if response.status_code != 200:
             raise ValueError('Failed to get access token')
@@ -75,6 +79,7 @@ def paypal_get_access_token():
 
     return access_token
 
+
 @csrf_exempt
 @login_required
 @post_wrapper
@@ -88,13 +93,13 @@ def paypal_create_ordder(request):
     }
 
     payload = {
-            "intent": "CAPTURE",
-            "payer": {
-                "name": {
-                    "given_name": given_name,
-                    "surname": last_name
-                },
-                "email_address": email,
+        "intent": "CAPTURE",
+        "payer": {
+            "name": {
+                "given_name": given_name,
+                "surname": last_name
+            },
+            "email_address": email,
             "application_context": {
                 "shipping_preference": "NO_SHIPPING"
             },
@@ -120,39 +125,43 @@ def paypal_create_ordder(request):
                         "allowed_payment_method": 'INSTANT_FUNDING_SOURCE'
                     },
                     "item_category": 'DIGITAL_GOODS',
-                    "soft_descriptor": 'JASMA', # Company name displayed on bank statements or credit card statements.
+                    # Company name displayed on bank statements or credit card statements.
+                    "soft_descriptor": 'JASMA',
                     "items": [
                         {
                             "name": 'Credit purchase',
                             "unit_amount": {
-                                "currency_code": cartData["currency"],
-                                "value": cartData["price"]
-                        },
-                        "quantity": '1',
-                        "description": 'Purchase of credits.'
+                                    "currency_code": cartData["currency"],
+                                    "value": cartData["price"]
+                            },
+                            "quantity": '1',
+                            "description": 'Purchase of credits.'
                         }
                     ],
                     "billing_address": {
-                        "address_line_1": '', # '123 Main St',
-                        "address_line_2": '', # 'Suite 100',
-                        "admin_area_2": '', # 'San Jose',
-                        "admin_area_1": '', # 'CA',
-                        "postal_code": '', # '95131',
-                        "country_code": '', # 'US'
+                        "address_line_1": '',  # '123 Main St',
+                        "address_line_2": '',  # 'Suite 100',
+                        "admin_area_2": '',  # 'San Jose',
+                        "admin_area_1": '',  # 'CA',
+                        "postal_code": '',  # '95131',
+                        "country_code": '',  # 'US'
                     }
                 },
             ]
-            },
-        }
+        },
+    }
 
-    response = requests.post(f'{endpoint}/v2/checkout/orders', headers=headers, json=payload)
+    response = requests.post(
+        f'{endpoint}/v2/checkout/orders', headers=headers, json=payload)
 
     if response.status_code != 201:
         raise ValueError('Failed to create order')
 
     order_id = response.json()['id']
 
-#Capture the order
+# Capture the order
+
+
 @csrf_exempt
 @login_required
 @post_wrapper
@@ -165,28 +174,34 @@ def paypal_capture_order(request):
         "payer_id": payer_id,
     }
 
-    response = requests.post(f'{endpoint}/v2/checkout/orders/{order_id}/capture', headers=headers, json=data)
+    response = requests.post(
+        f'{endpoint}/v2/checkout/orders/{order_id}/capture', headers=headers, json=data)
 
     if response.status_code != 201:
         raise ValueError('Failed to capture order')
-    
+
+
 @login_required
 @get_wrapper
 def paypal_get_payment_details(request):
     # Step 3: Get the transaction details
-    transaction_id = response.json()['purchase_units'][0]['payments']['captures'][0]['id']
+    transaction_id = response.json(
+    )['purchase_units'][0]['payments']['captures'][0]['id']
 
-    response = requests.get(f'{endpoint}/v2/payments/captures/{transaction_id}', headers=headers)
+    response = requests.get(
+        f'{endpoint}/v2/payments/captures/{transaction_id}', headers=headers)
 
     if response.status_code != 200:
         raise ValueError('Failed to get transaction details')
 
     transaction_details = response.json()
 
+
 @login_required
 @get_wrapper
 def paypal_get_order_details(request):
-    response = requests.get(f'{endpoint}/v2/checkout/orders/{order_id}', headers=headers)
+    response = requests.get(
+        f'{endpoint}/v2/checkout/orders/{order_id}', headers=headers)
 
     if response.status_code != 200:
         raise ValueError('Failed to get order details')
@@ -610,5 +625,5 @@ def paypal_get_order_details(request):
 #      }
 #    }
 #  }
-#}
+# }
 #

@@ -1,4 +1,6 @@
+# TODO: Eventally get rid of this. There are built-in ways to emulate these functions.
 from .handle_invalid_method import handle_invalid_method
+
 
 def get_wrapper(view_func):
     def wrapper(request, *args, **kwargs):
@@ -8,6 +10,7 @@ def get_wrapper(view_func):
             return handle_invalid_method(request, ['GET'])
     return wrapper
 
+
 def post_wrapper(view_func):
     def wrapper(request, *args, **kwargs):
         if request.method == 'POST':
@@ -16,6 +19,7 @@ def post_wrapper(view_func):
             return handle_invalid_method(request, ['POST'])
     return wrapper
 
+
 def put_wrapper(view_func):
     def wrapper(request, *args, **kwargs):
         if request.method == 'PUT':
@@ -23,6 +27,7 @@ def put_wrapper(view_func):
         else:
             return handle_invalid_method(request, ['PUT'])
     return wrapper
+
 
 def delete_wrapper(view_func):
     def wrapper(request, *args, **kwargs):

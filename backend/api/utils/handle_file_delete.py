@@ -7,6 +7,8 @@ from api.constants import files
 logger = logging.getLogger(__name__)
 
 # This would be best practice
+
+
 class FilePathNotAllowed(Exception):
     """ Exception raised to inform that a path is not allowed. """
     pass
@@ -29,14 +31,13 @@ def handle_file_delete(file_path):
             # Create absolute file path
             file_path = os.path.join(settings.MEDIA_ROOT, file_path)
 
-        #First check if the file exists before deleting it.
+        # First check if the file exists before deleting it.
         if os.path.isfile(file_path):
             os.remove(file_path)
             return True
         return False
     except Exception as e:
-            print(e)
-            logger.error(e)
-            logger.error("Could NOT DELETE file: " + file_path)
-            return False
-
+        print(e)
+        logger.error(e)
+        logger.error("Could NOT DELETE file: " + file_path)
+        return False

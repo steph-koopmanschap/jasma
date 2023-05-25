@@ -16,13 +16,14 @@ from rest_framework.request import Request
 
 
 @api_view(["POST"])
-@authentication_classes([])  # TODO: Confirm if really needed to bypass csrf token error
+# TODO: Confirm if really needed to bypass csrf token error
+@authentication_classes([])
 def register(request):
     # get the user input data from the request body
     username = request.data.get('username')
     email = request.data.get('email')
     password = request.data.get('password')
-    
+
     # Perform basic validation of input data
     # all() is a built-in Python function that returns True if all the elements in an iterable are considered True, and False otherwise.
     message = ""
@@ -32,7 +33,7 @@ def register(request):
         message = 'Email already exists.'
     elif User.objects.filter(username=username).exists():
         message = 'Username already exists.'
-    
+
     if message:
         data = {'success': False, 'message': message}
         return Response(data, status=status.HTTP_400_BAD_REQUEST)
@@ -48,8 +49,10 @@ def register(request):
     data = {'success': True, 'message': f"User {username} registered successfully."}
     return JsonResponse(data, status=status.HTTP_201_CREATED)
 
+
 @api_view(["POST"])
-@authentication_classes([])  # TODO: Confirm if really needed to bypass csrf token error
+# TODO: Confirm if really needed to bypass csrf token error
+@authentication_classes([])
 def login_view(request):
     email = request.data.get('email')
     password = request.data.get('password')
@@ -65,7 +68,8 @@ def login_view(request):
             'email': user.email
         }
         request.session.update(user_info)
-        data = {"success": True, "user": user_info, "message": "User logged in."}
+        data = {"success": True, "user": user_info,
+                "message": "User logged in."}
         return Response(data)
     else:
         data = {"success": False, "message": "Invalid email or password."}
@@ -73,13 +77,16 @@ def login_view(request):
 
 
 @api_view(["POST"])
-@authentication_classes([])  # TODO: Confirm if really needed to bypass csrf token error
+# TODO: Confirm if really needed to bypass csrf token error
+@authentication_classes([])
 def logout_view(request):
     logout(request)
     data = {"success": True, "message": "Logged out."}
     return Response(data)
 
 # Not sure do we ever check auth on unthenticated?
+
+
 @api_view(["GET"])
 def check_auth(request):
     if 'id' in request.session:
@@ -90,11 +97,13 @@ def check_auth(request):
         data = {"success": False, 'isAuth': False}
         return Response(data, status=status.HTTP_401_UNAUTHORIZED)
 
+
 @api_view(["GET"])
 def get_csrf_token(request):
     data = {'csrfToken': get_token(request)}
     return Response(data)
-    
+
+
 @login_required
 @api_view(["POST"])
 def change_password(request):
