@@ -4,7 +4,7 @@ import json
 import unittest
 from utils.http_status import HTTP_STATUS
 
-BASE_URL = "http://127.0.0.1:8000"
+BASE_URL = "http://localhost:8000"
 
 filepath_dummydata = './test_data/dummy_test_data.json'
 with open(filepath_dummydata, 'r') as f:
@@ -52,7 +52,7 @@ class ApiTest(unittest.TestCase):
         cls.session.close()
 
     def setUp(self):
-        print("======SETTING UP INDIVIDUAL TEST========")
+        print(f"======SETTING UP {self._testMethodName}========")
         self.response = None
 
     def tearDown(self):
@@ -60,9 +60,10 @@ class ApiTest(unittest.TestCase):
             print("response status: ", self.response.status_code)
             print("response headers: ", self.response.headers)
             print("response_body: ", self.response.json())
-        print("======TEARING DOWN INDIVIDUAL TEST======")
+        print(f"======TEARING DOWN {self._testMethodName}======")
 
-    def test_A_auth_register_correct(self):
+    def test_A_auth_register_correct(self):  
+        # TODO: After running once, it always fails as the record never get cleaned up.
         self.response = self.session.post(f"{BASE_URL}/api/auth/register",
                                         data=json.dumps({
                                             "username": test_user_one["username"],
@@ -157,8 +158,7 @@ class ApiTest(unittest.TestCase):
         self.assertEqual(response_body['message'], "User logged in.")
 
     def test_H_auth_check_auth_true(self):
-        self.response = self.session.get(
-            f"{BASE_URL}/api/auth/checkAuth/")
+        self.response = self.session.get(f"{BASE_URL}/api/auth/checkAuth")
         response_body = self.response.json()
         self.assertEqual(self.response.status_code, HTTP_STATUS["OK"])
         self.assertTrue(response_body['success'])
