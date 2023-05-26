@@ -4,8 +4,8 @@ import { faBell } from "@fortawesome/free-solid-svg-icons";
 import Brand from "@/widgets/brand";
 import { DropDownBtn } from "@/shared/ui";
 import { ThemeSwitch } from "@/features/theme";
-import { NavProfile } from "@/widgets/user";
-import { NotificationList } from "@/widgets/notification-list";
+import UserWidgets from "@/widgets/user/index";
+import NotificationList from "@/widgets/notification-list";
 import { SearchInput } from "@/features/search";
 
 const Nav = () => {
@@ -28,7 +28,7 @@ const Nav = () => {
                 >
                     <NotificationList />
                 </DropDownBtn>
-                <NavProfile />
+                <UserWidgets.NavProfile />
                 <div className="flex self-center">
                     <ThemeSwitch />
                 </div>

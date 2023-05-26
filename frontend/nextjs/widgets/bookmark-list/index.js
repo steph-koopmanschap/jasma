@@ -1,3 +1,3 @@
 import { BookmarksList } from "./BookmarkList";
 
-export default { BookmarksList };
+export default BookmarksList;

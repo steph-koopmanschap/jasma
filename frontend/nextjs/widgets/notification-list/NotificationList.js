@@ -1,8 +1,8 @@
 import { NotificationShell, getNotifications } from "@/entities/notification";
-import { ProfilePic } from "../user";
+import UserWidgets from "../user/index";
 import { useQuery } from "react-query";
 
-const NotificationList = () => {
+export const NotificationList = () => {
     const { isSuccess, isLoading, isError, data, error, refetch } = useQuery(
         [`notifications`],
         async () => {
@@ -20,7 +20,7 @@ const NotificationList = () => {
     }
 
     if (isError) {
-        return <h1>{error}</h1>;
+        return <h1>{error.message}</h1>;
     }
 
     if (data.success === false) {
@@ -44,10 +44,9 @@ const NotificationList = () => {
                     {...notification}
                     key={notification.notification_id}
                     onClick={readNotification}
-                    profilePic={<ProfilePic userID={notification.from} />}
+                    profilePic={<UserWidgets.ProfilePic userID={notification.from} />}
                 />
             ))}
         </div>
     );
 };
-export default NotificationList;

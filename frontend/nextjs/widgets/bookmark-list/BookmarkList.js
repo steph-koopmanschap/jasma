@@ -2,7 +2,7 @@ import Post from "@/components/Post";
 import { useGetBookmarkedPosts } from "@/entities/bookmark";
 import { RemoveBookmark } from "@/features/bookmark/remove-mark";
 
-export default function BookmarksList(props) {
+export function BookmarksList(props) {
     const { status, isLoading, isError, data, error, refetch } = useGetBookmarkedPosts();
 
     if (isLoading) {
@@ -22,7 +22,10 @@ export default function BookmarksList(props) {
             {data.posts.map((post) => (
                 <div key={post.post_id}>
                     <RemoveBookmark post_id={post_id} />
-                    <Post postData={post} />
+                    <Post
+                        postData={post}
+                        key={post_id}
+                    />
                 </div>
             ))}
         </div>

@@ -1,7 +1,7 @@
 import { useGetComments } from "@/features/comment";
-import { Comment } from "../comment";
+import Comment from "../comment";
 
-const CommentList = ({ postID }) => {
+export const CommentList = ({ postID }) => {
     const { error, data, isLoading, isError } = useGetComments(postID, 25);
 
     // useEffect(() => {
@@ -13,7 +13,7 @@ const CommentList = ({ postID }) => {
     }
 
     if (isError) {
-        return <h1>{error}</h1>;
+        return <h1>{error.message}</h1>;
     }
 
     if (data.success === false) {
@@ -32,4 +32,3 @@ const CommentList = ({ postID }) => {
         </div>
     );
 };
-export default CommentList;

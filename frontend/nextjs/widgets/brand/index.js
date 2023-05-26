@@ -1,3 +1,3 @@
-import Brand from "./Brand.js";
+import { Brand } from "./Brand.js";
 
-export default { Brand };
+export default Brand;

@@ -1,1 +1,3 @@
-export { default as FooterMain } from "./FooterMain";
+import { FooterMain } from "./FooterMain";
+
+export default FooterMain;

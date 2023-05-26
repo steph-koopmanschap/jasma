@@ -1,8 +1,7 @@
 import { CommentShell } from "@/entities/comment";
 import { DeleteCommentButton, EditCommentButton } from "@/features/comment";
-import { ProfilePic } from "../user";
-
-const Comment = (props) => {
+import UserWidgets from "../user";
+export const Comment = (props) => {
     const { commentData } = props;
 
     return (
@@ -14,8 +13,7 @@ const Comment = (props) => {
                 </>
             }
             commentData={commentData}
-            profilePicture={<ProfilePic userID={commentData.user_id} />}
+            profilePicture={<UserWidgets.ProfilePic userID={commentData.user_id} />}
         />
     );
 };
-export default Comment;

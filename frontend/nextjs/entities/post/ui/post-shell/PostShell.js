@@ -93,6 +93,7 @@ function PostDateInfo({ last_edited_at, created_at }) {
 }
 
 function PostTextContent({ text_content }) {
+    console.log(text_content);
     return <p className="">{text_content}</p>;
 }
 

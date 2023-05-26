@@ -1,9 +1,10 @@
 import { api } from "@/shared/api/axios";
 
 const AUTH_API = api;
+const AUTH_ENDPOINT = "/api/auth";
 
 const logout = async () => {
-    const response = await AUTH_API.post("/api/auth/logout");
+    const response = await AUTH_API.post(`${AUTH_ENDPOINT}/logout`);
     return response.data;
 };
 
@@ -15,7 +16,7 @@ const logout = async () => {
  */
 
 const login = async (email, password) => {
-    const response = await AUTH_API.post("/api/auth/login", { email: email, password: password });
+    const response = await AUTH_API.post(`${AUTH_ENDPOINT}/login`, { email: email, password: password });
 
     if (response.data.success === false) {
         return response.data;
@@ -42,7 +43,7 @@ const login = async (email, password) => {
  */
 
 const register = async (username, email, password) => {
-    const response = await AUTH_API.post("/api/auth/register", {
+    const response = await AUTH_API.post(`${AUTH_ENDPOINT}/register`, {
         username: username,
         email: email,
         password: password
@@ -52,7 +53,7 @@ const register = async (username, email, password) => {
 
 //Check if a user is authenticated (logged in)
 const checkAuth = async (req) => {
-    const response = await fetch(`${baseURL}/api/auth/checkAuth`, {
+    const response = await fetch(`${baseURL}${AUTH_ENDPOINT}/checkAuth`, {
         method: "POST",
         headers: req.headers
     });
@@ -61,12 +62,12 @@ const checkAuth = async (req) => {
 };
 
 const checkAuthClientSide = async () => {
-    const response = await AUTH_API.post("/api/auth/checkAuth");
+    const response = await AUTH_API.post(`${AUTH_ENDPOINT}/checkAuth`);
     return response.data.isAuth;
 };
 
 const checkAuthUserRole = async () => {
-    const response = await AUTH_API.post("/api/auth/checkAuthUserRole");
+    const response = await AUTH_API.post(`${AUTH_ENDPOINT}/checkAuthUserRole`);
     return response.data;
 };
 
@@ -77,10 +78,10 @@ const checkAuthUserRole = async () => {
  */
 
 const changePassword = async (newPassword) => {
-    const response = await AUTH_API.post("/api/auth/changePassword", {
+    const response = await AUTH_API.post(`${AUTH_ENDPOINT}/changePassword`, {
         newPassword: newPassword
     });
     return response.data;
 };
 
-export { changePassword, checkAuth, checkAuthClientSide, checkAuthUserRole, changePassword, login, logout, register };
+export { changePassword, checkAuth, checkAuthClientSide, checkAuthUserRole, login, logout, register };

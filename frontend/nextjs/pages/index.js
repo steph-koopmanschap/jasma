@@ -1,5 +1,5 @@
-import { FooterMain } from "@/widgets/footer";
-import { HeaderMain } from "@/widgets/header";
+import FooterMain from "@/widgets/footer";
+import HeaderMain from "@/widgets/header";
 import Link from "next/link";
 
 export default function Home({ initialTheme }) {

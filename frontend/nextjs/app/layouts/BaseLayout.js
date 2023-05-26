@@ -4,6 +4,7 @@ import { ThemeProvider } from "styled-components";
 import Nav from "../Nav";
 import { MetaHead } from "../MetaHead";
 import { themeState, themes } from "@/entities/theme";
+import GlobalStyles from "@/shared/styles/GlobalStyles";
 
 export default function Layout({ children }) {
     const [theme, setTheme] = useRecoilState(themeState);

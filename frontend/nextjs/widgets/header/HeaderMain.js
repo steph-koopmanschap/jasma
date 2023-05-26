@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-export default function HeaderMain() {
+export function HeaderMain() {
     return (
         <header className="flex flex-col items-center justify-center w-full">
             <Link

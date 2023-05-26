@@ -1,4 +1,5 @@
 import { getClientUser, getProfilePic } from "@/entities/user";
+import { useQuery } from "react-query";
 
 const useGetUserPicture = (userID) => {
     return useQuery(

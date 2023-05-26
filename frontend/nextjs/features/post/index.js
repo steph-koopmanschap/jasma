@@ -5,4 +5,4 @@ export { shareIcon } from "./ui/share/ReplacementIcon";
 export { ReportPostBtn } from "./ui/report/ReportPostBtn";
 export { CreatePost } from "./ui/create/CreatePost";
 
-export { useGetSinglePost } from "./model/actions";
+export { useGetSinglePost, useGetNewsFeed, useGetLatestFeed } from "./model/actions";

@@ -1,4 +1,12 @@
-import { createPost, createReport, deletePost, editPost, getSinglePost } from "@/entities/post/index.js";
+import {
+    createPost,
+    createReport,
+    deletePost,
+    editPost,
+    getLatestPosts,
+    getNewsFeed,
+    getSinglePost
+} from "@/entities/post/index.js";
 import { useQuery } from "react-query";
 
 /**
@@ -95,4 +103,38 @@ const useGetSinglePost = (postID) => {
     );
 };
 
-export { handleCreatePost, handleDeletePost, handleEditPost, handleSharePost, handleReportPost, useGetSinglePost };
+const useGetNewsFeed = () => {
+    return useQuery(
+        ["newsFeed"],
+        async () => {
+            return await getNewsFeed();
+        },
+        {
+            enabled: true,
+            refetchOnWindowFocus: false
+        }
+    );
+};
+
+const useGetLatestFeed = () =>
+    useQuery(
+        ["newsFeed"],
+        async () => {
+            return await getLatestPosts(25);
+        },
+        {
+            enabled: true,
+            refetchOnWindowFocus: false
+        }
+    );
+
+export {
+    handleCreatePost,
+    handleDeletePost,
+    useGetNewsFeed,
+    handleEditPost,
+    handleSharePost,
+    handleReportPost,
+    useGetSinglePost,
+    useGetLatestFeed
+};

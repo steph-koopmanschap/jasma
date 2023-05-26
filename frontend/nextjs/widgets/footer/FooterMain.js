@@ -2,7 +2,7 @@ import Link from "next/link";
 
 //The main footer
 
-export default function FooterMain() {
+export function FooterMain() {
     return (
         <footer className="flex justify-center mt-20">
             <div className="">

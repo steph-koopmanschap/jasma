@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 
-export function ProfileImage({ imgSrc = "/" }) {
+export function ProfileImage({ imgSrc = "", width = 32, height = 32 }) {
     //rounded-t-full (css)
 
     // if (data) {
@@ -19,8 +19,8 @@ export function ProfileImage({ imgSrc = "/" }) {
             <Image
                 className=" m-2"
                 src={imgSrc}
-                width={props.width}
-                height={props.height}
+                width={width}
+                height={height}
                 alt="Profile picture"
             />
             {/* <Image 

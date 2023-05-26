@@ -1,4 +1,4 @@
-import "../styles/globals.css";
+import "../shared/styles/globals.css";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
@@ -6,7 +6,7 @@ import { ToastContainer } from "react-toastify";
 import { RecoilRoot } from "recoil";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import "react-toastify/dist/ReactToastify.css";
-import Layout from "./layouts/BaseLayout";
+import Layout from "../app/layouts/BaseLayout";
 
 function MyApp({ Component, pageProps }) {
     const [queryClient] = React.useState(() => new QueryClient());
@@ -18,10 +18,7 @@ function MyApp({ Component, pageProps }) {
 
     return (
         <RecoilRoot>
-            <QueryClientProvider
-                contextSharing={true}
-                client={queryClient}
-            >
+            <QueryClientProvider client={queryClient}>
                 <ToastContainer />
                 <PayPalScriptProvider options={{ "client-id": paypalClientID }}>
                     <Layout>

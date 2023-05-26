@@ -1,1 +1,3 @@
-export { default as Post } from "./ui/Post";
+import { Post } from "./ui/Post";
+
+export default Post;

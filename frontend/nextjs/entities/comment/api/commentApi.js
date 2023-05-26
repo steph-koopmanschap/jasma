@@ -1,7 +1,7 @@
 import { api } from "@/shared/api/axios";
 
 const COMMENT_API = api;
-
+const COMMENT_ENDPOINT = "/api/comments";
 /**
  *
  * @param {FormData} multipartData formed data object
@@ -9,7 +9,7 @@ const COMMENT_API = api;
  */
 
 const createComment = async (multipartData) => {
-    const response = await POST_API.post(`/api/comments/createComment`, multipartData, {
+    const response = await COMMENT_API.post(`${COMMENT_ENDPOINT}/createComment`, multipartData, {
         headers: { "content-type": "multipart/form-data" }
     });
     console.log("multipart response(comment)", response.data);
@@ -24,7 +24,7 @@ const createComment = async (multipartData) => {
  */
 
 const getComments = async (post_id, limit) => {
-    const response = await this.api.get(`/api/comments/getComments?post_id=${post_id}&limit=${limit}`);
+    const response = await COMMENT_API.get(`${COMMENT_ENDPOINT}/getComments?post_id=${post_id}&limit=${limit}`);
     return response.data;
 };
 
@@ -35,7 +35,7 @@ const getComments = async (post_id, limit) => {
  */
 
 const deleteComment = async (commentID) => {
-    const response = await COMMENT_API.delete(`/api/comments/deleteComment/${commentID}`);
+    const response = await COMMENT_API.delete(`${COMMENT_ENDPOINT}/deleteComment/${commentID}`);
     return response.data;
 };
 
@@ -46,7 +46,7 @@ const deleteComment = async (commentID) => {
  * @returns
  */
 const editComment = async (commentID) => {
-    const response = await COMMENT_API.put(`/api/comments/editComment`);
+    const response = await COMMENT_API.put(`${COMMENT_ENDPOINT}/editComment`);
     return response.data;
 };
 

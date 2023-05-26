@@ -3,11 +3,12 @@ import { useRecoilState } from "recoil";
 import Link from "next/link";
 
 import { DropDownBtn } from "@/shared/ui";
-import { ProfilePic } from "../..";
 import { handleGetUser } from "@/features/user";
 import { LogInOutBtn } from "@/features/auth/logout";
+import { userState } from "@/entities/theme";
+import { ProfilePic } from "../profile-picture/ProfilePic";
 
-const NavProfile = () => {
+export const NavProfile = () => {
     const [user, setUser] = useRecoilState(userState);
 
     useEffect(() => {
@@ -51,5 +52,3 @@ const NavProfile = () => {
         </div>
     );
 };
-
-export default NavProfile;

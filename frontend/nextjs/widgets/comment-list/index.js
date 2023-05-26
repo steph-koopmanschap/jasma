@@ -1,1 +1,3 @@
-export { default as CommentList } from "./CommentList";
+import { CommentList } from "./CommentList";
+
+export default CommentList;

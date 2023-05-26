@@ -1,6 +1,7 @@
 import { api } from "@/shared/api/axios";
 
 const POST_API = api;
+const POST_ENDPOINT = "/api/posts";
 
 /**
  *
@@ -9,7 +10,7 @@ const POST_API = api;
  */
 
 const createPost = async (multipartData) => {
-    const response = await POST_API.post("api/posts/createPost", multipartData, {
+    const response = await POST_API.post(`${POST_ENDPOINT}/createPost`, multipartData, {
         headers: { "content-type": "multipart/form-data" }
     });
     console.log("multipart response(post)", response.data);
@@ -23,7 +24,7 @@ const createPost = async (multipartData) => {
  */
 
 const deletePost = async (postID) => {
-    const response = await POST_API.delete(`/api/posts/deletePost/${postID}`);
+    const response = await POST_API.delete(`${POST_ENDPOINT}/deletePost/${postID}`);
     return response.data;
 };
 
@@ -33,7 +34,7 @@ const deletePost = async (postID) => {
  * @returns
  */
 const editPost = async (postID) => {
-    const response = await POST_API.put(`/api/posts/editPost`);
+    const response = await POST_API.put(`${POST_ENDPOINT}/editPost`);
     return response.data;
 };
 /**
@@ -43,7 +44,7 @@ const editPost = async (postID) => {
  * @returns
  */
 const createReport = async (post_id, report_reason) => {
-    const response = await POST_API.post(`/api/reports/createReport`, {
+    const response = await POST_API.post(`${POST_ENDPOINT}/createReport`, {
         post_id: post_id,
         report_reason: report_reason
     });
@@ -58,7 +59,7 @@ const createReport = async (post_id, report_reason) => {
  */
 
 const getUserPosts = async (user_id, limit) => {
-    const response = await POST_API.get(`/api/posts/getUserPosts?user_id=${user_id}&limit=${limit}`);
+    const response = await POST_API.get(`${POST_ENDPOINT}/getUserPosts?user_id=${user_id}&limit=${limit}`);
     return response.data;
 };
 
@@ -69,8 +70,24 @@ const getUserPosts = async (user_id, limit) => {
  */
 
 const getSinglePost = async (post_id) => {
-    const response = await POST_API.get(`/api/posts/getSinglePost/${post_id}`);
+    const response = await POST_API.get(`${POST_ENDPOINT}/getSinglePost/${post_id}`);
     return response.data;
 };
 
-export { deletePost, editPost, createPost, createReport, getSinglePost, getUserPosts };
+const getNewsFeed = async () => {
+    const response = await POST_API.get(`${POST_ENDPOINT}/getNewsFeed`);
+    return response.data;
+};
+
+/**
+ *
+ * @param {Number} limit max posts per query
+ * @returns
+ */
+
+const getLatestPosts = async (limit) => {
+    const response = await POST_API.get(`${{ POST_ENDPOINT }}/getLatestPosts?limit=${limit}`);
+    return response.data;
+};
+
+export { getNewsFeed, deletePost, editPost, createPost, createReport, getLatestPosts, getSinglePost, getUserPosts };

@@ -1,8 +1,8 @@
 import Link from "next/link";
-import Logo from "./Logo";
-import BrandName from "./BrandName";
+import Logo from "./ui/Logo";
+import BrandName from "./ui/BrandName";
 
-function Brand() {
+export function Brand() {
     return (
         <Link href="/">
             <div className="flex w-full h-full text-2xl">
@@ -12,5 +12,3 @@ function Brand() {
         </Link>
     );
 }
-
-export default Brand;
