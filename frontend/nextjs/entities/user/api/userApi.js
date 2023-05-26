@@ -14,4 +14,8 @@ const getProfilePic = async (userid) => {
     return response.data;
 };
 
-export { getProfilePic };
+const getClientUser = async () => {
+    const response = await USER_API.get("/api/users/getClientUser");
+    return response.data;
+};
+export { getProfilePic, getClientUser };

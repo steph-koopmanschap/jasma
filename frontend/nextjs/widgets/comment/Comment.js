@@ -2,7 +2,7 @@ import { CommentShell } from "@/entities/comment";
 import { DeleteCommentButton, EditCommentButton } from "@/features/comment";
 import { ProfilePic } from "../user";
 
-export const Comment = (props) => {
+const Comment = (props) => {
     const { commentData } = props;
 
     return (
@@ -18,3 +18,4 @@ export const Comment = (props) => {
         />
     );
 };
+export default Comment;

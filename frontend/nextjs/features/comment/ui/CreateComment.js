@@ -1,7 +1,7 @@
 import { useToast } from "@/shared/model";
 import { useState } from "react";
 import { handleCreatePostComment } from "../model/commentActions";
-import FileUploader from "@/components/file-upload/FileUploader";
+import { FileUploader } from "@/features/file-upload/ui/FileUpload";
 
 export const CreateComment = ({ postID }) => {
     const { notifyToast } = useToast();

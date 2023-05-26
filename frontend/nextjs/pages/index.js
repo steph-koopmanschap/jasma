@@ -1,11 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { FooterMain } from "@/widgets/footer";
+import { HeaderMain } from "@/widgets/header";
 import Link from "next/link";
-import HeaderMain from "../components/HeaderMain";
-import FooterMain from "../components/FooterMain";
-import DefaultHead from "../components/DefaultHead";
-import themes from "../styles/themes";
-import { ThemeProvider } from "styled-components";
-import GlobalStyles from "../styles/GlobalStyles";
 
 export default function Home({ initialTheme }) {
     return (
@@ -24,10 +19,24 @@ export default function Home({ initialTheme }) {
                 </h1>
 
                 <p>
-                    To start you can <Link className="text-blue-700 hover:text-blue-500 font-bold" href="/register">register</Link> an account.
+                    To start you can{" "}
+                    <Link
+                        className="text-blue-700 hover:text-blue-500 font-bold"
+                        href="/register"
+                    >
+                        register
+                    </Link>{" "}
+                    an account.
                 </p>
                 <p className="mb-2">
-                    Or <Link className="text-blue-700 hover:text-blue-500 font-bold" href="/login">login</Link> if you already have an accont.
+                    Or{" "}
+                    <Link
+                        className="text-blue-700 hover:text-blue-500 font-bold"
+                        href="/login"
+                    >
+                        login
+                    </Link>{" "}
+                    if you already have an accont.
                 </p>
 
                 <p className="text-2xl m-2 primary">

@@ -1,8 +1,8 @@
 import { useToast } from "@/shared/model";
 import { useState } from "react";
 import { handleCreatePost } from "../../model/actions";
-import FileUploader from "@/components/file-upload/FileUploader";
 import { hashtagFormatter } from "@/shared/utils/hashtagFormatter";
+import { FileUploader } from "@/features/file-upload/ui/FileUpload";
 
 export const CreatePost = () => {
     const { notifyToast } = useToast();

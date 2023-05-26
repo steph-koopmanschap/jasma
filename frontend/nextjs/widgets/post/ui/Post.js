@@ -5,7 +5,7 @@ import { DeletePostBtn, EditPostBtn, SharePostBtn, ReportPostBtn } from "@/featu
 import { CommentList } from "@/widgets/comment-list";
 import { ProfilePic } from "@/widgets/user";
 
-export const Post = (props) => {
+const Post = (props) => {
     const { postData } = props;
     const { post_id } = postData;
     return (
@@ -26,3 +26,5 @@ export const Post = (props) => {
         />
     );
 };
+
+export default Post;

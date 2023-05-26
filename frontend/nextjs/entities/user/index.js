@@ -1,1 +1,1 @@
-export { getProfilePic } from "./api/userApi";
+export { getProfilePic, getClientUser } from "./api/userApi";

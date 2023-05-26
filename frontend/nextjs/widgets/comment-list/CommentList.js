@@ -1,7 +1,7 @@
 import { useGetComments } from "@/features/comment";
 import { Comment } from "../comment";
 
-export const CommentList = ({ postID }) => {
+const CommentList = ({ postID }) => {
     const { error, data, isLoading, isError } = useGetComments(postID, 25);
 
     // useEffect(() => {
@@ -32,3 +32,4 @@ export const CommentList = ({ postID }) => {
         </div>
     );
 };
+export default CommentList;

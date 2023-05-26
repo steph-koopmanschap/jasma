@@ -2,7 +2,7 @@ import Post from "@/components/Post";
 import { useGetBookmarkedPosts } from "@/entities/bookmark";
 import { RemoveBookmark } from "@/features/bookmark/remove-mark";
 
-export function BookmarksList(props) {
+export default function BookmarksList(props) {
     const { status, isLoading, isError, data, error, refetch } = useGetBookmarkedPosts();
 
     if (isLoading) {
