@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-import Link from 'next/link';
+import React, { useState } from "react";
+import Link from "next/link";
 
-export default function UserFeedback() {
+export function FeedbackForm() {
     // Values of the email and password input boxes
     const [feedbackFormState, setFeedbackFormState] = useState({
         rating: 1,
@@ -19,45 +19,58 @@ export default function UserFeedback() {
     // Submit Feedback
     const submitForm = async (e) => {
         e.preventDefault();
-    
-    }
+    };
 
-    return ( 
+    return (
         <div className="flex flex-col items-center justify-center my-16">
             <h3 className="my-2">What do you think of JASMA</h3>
 
-            <form className="bg-gray-600 shadow-md rounded px-8 pt-6 pb-8 mb-4" action="#" onSubmit={submitForm}>
+            <form
+                className="bg-gray-600 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+                action="#"
+                onSubmit={submitForm}
+            >
                 <div className="mb-4">
-                    <label className='labelDefault' htmlFor="rating">
+                    <label
+                        className="labelDefault"
+                        htmlFor="rating"
+                    >
                         rating
                     </label>
-                    <input 
+                    <input
                         type="number"
                         placeholder=""
                         name="rating"
-                        value={feedbackFormState.rating} 
+                        value={feedbackFormState.rating}
                         onChange={handleChange}
                         min="1"
                         max="5"
-                        required 
+                        required
                     />
                 </div>
                 <div className="mb-6">
-                    <label className='labelDefault' htmlFor="review">
+                    <label
+                        className="labelDefault"
+                        htmlFor="review"
+                    >
                         Password
                     </label>
-                    <textarea 
+                    <textarea
                         type="textarea"
                         placeholder="Your review..."
                         name="review"
                         value={feedbackFormState.review}
                         onChange={handleChange}
-                        required 
-                    /> 
+                        required
+                    />
                 </div>
-            
+
                 <div className="flex flex-col items-center justify-between">
-                    <button className="formButtonDefault" type="submit" value="Submit Review">
+                    <button
+                        className="formButtonDefault"
+                        type="submit"
+                        value="Submit Review"
+                    >
                         Submit Review
                     </button>
                 </div>

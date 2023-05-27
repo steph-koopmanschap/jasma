@@ -5,8 +5,10 @@ import {
     editPost,
     getLatestPosts,
     getNewsFeed,
-    getSinglePost
+    getSinglePost,
+    getUserPosts
 } from "@/entities/post/index.js";
+import { createMultipartData } from "@/shared/utils";
 import { useQuery } from "react-query";
 
 /**
@@ -70,7 +72,7 @@ const handleSharePost = (postID) => {
 /**
  *
  * @param {String} postID
- * @param {String} report_reason // string describing report reason
+ * @param {String} report_reason  string describing report reason
  * @returns
  */
 
@@ -128,6 +130,25 @@ const useGetLatestFeed = () =>
         }
     );
 
+/**
+ *
+ * @param {String} user_id
+ * @param {Number} limit max amount of data per query
+ * @returns
+ */
+
+const useGetUserPost = async (user_id, limit) =>
+    useQuery(
+        [`userPosts_${user_id}`],
+        async () => {
+            return await getUserPosts(user_id, limit);
+        },
+        {
+            enabled: true,
+            refetchOnWindowFocus: false
+        }
+    );
+
 export {
     handleCreatePost,
     handleDeletePost,
@@ -136,5 +157,6 @@ export {
     handleSharePost,
     handleReportPost,
     useGetSinglePost,
-    useGetLatestFeed
+    useGetLatestFeed,
+    useGetUserPost
 };
