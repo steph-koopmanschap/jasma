@@ -2,6 +2,12 @@ import axios from "axios";
 import fetch from "node-fetch";
 import Cookies from "js-cookie";
 
+/*
+    This file is now deprecated, soon it will be deleted, all services should be written within entities folder 
+    following FSD convention and imported from there.
+
+*/
+
 function createMultipartData(data, file) {
     const formData = new FormData();
 

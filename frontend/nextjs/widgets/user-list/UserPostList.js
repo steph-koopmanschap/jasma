@@ -1,9 +1,7 @@
 import { useGetUserPost } from "@/features/post";
 import Post from "../post";
 
-export function UserPostList(props) {
-    const { userID } = props;
-
+export function UserPostList({ userID }) {
     const { status, isLoading, isError, data, error, refetch } = useGetUserPost(userID, 25);
 
     if (isLoading) {

@@ -13,16 +13,16 @@ import React from "react";
     However the <YourComponent /> will no longer render and instead the render function of this component will render instead.
 */
 
-class ErrorBoundary extends React.Component {
+export class ErrorBoundary extends React.Component {
     constructor(props) {
         super(props);
         this.state = { hasError: false };
     }
 
-    static getDerivedStateFromError(error) {     
+    static getDerivedStateFromError(error) {
         console.log("ERROR: " + error);
-        // Update state so the next render will show the fallback UI.  
-        return { hasError: true };  
+        // Update state so the next render will show the fallback UI.
+        return { hasError: true };
     }
 
     componentDidCatch(error, info) {
@@ -35,14 +35,12 @@ class ErrorBoundary extends React.Component {
 
             //return this.props.fallback
             return (
-            <div>
-                <h1>Something went wrong here.</h1>
-                <p></p>
-            </div>);
+                <div>
+                    <h1>Something went wrong here.</h1>
+                    <p></p>
+                </div>
+            );
         }
-        return this.props.children; 
+        return this.props.children;
     }
 }
-
-export default ErrorBoundary;
-

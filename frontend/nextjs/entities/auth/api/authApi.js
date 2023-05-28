@@ -83,5 +83,27 @@ const changePassword = async (newPassword) => {
     });
     return response.data;
 };
+async function get_CSRF_TOKEN_fromCookie() {
+    console.log("This function is disabled for now...FROM: async function get_CSRF_TOKEN_fromCookie() in api.js");
+    //     let token = "";
+    //    // The CSRF token already exists in the cookie
+    //     if (checkCookieExists('XSRF-TOKEN') === true) {
+    //         token = Cookies.get('XSRF-TOKEN');
+    //     }
+    //     // if (checkCookieExists('_csrf') === true)
+    //     // {
+    //     //     token = Cookies.get('_csrf');
+    //     // }
+    //     //The CSRF Token does not exist yet. Request server for a CSRF Token.
+    //     else {
+    //         token = await requestCSRF_TOKEN();
+    //     }
+    //     console.log("token:", token);
+    //     return token;
+}
 
-export { changePassword, checkAuth, checkAuthClientSide, checkAuthUserRole, login, logout, register };
+const getCSRF_TOKEN = async () => {
+    return await get_CSRF_TOKEN_fromCookie();
+};
+
+export { changePassword, checkAuth, checkAuthClientSide, checkAuthUserRole, login, logout, register, getCSRF_TOKEN };

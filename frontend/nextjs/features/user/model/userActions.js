@@ -85,14 +85,25 @@ const handleUploadUserPic = async (file) => {
  * @returns
  */
 
-const handleGetFollowers = async (userID) => {
-    try {
-        const res = await getFollowers(userID);
-        return res;
-    } catch (error) {
-        return { error: true, message: "Error." + error };
-    }
-};
+const useGetFollowers = async (userID) =>
+    useQuery(
+        [`followers_${userID}`],
+        async () => {
+            return await api.getFollowers(userID);
+        },
+        {
+            enabled: true,
+            refetchOnWindowFocus: false
+        }
+    );
+
+if (isLoading) {
+    return <h1>Retrieving followers...</h1>;
+}
+
+if (isError) {
+    return <h1>{error}</h1>;
+}
 
 /**
  *
@@ -100,14 +111,17 @@ const handleGetFollowers = async (userID) => {
  * @returns
  */
 
-const handleGetFollowing = async (userID) => {
-    try {
-        const res = await getFollowing(userID);
-        return res;
-    } catch (error) {
-        return { error: true, message: "Error." + error };
-    }
-};
+const useGetFollowing = async (userID) =>
+    useQuery(
+        [`followees_${userID}`],
+        async () => {
+            return await api.getFollowing(userID);
+        },
+        {
+            enabled: true,
+            refetchOnWindowFocus: false
+        }
+    );
 
 /**
  *
@@ -131,8 +145,8 @@ export {
     handleSetFollow,
     handleUploadUserPic,
     handleCheckIsFollowing,
-    handleGetFollowers,
-    handleGetFollowing,
+    useGetFollowers,
+    useGetFollowing,
     handleSetFollow,
     handleUnfollow
 };

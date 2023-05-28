@@ -1,2 +1,2 @@
-export { useGetUserPicture, handleGetUser } from "./model/userActions";
+export { useGetUserPicture, handleGetUser, useGetFollowing, useGetFollowers } from "./model/userActions";
 export { ToggleFollowBtn } from "./ui/ToggleFollowBtn";

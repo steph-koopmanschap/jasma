@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import Link from "next/link";
-import jasmaApi from "@/clientAPI/api";
 import { useToast } from "@/shared/model";
+import Link from "next/link";
+import { useState } from "react";
+import { handleSignup } from "../model/signupActions";
 
-export default function SignUpForm() {
+export function SignUpForm() {
     const { notifyToast } = useToast();
 
     //Values of all the input boxes
@@ -24,17 +24,14 @@ export default function SignUpForm() {
     //Registration action (OnSubmit form)
     const signup = async (e) => {
         e.preventDefault();
-        const res = await jasmaApi.register(
+        const res = await handleSignup(
             registrationState.userNameInput,
             registrationState.emailInput,
             registrationState.passwordInput
         );
-        if (res.success === true) {
+        if (!res.error) {
             console.log(res.message);
             notifyToast(res.message);
-        } else if (res?.errors) {
-            console.log(res.errors[0].msg);
-            notifyToast(res.errors[0].msg);
         } else {
             console.log(res.message);
             notifyToast(res.message);

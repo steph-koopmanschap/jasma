@@ -3,9 +3,7 @@ import UserWidgets from "../user";
 import { UserListItemShell } from "@/entities/user";
 import { ToggleFollowBtn } from "@/features/user";
 
-export function UsersList(props) {
-    const { users } = props;
-
+export function UsersList({ users }) {
     const [loggedInUserID, setLoggedInUserID] = useState(null);
 
     useEffect(() => {

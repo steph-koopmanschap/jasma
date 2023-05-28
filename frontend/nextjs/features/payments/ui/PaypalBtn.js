@@ -1,21 +1,23 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { PayPalButtons } from "@paypal/react-paypal-js";
-import api from "../clientAPI/api.js";
+import { handleCreateOrder } from "../model/paymentsActions";
+import { useToast } from "@/shared/model";
 
-export default function PaypalBtn(props) {
-    const { cartData } = props;
+export function PaypalBtn({ cartData }) {
+    const [orderID, setOrderID] = useState("");
 
-    const [orderID, setOrderID] = useState('');
-
+    const { notifyToast } = useToast();
 
     const createOrder = async () => {
-        const res = api.paypalCreateOrder(cartData);
+        const res = await handleCreateOrder(cartData);
+        if (res.error) return notifyToast(res.message);
         setOrderID(res);
         return res;
     };
 
     const onApprove = async () => {
-        const res = api.paypalCreateOrder(cartData);
+        const res = await handleCreateOrder(cartData);
+        if (res.error) return notifyToast(res.message);
         return res;
     };
 
@@ -27,7 +29,7 @@ export default function PaypalBtn(props) {
                     shape: "pill",
                     label: "pay",
                     tagline: false,
-                    layout: "horizontal",
+                    layout: "horizontal"
                 }}
                 createOrder={createOrder}
                 onApprove={onApprove}
