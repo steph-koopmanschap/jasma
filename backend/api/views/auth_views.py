@@ -16,8 +16,6 @@ from rest_framework.request import Request
 
 
 @api_view(["POST"])
-# TODO: Confirm if really needed to bypass csrf token error
-@authentication_classes([])
 def register(request):
     # get the user input data from the request body
     username = request.data.get('username')
@@ -47,12 +45,10 @@ def register(request):
     user.after_create()
     # return success response
     data = {'success': True, 'message': f"User {username} registered successfully."}
-    return JsonResponse(data, status=status.HTTP_201_CREATED)
+    return Response(data, status=status.HTTP_201_CREATED)
 
 
 @api_view(["POST"])
-# TODO: Confirm if really needed to bypass csrf token error
-@authentication_classes([])
 def login_view(request):
     email = request.data.get('email')
     password = request.data.get('password')
@@ -77,8 +73,6 @@ def login_view(request):
 
 
 @api_view(["POST"])
-# TODO: Confirm if really needed to bypass csrf token error
-@authentication_classes([])
 def logout_view(request):
     logout(request)
     data = {"success": True, "message": "Logged out."}
