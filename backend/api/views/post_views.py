@@ -12,26 +12,148 @@ from api.utils.handle_file_save import handle_file_save
 from api.utils.handle_file_delete import handle_file_delete
 from api.views.notification_views import create_notification
 
+from rest_framework import status, viewsets, permissions
+from rest_framework.response import Response
+from rest_framework.decorators import action
+from .. import serializers
 
-@csrf_exempt
+
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = serializers.PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user_id = self.request.query_params.get('user_id')
+        limit = int(self.request.query_params.get('limit', 1))
+        if user_id:
+            queryset = queryset.filter(user_id=user_id)[:limit]
+
+        return queryset
+
+    def create(self, request):
+
+        request.data["user_id"] = request.user.id
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        
+        data = {
+            "success": True,
+            'message': "Post created successfully."
+        }
+        return Response(data, status=status.HTTP_201_CREATED)
+
+    def perform_create(self, serializer):
+        # Save the post instance
+        post = serializer.save()
+        # Get the hashtags from the request data
+        hashtags = self.request.data.get('hashtags', [])
+        # Create non-existing hashtags
+        for tag in hashtags:
+            hashtag, _ = Hashtag.objects.get_or_create(hashtag=tag)
+            # Add the created hashtag to the post
+            post.hashtags.add(hashtag)
+        # Save the updated post
+        post.save()
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Get the list of posts
+        serializer = self.get_serializer(queryset, many=True)
+        posts = serializer.data
+
+        # Customize the response format
+        response_data = {
+            'posts': posts,
+            'success': True
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
+        
+        
+        
+        """
+        if result.status_code == status.HTTP_201_CREATED:
+            result.data.update(
+                {"success": True, "message": "Post created successfully."})
+        else:
+            result.data.update({"success": False})
+            if result.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR:
+                result.data.update({"message": "File upload failed."})
+        """
+"""
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
+from .. import serializers
+
+class PostList(generics.ListCreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = serializers.PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        request.data.update({"user_id": request.user.id})
+        # This should maybe be dealt with at the model level
+        for tag in request.data.get("hashtags"):
+            Hashtag.objects.get_or_create(hashtag=tag)
+        result = super().post(request, *args, **kwargs)
+        # This is why I was wondering if success / message are necessary
+        if result.status_code == status.HTTP_201_CREATED:
+            result.data.update(
+                {"success": True, "message": "Post created successfully."})
+        else:
+            result.data.update({"success": False})
+            if result.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR:
+                result.data.update({"message": "File upload failed."})
+
+        return result
+
+    def get_queryset(self):
+        queryset = Post.objects.all()
+
+        user_id = self.request.query_params.get('user_id')
+        limit = int(self.request.query_params.get('limit', 1))
+        if user_id:
+            queryset = queryset.filter(user_id=user_id)[:limit]
+
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        result = super().get(request, *args, **kwargs)
+        if result.status_code == status.HTTP_200_OK:
+            result.data.update(
+                {"success": True})
+            # posts = [result.data.pop() for _ in range(len(result.data))]
+            # result.data.update({
+            #     "success": True,
+            #     "posts": reversed(posts)
+            # })
+            # print(result.data)
+            # print("I got HERE!")
+        return result
+
+
 @login_required
 @post_wrapper
 def create_post(request):
-    text_content = request.POST.get('text_content')
-    hashtags = request.POST.getlist('hashtags')
+    text_content = request.POST.get("text_content")
+    hashtags = request.POST.getlist("hashtags")
     user = request.user
     # try post creation
     try:
         # Post contains a file
         if request.FILES:
-            uploaded_file = request.FILES.get('file')
+            uploaded_file = request.FILES.get("file")
             saved_file = handle_file_save(uploaded_file, "post")
             if saved_file == False:
-                return JsonResponse({'successs': False, 'message': "File upload failed."},
+                return JsonResponse({"successs": False, "message": "File upload failed."},
                                     status=HTTP_STATUS["Internal Server Error"])
             file_url = saved_file["URL"]
             # Deterimine the type of post based on the file type
-            post_type = saved_file["file_type"]["mime_type"].split('/')[0]
+            post_type = saved_file["file_type"]["mime_type"].split("/")[0]
         # Post has no file.
         else:
             file_url = None
@@ -51,19 +173,19 @@ def create_post(request):
         post.save()
     except Exception as e:
         # Check if a post has been created, if yes, delete it upon error.
-        if 'post' in locals():
+        if "post" in locals():
             post.delete()
         # Delete the saved file too.
-        if 'saved_file' in locals():
+        if "saved_file" in locals():
             if saved_file != False:
                 handle_file_delete(saved_file["location"])
         print(e)
-        return JsonResponse({'successs': False, 'message': e.args[0]},
+        return JsonResponse({"successs": False, "message": e.args[0]},
                             status=HTTP_STATUS["Internal Server Error"])
-    # Create a notification towards followers of the post's user. (in Redis)
+    # Create a notification towards followers of the post"s user. (in Redis)
     following = Following.objects.filter(
-        following=user).values_list('user', flat=True)
-    followers_users = User.objects.filter(id__in=following).values('id')
+        following=user).values_list("user", flat=True)
+    followers_users = User.objects.filter(id__in=following).values("id")
     for follower in followers_users:
         create_notification(follower.id, {
             "from": user.id,
@@ -76,8 +198,9 @@ def create_post(request):
     cache.set(f"posts_{post.post_id}", post_formatted,
               timeout=MONTH_IN_SECONDS)
 
-    return JsonResponse({'successs': True, 'message': "Post created successfully."},
+    return JsonResponse({"successs": True, "message": "Post created successfully."},
                         status=HTTP_STATUS["Created"])
+    """
 
 
 @csrf_exempt
@@ -85,20 +208,20 @@ def create_post(request):
 @put_wrapper
 def edit_post(request):
     try:
-        post_id = request.POST.get('post_id')
+        post_id = request.POST.get("post_id")
         post = Post.objects.get(post_id=post_id)
         old_post = post  # Save the old post in case edit fails?
     except Post.DoesNotExist:
-        return JsonResponse({'success': False, 'message': "Post does not exist."},
+        return JsonResponse({"success": False, "message": "Post does not exist."},
                             status=HTTP_STATUS["Not Found"])
     # Try edit the post
     try:
         # Update text_content if available
-        text_content = request.POST.get('text_content')
+        text_content = request.POST.get("text_content")
         if text_content:
             post.text_content = text_content
         # Update hashtags if available
-        hashtags = request.POST.getlist('hashtags')
+        hashtags = request.POST.getlist("hashtags")
         if hashtags:
             # Clear previous hashtags and add new ones
             post.hashtags.clear()
@@ -107,14 +230,14 @@ def edit_post(request):
                 post.hashtags.add(hashtag)
         # Handle file upload if available
         if request.FILES:
-            uploaded_file = request.FILES.get('file')
+            uploaded_file = request.FILES.get("file")
             saved_file = handle_file_save(uploaded_file, "post")
             if saved_file == False:
-                return JsonResponse({'successs': False, 'message': "File upload failed."},
+                return JsonResponse({"successs": False, "message": "File upload failed."},
                                     status=HTTP_STATUS["Internal Server Error"])
             file_url = saved_file["URL"]
             # Determine the type of post based on the file type
-            post_type = saved_file["file_type"]["mime_type"].split('/')[0]
+            post_type = saved_file["file_type"]["mime_type"].split("/")[0]
             # If the post already contains a file, delete the old one
             if post.file_url:
                 handle_file_delete(post.file_url)
@@ -135,11 +258,11 @@ def edit_post(request):
         post.hashtags.add(*old_post.hashtags.all())
         post.save()
         # Delete the saved file too.
-        if 'saved_file' in locals():
+        if "saved_file" in locals():
             if saved_file != False:
                 handle_file_delete(saved_file["location"])
         print(e)
-        return JsonResponse({'successs': False, 'message': e.args[0]},
+        return JsonResponse({"successs": False, "message": e.args[0]},
                             status=HTTP_STATUS["Internal Server Error"])
     # Delete the old post from the cache
     cache_key = f"posts_{post.post_id}"
@@ -148,7 +271,7 @@ def edit_post(request):
     post_formatted = Post.format_post_dict(post)
     cache.set(cache_key, post_formatted, timeout=MONTH_IN_SECONDS)
 
-    return JsonResponse({'success': True, 'message': "Post updated successfully."},
+    return JsonResponse({"success": True, "message": "Post updated successfully."},
                         status=HTTP_STATUS["Created"])
 
 
@@ -159,30 +282,30 @@ def delete_post(request, post_id):
     try:
         post = Post.objects.get(post_id=post_id)
     except Post.DoesNotExist:
-        return JsonResponse({'success': True, 'message': "Post does not exist or already deleted."},
+        return JsonResponse({"success": True, "message": "Post does not exist or already deleted."},
                             status=HTTP_STATUS["Gone"])
     if post.file_url != None:
         delete_file = handle_file_delete(post.file_url)
     cache.delete(f"posts_{post.post_id}")
     post.delete()
-    return JsonResponse({'successs': True, 'message': "Post deleted successfully."},
+    return JsonResponse({"successs": True, "message": "Post deleted successfully."},
                         status=HTTP_STATUS["OK"])
 
 
 @get_wrapper
 def get_user_posts(request):
-    user_id = request.GET.get('user_id', None)
-    limit = int(request.GET.get('limit', 1))
+    user_id = request.GET.get("user_id", None)
+    limit = int(request.GET.get("limit", 1))
     try:
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
-        return JsonResponse({'success': False, 'message': "User does not exist."},
+        return JsonResponse({"success": False, "message": "User does not exist."},
                             status=HTTP_STATUS["Not Found"])
     # Get the latest posts of the user with the limit.
-    posts = Post.objects.filter(user=user).order_by('-created_at')[:limit]
+    posts = Post.objects.filter(user=user).order_by("-created_at")[:limit]
     posts_formatted = Post.format_posts_dict(posts)
 
-    return JsonResponse({'success': True, 'posts': posts_formatted},
+    return JsonResponse({"success": True, "posts": posts_formatted},
                         status=HTTP_STATUS["OK"])
 
 
@@ -192,9 +315,9 @@ def get_single_post(request, post_id):
         post = Post.objects.get(post_id=post_id)
         post_formatted = Post.format_post_dict(post)
     except Post.DoesNotExist:
-        return JsonResponse({'success': False, 'message': "Post does not exist."},
+        return JsonResponse({"success": False, "message": "Post does not exist."},
                             status=HTTP_STATUS["Not Found"])
-    return JsonResponse({'success': True, 'post': post_formatted},
+    return JsonResponse({"success": True, "post": post_formatted},
                         status=HTTP_STATUS["OK"])
 
 # Get mulitple specific posts by passing in an array of post_ids
@@ -205,7 +328,7 @@ def get_single_post(request, post_id):
 @post_wrapper
 def get_multiple_posts(request):
     req = json.loads(request.body)
-    post_ids = req['post_ids']
+    post_ids = req["post_ids"]
     # Check if the posts are in Redis Cache
     # TODO: FINISH CACHING!
     for post_id in post_ids:
@@ -213,7 +336,7 @@ def get_multiple_posts(request):
 
     posts = Post.objects.filter(post_id__in=post_ids)
     posts_formatted = Post.format_posts_dict(posts)
-    return JsonResponse({'success': True, 'posts': posts_formatted},
+    return JsonResponse({"success": True, "posts": posts_formatted},
                         status=HTTP_STATUS["OK"])
 
 # TODO: Ad injection
@@ -224,17 +347,17 @@ def get_multiple_posts(request):
 
 @get_wrapper
 def get_global_newsfeed(request):
-    limit = int(request.GET.get('limit', 1))
+    limit = int(request.GET.get("limit", 1))
     # Filter posts by type
-    post_type_filter = request.GET.get('post_type', 'all')
-    if post_type_filter == 'all':
-        posts = Post.objects.all().order_by('-created_at')[:limit]
+    post_type_filter = request.GET.get("post_type", "all")
+    if post_type_filter == "all":
+        posts = Post.objects.all().order_by("-created_at")[:limit]
     else:
         posts = Post.objects.all().order_by(
-            '-created_at').filter(post_type=post_type_filter)[:limit]
+            "-created_at").filter(post_type=post_type_filter)[:limit]
 
     posts_formatted = Post.format_posts_dict(posts)
-    return JsonResponse({'success': True, 'posts': posts_formatted},
+    return JsonResponse({"success": True, "posts": posts_formatted},
                         status=HTTP_STATUS["OK"])
 
 # TODO: Ad injection
@@ -245,7 +368,7 @@ def get_global_newsfeed(request):
 @login_required
 @get_wrapper
 def get_newsfeed(request):
-    limit = int(request.GET.get('limit', 50))
+    limit = int(request.GET.get("limit", 50))
     user = request.user
     # Get the users that this user is following
     following = Following.objects.filter(user=user)
@@ -256,10 +379,10 @@ def get_newsfeed(request):
     # For each hashtag get the 5 latest posts.
     for hashtag in hashtags:
         posts_subbed_hashtags = Post.objects.filter(
-            hashtags__hashtag=hashtag).order_by('-created_at')[:5]
+            hashtags__hashtag=hashtag).order_by("-created_at")[:5]
     # Get latest the posts of the users that the user is following
     posts_following = Post.objects.filter(
-        user__in=following).order_by('-created_at')[:limit]
+        user__in=following).order_by("-created_at")[:limit]
     # Combine the posts_following and posts_subbed_hashtags into a new QuerySet
     posts = posts_following | posts_subbed_hashtags
     # If the combined following and subbed hashtags posts are less than the limit.
@@ -267,14 +390,14 @@ def get_newsfeed(request):
         # Get the latest posts from the global newsfeed
         num_posts_to_get = limit - posts.count()
         posts_global = Post.objects.all().order_by(
-            '-created_at')[:num_posts_to_get]
+            "-created_at")[:num_posts_to_get]
         # Add the global posts to the posts
         posts = posts | posts_global
     # Sort the posts by date
-    posts = posts.order_by('-created_at')
+    posts = posts.order_by("-created_at")
     # Format the posts
     posts_formatted = Post.format_posts_dict(posts)
-    return JsonResponse({'success': True, 'posts': posts_formatted},
+    return JsonResponse({"success": True, "posts": posts_formatted},
                         status=HTTP_STATUS["OK"])
 
 
@@ -284,14 +407,14 @@ def get_newsfeed(request):
 def add_post_bookmark(request):
     user = request.user
     req = json.loads(request.body)
-    post_id = req['post_id']
+    post_id = req["post_id"]
 
     post = Post.objects.get(post_id=post_id)
     _, created = BookmarkedPost.objects.get_or_create(user=user, post=post)
     if not created:
-        return JsonResponse({'success': True, 'message': "Post already bookmarked."},
+        return JsonResponse({"success": True, "message": "Post already bookmarked."},
                             status=HTTP_STATUS["OK"])
-    return JsonResponse({'success': True, 'message': "Post bookmarked successfully."},
+    return JsonResponse({"success": True, "message": "Post bookmarked successfully."},
                         status=HTTP_STATUS["Created"])
 
 
@@ -302,7 +425,7 @@ def delete_post_bookmark(request, post_id):
     user = request.user
     bookmark = BookmarkedPost.objects.filter(user=user, post_id=post_id)
     bookmark.delete()
-    return JsonResponse({'success': True, 'message': "Post bookmark deleted successfully."},
+    return JsonResponse({"success": True, "message": "Post bookmark deleted successfully."},
                         status=HTTP_STATUS["OK"])
 
 
@@ -311,11 +434,11 @@ def delete_post_bookmark(request, post_id):
 def get_bookmarked_posts(request):
     user = request.user
     bookmarks = BookmarkedPost.objects.filter(
-        user=user).order_by('-bookmarked_at')
+        user=user).order_by("-bookmarked_at")
     posts = []
     for bookmark in bookmarks:
         posts.append(Post.objects.get(post_id=bookmark.post))
     posts_formatted = Post.format_posts_dict(posts)
 
-    return JsonResponse({'success': True, 'posts': posts_formatted},
+    return JsonResponse({"success": True, "posts": posts_formatted},
                         status=HTTP_STATUS["OK"])

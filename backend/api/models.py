@@ -155,7 +155,7 @@ class Hashtag(models.Model):
 
 class Post(models.Model):
     post_id = models.UUIDField(default=uuid4, primary_key=True, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)  # Cascade could be problematic.
     text_content = models.CharField(max_length=40000)
     file_url = models.URLField(max_length=300, null=True, blank=True)
     post_type = models.CharField(max_length=5, default='text',
@@ -187,7 +187,7 @@ class Post(models.Model):
     def format_post_dict(post):
         post_dict = {
             "post_id": post.post_id,
-            "user_id": post.user.id,
+            "user_id": post.user_id,
             "text_content": post.text_content,
             "file_url": post.file_url,
             "post_type": post.post_type,
