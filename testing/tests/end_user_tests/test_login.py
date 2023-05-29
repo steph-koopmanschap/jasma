@@ -1,7 +1,7 @@
 import time
 import unittest
 from selenium.webdriver.common.by import By
-from tests.webdrivers import get_webdriver
+from utils.webdrivers import get_webdriver
 
 class LoginTests(unittest.TestCase):
 

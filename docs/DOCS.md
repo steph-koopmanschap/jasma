@@ -4,16 +4,34 @@
 
 ## Table of Contents
 
-- [Tech Stack](#tech-stack)
-- [Getting started](#getting-started)
-- [Getting started with Docker](#getting-started-with-docker)
-- [Environment variables explained](#environment-variables-explained)
-- [API Routes](#api-routes)
-- [External documentation of 3rd party libraries, frameworks, and tools.](#external-documentation-of-3rd-party-libraries-frameworks-and-tools)
+- [JASMA (OLD) Documentation](#jasma-old-documentation)
+  - [NOTE: THIS DOCUMENTATION IS DEPRECATED](#note-this-documentation-is-deprecated)
+  - [Table of Contents](#table-of-contents)
+  - [Tech Stack:](#tech-stack)
+    - [Frontend:](#frontend)
+    - [Backend:](#backend)
+    - [Testing:](#testing)
+  - [Getting started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Install node modules](#install-node-modules)
+      - [Configure environment variables](#configure-environment-variables)
+    - [Setting up the database](#setting-up-the-database)
+    - [Starting the app](#starting-the-app)
+  - [Getting started with Docker](#getting-started-with-docker)
+    - [Prerequisites](#prerequisites-1)
+    - [Configure Docker environment variables](#configure-docker-environment-variables)
+    - [Starting the app with docker.](#starting-the-app-with-docker)
+  - [Environment variables explained](#environment-variables-explained)
+    - [jasma-api-server](#jasma-api-server)
+    - [jasma-client](#jasma-client)
+  - [api documentation](#api-documentation)
+  - [testing documentation](#testing-documentation)
+  - [External documentation of 3rd party libraries, frameworks, and tools](#external-documentation-of-3rd-party-libraries-frameworks-and-tools)
 
 ## Tech Stack:
 
 ### Frontend:
+
 - NextJS / React
 - TailwindCSS
 - React Query
@@ -22,11 +40,15 @@
 - Font Awesome
 
 ### Backend:
-- ExpressJS
+
+- Django / Python
 - PostGreSQL
 - Redis
-- NodeJS
-- Sequelize
+
+### Testing:
+
+- PyUnit (unittest)
+- Selenium
 
 ## Getting started
 
@@ -96,7 +118,7 @@ You can also independently start each server with the commands.
 - `cd media-server && npm run dev`
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the app.
-API server lives on [http://localhost:5000/api](http://localhost:5000/api)
+API server lives on [http://localhost:8000/api](http://localhost:8000/api)
 
 ## Getting started with Docker
 
@@ -190,96 +212,16 @@ The env variables in the .env files might be slightly different.
 `NEXT_PUBLIC_NODE_ENV` Controls if the app is started in dev or production mode. `(development / production)` <br />
 `ANALYZE` Controls if the NextJS document size analyzer should be turned on. Setting this to true might crash the browser. `(true / false)` <br />
 `SESSION_SECRET` NextJS session secret. NOT USED. `(String)` <br />
-`PAYPAL_SECRET` Paypal secret of your paypal account. NOT USED. `(String)` <br />
-`NEXT_PUBLIC_PAYPAL_CLIENT_ID_SANDBOX` Client ID of your paypal app. For testing. NOT USED. `(String)` <br />
-`NEXT_PUBLIC_PAYPAL_CLIENT_ID_PRODUCTION` Client ID of your paypal app. For production. NOT USED. `(String)` <br />
 `NEXT_TELEMETRY_DEBUG` Controls wether to show debug and telemetry data in the console. `(1 / 0)` <br />
 `NEXT_TELEMETRY_DISABLED` Controls wether to send telemetry and app usage data to Vercel. `(1 / 0)` <br />
 
-## API Routes
+## api documentation
 
-#### Routes marked with ! require authenthication/authorization.
-#### Routes marked with !! require moderator/admin authenthication/authorization.
+Click here ()[] to see the full API documentation.
 
-### Auth
+## testing documentation
 
-- POST   /api/auth/register
-- POST   /api/auth/login
-- POST   /api/auth/logout
-- POST   /api/auth/checkAuth
-- POST   /api/auth/checkAuthUserRole
-- ! POST /api/auth/changePassword
-
-### Users
-
-- ! GET    /api/users/getClientUser
-- GET      /api/users/getUserId/${username}
-- GET      /api/users/${userID}/UserInfo
-- GET      /api/users/${userid}/profilepic
-- ! PUT    /api/users/uploadProfilePic
-- ! POST   /api/users/addFollower
-- ! DELETE /api/users/removeFollower/${userID_two}
-- GET      /api/users/${userID}/getFollowers
-- GET      /api/users/${userID}/getFollowing
-- ! GET    /api/users/checkIsFollowing/${userID_two}
-- !! GET   /api/users/getUsersByRole
-- !! PUT   /api/users/changeUserRole
-
-### Posts
-
-- ! POST   /api/posts/createPost
-- ! DELETE /api/posts/deletePost/${postID}
-- ! PUT    /api/posts/editPost
-- GET      /api/posts/getUserPosts?user_id=${user_id}&limit=${limit}
-- GET      /api/posts/getSinglePost/${post_id}
-- GET      /api/posts/getLatestPosts?limit=${limit}
-- ! GET    /api/posts/getNewsFeed
-- ! POST   /api/posts/addPostBookmark
-- ! DELETE /api/posts/removePostBookmark/${post_id}
-- ! GET    /api/posts/getBookmarkedPosts
-
-### Comments
-
-- ! POST   /api/comments/createComment
-- ! DELETE /api/comments/deleteComment/${commentID}
-- ! PUT    /api/comments/editComment
-- GET      /api/comments/getComments?post_id=${post_id}&limit=${limit}
-
-### Search
-
-- GET /api/search/search?q=${keyword}&filter=${filter}
-
-### Hashtags
-
-- GET      /api/hashtags/getTopHashtags?limit=${limit}
-- GET      /api/hashtags/getHashtagCount/${hashtag}
-- ! GET    /api/hashtags/getSubscribedHashtags
-- ! POST   /api/hashtags/subscribeToHashtags
-- ! DELETE /api/hashtags/unsubscribeFromHashtag
-
-### Notifications
-
-- ! GET /api/notifications/getNotifications
-- ! PUT /api/notifications/readNotification
-
-### Reports
-
-- POST /api/reports/createReport
-- !! GET /api/reports/getReports
-- !! DELETE /api/reports/deleteReport/${postID}
-- !! DELETE /api/reports/ignoreReport/${postID}
-
-### Advertisements
-
-- ! POST   /api/ads/createAd
-- ! DELETE /api/ads/deleteAd/${adID}
-- ! PUT    /api/ads/editAd
-- ! GET    /api/ads/getAd/${adID} 
-- ! GET    /api/ads/getAds
-
-### Media
-
-- GET /media/${mediaType}/${context}/${fileName}
+Click here ()[] to see the full testing documentation.
 
 ## External documentation of 3rd party libraries, frameworks, and tools
 
