@@ -69,6 +69,8 @@ The `development` branch is usually the most updated and most recent version of 
 To contribute code, create a new branch from the development branch with an appropriate name for the bug or feature you are working on. <br />
 Then create a PR for your branch to merge into the development (dev) branch. 
 
+You may also directly contact the project manager on Discord @ Greylien#8501
+
 ## Documentation
 
 See [DOCS.md](https://github.com/steph-koopmanschap/jasma/blob/main/DOCS.md)

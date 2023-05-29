@@ -39,12 +39,14 @@ def create_comment(request):
             file_url=file_url)
         # Create a notification towards the post owner, about this comment.
         post_owner = User.objects.get(id=post.user_id)
-        create_notification(post_owner.id, {
-            "from": user.id,
-            "event_type": "new_comment",
-            "event_reference": post_id,
-            "message": f"{user.username} commented on your post"
-        })
+        # Do not create a notification if the comment is made by the post owner.
+        if post_owner.id != user.id:
+            create_notification(post_owner.id, {
+                "from": user.id,
+                "event_type": "new_comment",
+                "event_reference": post_id,
+                "message": f"{user.username} commented on your post"
+            })
         # Add the comment to the redis cache
         # Get the previous comments from the cache
         cache_key = f"comments_{comment.post.post_id}"

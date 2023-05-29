@@ -14,7 +14,6 @@ from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
 from rest_framework.request import Request
 
-
 @api_view(["POST"])
 # TODO: Confirm if really needed to bypass csrf token error
 @authentication_classes([])
@@ -49,7 +48,6 @@ def register(request):
     data = {'success': True, 'message': f"User {username} registered successfully."}
     return JsonResponse(data, status=status.HTTP_201_CREATED)
 
-
 @api_view(["POST"])
 # TODO: Confirm if really needed to bypass csrf token error
 @authentication_classes([])
@@ -74,7 +72,6 @@ def login_view(request):
     else:
         data = {"success": False, "message": "Invalid email or password."}
         return Response(data, status=status.HTTP_403_FORBIDDEN)
-
 
 @api_view(["POST"])
 # TODO: Confirm if really needed to bypass csrf token error
