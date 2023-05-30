@@ -4,16 +4,32 @@
 
 ## Table of Contents
 
-- [Tech Stack](#tech-stack)
-- [Getting started](#getting-started)
-- [Getting started with Docker](#getting-started-with-docker)
-- [Environment variables explained](#environment-variables-explained)
-- [API Routes](#api-routes)
-- [External documentation of 3rd party libraries, frameworks, and tools.](#external-documentation-of-3rd-party-libraries-frameworks-and-tools)
+- [JASMA (OLD) Documentation](#jasma-old-documentation)
+  - [NOTE: THIS DOCUMENTATION IS DEPRECATED](#note-this-documentation-is-deprecated)
+  - [Table of Contents](#table-of-contents)
+  - [Tech Stack:](#tech-stack)
+    - [Frontend:](#frontend)
+    - [Backend:](#backend)
+    - [Testing:](#testing)
+  - [Getting started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Install node modules](#install-node-modules)
+      - [Configure environment variables](#configure-environment-variables)
+  - [Getting started with Docker](#getting-started-with-docker)
+    - [Prerequisites](#prerequisites-1)
+    - [Configure Docker environment variables](#configure-docker-environment-variables)
+    - [Starting the app with docker.](#starting-the-app-with-docker)
+  - [Environment variables explained](#environment-variables-explained)
+    - [jasma-api-server](#jasma-api-server)
+    - [jasma-client](#jasma-client)
+  - [api documentation](#api-documentation)
+  - [testing documentation](#testing-documentation)
+  - [External documentation of 3rd party libraries, frameworks, and tools](#external-documentation-of-3rd-party-libraries-frameworks-and-tools)
 
 ## Tech Stack:
 
 ### Frontend:
+
 - NextJS / React
 - TailwindCSS
 - React Query
@@ -22,11 +38,15 @@
 - Font Awesome
 
 ### Backend:
-- ExpressJS
+
+- Django / Python
 - PostGreSQL
 - Redis
-- NodeJS
-- Sequelize
+
+### Testing:
+
+- PyUnit (unittest)
+- Selenium
 
 ## Getting started
 
@@ -37,14 +57,11 @@ NOTE: The most easiest way to quickly get started is by using Docker.
 
 - Install PostGreSQL <br />
 `sudo apt install postgresql` <br />
-- Install Redis <br /> 
-`sudo apt install redis-server` <br />
 - Install NPM  <br />
 `sudo apt install npm` <br />
 - Install NodeJS  <br />
 `sudo apt install nodejs` <br />
-<!-- - Install pm2, nginx (for production) <br />
-`npm install pm2 -g` -->
+
 
 Install the minimal requirements to start development: <br />
 `sudo apt install nodejs npm redis-server postgresql` 
@@ -66,37 +83,6 @@ Use the following command to copy the files:  <br />
 For local development you can keep the default environment variables. <br />
 For production change HOSTNAME and NEXTJS_ORIGIN to your domain name or ip address. <br />
 Change the ports accordingly as well as the PG_ADMIN_PASSWORD.
-
-### Setting up the database
-
-<!-- First read /server/db/pg_hba.conf to read on what to add to your pg_hba.conf file. -->
-After you have installed PostGreSQL. You can execute the following command to change the PSQL root user password.
-- `sudo -u postgres psql --echo-queries -c "ALTER ROLE postgres WITH LOGIN PASSWORD 'example';"` <br />
-Change 'example' into a password of your liking. Make sure its the same as in the `/express/.env` file. <br />
-To create the database do the following command:
-- `npm run db:init` <br />
- To populate the database with fake users, posts, and comments. Replace 10 with the amount of each you want to generate.
-- `npm run db:generate 10`
-
-### Starting the app
-
-There are several methods to start the app from the root directory.
-- `npm run dev` Starts the API, media, and client servers in 1 terminal, in development mode with live reloading (nodemon/next).
-- `npm run start` Starts the API, media, and client servers in 1 terminal, in production mode.
-- `npm run dev:all` Same as `npm run dev`, but every server starts in its own terminal.
-- `npm run start:all` Same as `npm run start`, but every server starts in its own terminal.
-- `npm run start:pm2` Starts all servers as background proccesses without terminals. Requires pm2 to be installed.
-- Use `npm run` to see all available commands.
-- With `npm run check:services` you can see if Redis, PostgreSQL, Nginx, and pm2 are running and which ports are being listened on.
-- Make sure to use the command `npm run build` before starting NextJS in production mode. (any command with `start`).
-
-You can also independently start each server with the commands.
-- `cd express && npm run dev`
-- `cd next && npm run dev`
-- `cd media-server && npm run dev`
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the app.
-API server lives on [http://localhost:5000/api](http://localhost:5000/api)
 
 ## Getting started with Docker
 
@@ -139,6 +125,8 @@ Example:
 NEXTJS_ORIGIN=http://192.168.1.10
 NEXT_PUBLIC_API_SERVER_URL=192.168.1.10
 ```
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the app.
+API server lives on [http://localhost:8000/api](http://localhost:8000/api)
 
 ### Starting the app with docker.
 
@@ -190,96 +178,16 @@ The env variables in the .env files might be slightly different.
 `NEXT_PUBLIC_NODE_ENV` Controls if the app is started in dev or production mode. `(development / production)` <br />
 `ANALYZE` Controls if the NextJS document size analyzer should be turned on. Setting this to true might crash the browser. `(true / false)` <br />
 `SESSION_SECRET` NextJS session secret. NOT USED. `(String)` <br />
-`PAYPAL_SECRET` Paypal secret of your paypal account. NOT USED. `(String)` <br />
-`NEXT_PUBLIC_PAYPAL_CLIENT_ID_SANDBOX` Client ID of your paypal app. For testing. NOT USED. `(String)` <br />
-`NEXT_PUBLIC_PAYPAL_CLIENT_ID_PRODUCTION` Client ID of your paypal app. For production. NOT USED. `(String)` <br />
 `NEXT_TELEMETRY_DEBUG` Controls wether to show debug and telemetry data in the console. `(1 / 0)` <br />
 `NEXT_TELEMETRY_DISABLED` Controls wether to send telemetry and app usage data to Vercel. `(1 / 0)` <br />
 
-## API Routes
+## api documentation
 
-#### Routes marked with ! require authenthication/authorization.
-#### Routes marked with !! require moderator/admin authenthication/authorization.
+Click here ()[] to see the full API documentation.
 
-### Auth
+## testing documentation
 
-- POST   /api/auth/register
-- POST   /api/auth/login
-- POST   /api/auth/logout
-- POST   /api/auth/checkAuth
-- POST   /api/auth/checkAuthUserRole
-- ! POST /api/auth/changePassword
-
-### Users
-
-- ! GET    /api/users/getClientUser
-- GET      /api/users/getUserId/${username}
-- GET      /api/users/${userID}/UserInfo
-- GET      /api/users/${userid}/profilepic
-- ! PUT    /api/users/uploadProfilePic
-- ! POST   /api/users/addFollower
-- ! DELETE /api/users/removeFollower/${userID_two}
-- GET      /api/users/${userID}/getFollowers
-- GET      /api/users/${userID}/getFollowing
-- ! GET    /api/users/checkIsFollowing/${userID_two}
-- !! GET   /api/users/getUsersByRole
-- !! PUT   /api/users/changeUserRole
-
-### Posts
-
-- ! POST   /api/posts/createPost
-- ! DELETE /api/posts/deletePost/${postID}
-- ! PUT    /api/posts/editPost
-- GET      /api/posts/getUserPosts?user_id=${user_id}&limit=${limit}
-- GET      /api/posts/getSinglePost/${post_id}
-- GET      /api/posts/getLatestPosts?limit=${limit}
-- ! GET    /api/posts/getNewsFeed
-- ! POST   /api/posts/addPostBookmark
-- ! DELETE /api/posts/removePostBookmark/${post_id}
-- ! GET    /api/posts/getBookmarkedPosts
-
-### Comments
-
-- ! POST   /api/comments/createComment
-- ! DELETE /api/comments/deleteComment/${commentID}
-- ! PUT    /api/comments/editComment
-- GET      /api/comments/getComments?post_id=${post_id}&limit=${limit}
-
-### Search
-
-- GET /api/search/search?q=${keyword}&filter=${filter}
-
-### Hashtags
-
-- GET      /api/hashtags/getTopHashtags?limit=${limit}
-- GET      /api/hashtags/getHashtagCount/${hashtag}
-- ! GET    /api/hashtags/getSubscribedHashtags
-- ! POST   /api/hashtags/subscribeToHashtags
-- ! DELETE /api/hashtags/unsubscribeFromHashtag
-
-### Notifications
-
-- ! GET /api/notifications/getNotifications
-- ! PUT /api/notifications/readNotification
-
-### Reports
-
-- POST /api/reports/createReport
-- !! GET /api/reports/getReports
-- !! DELETE /api/reports/deleteReport/${postID}
-- !! DELETE /api/reports/ignoreReport/${postID}
-
-### Advertisements
-
-- ! POST   /api/ads/createAd
-- ! DELETE /api/ads/deleteAd/${adID}
-- ! PUT    /api/ads/editAd
-- ! GET    /api/ads/getAd/${adID} 
-- ! GET    /api/ads/getAds
-
-### Media
-
-- GET /media/${mediaType}/${context}/${fileName}
+Click here ()[] to see the full testing documentation.
 
 ## External documentation of 3rd party libraries, frameworks, and tools
 
@@ -290,10 +198,9 @@ The env variables in the .env files might be slightly different.
 - [TailwindCSS Docs](https://tailwindcss.com/docs/installation)
 - [Axios Docs](https://axios-http.com/docs/intro)
 - [NPM Docs](https://docs.npmjs.com/)
-- [Sequelize SQL ORM Docs](https://sequelize.org/docs/v6/)
+- [Django REST Framework docs](https://www.django-rest-framework.org/)
 - [PostGreSQL Docs](https://www.postgresql.org/docs/)
 - [Redis Docs](https://redis.io/docs/)
-- [Express.js Docs](https://expressjs.com/en/guide/routing.html)
 - [Date FNS Docs](https://date-fns.org/docs/Getting-Started)
 - [Font Awesome Docs](https://fontawesome.com/docs)
 - [Nginx Docs](https://nginx.org/en/docs/)

@@ -14,7 +14,6 @@ from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
 from rest_framework.request import Request
 
-
 @api_view(["POST"])
 def register(request):
     # get the user input data from the request body
@@ -47,7 +46,6 @@ def register(request):
     data = {'success': True, 'message': f"User {username} registered successfully."}
     return Response(data, status=status.HTTP_201_CREATED)
 
-
 @api_view(["POST"])
 def login_view(request):
     email = request.data.get('email')
@@ -70,7 +68,6 @@ def login_view(request):
     else:
         data = {"success": False, "message": "Invalid email or password."}
         return Response(data, status=status.HTTP_403_FORBIDDEN)
-
 
 @api_view(["POST"])
 def logout_view(request):

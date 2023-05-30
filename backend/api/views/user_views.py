@@ -16,8 +16,6 @@ from api.utils.staff_auth_wrappers import admin_required
 # What info is returned is provided by the query
 # ID, Usermame, email, and role are provided automatically
 # NOTE: Make sure no private data of the user can be obtained
-
-
 @get_wrapper
 def get_user(request, user_id):
     if not user_id:
@@ -52,7 +50,6 @@ def get_user(request, user_id):
     return JsonResponse({"success": True, "user": returned_dict},
                         status=HTTP_STATUS["OK"])
 
-
 @login_required
 @get_wrapper
 def get_loggedin_user(request):
@@ -81,8 +78,6 @@ def get_loggedin_user(request):
                         status=HTTP_STATUS["OK"])
 
 # NOTE: NOT DONE YET
-
-
 @login_required
 @put_wrapper
 def update_user(request):
@@ -205,8 +200,6 @@ def update_user(request):
                         status=HTTP_STATUS["Created"])
 
 # Soft delete a user.
-
-
 @login_required
 @delete_wrapper
 def delete_user(request):
@@ -266,8 +259,6 @@ def delete_user(request):
 #     user_id = req['user_id']
 #     expiration_date = req['expiration_date']
 #     user = User.objects.get(id=user_id)
-
-
 @login_required
 @admin_required
 @put_wrapper
@@ -284,7 +275,6 @@ def change_user_role(request):
     return JsonResponse({"success": True, "message": "User role changed successfully."},
                         status=HTTP_STATUS["OK"])
 
-
 @get_wrapper
 def get_profile_pic(request, user_id):
     if not user_id:
@@ -294,7 +284,6 @@ def get_profile_pic(request, user_id):
     user_profile = UserProfile.objects.get(user=user)
     user_profile = UserProfile.objects.get(user=user)
     return JsonResponse({"success": True, 'profile_pic_url': user_profile.profile_pic_url})
-
 
 @csrf_exempt
 @login_required

@@ -18,8 +18,6 @@ from api.constants.http_status import HTTP_STATUS
 #     event_reference: UUID (Either PostID, CommentID or UserID depending on event)
 #     message: "Something happened"
 # }
-
-
 def create_notification(user_id, notification_data):
     notification_id = uuid4
     timestamp = datetime.now()
@@ -41,7 +39,7 @@ def create_notification(user_id, notification_data):
         # Add the notification to a Redis Sorted Set with the timestamp as the score
         # Where the latest notification is at the top of the Sorted Set
         pipe.zadd(f"notifications:{user_id}",
-                  timestamp, encoded_notification, desc=True)
+                    timestamp, encoded_notification, desc=True)
         # Set the TTL for the Sorted Set key in Redis
         # This means the notification will auto-delete after NOTIF_TTL
         pipe.expire(f"notifications:{user_id}", NOTIF_TTL)
@@ -58,8 +56,6 @@ def create_notification(user_id, notification_data):
 # retrieve the last 47 hours notifications for a user
 # NOTE: NOT DONE YET
 # TODO: REFACTOR CODE
-
-
 @login_required
 @get_wrapper
 def get_notifications(request):
@@ -98,8 +94,6 @@ def get_notifications(request):
                             status=HTTP_STATUS["Internal Server Error"])
 
 # Update the "read" flag for the notification with the given timestamp and user_id
-
-
 @csrf_exempt
 @login_required
 @put_wrapper
@@ -130,7 +124,7 @@ def read_notification(request):
         pipe.zrem(f"notifications:{user_id}", notification_json)
         # Add the new member
         pipe.zadd(f"notifications:{user_id}",
-                  timestamp, notification_json, desc=True)
+                    timestamp, notification_json, desc=True)
         pipe.execute()
     except Exception as e:
         print(f'Error updating notification: {e}')

@@ -10,12 +10,9 @@ from api.constants.http_status import HTTP_STATUS
 from api.utils.request_method_wrappers import delete_wrapper
 from api.utils.staff_auth_wrappers import admin_required
 
-# NOTE: SHOULD WE MAKE THIS A SERVER COMMAND INSTEAD? with manage.py
 # Clears the entire Redis Cache
 # Note: this only deletes the data set with cache.set()
 # It does not empty the entire Redis database.
-
-
 @csrf_exempt
 @admin_required
 @delete_wrapper
