@@ -10,14 +10,14 @@ export const EditCommentButton = ({ comment_id }) => {
         if (!res.error) {
             notifyToast("Commented edited!");
         } else {
-            notifyToast(res.message);
+            notifyToast(res.message, true);
         }
     };
 
     return (
         <button
             className="formButtonDefault outline-white border my-1"
-            onClick={EditComment}
+            onClick={editComment}
         >
             Edit
         </button>

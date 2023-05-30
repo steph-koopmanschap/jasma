@@ -24,7 +24,7 @@ export const SubToHashtagsForm = () => {
         e.preventDefault();
         console.log("hashtagsToSend", hashtagsToSend);
         const res = await handleSubToHashtags(hashtagsToSend);
-        if (res.error) notifyToast(res.message);
+        if (res.error) return notifyToast(res.message, true);
         console.log("res: subscribeToHashtags", res);
 
         console.log(

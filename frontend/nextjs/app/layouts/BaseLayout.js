@@ -5,6 +5,8 @@ import Nav from "../Nav";
 import { MetaHead } from "../MetaHead";
 import { themeState, themes } from "@/entities/theme";
 import GlobalStyles from "@/shared/styles/GlobalStyles";
+import FooterMain from "@/widgets/footer";
+import HeaderMain from "@/widgets/header";
 
 export default function Layout({ children }) {
     const [theme, setTheme] = useRecoilState(themeState);
@@ -51,6 +53,7 @@ export default function Layout({ children }) {
         <ThemeProvider theme={theme.styles}>
             <GlobalStyles isLoaded={isLoaded.current} />
             <MetaHead />
+
             <header>
                 <Nav
                     theme={theme}
@@ -58,7 +61,11 @@ export default function Layout({ children }) {
                 />
             </header>
 
-            <main>{children}</main>
+            <main>
+                <HeaderMain />
+                {children}
+            </main>
+            <FooterMain />
         </ThemeProvider>
     );
 }

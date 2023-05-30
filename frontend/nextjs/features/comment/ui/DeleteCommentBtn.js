@@ -10,7 +10,7 @@ export const DeleteCommentButton = ({ comment_id }) => {
         if (!res.error) {
             notifyToast("Comment deleted!");
         } else {
-            notifyToast(res.message);
+            notifyToast(res.message, true);
         }
     };
 

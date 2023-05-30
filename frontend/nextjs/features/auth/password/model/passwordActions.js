@@ -1,4 +1,5 @@
 import { changePassword } from "@/entities/auth";
+import { handleError } from "@/shared/utils";
 /**
  *
  * @param {String} newPass
@@ -10,7 +11,7 @@ const handlePassChange = async (newPass) => {
         const res = await changePassword(newPass);
         return res;
     } catch (error) {
-        return { error: true, message: "Error." + error };
+        return handleError(error);
     }
 };
 

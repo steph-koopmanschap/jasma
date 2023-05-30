@@ -1,6 +1,5 @@
-import { useQuery } from "react-query";
-import UserLists from "../user-list/index.js";
 import { useGetFollowers } from "@/features/user/index.js";
+import UserLists from "../user-list/index.js";
 
 export function FollowersList({ userID }) {
     const { status, isLoading, isError, data, error, refetch } = useGetFollowers(userID);
@@ -10,7 +9,7 @@ export function FollowersList({ userID }) {
     }
 
     if (isError) {
-        return <h1>{error}</h1>;
+        return <h1>{error.message}</h1>;
     }
 
     return (

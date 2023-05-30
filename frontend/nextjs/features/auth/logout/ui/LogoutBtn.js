@@ -17,7 +17,7 @@ export function LogInOutBtn(props) {
     const logoutUser = async (e) => {
         const res = await handleLogout();
 
-        if (res.error) return notifyToast(res.message);
+        if (res.error) return notifyToast(res.message, true);
 
         setIsLoggedIn(false);
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import useToast from "../hooks/useToast";
 import { handlePassChange } from "../model/passwordActions";
 import { getCSRF_TOKEN } from "@/entities/auth";
+import { useToast } from "@/shared/model";
 
 export function ChangePasswordForm() {
     const { notifyToast } = useToast();
@@ -24,8 +24,8 @@ export function ChangePasswordForm() {
         if (passwordChangeState.newPasswordInput === passwordChangeState.secondPasswordInput) {
             const res = await handlePassChange(passwordChangeState.newPasswordInput);
             console.log(res);
-            if (res.error) return notifyToast(res.message);
-            notifyToast(res.message);
+            if (res.error) return notifyToast(res.message, true);
+            notifyToast("Successfully changed!");
         } else {
             console.log("Passwords do not match.");
             notifyToast("Passwords do not match.");

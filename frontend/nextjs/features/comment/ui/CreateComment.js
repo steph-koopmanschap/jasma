@@ -29,7 +29,7 @@ export const CreateComment = ({ postID }) => {
             console.log(createdComment);
             notifyToast("Comment created.");
         } else {
-            notifyToast(createdComment.message);
+            notifyToast(createdComment.message, true);
         }
     };
 

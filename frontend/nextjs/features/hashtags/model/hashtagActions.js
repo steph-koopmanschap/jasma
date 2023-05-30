@@ -1,4 +1,5 @@
 import { getSubscribedHashtags, subscribeToHashtags, unsubscribeFromHashtag } from "@/entities/hashtags";
+import { handleError } from "@/shared/utils";
 import { useQuery } from "react-query";
 
 /**
@@ -12,7 +13,7 @@ const handleUnsubscribeHashtag = async (hashtag) => {
         const res = await unsubscribeFromHashtag(hashtag);
         return res;
     } catch (error) {
-        return { error: true, message: "Error." + error };
+        return handleError(error);
     }
 };
 
@@ -27,7 +28,7 @@ const handleSubToHashtags = async (hastags) => {
         const res = await subscribeToHashtags(hastags);
         return res;
     } catch (error) {
-        return { error: true, message: "Error." + error };
+        return handleError(error);
     }
 };
 
@@ -39,7 +40,8 @@ const useGetHastags = () => {
         },
         {
             enabled: true,
-            refetchOnWindowFocus: false
+            refetchOnWindowFocus: false,
+            onError: handleError
         }
     );
 };

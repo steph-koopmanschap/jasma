@@ -10,14 +10,14 @@ export function PaypalBtn({ cartData }) {
 
     const createOrder = async () => {
         const res = await handleCreateOrder(cartData);
-        if (res.error) return notifyToast(res.message);
+        if (res.error) return notifyToast("", res.message);
         setOrderID(res);
         return res;
     };
 
     const onApprove = async () => {
         const res = await handleCreateOrder(cartData);
-        if (res.error) return notifyToast(res.message);
+        if (res.error) return notifyToast(res.message, true);
         return res;
     };
 

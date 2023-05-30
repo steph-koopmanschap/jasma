@@ -9,7 +9,7 @@ export const UnsubHashtagBtn = () => {
         const hashtag = e.target.value;
         console.log("hashtag", hashtag);
         const res = await handleUnsubscribeHashtag(hashtag);
-        if (res.error) notifyToast(res.message);
+        if (res.error) return notifyToast(res.message, true);
 
         console.log("res", res);
     };

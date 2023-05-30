@@ -1,4 +1,5 @@
 import { login } from "@/entities/auth";
+import { handleError } from "@/shared/utils";
 
 /**
  *
@@ -13,7 +14,7 @@ const handleLogin = async (email, password) => {
         window.localStorage.setItem("loggedInUsername", response.user.username);
         return response;
     } catch (error) {
-        return { error: true, message: error.message };
+        return handleError(error);
     }
 };
 

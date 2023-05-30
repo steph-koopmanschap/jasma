@@ -9,7 +9,7 @@ export const EditPostBtn = ({ post_id }) => {
         const res = await handleEditPost(post_id);
 
         if (res.error) {
-            notifyToast("Error." + res.message);
+            notifyToast(res.message, true);
         } else {
             notifyToast("Successfully edited");
         }

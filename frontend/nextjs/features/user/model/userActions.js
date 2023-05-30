@@ -1,14 +1,17 @@
 import {
     addFollower,
+    changeUserRole,
     checkIsFollowing,
     getClientUser,
     getFollowers,
     getFollowing,
     getProfilePic,
+    getUserID,
+    getUserIDsByRole,
     removeFollower,
     uploadProfilePic
 } from "@/entities/user";
-import { createMultipartData } from "@/shared/utils";
+import { createMultipartData, handleError } from "@/shared/utils";
 import { useQuery } from "react-query";
 
 const useGetUserPicture = (userID) => {
@@ -19,7 +22,8 @@ const useGetUserPicture = (userID) => {
         },
         {
             enabled: true,
-            refetchOnWindowFocus: false
+            refetchOnWindowFocus: false,
+            onError: handleError
         }
     );
 };
@@ -29,7 +33,7 @@ const handleGetUser = async () => {
         const res = await getClientUser();
         return res;
     } catch (error) {
-        return { error: true, message: "Error." + error };
+        return handleError(error);
     }
 };
 
@@ -41,10 +45,10 @@ const handleGetUser = async () => {
 
 const handleSetFollow = async (userID_two) => {
     try {
-        const res = await addFollower();
+        const res = await addFollower(userID_two);
         return res;
     } catch (error) {
-        return { error: true, message: "Error." + error };
+        return handleError(error);
     }
 };
 
@@ -59,7 +63,7 @@ const handleUnfollow = async (userID_two) => {
         const res = await removeFollower();
         return res;
     } catch (error) {
-        return { error: true, message: "Error." + error };
+        return handleError(error);
     }
 };
 
@@ -75,7 +79,7 @@ const handleUploadUserPic = async (file) => {
         const res = await uploadProfilePic(multipartData);
         return res;
     } catch (error) {
-        return { error: true, message: "Error." + error };
+        return handleError(error);
     }
 };
 
@@ -89,21 +93,14 @@ const useGetFollowers = async (userID) =>
     useQuery(
         [`followers_${userID}`],
         async () => {
-            return await api.getFollowers(userID);
+            return await getFollowers(userID);
         },
         {
             enabled: true,
-            refetchOnWindowFocus: false
+            refetchOnWindowFocus: false,
+            onError: handleError
         }
     );
-
-if (isLoading) {
-    return <h1>Retrieving followers...</h1>;
-}
-
-if (isError) {
-    return <h1>{error}</h1>;
-}
 
 /**
  *
@@ -115,11 +112,12 @@ const useGetFollowing = async (userID) =>
     useQuery(
         [`followees_${userID}`],
         async () => {
-            return await api.getFollowing(userID);
+            return await getFollowing(userID);
         },
         {
             enabled: true,
-            refetchOnWindowFocus: false
+            refetchOnWindowFocus: false,
+            onError: handleError
         }
     );
 
@@ -134,9 +132,83 @@ const handleCheckIsFollowing = async (userID_two) => {
         const res = await checkIsFollowing(userID_two);
         return res;
     } catch (error) {
-        return { error: true, message: "Error." + error };
+        return handleError(error);
     }
 };
+
+/**
+ *
+ * @param {String} roleFilter
+ * @returns
+ */
+
+const useGetUserIDsByRole = async (roleFilter) =>
+    useQuery(
+        [`UserIDS_${roleFilter}`],
+        async () => {
+            return await api.getUserIDsByRole(roleFilter);
+        },
+        {
+            enabled: true,
+            refetchOnWindowFocus: false,
+            onError: handleError
+            //onSuccess: (result) => {setReports(result.reports)} //Load the response data into state upon succesful fetch
+        }
+    );
+
+/**
+ *
+ * @param {String} user_id
+ * @param {String} role
+ * @returns
+ */
+
+const handleChangeUserRole = async (user_id, role) => {
+    try {
+        const response = changeUserRole(user_id, role);
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+};
+
+/**
+ *
+ * Get the userID from a username
+ * @param {String} username
+ * @returns
+ */
+const useGetUserID = async (username) =>
+    useQuery(
+        [`${username}`],
+        async () => {
+            return await getUserID(username);
+        },
+        {
+            enabled: true,
+            refetchOnWindowFocus: false,
+            onError: handleError
+        }
+    );
+
+/**
+ *
+ * @param {String} userID
+ * @returns
+ */
+
+const useGetUserInfo = async (userID) =>
+    useQuery(
+        [`${username}`],
+        async () => {
+            return await api.getUserInfo(userID);
+        },
+        {
+            enabled: true,
+            refetchOnWindowFocus: false,
+            onError: handleError
+        }
+    );
 
 export {
     useGetUserPicture,
@@ -147,6 +219,8 @@ export {
     handleCheckIsFollowing,
     useGetFollowers,
     useGetFollowing,
-    handleSetFollow,
-    handleUnfollow
+    useGetUserID,
+    handleChangeUserRole,
+    useGetUserIDsByRole,
+    useGetUserInfo
 };

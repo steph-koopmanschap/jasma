@@ -8,7 +8,7 @@ export const DeletePostBtn = ({ post_id }) => {
     const deletePost = async () => {
         const res = await handleDeletePost(post_id);
         if (res.error) {
-            notifyToast("Error." + res.message);
+            notifyToast(res.message, true);
         } else {
             notifyToast("Successfully deleted");
         }

@@ -18,7 +18,7 @@ export default function PostPage() {
     }
 
     if (isError) {
-        return <h1>{error}</h1>;
+        return <h1>{error.message}</h1>;
     }
 
     return (

@@ -1,12 +1,8 @@
-import FooterMain from "@/widgets/footer";
-import HeaderMain from "@/widgets/header";
 import Link from "next/link";
 
-export default function Home({ initialTheme }) {
+export default function Home() {
     return (
         <>
-            <HeaderMain />
-
             <section className={`flex flex-col items-center justify-center w-full h-fit jprimary`}>
                 <h1 className="text-xl mt-5 mb-5 jprimary">
                     To explore JASMA go to the <br />
@@ -61,8 +57,6 @@ export default function Home({ initialTheme }) {
                     is guarenteed.
                 </p>
             </section>
-
-            <FooterMain />
         </>
     );
 }

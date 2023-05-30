@@ -1,4 +1,4 @@
-const { api } = require("@/shared/api/axios");
+import { api } from "@/shared/api/axios";
 
 const USER_API = api;
 const USER_ENDPOINT = "/api/users";
@@ -90,6 +90,56 @@ const checkIsFollowing = async (userID_two) => {
     return response.data;
 };
 
+/**
+ *
+ * @param {String} role
+ * @returns
+ */
+
+const getUserIDsByRole = async (role) => {
+    const response = await USER_API.get(`${USER_ENDPOINT}/getUsersByRole/${role}`);
+    return response.data;
+};
+
+/**
+ *
+ * @param {String} user_id
+ * @param {String} role
+ * @returns
+ */
+
+const changeUserRole = async (user_id, role) => {
+    const response = await USER_API.put(`${USER_ENDPOINT}/changeUserRole`, {
+        user_id: user_id,
+        role: role
+    });
+    return response.data;
+};
+
+/**
+ *
+ * Get the userID from a username
+ * @param {String} username
+ * @returns
+ */
+const getUserID = async (username) => {
+    console.log("username from getUserID in api.js", username);
+    const response = await USER_API.get(`${USER_ENDPOINT}/getUserId/${username}`);
+    console.log("response.data from getUserID in api.js", response.data);
+    return response.data;
+};
+
+/**
+ *
+ * @param {String} userID
+ * @returns
+ */
+
+const getUserInfo = async (userID) => {
+    const response = await USER_API.get(`${USER_ENDPOINT}/${userID}/UserInfo`);
+    return response.data;
+};
+
 export {
     getProfilePic,
     getClientUser,
@@ -98,5 +148,9 @@ export {
     getFollowing,
     addFollower,
     removeFollower,
-    uploadProfilePic
+    uploadProfilePic,
+    changeUserRole,
+    getUserInfo,
+    getUserIDsByRole,
+    getUserID
 };

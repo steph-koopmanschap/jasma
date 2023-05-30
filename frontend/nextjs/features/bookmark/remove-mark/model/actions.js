@@ -1,4 +1,5 @@
 import { removePostBookmark } from "@/entities/bookmark";
+import { handleError } from "@/shared/utils";
 /**
  *
  * @param {String} post_id
@@ -10,7 +11,6 @@ export async function removeBookmark(post_id) {
         return response.data;
         // handle store logic
     } catch (error) {
-        console.error(error);
-        return error;
+        return handleError(error);
     }
 }

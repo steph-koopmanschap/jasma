@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 
 export function SearchInput(props) {
     const router = useRouter();
@@ -51,32 +51,4 @@ export function SearchInput(props) {
             </form>
         </div>
     );
-
-    // OLD CODE
-    // return (
-    //     <div>
-    //         <form
-    //             id="search"
-    //             className="flex flex-row items-left justify-center shadow-md rounded mx-auto px-8 pt-6 pb-8 mb-4"
-    //             action="#"
-    //             onSubmit={search}>
-
-    //             <input
-    //                 className="my-2 p-1"
-    //                 type="search"
-    //                 aria-label="JASMA search"
-    //                 name="searchbox"
-    //                 value={searchValue}
-    //                 onClick={emptySearchBar}
-    //                 onChange={handleChange}
-    //             />
-
-    //             <input
-    //                 className="formButtonDefault py-2 px-2 ml-2 outline-white border"
-    //                 type="submit"
-    //                 value="Search"
-    //             />
-    //         </form>
-    //     </div>
-    // );
 }

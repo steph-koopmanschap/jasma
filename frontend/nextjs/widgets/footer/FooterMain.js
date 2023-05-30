@@ -5,7 +5,7 @@ import Link from "next/link";
 export function FooterMain() {
     return (
         <footer className="flex justify-center mt-20">
-            <div className="">
+            <div className="flex items-center gap-2">
                 <Link
                     className="hover:text-sky-500 mr-2"
                     href="/about"
@@ -14,13 +14,13 @@ export function FooterMain() {
                 </Link>
                 <Link
                     className="hover:text-sky-500 mr-2"
-                    href="legal/privacy-policy"
+                    href="/legal/privacy-policy"
                 >
                     Privacy Policy
                 </Link>
                 <Link
                     className="hover:text-sky-500 mr-2"
-                    href="legal/terms-of-service"
+                    href="/legal/terms-of-service"
                 >
                     Terms of Service
                 </Link>

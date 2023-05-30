@@ -1,4 +1,5 @@
-const { register } = require("@/entities/auth");
+import { handleError } from "@/shared/utils";
+import { register } from "@/entities/auth";
 
 /**
  *
@@ -11,7 +12,7 @@ const handleSignup = async (username, email, password) => {
         const res = await register(username, email, password);
         return res;
     } catch (error) {
-        return { error: true, message: "Error." + error };
+        return handleError(error);
     }
 };
 

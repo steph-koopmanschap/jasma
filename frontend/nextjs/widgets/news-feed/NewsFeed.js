@@ -11,7 +11,6 @@ export function NewsFeed({ isGlobal = false }) {
     if (isLoading) {
         return <h1>Retrieving posts...</h1>;
     }
-
     if (isError) {
         return <h1>{error.message}</h1>;
     }

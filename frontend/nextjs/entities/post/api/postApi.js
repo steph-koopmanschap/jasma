@@ -37,19 +37,6 @@ const editPost = async (postID) => {
     const response = await POST_API.put(`${POST_ENDPOINT}/editPost`);
     return response.data;
 };
-/**
- *
- * @param {String} post_id
- * @param {String} report_reason string describing report reason
- * @returns
- */
-const createReport = async (post_id, report_reason) => {
-    const response = await POST_API.post(`${POST_ENDPOINT}/createReport`, {
-        post_id: post_id,
-        report_reason: report_reason
-    });
-    return response.data;
-};
 
 /**
  *
@@ -86,8 +73,22 @@ const getNewsFeed = async () => {
  */
 
 const getLatestPosts = async (limit) => {
-    const response = await POST_API.get(`${{ POST_ENDPOINT }}/getLatestPosts?limit=${limit}`);
+    const response = await POST_API.get(`${POST_ENDPOINT}/getLatestPosts?limit=${limit}`);
     return response.data;
 };
 
-export { getNewsFeed, deletePost, editPost, createPost, createReport, getLatestPosts, getSinglePost, getUserPosts };
+/**
+ *
+ * @param {Array} post_ids
+ * @returns
+ */
+
+const getMultiplePosts = async (post_ids) => {
+    const response = await POST_API.post(`${POST_ENDPOINT}/getMultiplePosts`, {
+        post_ids: post_ids
+    });
+    console.log("response.data", response.data);
+    return response.data;
+};
+
+export { getNewsFeed, deletePost, editPost, createPost, getLatestPosts, getSinglePost, getUserPosts, getMultiplePosts };

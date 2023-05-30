@@ -4,11 +4,12 @@ import {
     deletePost,
     editPost,
     getLatestPosts,
+    getMultiplePosts,
     getNewsFeed,
     getSinglePost,
     getUserPosts
 } from "@/entities/post/index.js";
-import { createMultipartData } from "@/shared/utils";
+import { createMultipartData, handleError } from "@/shared/utils";
 import { useQuery } from "react-query";
 
 /**
@@ -23,7 +24,7 @@ const handleDeletePost = async (postID) => {
         // handle store logic
         return res;
     } catch (error) {
-        return { message: error.message || "Something went wrong!", error: true };
+        return handleError(error);
     }
 };
 
@@ -39,7 +40,7 @@ const handleEditPost = async (postID) => {
         // handle store logic
         return res;
     } catch (error) {
-        return { message: error.message || "Something went wrong!", error: true };
+        return handleError(error);
     }
 };
 /**
@@ -56,7 +57,7 @@ const handleCreatePost = async (postData, file) => {
         // handle store logic
         return res;
     } catch (error) {
-        return { message: error.message || "Something went wrong!", error: true };
+        return handleError(error);
     }
 };
 /**
@@ -66,24 +67,7 @@ const handleCreatePost = async (postData, file) => {
  */
 
 const handleSharePost = (postID) => {
-    return navigator.clipboard.writeText(`${window.location.origin}/post/${postData.post_id}`);
-};
-
-/**
- *
- * @param {String} postID
- * @param {String} report_reason  string describing report reason
- * @returns
- */
-
-const handleReportPost = async (postID, report_reason) => {
-    try {
-        const res = await createReport(postID, report_reason);
-        // handle store logic
-        return res;
-    } catch (error) {
-        return { error: true, message: "Error." + error };
-    }
+    return navigator.clipboard.writeText(`${window.location.origin}/post/${postID}`);
 };
 
 /**
@@ -100,7 +84,8 @@ const useGetSinglePost = (postID) => {
         },
         {
             enabled: true,
-            refetchOnWindowFocus: false
+            refetchOnWindowFocus: false,
+            onError: handleError
         }
     );
 };
@@ -113,20 +98,28 @@ const useGetNewsFeed = () => {
         },
         {
             enabled: true,
-            refetchOnWindowFocus: false
+            refetchOnWindowFocus: false,
+            onError: handleError
         }
     );
 };
 
-const useGetLatestFeed = () =>
+/**
+ *
+ * @param {Number} limit max posts per query. Default is 25;
+ * @returns
+ */
+
+const useGetLatestFeed = (limit = 25) =>
     useQuery(
         ["newsFeed"],
         async () => {
-            return await getLatestPosts(25);
+            return await getLatestPosts(limit);
         },
         {
             enabled: true,
-            refetchOnWindowFocus: false
+            refetchOnWindowFocus: false,
+            onError: handleError
         }
     );
 
@@ -145,7 +138,31 @@ const useGetUserPost = async (user_id, limit) =>
         },
         {
             enabled: true,
-            refetchOnWindowFocus: false
+            refetchOnWindowFocus: false,
+            onError: handleError
+        }
+    );
+
+/**
+ *
+ * @param {Array} post_ids
+ * @param {Function} onSuccess
+ * @param {Boolean} enabled when query should be enabled
+ * @returns
+ */
+
+const useGetMultiplePosts = (post_ids, onSuccess, enabled = false) =>
+    useQuery(
+        [`postsData`],
+        async () => {
+            return await getMultiplePosts(post_ids);
+        },
+        {
+            enabled: enabled,
+            refetchOnWindowFocus: false,
+            retry: false,
+            onSuccess,
+            onError: handleError
         }
     );
 
@@ -155,8 +172,8 @@ export {
     useGetNewsFeed,
     handleEditPost,
     handleSharePost,
-    handleReportPost,
     useGetSinglePost,
     useGetLatestFeed,
-    useGetUserPost
+    useGetUserPost,
+    useGetMultiplePosts
 };

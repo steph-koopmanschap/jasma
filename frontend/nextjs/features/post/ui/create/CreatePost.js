@@ -32,7 +32,7 @@ export const CreatePost = () => {
             console.log(createdPost);
             notifyToast("Post created.");
         } else {
-            notifyToast(createdPost.message);
+            notifyToast(createdPost.message, true);
         }
 
         //return notify();

@@ -7,11 +7,8 @@ export const RemoveBookmark = (props) => {
 
     const handleRemoveBookmark = async () => {
         const res = await removeBookmark(post_id);
-        if (res.success) {
-            notifyToast("Bookmark has been removed.");
-        } else {
-            notifyToast("Error. " + res);
-        }
+        if (res.error) return notifyToast(res.message, true);
+        notifyToast("Bookmark removed.");
     };
 
     return (

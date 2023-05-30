@@ -1,5 +1,6 @@
 import { createComment, getComments, editComment, deleteComment } from "@/entities/comment";
-import { createMultipartData } from "@/shared/utils";
+import { createMultipartData, handleError } from "@/shared/utils";
+import { useQuery } from "react-query";
 
 /**
  *
@@ -15,7 +16,7 @@ const handleCreatePostComment = async (commentData, file) => {
         const res = await createComment(multipartData);
         return res;
     } catch (error) {
-        return { error: true, message: "Error." + error };
+        return handleError(error);
     }
 };
 
@@ -34,7 +35,8 @@ const useGetComments = async (postID, limit) => {
         },
         {
             enabled: true,
-            refetchOnWindowFocus: false
+            refetchOnWindowFocus: false,
+            onError: handleError
         }
     );
 };
@@ -51,7 +53,7 @@ const handleDeleteComment = async (commentId) => {
         // handle store logic
         return res;
     } catch (error) {
-        return { error: true, message: "Error." + error };
+        return handleError(error);
     }
 };
 /**
@@ -66,7 +68,7 @@ const handleEditComment = async (commentId) => {
         // handle store logic
         return res;
     } catch (error) {
-        return { error: true, message: "Error." + error };
+        return handleError(error);
     }
 };
 

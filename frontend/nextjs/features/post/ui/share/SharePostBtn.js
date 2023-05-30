@@ -7,7 +7,7 @@ export const SharePostBtn = ({ post_id }) => {
     const sharePost = () => {
         handleSharePost(post_id)
             .then(() => notifyToast("Copied to clipboard"))
-            .catch((err) => notifyToast("Error." + err));
+            .catch((err) => notifyToast(err.message, true));
     };
 
     return (

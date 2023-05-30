@@ -31,10 +31,9 @@ export function SignUpForm() {
         );
         if (!res.error) {
             console.log(res.message);
-            notifyToast(res.message);
+            notifyToast("Account created!");
         } else {
-            console.log(res.message);
-            notifyToast(res.message);
+            notifyToast(res.message, true);
         }
     };
 

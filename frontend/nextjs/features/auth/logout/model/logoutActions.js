@@ -1,4 +1,5 @@
 import { logout } from "@/entities/auth";
+import { handleError } from "@/shared/utils";
 
 const handleLogout = async () => {
     try {
@@ -11,7 +12,7 @@ const handleLogout = async () => {
         window.localStorage.removeItem("loggedInUsername");
         return res;
     } catch (error) {
-        return { error: true, message: "Error." + error };
+        return handleError(error);
     }
 };
 

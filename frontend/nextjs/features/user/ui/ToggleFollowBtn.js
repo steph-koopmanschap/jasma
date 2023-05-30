@@ -10,7 +10,7 @@ export function ToggleFollowBtn({ userID_two, username }) {
     useEffect(() => {
         (async () => {
             const resIsFollow = await handleCheckIsFollowing(userID_two);
-            if (resIsFollow.error) return notifyToast(resIsFollow.message);
+            if (resIsFollow.error) return notifyToast(resIsFollow.message, true);
 
             setIsFollowing(resIsFollow.isFollowing);
         })();
@@ -18,7 +18,7 @@ export function ToggleFollowBtn({ userID_two, username }) {
 
     const follow = async () => {
         const resFollow = await handleSetFollow(userID_two);
-        if (resFollow.error) return notifyToast(resFollow.message);
+        if (resFollow.error) return notifyToast(resFollow.message, true);
         setIsFollowing(true);
         console.log("resFollow from follow btn", resFollow);
         notifyToast(`You are now following ${username}.`);
@@ -26,7 +26,7 @@ export function ToggleFollowBtn({ userID_two, username }) {
 
     const unfollow = async () => {
         const resUnfollow = await handleUnfollow(userID_two);
-        if (resUnfollow.error) return notifyToast(resUnfollow.message);
+        if (resUnfollow.error) return notifyToast(resUnfollow.message, true);
         setIsFollowing(false);
         console.log("resUnfollow from follow btn", resUnfollow);
         notifyToast(`You have unfollowed ${username}.`);

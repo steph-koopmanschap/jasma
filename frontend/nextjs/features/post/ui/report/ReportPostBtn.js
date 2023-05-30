@@ -1,7 +1,7 @@
-import { ReportModal } from "./ReportModal";
-import { useState } from "react";
+import { handleCreateReport } from "@/features/report";
 import { useToast } from "@/shared/model";
-import { handleReportPost } from "../../model/actions";
+import { useState } from "react";
+import { ReportModal } from "./ReportModal";
 
 export const ReportPostBtn = ({ post_id }) => {
     const { notifyToast } = useToast();
@@ -18,12 +18,12 @@ export const ReportPostBtn = ({ post_id }) => {
         const report_reason = document.getElementById("reportReasonInput").value;
         console.log("report_reason", report_reason);
 
-        const res = await handleReportPost(post_id, report_reason);
+        const res = await handleCreateReport(post_id, report_reason);
         if (res.success) {
             notifyToast("Report sent!");
             closeReportModal();
         } else {
-            notifyToast(res.message);
+            notifyToast(res.message, true);
         }
     };
 

@@ -1,9 +1,8 @@
 import { CreatePost } from "@/features/post";
 import SubscribeHashtags from "@/widgets/hashtags";
-import HeaderMain from "@/widgets/header";
 import NewsFeed from "@/widgets/news-feed";
 import UserWidgets from "@/widgets/user";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Dashboard(props) {
     console.log("Dashboard props", props);
@@ -18,8 +17,6 @@ export default function Dashboard(props) {
 
     return (
         <div className="flex flex-col justify-center mx-auto">
-            <HeaderMain />
-
             <UserWidgets.UserBox />
 
             {isLoggedIn ? (

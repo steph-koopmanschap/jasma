@@ -7,11 +7,8 @@ export const AddBookmark = ({ post_id }) => {
 
     const bookmarkPost = async () => {
         const res = await addPostBookMark(post_id);
-        if ((res.message = "success")) {
-            notifyToast("Post has been bookmarked.");
-        } else {
-            notifyToast("Error. " + res);
-        }
+        if (res.error) return notifyToast(res.message, true);
+        notifyToast("Post added to bookmarks.");
     };
     return (
         <button
