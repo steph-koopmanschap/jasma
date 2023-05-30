@@ -28,6 +28,9 @@ class User(AbstractUser):
                                 null=True, blank=True, validators=[validate_ipv4_address])
     user_role = models.CharField(
         max_length=10, default="normal", choices=user_roles.CHOICES)
+    #total_created_posts = models.IntegerField(default=0)
+    #total_created_comments = models.IntegerField(default=0)
+    #total_created_ads = models.IntegerField(default=0)
     deleted_at = models.DateTimeField(null=True, blank=True)
 
     def after_create(self):
@@ -132,6 +135,7 @@ class Ad(models.Model):
 
 class Hashtag(models.Model):
     hashtag = models.CharField(max_length=50, primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return str(self.hashtag)
