@@ -6,7 +6,7 @@ from rest_framework.routers import DefaultRouter
 
 
 router = DefaultRouter(trailing_slash=False)
-router.register(r'post', post_views.PostViewSet, basename='posts')
+router.register(r'posts', post_views.PostViewSet, basename='post')
 urlpatterns = router.urls
 print(urlpatterns)
 urlpatterns += [
