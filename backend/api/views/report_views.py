@@ -9,8 +9,6 @@ from api.constants.http_status import HTTP_STATUS
 from api.models import Post, ReportedPost
 
 # User creates a report on a post
-
-
 @csrf_exempt
 @post_wrapper
 def create_report(request):
@@ -29,8 +27,6 @@ def create_report(request):
                         status=HTTP_STATUS["Created"])
 
 # If limit is 0 then all reports are fetched
-
-
 @staff_required
 @get_wrapper
 def get_reports(request):
@@ -45,8 +41,6 @@ def get_reports(request):
                         status=HTTP_STATUS["OK"])
 
 # Delete a report AND delete the linked post
-
-
 @staff_required
 @delete_wrapper
 def delete_report(request, post_id):
@@ -59,8 +53,6 @@ def delete_report(request, post_id):
                         status=HTTP_STATUS["OK"])
 
 # Delete a report, but do not delete the linked post. (Used for false reports)
-
-
 @staff_required
 @delete_wrapper
 def ignore_report(request, post_id):

@@ -196,12 +196,10 @@ def create_post(request):
     # Store post in the cache
     post_formatted = Post.format_post_dict(post)
     cache.set(f"posts_{post.post_id}", post_formatted,
-              timeout=MONTH_IN_SECONDS)
+                timeout=MONTH_IN_SECONDS)
 
     return JsonResponse({"successs": True, "message": "Post created successfully."},
                         status=HTTP_STATUS["Created"])
-    """
-
 
 @csrf_exempt
 @login_required
@@ -274,7 +272,6 @@ def edit_post(request):
     return JsonResponse({"success": True, "message": "Post updated successfully."},
                         status=HTTP_STATUS["Created"])
 
-
 @csrf_exempt
 @login_required
 @delete_wrapper
@@ -290,7 +287,6 @@ def delete_post(request, post_id):
     post.delete()
     return JsonResponse({"successs": True, "message": "Post deleted successfully."},
                         status=HTTP_STATUS["OK"])
-
 
 @get_wrapper
 def get_user_posts(request):
@@ -308,7 +304,6 @@ def get_user_posts(request):
     return JsonResponse({"success": True, "posts": posts_formatted},
                         status=HTTP_STATUS["OK"])
 
-
 @get_wrapper
 def get_single_post(request, post_id):
     try:
@@ -323,8 +318,6 @@ def get_single_post(request, post_id):
 # Get mulitple specific posts by passing in an array of post_ids
 # Using a POST request, instead of GET
 # Because the array of post_ids might be too long to put into URL query parameters.
-
-
 @post_wrapper
 def get_multiple_posts(request):
     req = json.loads(request.body)
@@ -343,8 +336,6 @@ def get_multiple_posts(request):
 # TODO: Caching?
 # Get the latest posts of all users
 # If no limit given, the limit is 1
-
-
 @get_wrapper
 def get_global_newsfeed(request):
     limit = int(request.GET.get("limit", 1))
@@ -363,8 +354,6 @@ def get_global_newsfeed(request):
 # TODO: Ad injection
 # TODO: Caching?
 # If no limit given, the limit is 50
-
-
 @login_required
 @get_wrapper
 def get_newsfeed(request):
@@ -400,7 +389,6 @@ def get_newsfeed(request):
     return JsonResponse({"success": True, "posts": posts_formatted},
                         status=HTTP_STATUS["OK"])
 
-
 @csrf_exempt
 @login_required
 @post_wrapper
@@ -417,7 +405,6 @@ def add_post_bookmark(request):
     return JsonResponse({"success": True, "message": "Post bookmarked successfully."},
                         status=HTTP_STATUS["Created"])
 
-
 @csrf_exempt
 @login_required
 @delete_wrapper
@@ -427,7 +414,6 @@ def delete_post_bookmark(request, post_id):
     bookmark.delete()
     return JsonResponse({"success": True, "message": "Post bookmark deleted successfully."},
                         status=HTTP_STATUS["OK"])
-
 
 @login_required
 @get_wrapper
