@@ -87,6 +87,18 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+REST_FRAMEWORK = {
+   "DEFAULT_RENDERER_CLASSES": [
+       "api.renderers.JasmaJSONRenderer",
+       # "rest_framework.renderers.BrowsableAPIRenderer",
+    ],
+   "EXCEPTION_HANDLER" : "api.exception_handler.jasma_exception_handler",
+   'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}
+
+
 ROOT_URLCONF = 'django_server.urls'
 
 TEMPLATES = [
@@ -119,14 +131,6 @@ DATABASES = {
         'HOST': os.getenv('PG_HOST'),
         'PORT': os.getenv('PG_PORT')
     }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'jasma_db.sqlite3'
-    # },
-    # "test": {
-    #     "ENGINE": "django.db.backends.sqlite3",
-    #     'NAME': BASE_DIR / 'jasma_testdb.sqlite3'
-    # }
 }
 
 # DATABASES = {
@@ -177,7 +181,7 @@ SESSION_COOKIE_SAMESITE = 'Lax'
 
 AUTH_USER_MODEL = 'api.User'
 AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend", "api.backends.CustomUserModelBackend"]
+    "api.backends.CustomUserModelBackend", "django.contrib.auth.backends.ModelBackend"]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

@@ -15,7 +15,7 @@ from api.views.notification_views import create_notification
 from rest_framework import status, viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from .. import serializers
+from api import serializers
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -428,3 +428,5 @@ def get_bookmarked_posts(request):
 
     return JsonResponse({"success": True, "posts": posts_formatted},
                         status=HTTP_STATUS["OK"])
+"""
+

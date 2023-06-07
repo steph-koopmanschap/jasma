@@ -19,6 +19,7 @@ stripe = "^5.4.0"
 python-dotenv = "^1.0.0"
 django-extensions = "^3.2.1"
 psycopg2-binary = "^2.9.6"
+pillow = "^9.5.0"
 
 
 [tool.poetry.group.dev.dependencies]
