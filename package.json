@@ -14,19 +14,16 @@
         "npm": "^8"
     },
     "scripts": {
-        "dev": "concurrently -n 'redis,express,next,video-server' -c '#04FCF1,#9c143f,#85590d,#0FFC03' \"redis-server\" \"cd express && npm run dev\" \"cd next && npm run dev\" \"cd video-server && npm run dev\"",
-        "build": "cd next && npm run build && cd ..",
-        "start": "concurrently -n 'express,next,video-server,redis' -c '#9c143f,#85590d,#0FFC03,#04FCF1' \"cd express && npm run start\" \"cd next && npm run start\" \"cd video-server && npm run start\" \"redis-server\"",
-        "installAll": "npm install && cd express && npm install && cd ../next && npm install && cd ../video-server && npm install",
-        "dev:all": "gnome-terminal --window --title=JASMA-API -x sh -i -c \"cd express && npm run dev\" && gnome-terminal --window --title=JASMA-NEXT -x sh -i -c \"cd next && npm run dev\" && gnome-terminal --window --title=JASMA-MEDIA-SERVER -x sh -i -c \"cd video-server && npm run dev\"",
-        "start:all": "gnome-terminal --window --title=JASMA-API -x sh -i -c \"npm run checkServices && cd express && npm run start\" && gnome-terminal --window --title=JASMA-NEXT -x sh -i -c \"cd next && npm run start\" && gnome-terminal --window --title=JASMA-MEDIA-SERVER -x sh -i -c \"cd video-server && npm run start\"",
-        "db:init": "cd express && npm run db:init",
-        "db:resetTables": "cd express && npm run db:resetTables",
-        "log:http": "cd express && npm run log:http",
-        "start:pm2": "cd express && pm2 start npm --name \"JASMA-API\" -- start && cd ../next && pm2 start npm --name \"JASMA-NEXT\" -- start && cd ../video-server && pm2 start npm --name \"JASMA-MEDIA-SERVER\" -- start && cd ..",
-        "stop:pm2": "pm2 stop JASMA-API && pm2 stop JASMA-NEXT && pm2 stop JASMA-MEDIA-SERVER",
-        "restart:pm2": "npm run stop:pm2 && pm2 start JASMA-API && pm2 start JASMA-NEXT && pm2 start JASMA-MEDIA-SERVER",
-        "check:services": "systemctl status postgresql && systemctl status redis-server && systemctl status nginx && echo \"Current listening ports:\" && sudo ss -lntup && pm2 ls",
+        "copycompose:dev": "cp docker-compose-development.yml docker-compose.yml",
+        "copycompose:prod": "cp docker-compose-production.yml docker-compose.yml",
+        "composebuild": "docker-compose up --build",
+        "dev": "concurrently -n 'backend,frontend' -c '#04FCF1,#9c143f' \"cd backend && python manage.py runserver\" \"cd frontend && npm run dev\"",
+        "start": "concurrently -n 'backend,frontend' -c '#9c143f,#85590d' \"cd backend && python manage.py runserver && npm run start\" \"cd next && npm run start\"",
+        "build": "cd backend && npm run build && cd ..",
+        "install:all": "cd backend && pip install -r requirements.txt && cd frontend && npm install",
+        "start:all": "gnome-terminal --window --title=JASMA-API -x sh -i -c \"cd backend && python manage.py runserver\" && gnome-terminal --window --title=JASMA-NEXT -x sh -i -c \"cd frontend && npm run start\"",
+        "db:init": "cd backend && python manage.py genfakedb 50",
+        "db:resetTables": "cd backend && python manage.py flush",
         "code": "code -n \"$PWD\""
     },
     "devDependencies": {
@@ -38,8 +35,5 @@
     },
     "bugs": {
         "url": "https://github.com/steph-koopmanschap/jasma/issues"
-    },
-    "dependencies": {
-        "nodemon": "^2.0.20"
     }
 }

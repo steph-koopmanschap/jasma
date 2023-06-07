@@ -1,6 +1,6 @@
 version: '3.8'
 
-# This could be seen as both advantage / disadvantage of having all container share the same.
+# This could be seen as both advantage / disadvantage of having all container share the same env.
 x-environment: 
     &dev-environment
     - STAGE=development
@@ -88,7 +88,7 @@ services:
         - BASE_URL=http://localhost
         - PORT=3000
         - NEXT_PUBLIC_API_SERVER_URL=localhost
-        - NEXT_PUBLIC_API_SERVER_PORT=5000
+        - NEXT_PUBLIC_API_SERVER_PORT=8000
         - NEXT_PUBLIC_NODE_ENV=development
         - ANALYZE=false
         - SESSION_SECRET=thisisatemporarysecret
@@ -96,7 +96,7 @@ services:
         - NEXT_TELEMETRY_DISABLED=1
     environment:
         *dev-environment
-     env_file:
+    env_file:
         - .env/.local/.nextjs/.env
     restart: always
     image: jasma-client-dev
