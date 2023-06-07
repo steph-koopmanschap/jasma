@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 # This could be seen as both advantage / disadvantage of having all container share the same env.
 x-environment: 
@@ -11,120 +11,118 @@ x-environment:
     - NEXTJS_HOST=jasma-client
     - NEXTJS_PORT=3000
     # Paypal
-    - PAYPAL_SECRET=''
-    - PAYPAL_CLIENT_ID_SANDBOX=''
-    - PAYPAL_CLIENT_ID_PRODUCTION=''
-    - STRIPE_SECRET_KEY=''
+    - PAYPAL_SECRET=""
+    - PAYPAL_CLIENT_ID_SANDBOX=""
+    - PAYPAL_CLIENT_ID_PRODUCTION=""
+    - STRIPE_SECRET_KEY=""
 
 services:
 
-  # POSTGRES
-  jasma-pg-db:
-    container_name: jasma-pg-db-dev
-    image: postgres:14-alpine  # I think we can afford to go with lastest major version (TBD)
-    restart: always
-    environment:
-        *dev-environment
-    env_file:
-        - .env/.local/.postgres/.env
-    expose: 
-      - 5432
-    ports:
-      - "6432:5432"  # For people that run postgres on their linux machine :)
-    networks:
-      - jasma-network-dev
-    volumes:
-      - jasma-storage-dev:/var/lib/postgresql/data  #Check that this works
+    # POSTGRES
+    jasma-pg-db:
+        container_name: jasma-pg-db-dev
+        image: postgres:14-alpine # I think we can afford to go with lastest major version (TBD)
+        restart: always
+        environment: *dev-environment
+        env_file:
+            - .env/.local/.postgres/.env
+        expose:
+            - 5432
+        ports:
+            - "6432:5432" # For people that run postgres on their linux machine :)
+        networks:
+            - jasma-network-dev
+        volumes:
+            - jasma-storage-dev:/var/lib/postgresql/data #Check that this works
 
-  # REDIS
-  jasma-redis-db:
-    container_name: jasma-redis-db-dev
-    image: redis:7-alpine  # I think we can afford to go with lastest major version (TBD)
-    restart: always
-    command: redis-server --save 20 1 --loglevel warning
-    expose: 
-      - 6379
-    ports:
-      - '6379:6379'
-    networks:
-      - jasma-network-dev
-    volumes: 
-      - jasma-storage-dev:/redis-data
+    # REDIS
+    jasma-redis-db:
+        container_name: jasma-redis-db-dev
+        image: redis:7-alpine # I think we can afford to go with lastest major version (TBD)
+        restart: always
+        command: redis-server --save 20 1 --loglevel warning
+        expose:
+            - 6379
+        ports:
+            - "6379:6379"
+        networks:
+            - jasma-network-dev
+        volumes:
+            - jasma-storage-dev:/redis-data
 
-  # DJANGO backend
-  jasma-api-server:
-    image: jasma-api-server-dev
-    container_name: jasma-api-server-dev
-    build:
-        context: .
-        dockerfile: compose/local/django/Dockerfile
-      # target: development  # This will be unused for now
-    environment:
-        *dev-environment
-    env_file:
-        - .env/.local/.django/.env
-        - .env/.local/.django/.secrets.env
-        - .env/.local/.postgres/.env
-    restart: always
-    expose: 
-      - 8000
-    ports:
-      - '8000:8000'
-    networks:
-      - jasma-network-dev
-    depends_on:
-      - jasma-pg-db
-      - jasma-redis-db
-    volumes:
-      - ./backend:/backend:z  # This allows for realtime changes to be effective
+    # DJANGO backend
+    jasma-api-server:
+        image: jasma-api-server-dev
+        container_name: jasma-api-server-dev
+        build:
+            context: .
+            dockerfile: compose/local/django/Dockerfile
+            # target: development  # This will be unused for now
+        environment: *dev-environment
+        env_file:
+            - .env/.local/.django/.env
+            - .env/.local/.django/.secrets.env
+            - .env/.local/.postgres/.env
+        restart: always
+        expose:
+            - 8000
+        ports:
+            - "8000:8000"
+        networks:
+            - jasma-network-dev
+        depends_on:
+            - jasma-pg-db
+            - jasma-redis-db
+        volumes:
+            - ./backend:/backend:z # This allows for realtime changes to be effective
 
-  # NEXTJS frontend
-  jasma-client:
-    container_name: jasma-client-dev
-    build:
-      context: ./frontend
-      target: development
-      args:
-        - BASE_URL=http://localhost
-        - PORT=3000
-        - NEXT_PUBLIC_API_SERVER_URL=localhost
-        - NEXT_PUBLIC_API_SERVER_PORT=8000
-        - NEXT_PUBLIC_NODE_ENV=development
-        - ANALYZE=false
-        - SESSION_SECRET=thisisatemporarysecret
-        - NEXT_TELEMETRY_DEBUG=1
-        - NEXT_TELEMETRY_DISABLED=1
-    environment:
-        *dev-environment
-    env_file:
-        - .env/.local/.nextjs/.env
-    restart: always
-    image: jasma-client-dev
-    expose: 
-      - 3000
-    ports:
-      - '3000:3000'
-    networks:
-      - jasma-network-dev
-    depends_on:
-      - jasma-api-server
+    # NEXTJS frontend website
+    jasma-client:
+        container_name: jasma-client-dev
+        build:
+            context: .
+            dockerfile: compose/local/next/Dockerfile
+            target: development
+            args:
+                - BASE_URL=http://localhost
+                - PORT=3000
+                - NEXT_PUBLIC_API_SERVER_URL=localhost
+                - NEXT_PUBLIC_API_SERVER_PORT=8000
+                - NEXT_PUBLIC_NODE_ENV=development
+                - ANALYZE=false
+                - SESSION_SECRET=thisisatemporarysecret
+                - NEXT_TELEMETRY_DEBUG=1
+                - NEXT_TELEMETRY_DISABLED=1
+        environment: *dev-environment
+        env_file:
+            - .env/.local/.nextjs/.env
+        restart: always
+        image: jasma-client-dev
+        expose:
+            - 3000
+        ports:
+            - "3000:3000"
+        networks:
+            - jasma-network-dev
+        depends_on:
+            - jasma-api-server
 
-  # NGINX reverse-proxy load balancing webserver
-  jasma-nginx-dev:
-    container_name: jasma-nginx-dev
-    build:
-      context: ./nginx
-      target: development
-    restart: always
-    ports:
-    - '80:80'
-    networks:
-      - jasma-network-dev
+    # NGINX reverse-proxy load balancing webserver
+    jasma-nginx-dev:
+        container_name: jasma-nginx-dev
+        build:
+            context: ./nginx
+            target: development
+        restart: always
+        ports:
+            - "80:80"
+        networks:
+            - jasma-network-dev
 
 volumes:
-  jasma-storage-dev:
-    driver: local
+    jasma-storage-dev:
+        driver: local
 
 networks:
-  jasma-network-dev:
-    driver: bridge
+    jasma-network-dev:
+        driver: bridge
