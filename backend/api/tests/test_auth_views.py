@@ -309,21 +309,3 @@ class AuthViewTestCase(APITestCase):
             }
         ]
         self.assertCountEqual(data.get("errors"), expected_errors)
-
-
-    """ Template for new test :)
-    def test_(self):
-        # Request
-        url = reverse_lazy("")
-        payload = {}
-        with self.assertNumQueries():
-            self.response = self.client.(url)
-        # Response
-        self.assertEqual(self.response.status_code, status.)
-        # Data
-        data = self.response.data
-        self.assert(data.get("success"))
-        self.assert(data.get("message"))
-        self.assert(data.get("data"))
-        self.assert(data.get("errors"))
-    """
