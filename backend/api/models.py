@@ -80,7 +80,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(
         User, related_name="profile", on_delete=models.CASCADE, primary_key=True, editable=False)
     profile_pic_url = models.ImageField(
-        upload_to=f"{settings.MEDIA_URL}images/avatars/", default=f"{settings.MEDIA_URL}images/avatars/default-profile-pic.webp")
+        upload_to="images/avatars/", default="images/avatars/default-profile-pic.webp")
     # TODO: Test and confirm
     # profile_pic_url = models.URLField(max_length=300, default=f"{settings.MEDIA_URL}images/avatars/default-profile-pic.webp")
     given_name = models.CharField(max_length=35, blank=True)

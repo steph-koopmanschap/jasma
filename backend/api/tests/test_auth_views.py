@@ -19,15 +19,6 @@ class AuthViewTestCase(APITestCase):
             username="user1",
             password="password1",
             email="user1@test1.test")
-        cls.user2 = User.objects.create_user(
-            username="user2",
-            password="password2",
-            email="user2@test2.test")
-        cls.user3 = User.objects.create_user(
-            username="user3",
-            password="password3",
-            email="user3@test3.test"
-        )
 
     def setUp(self):
         print(f"======SETTING UP {self._testMethodName}========")

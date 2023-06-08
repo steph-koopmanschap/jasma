@@ -17,23 +17,32 @@ import redis
 from dotenv import load_dotenv
 load_dotenv()
 
-runserver.default_addr = os.getenv('BACKEND_HOST')
-runserver.default_port = os.getenv('BACKEND_PORT')
+# Environment varaibles
+BACKEND_HOST = os.getenv('BACKEND_HOST')
+BACKEND_PORT = os.getenv('BACKEND_PORT')
+
+# This is to allows external services though .env file
+MEDIA_ROOT = os.getenv('MEDIA_ROOT')
+LOGS_ROOT = os.getenv('LOGS_ROOT')
+
+runserver.default_addr = BACKEND_HOST
+runserver.default_port = BACKEND_PORT
 
 if os.getenv('STAGE') == 'production':
-    BASE_URL = "https://" + os.getenv('BACKEND_HOST')
+    BASE_URL = f'https://{BACKEND_HOST}'
     DEBUG = False
 elif os.getenv('STAGE') == 'development':
-    BASE_URL = "http://" + \
-        os.getenv('BACKEND_HOST') + ":" + os.getenv('BACKEND_PORT')
+    BASE_URL = f'http://{BACKEND_HOST}:{BACKEND_PORT}'
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = f"{BASE_URL}/media/"
-# MEDIA_URL = '/media/'
+
+MEDIA_URL = '/media/'
+
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = f"{BASE_URL}/media/"
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 # Quick-start development settings - unsuitable for production
@@ -49,7 +58,7 @@ LOGGING = {
     'handlers': {
         'file': {
             'class': 'logging.handlers.WatchedFileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs/server_logfile.log'),
+            'filename': os.path.join(LOGS_ROOT, 'server_logfile.log'),
         },
     },
     'loggers': {
@@ -90,7 +99,7 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
    "DEFAULT_RENDERER_CLASSES": [
        "api.renderers.JasmaJSONRenderer",
-       # "rest_framework.renderers.BrowsableAPIRenderer",
+       "rest_framework.renderers.BrowsableAPIRenderer",
     ],
    "EXCEPTION_HANDLER" : "api.exception_handler.jasma_exception_handler",
    'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -152,12 +161,12 @@ DATABASES = {
 #    }
 # }
 
-TEST_NAME = 'test'
-
+# REDIS Setup
 REDIS_HOST = os.getenv('REDIS_HOST')
 REDIS_PORT = os.getenv('REDIS_PORT')
 
 REDIS_CLIENT = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
+
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_CACHE_ALIAS = 'default'

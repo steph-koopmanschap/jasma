@@ -1,5 +1,5 @@
 from rest_framework.views import exception_handler
-from rest_framework.exceptions import ValidationError, PermissionDenied, NotAuthenticated
+from rest_framework.exceptions import ValidationError, APIException
 
 
 def jasma_exception_handler(exc, context):
@@ -14,7 +14,7 @@ def jasma_exception_handler(exc, context):
                         "code": error_detail.code,
                         "message": error_detail.capitalize()
                     })
-        elif isinstance(exc, (PermissionDenied, NotAuthenticated, ValidationError)):
+        elif isinstance(exc, (APIException)):
             errors.append({
                 "attr": None,
                 "code": exc.get_codes(),
