@@ -70,8 +70,8 @@ LOGGING = {
 }
 
 ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
-
 APPEND_SLASH = False
+
 
 # Application definition
 
@@ -105,6 +105,9 @@ REST_FRAMEWORK = {
    'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
     ],
+    'DEFAULT_PROXY_HEADERS': {
+        'HTTP_X_FORWARDED_FOR': 'X_FORWARDED_FOR',
+    }
 }
 
 

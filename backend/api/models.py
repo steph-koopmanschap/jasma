@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.validators import validate_ipv4_address, MaxValueValidator, MinValueValidator
+from api.validators import validate_image_file_size
 from uuid import uuid4
 from api.constants import user_roles, relationships, genders
 
@@ -77,10 +78,10 @@ class User(AbstractUser):
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(
-        User, related_name="profile", on_delete=models.CASCADE, primary_key=True, editable=False)
-    profile_pic_url = models.ImageField(
-        upload_to="images/avatars/", default="images/avatars/default-profile-pic.webp")
+    user = models.OneToOneField(User, related_name="profile",
+                                on_delete=models.CASCADE, primary_key=True, editable=False)
+    profile_pic_url = models.ImageField("Profile picture", upload_to="images/avatars/",
+                                        default="images/avatars/default-profile-pic.webp", validators=[validate_image_file_size])
     # TODO: Test and confirm
     # profile_pic_url = models.URLField(max_length=300, default=f"{settings.MEDIA_URL}images/avatars/default-profile-pic.webp")
     given_name = models.CharField(max_length=35, blank=True)
