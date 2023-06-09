@@ -151,12 +151,24 @@ Login a user.
 
 #### Output
 
+{
+    "success": true,
+    "message": "User logged in.",
+    "data": {
+        "user": {
+            "id": "124ed254-dde4-461e-aaf5-bf0de681d9b4",
+            "username": "test123",
+            "email": "test@test.com"
+        }
+    },
+    "errors": []
+}
+
 ### POST | /api/auth/checkAuth
 
 Check if a user is logged serverside.
 
 #### Output
-
 
 
 
