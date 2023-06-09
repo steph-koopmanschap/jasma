@@ -11,27 +11,63 @@ All kinds of app-wide matters, both in the technical sense (e.g., context provid
 this directory contains app segment files
 
 ### /frontend/pages
-contains complete Application pages files
+Contains complete Application pages files
 
 ### /frontend/shared
-contains reused module sand non-business specific files => ```Isolated modules, components and abstractions that are detached from the specifics of the project or business. ```
+Contains react components, utilities, and other code that can be shared troughout the app.
 
 ### /frontend/widgets
-contains Independent and self-contained blocks for pages
+Contains Independent and self-contained blocks (React components) for pages.
 
 ### /frontend/features
 Processing of user scenarios => ```Actions that a user can make in the application to interact with the business entities to achieve a valuable outcome.```
 
 ### /frontend/entities
-contains : Business entities that domain logic operates 
+Contains business entities that domain logic operates 
 
 ### /frontend/public
-contains static assets to be served
-
+Contains static assets to be served
 
 ### /backend
 
 The backend server. (Django)
+
+### /backend/django_server
+
+Config files for the django server.
+
+### /backend/api
+
+All the files for JASMA main API server.
+
+### /backend/api/constants
+
+Constants for the backend.
+
+### /backend/api/management/commands
+
+Custom commands to use with the Django server.
+
+### /backend/api/migrations
+
+Changes applied to the PostGreSQL database.
+The Postgres tables are defined in the models folder.
+
+### /backend/api/tests
+
+Tests for the Django API server.
+
+### /backend/api/urls
+
+The routes or URLS of the API endpoints are defined here. (Might be changed in the future to urls.py)
+
+### /backend/api/views
+
+All the view functions. The actual logic and proccesing of the API endpoints are defined here.
+
+### /backend/media
+
+All the user uploaded media files are stored here. Including images, videos, audios, and profile avatar pics.
 
 ### /docs
 
@@ -52,7 +88,7 @@ HTTP and HTTPS Config files for the NGINX webserver.
 
 ### /monitor
 
-An individual app for monitoring JASMA. 
+An individual app for monitoring JASMA. (Not done yet).
 
 ### /.env
 

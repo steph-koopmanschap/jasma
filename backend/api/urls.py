@@ -9,7 +9,7 @@ urlpatterns = [
     path("auth/logout", auth_views.logout_view, name="logout"),
     path("auth/checkAuth", auth_views.check_auth, name="check-auth"),
     # path("auth/getCsrf", auth_views.get_csrf_token, name="get-csrf"),
-    path("auth/changePass", auth_views.change_password, name="change-password"),
+    path("auth/changePassword", auth_views.change_password, name="change-password"),
 ]
 
 # Inititalize the router

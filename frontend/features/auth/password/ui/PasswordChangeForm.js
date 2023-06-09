@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { handlePassChange } from "../model/passwordActions";
-import { getCSRF_TOKEN } from "@/entities/auth";
+//import { getCSRF_TOKEN } from "@/entities/auth";
 import { useToast } from "@/shared/model";
 
 export function ChangePasswordForm() {
@@ -40,11 +40,11 @@ export function ChangePasswordForm() {
                 action="#"
                 onSubmit={changePassword}
             >
-                <input
+                {/* <input
                     type="hidden"
                     name="XSRF-TOKEN"
                     value={getCSRF_TOKEN()}
-                />
+                /> */}
                 <div className="mb-2">
                     <label
                         className="labelDefault"

@@ -28,7 +28,6 @@ test/test/reports/*
 
 # Environments
 # This will need cleanup
-
 .env
 !/.env
 !/.env/.local/**/*.env
@@ -53,7 +52,7 @@ docker-compose.yml
 next-env.d.ts
 
 # Logs
-**/logs
+/logs/*.log
 *.log
 
 # Server media files
