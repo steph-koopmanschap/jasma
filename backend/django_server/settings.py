@@ -23,7 +23,7 @@ BACKEND_PORT = os.getenv('BACKEND_PORT')
 
 # This is to allows external services though .env file
 MEDIA_ROOT = os.getenv('MEDIA_ROOT')
-LOGS_ROOT = os.getenv('LOGS_ROOT')
+LOGS_ROOT  = os.getenv('LOGS_ROOT')
 
 runserver.default_addr = BACKEND_HOST
 runserver.default_port = BACKEND_PORT
