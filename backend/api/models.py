@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.validators import validate_ipv4_address, MaxValueValidator, MinValueValidator
 from uuid import uuid4
-from api.constants import user_roles, relationships, genders
+from api.constants import user_roles, relationships, genders, education
 
 # Custom user model
 # Login:
@@ -91,7 +91,11 @@ class UserProfile(models.Model):
     relationship_with = models.ForeignKey(
         User, related_name="relationships_with", on_delete=models.CASCADE, null=True, blank=True)
     language = models.CharField(max_length=100, blank=True)
-    # TODO: Do we want to include our country choices?
+    job_company = models.CharField(max_length=100, blank=True)
+    job_industry = models.CharField(max_length=100, blank=True)
+    job_role = models.CharField(max_length=100, blank=True)
+    education = models.CharField(max_length=16, choices=education.CHOICES, blank=True)
+    # TODO: Do we want to include our country choices? Yes.
     country = models.CharField(max_length=100, blank=True)
     city = models.CharField(max_length=100, blank=True)
     website = models.URLField(max_length=300, blank=True)
@@ -123,39 +127,6 @@ class UserNotificationPreferences(models.Model):
     class Meta:
         db_table = "users_notification_preferences"
         verbose_name_plural = "UsersNotificationPreferences"
-
-class Ad(models.Model):
-    id = models.UUIDField("ad id", default=uuid4,
-                        primary_key=True, editable=False)
-    user = models.ForeignKey(User, related_name="ads",
-                            on_delete=models.CASCADE)
-    ad_name = models.CharField(max_length=50)
-    text_content = models.CharField(max_length=1000)
-    # TODO: Here I think there are still thing to consider, like do we plan to host?
-    # If we just use external url, will there be latency issues?
-    # Will the front end just take care of it?
-    ad_file_url = models.URLField(max_length=300, blank=True)
-    ad_url = models.URLField(max_length=300, blank=True)
-    expires_at = models.DateTimeField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    targ_age_start = models.SmallIntegerField(blank=True,
-                                            validators=[MinValueValidator(18), MaxValueValidator(125)])
-    targ_age_end = models.SmallIntegerField(blank=True,
-                                            validators=[MinValueValidator(18), MaxValueValidator(125)])
-    targ_gender = models.CharField(
-        max_length=11, blank=True, choices=genders.CHOICES)
-    targ_relationship = models.CharField(
-        max_length=11, blank=True, choices=relationships.CHOICES)
-    # Shouldn"t this be a choice?
-    targ_country = models.CharField(max_length=100, blank=True)
-    targ_city = models.CharField(max_length=100, blank=True)
-
-    def __str__(self):
-        return f"{self.ad_name} ad_id: {self.id}"
-
-    class Meta:
-        db_table = "ads"
-        verbose_name_plural = "Ads"
         
 class Hashtag(models.Model):
     id = models.CharField(max_length=50, primary_key=True, editable=False)
@@ -263,6 +234,46 @@ class ReportedPost(models.Model):
             models.UniqueConstraint(
                 fields=["post"], name="unique_reported_post")
         ]
+        
+class Ad(models.Model):
+    id = models.UUIDField("ad id", default=uuid4,
+                        primary_key=True, editable=False)
+    user = models.ForeignKey(User, related_name="ads",
+                            on_delete=models.CASCADE)
+    ad_name = models.CharField(max_length=50)
+    bid_price = models.DecimalField(
+        max_digits=19, decimal_places=4, default=1, validators=[MinValueValidator(1)])
+    text_content = models.CharField(max_length=1000)
+    # The image or video or audio for the ad.
+    ad_file_url = models.URLField(max_length=300, blank=True)
+    ad_url = models.URLField(max_length=300, blank=True)
+    expires_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    # Parameters for targeting a user / demographic with this ad.
+    targ_hashtags = models.ManyToManyField(
+        Hashtag, related_name="ads", blank=True)
+    # Targeting ads to minors is not allowed.
+    targ_age_start = models.SmallIntegerField(blank=True,
+                                            validators=[MinValueValidator(18), MaxValueValidator(125)])
+    targ_age_end = models.SmallIntegerField(blank=True,
+                                            validators=[MinValueValidator(18), MaxValueValidator(125)])
+    targ_gender = models.CharField(
+        max_length=11, blank=True, choices=genders.CHOICES)
+    targ_relationship = models.CharField(
+        max_length=11, blank=True, choices=relationships.CHOICES)
+    targ_education = models.CharField(max_length=16, choices=education.CHOICES, blank=True)
+    targ_job_industry = models.CharField(max_length=100, blank=True)
+    targ_job_role = models.CharField(max_length=100, blank=True)
+    # Shouldn"t this be a choice?
+    targ_country = models.CharField(max_length=100, blank=True)
+    targ_city = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return f"{self.ad_name} ad_id: {self.id}"
+
+    class Meta:
+        db_table = "ads"
+        verbose_name_plural = "Ads"
 
 class Transaction(models.Model):
     transaction_id = models.UUIDField(
