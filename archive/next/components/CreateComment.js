@@ -54,7 +54,7 @@ export default function CreateComment(props) {
                 action="#" 
                 onSubmit={createComment}
             >
-                <input type="hidden" name="XSRF-TOKEN" value={api.getCSRF_TOKEN()} />
+                {/* <input type="hidden" name="XSRF-TOKEN" value={api.getCSRF_TOKEN()} /> */}
                 <textarea 
                     className="my-1 p-1 mx-1"
                     id="newPostText"

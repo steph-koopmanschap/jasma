@@ -70,11 +70,11 @@ export const CreatePost = () => {
                 action="#"
                 onSubmit={createPost}
             >
-                <input
+                {/* <input
                     type="hidden"
                     name="XSRF-TOKEN"
                     value={api.getCSRF_TOKEN()}
-                />
+                /> */}
                 <textarea
                     className="my-2 p-1 mx-2"
                     id="newPostText"

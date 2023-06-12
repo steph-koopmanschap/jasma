@@ -59,7 +59,7 @@ class AuthViewTestCase(APITestCase):
         data = self.response.data
         self.assertTrue(data.get("success"))
         self.assertEqual(data.get("message"),
-                         f"User {payload['username']} registered successfully.")
+                        f"User {payload['username']} registered successfully.")
         self.assertFalse(data.get("data"))
         self.assertFalse(data.get("errors"))
         # Database
@@ -80,7 +80,7 @@ class AuthViewTestCase(APITestCase):
             self.response = self.client.post(url, payload, format="json")
         # Response
         self.assertEqual(self.response.status_code,
-                         status.HTTP_400_BAD_REQUEST)
+                        status.HTTP_400_BAD_REQUEST)
         # Data
         data = self.response.data
         self.assertFalse(data.get("success"))
@@ -112,7 +112,7 @@ class AuthViewTestCase(APITestCase):
             self.response = self.client.post(url, payload)
         # Response
         self.assertEqual(self.response.status_code,
-                         status.HTTP_400_BAD_REQUEST)
+                        status.HTTP_400_BAD_REQUEST)
         # Data
         data = self.response.data
         self.assertFalse(data.get("success"))

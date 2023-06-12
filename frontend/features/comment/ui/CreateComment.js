@@ -52,11 +52,11 @@ export const CreateComment = ({ postID }) => {
                 action="#"
                 onSubmit={createComment}
             >
-                <input
+                {/* <input
                     type="hidden"
                     name="XSRF-TOKEN"
                     value={api.getCSRF_TOKEN()}
-                />
+                /> */}
                 <textarea
                     className="my-1 p-1 mx-1"
                     id="newPostText"

@@ -128,7 +128,7 @@ export default function AdminPanel() {
         <p className=''>Change role of {searchUserBoxValue} to:</p>
 
         <form className="mb-6" id={`form_search`} action="#" onSubmit={changeRole}>
-            <input type="hidden" name="_csrf" value={api.getCSRF_TOKEN()} />
+            {/* <input type="hidden" name="_csrf" value={api.getCSRF_TOKEN()} /> */}
             <select name="role" id={`changeRoleSelect_search`}>
                 <option value="admin">admin</option>
                 <option value="mod">mod</option>

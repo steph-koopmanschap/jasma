@@ -10,7 +10,6 @@ from api.models import User
 from api.utils.get_client_ip import get_client_ip
 from api.serializers import UserRegisterSerializer
 
-
 @api_view(["POST"])
 def register(request):
     # Serialize, validate and create
@@ -21,7 +20,6 @@ def register(request):
     # return success response
     payload = {"message": f"User {user.username} registered successfully."}
     return Response(payload, status=status.HTTP_201_CREATED)
-
 
 @api_view(["POST"])
 def login_view(request):
@@ -40,19 +38,17 @@ def login_view(request):
         }
         request.session.update(user_info)
         payload = {"data": {"user": user_info},
-                   "message": "User logged in."}
+                    "message": "User logged in."}
         return Response(payload)
     else:
         payload = {"success": False, "message": "Invalid email or password."}
         return Response(payload, status=status.HTTP_403_FORBIDDEN)
-
 
 @api_view(["POST"])
 def logout_view(request):
     logout(request)
     payload = {"message": "Logged out."}
     return Response(payload)
-
 
 @api_view(["GET"])
 def check_auth(request):
@@ -72,7 +68,6 @@ def get_csrf_token(request):
     data = {"csrfToken": get_token(request)}
     return Response(data)
 """
-
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])

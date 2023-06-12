@@ -1,4 +1,4 @@
-import { getCSRF_TOKEN } from "@/entities/auth";
+//import { getCSRF_TOKEN } from "@/entities/auth";
 import { handleChangeUserRole } from "../../model/userActions";
 import { useToast } from "@/shared/model";
 import { UserRolesOptions } from "@/entities/user";
@@ -29,11 +29,11 @@ export const ChangeRole = ({ userId }) => {
             action="#"
             onSubmit={changeRole}
         >
-            <input
+            {/* <input
                 type="hidden"
                 name="_csrf"
                 value={getCSRF_TOKEN()}
-            />
+            /> */}
             <select
                 name="role"
                 id={`changeRoleSelect_search`}

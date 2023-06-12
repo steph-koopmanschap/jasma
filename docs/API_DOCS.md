@@ -2,7 +2,8 @@
 
 ## Table of Contents
 
-blabla
+[Overview](#overview)
+[Detailed information](#detailed-information)
 
 ## Overview
 
@@ -11,8 +12,8 @@ blabla
 
 ### Auth
 
-- POST   /api/auth/register
 - POST   /api/auth/login
+- POST   /api/auth/register
 - POST   /api/auth/logout
 - POST   /api/auth/checkAuth
 - POST   /api/auth/checkAuthUserRole
@@ -93,17 +94,85 @@ blabla
 
 ### POST | /api/auth/register
 
-#### Description
+Register a new user.
 
-Hello world
+#### Input
 
-#### Input/Output
+```
+{
+    "username": "test123",
+    "email": "test@test.com",
+    "password": "test123"
+}
+```
 
-Good bye world
+#### Output
 
-- POST   /api/auth/login
-- POST   /api/auth/logout
-- POST   /api/auth/checkAuth
+Success example.
+```
+{
+    "success": true,
+    "message": "User test123 registered successfully.",
+    "data": {},
+    "errors": []
+}
+```
+Error example.
+{
+    "success": false,
+    "message": "",
+    "data": {},
+    "errors": [
+        {
+            "attr": "username",
+            "code": "unique",
+            "message": "A user with that username already exists."
+        },
+        {
+            "attr": "email",
+            "code": "unique",
+            "message": "User with this email address already exists."
+        }
+    ]
+}
+
+### POST | /api/auth/login
+
+Login a user.
+
+#### Input
+
+```
+{
+    "email": "test@test.com",
+    "password": "test123"
+}
+```
+
+#### Output
+
+{
+    "success": true,
+    "message": "User logged in.",
+    "data": {
+        "user": {
+            "id": "124ed254-dde4-461e-aaf5-bf0de681d9b4",
+            "username": "test123",
+            "email": "test@test.com"
+        }
+    },
+    "errors": []
+}
+
+### POST | /api/auth/checkAuth
+
+Check if a user is logged serverside.
+
+#### Output
+
+
+
+# Ignore this (temporary)
 - POST   /api/auth/checkAuthUserRole
 - ! POST /api/auth/changePassword
 
