@@ -8,14 +8,12 @@ from api.constants import user_roles, relationships, genders
 # Custom user model
 # Login:
 # authenticate(email=email, password=password)
-
-
 class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
     id = models.UUIDField("User id", primary_key=True,
-                          default=uuid4, editable=False)
+                        default=uuid4, editable=False)
     email = models.EmailField("Email address", max_length=254, unique=True)
     email_verified = models.BooleanField(default=False)
     recovery_email = models.EmailField(
@@ -26,13 +24,12 @@ class User(AbstractUser):
     recovery_phone = models.CharField(
         "Recovery phone number", max_length=17, blank=True)
     # TODO: This souldn"t be here. Guess it shoud be in a related model instead.
-    # Also it migth be an idea to sell credits insteead of charging per transactions.
     balance = models.DecimalField(
         max_digits=19, decimal_places=4, default=0, validators=[MinValueValidator(0)])
     last_ipv4 = models.CharField("Last ipv4",
-                                 max_length=55, default="0.0.0.0", blank=True, validators=[validate_ipv4_address])
+                                max_length=55, default="0.0.0.0", blank=True, validators=[validate_ipv4_address])
     user_role = models.CharField("User role",
-                                 max_length=10, default="normal", choices=user_roles.CHOICES)
+                                max_length=10, default="normal", choices=user_roles.CHOICES)
     deleted_at = models.DateTimeField(null=True, blank=True)
 
     def save(self, *args, **kwargs) -> None:
@@ -75,7 +72,6 @@ class User(AbstractUser):
     def total_created_ads(self):
         return self.ads.count()
 
-
 class UserProfile(models.Model):
     user = models.OneToOneField(
         User, related_name="profile", on_delete=models.CASCADE, primary_key=True, editable=False)
@@ -107,7 +103,6 @@ class UserProfile(models.Model):
         db_table = "users_profiles"
         verbose_name_plural = "UsersProfiles"
 
-
 class UserNotificationPreferences(models.Model):
     user = models.OneToOneField(
         User, related_name="notification_preferences", on_delete=models.CASCADE, primary_key=True, editable=False)
@@ -129,12 +124,11 @@ class UserNotificationPreferences(models.Model):
         db_table = "users_notification_preferences"
         verbose_name_plural = "UsersNotificationPreferences"
 
-
 class Ad(models.Model):
     id = models.UUIDField("ad id", default=uuid4,
-                          primary_key=True, editable=False)
+                        primary_key=True, editable=False)
     user = models.ForeignKey(User, related_name="ads",
-                             on_delete=models.CASCADE)
+                            on_delete=models.CASCADE)
     ad_name = models.CharField(max_length=50)
     text_content = models.CharField(max_length=1000)
     # TODO: Here I think there are still thing to consider, like do we plan to host?
@@ -145,7 +139,7 @@ class Ad(models.Model):
     expires_at = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     targ_age_start = models.SmallIntegerField(blank=True,
-                                              validators=[MinValueValidator(18), MaxValueValidator(125)])
+                                            validators=[MinValueValidator(18), MaxValueValidator(125)])
     targ_age_end = models.SmallIntegerField(blank=True,
                                             validators=[MinValueValidator(18), MaxValueValidator(125)])
     targ_gender = models.CharField(
@@ -162,8 +156,7 @@ class Ad(models.Model):
     class Meta:
         db_table = "ads"
         verbose_name_plural = "Ads"
-
-
+        
 class Hashtag(models.Model):
     id = models.CharField(max_length=50, primary_key=True, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -176,21 +169,19 @@ class Hashtag(models.Model):
         verbose_name_plural = "Hashtags"
 
 # TODO: I have to circle back to this to handle files.
-
-
 class Post(models.Model):
     id = models.UUIDField(default=uuid4, primary_key=True, editable=False)
     # Cascade could be problematic.
     user = models.ForeignKey(User, related_name="posts",
-                             on_delete=models.CASCADE)
+                            on_delete=models.CASCADE)
     text_content = models.CharField(max_length=40000)
     file_url = models.URLField(max_length=300, null=True, blank=True)
     post_type = models.CharField(max_length=5, default="text",
-                                 choices=[
-                                     ("text", "Text"),
-                                     ("image", "Image"),
-                                     ("video", "Video"),
-                                     ("audio", "Audio")])
+                                choices=[
+                                    ("text", "Text"),
+                                    ("image", "Image"),
+                                    ("video", "Video"),
+                                    ("audio", "Audio")])
     hashtags = models.ManyToManyField(
         Hashtag, related_name="posts", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -212,10 +203,9 @@ class Post(models.Model):
         verbose_name_plural = "Posts"
         ordering = ["-created_at"]
 
-
 class Comment(models.Model):
     id = models.UUIDField("Comment id",
-                          default=uuid4, primary_key=True, editable=False)
+                        default=uuid4, primary_key=True, editable=False)
     post = models.ForeignKey(
         Post, related_name="comments", on_delete=models.CASCADE)
     user = models.ForeignKey(
@@ -232,7 +222,6 @@ class Comment(models.Model):
         db_table = "comments"
         verbose_name_plural = "Comments"
         ordering = ["-created_at"]
-
 
 class ReportedPost(models.Model):
     report_id = models.UUIDField(
@@ -275,7 +264,6 @@ class ReportedPost(models.Model):
                 fields=["post"], name="unique_reported_post")
         ]
 
-
 class Transaction(models.Model):
     transaction_id = models.UUIDField(
         default=uuid4, primary_key=True, editable=False)
@@ -295,7 +283,6 @@ class Transaction(models.Model):
         db_table = "transactions"
         verbose_name_plural = "Transactions"
 
-
 class BookmarkedPost(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -313,8 +300,6 @@ class BookmarkedPost(models.Model):
         ]
 
 # user_id follows follow_id. follow_id is followed by user_id
-
-
 class Following(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="followers")
@@ -341,8 +326,6 @@ class Following(models.Model):
 # Then, modify the queries in your views and templates to exclude any deleted hashtags.
 # Another option would be to create a separate table to store the subscription information, instead of using a foreign key relationship with the Hashtag model.
 # This table could have a field for the hashtag name or ID, and the subscription status could be updated even if the original hashtag is deleted.
-
-
 class SubscribedHashtag(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     hashtag = models.ForeignKey(Hashtag, on_delete=models.CASCADE)
@@ -358,7 +341,6 @@ class SubscribedHashtag(models.Model):
                 fields=["user", "hashtag"], name="composite_pk_on_subscribed_hashtags")
         ]
 
-
 class UserFeedback(models.Model):
     feedback_id = models.UUIDField(
         default=uuid4, primary_key=True, editable=False)
@@ -372,7 +354,6 @@ class UserFeedback(models.Model):
 
     class Meta:
         db_table = "userfeedback"
-
 
 class BugReport(models.Model):
     bug_report_id = models.UUIDField(

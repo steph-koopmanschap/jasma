@@ -90,12 +90,12 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
-   "DEFAULT_RENDERER_CLASSES": [
-       "api.renderers.JasmaJSONRenderer",
-       # "rest_framework.renderers.BrowsableAPIRenderer",
+    "DEFAULT_RENDERER_CLASSES": [
+        "api.renderers.JasmaJSONRenderer",
+        # "rest_framework.renderers.BrowsableAPIRenderer",
     ],
-   "EXCEPTION_HANDLER" : "api.exception_handler.jasma_exception_handler",
-   "DEFAULT_AUTHENTICATION_CLASSES": [
+    "EXCEPTION_HANDLER" : "api.exception_handler.jasma_exception_handler",
+    "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
     ],
 }
