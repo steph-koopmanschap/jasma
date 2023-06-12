@@ -125,7 +125,9 @@ CORS_EXPOSE_HEADERS = (
 read_only = ()
 read_write = (
     f"http://{os.getenv('FRONTEND_HOST')}:{os.getenv('FRONTEND_PORT')}",
-    f"https://{os.getenv('FRONTEND_HOST')}:{os.getenv('FRONTEND_PORT')}"
+    f"https://{os.getenv('FRONTEND_HOST')}:{os.getenv('FRONTEND_PORT')}",
+    f"http://{os.getenv('FRONTEND_HOST')}",
+    f"https://{os.getenv('FRONTEND_HOST')}"
 )
 CORS_ALLOWED_ORIGINS = (
     *read_only,
