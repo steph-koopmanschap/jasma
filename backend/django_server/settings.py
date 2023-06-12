@@ -24,17 +24,17 @@ BACKEND_PORT = os.getenv("BACKEND_PORT")
 if os.getenv("STAGE") == "production":
     BASE_URL = "https://" + os.getenv("BACKEND_HOST")
 # This is to allows external services though .env file
-MEDIA_ROOT = os.getenv('MEDIA_ROOT')
-LOGS_ROOT  = os.getenv('LOGS_ROOT')
+MEDIA_ROOT = os.getenv("MEDIA_ROOT")
+LOGS_ROOT  = os.getenv("LOGS_ROOT")
 
 runserver.default_addr = BACKEND_HOST
 runserver.default_port = BACKEND_PORT
 
-if os.getenv('STAGE') == 'production':
-    BASE_URL = f'https://{BACKEND_HOST}'
+if os.getenv("STAGE") == "production":
+    BASE_URL = f"https://{BACKEND_HOST}"
     DEBUG = False
-elif os.getenv('STAGE') == 'development':
-    BASE_URL = f'http://{BACKEND_HOST}:{BACKEND_PORT}'
+elif os.getenv("STAGE") == "development":
+    BASE_URL = f"http://{BACKEND_HOST}:{BACKEND_PORT}"
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
 
@@ -107,8 +107,8 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
     ],
-    'DEFAULT_PROXY_HEADERS': {
-        'HTTP_X_FORWARDED_FOR': 'X_FORWARDED_FOR',
+    "DEFAULT_PROXY_HEADERS": {
+        "HTTP_X_FORWARDED_FOR": "X_FORWARDED_FOR",
     }
 }
 
