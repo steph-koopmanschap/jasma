@@ -114,11 +114,14 @@ class UserNotificationPreferences(models.Model):
     is_all_push = models.BooleanField(default=True)
     is_all_inapp = models.BooleanField(default=True)
     is_comment_on_post_email = models.BooleanField(default=True)
-    is_new_follower_email = models.BooleanField(default=True)
-    is_comment_on_post_push = models.BooleanField(default=True)
-    is_new_follower_push = models.BooleanField(default=True)
     is_comment_on_post_inapp = models.BooleanField(default=True)
+    is_comment_on_post_push = models.BooleanField(default=True)
+    is_new_follower_email = models.BooleanField(default=True)
     is_new_follower_inapp = models.BooleanField(default=True)
+    is_new_follower_push = models.BooleanField(default=True)
+    is_following_new_post_email = models.BooleanField(default=True)
+    is_following_new_post_inapp = models.BooleanField(default=True)
+    is_following_new_post_push = models.BooleanField(default=True)
 
     # TODO: This looks weird. Prints the user_id? Maybe edit the string.
     def __str__(self):

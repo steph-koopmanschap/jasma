@@ -5,8 +5,6 @@ from django.db.models import Q
 UserModel = get_user_model()
 
 # Make user login with email instead of username
-
-
 class CustomUserModelBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
         if username is None:

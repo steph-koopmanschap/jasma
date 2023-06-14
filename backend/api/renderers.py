@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.DEBUG,
 
 
 class JasmaJSONRenderer(JSONRenderer):
-    """ Rederer that defines the standard json response within jasma """
+    """ Renderer that defines the standard json response within jasma """
 
     @staticmethod
     def jasma_json(data):

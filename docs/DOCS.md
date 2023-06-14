@@ -34,7 +34,7 @@
 
 ### Backend:
 
-- Django / Python
+- Django + Django REST / Python
 - PostGreSQL
 - Redis
 
