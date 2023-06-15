@@ -205,6 +205,7 @@ DATABASES = {
 
 # TEST_NAME = "test"
 
+# Redis Config
 REDIS_HOST = os.getenv("REDIS_HOST")
 REDIS_PORT = os.getenv("REDIS_PORT")
 
@@ -233,7 +234,9 @@ SESSION_COOKIE_SAMESITE = "Lax"
 
 AUTH_USER_MODEL = "api.User"
 AUTHENTICATION_BACKENDS = [
-    "api.backends.CustomUserModelBackend", "django.contrib.auth.backends.ModelBackend"]
+    "api.backends.CustomUserModelBackend", 
+    "django.contrib.auth.backends.ModelBackend"
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

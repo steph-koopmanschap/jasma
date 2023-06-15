@@ -4,7 +4,7 @@ const IS_DEVMODE = process.env.NEXT_PUBLIC_NODE_ENV === "development";
 
 /**
  *
- * @param {AxiosError | Error} error
+ * @param {AxiosError / Error} error
  * @returns {Object} {error: Boolean, message: String}
  */
 
@@ -12,6 +12,7 @@ export const handleError = (error) => {
     const errRes = Object.create(null);
     errRes.error = true;
 
+    // For debugging
     if (IS_DEVMODE) console.error(error);
 
     if (error instanceof Error) {

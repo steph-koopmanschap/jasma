@@ -77,6 +77,18 @@ Files for documentation about the app.
 
 Files use for testing the app.
 
+### /testing/tests
+
+Individual tests.
+
+### /testing/utils
+
+Utilities and shared code for tests.
+
+### /testing/test_data
+
+Dummy test data for tests.
+
 ### /archive
 
 Old deprecated code of JASMA that is archived here for future reference.

@@ -7,7 +7,7 @@ logging.basicConfig(level=logging.DEBUG,
                     format="%(asctime)s - %(levelname)s - %(message)s")
 
 class JasmaJSONRenderer(JSONRenderer):
-    """ Rederer that defines the standard json response within jasma """
+    """ Renderer that defines the standard json response within jasma """
     recognized_keys = {
         "success",
         "message",
