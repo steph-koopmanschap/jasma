@@ -3,6 +3,7 @@ import {
     faPause,
     faPlay,
     faRectangleXmark,
+    faTvAlt,
     faVolumeHigh,
     faVolumeLow,
     faVolumeMute
@@ -10,45 +11,56 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { forwardRef, useCallback } from "react";
 import { useVideoPlayer } from "../model/useVideoPlayer";
+import { formatTime } from "../utils/formatTime";
 import { Settings } from "./Settings";
 import "./VideoPlayer.css";
-import { formatTime } from "../utils/formatTime";
 
-export const VideoPlayer = forwardRef((props, forwardedRef) => {
+export const VideoPlayer = forwardRef(({ isLive = false }, forwardedRef) => {
     const { refs, functions, status } = useVideoPlayer();
 
     return (
-        <div className="player-container">
+        <div
+            className="player-container"
+            ref={refs.videoContainerRef}
+            tabIndex={1}
+        >
             <video
                 id="video"
                 ref={(el) => {
                     refs.videoRef.current = el;
                     forwardedRef.current = el;
                 }}
-                src="https://www.w3schools.com/tags/mov_bbb.mp4"
-                onTimeUpdate={functions.updateProgress}
-                onCanPlay={(e) => {
-                    functions.setVideoTime(e.target.duration);
-                    functions.changeVolume({ target: { value: Number(window.localStorage.userVideoVolume || 0.5) } });
-                }}
-                onEnded={functions.reset}
+                src="https://archive.org/download/ElephantsDream/ed_1024_512kb.mp4"
             >
                 Your browser does not support HTML5 video.
             </video>
-            <div className="top-curtain"></div>
-            <OnAirSign />
-            <div className="control-panel-container">
+            {status.showUi ? <div className="top-curtain"></div> : null}
+            <div className={`${status.isSeeking && !status.isPlaying ? "fullscreen-curtain" : ""}`}></div>
+            {status.showUi && isLive ? <OnAirSign /> : null}
+
+            <div
+                className={`control-panel-container ${
+                    status.showUi ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                }`}
+            >
                 <ProgressContainer
+                    ref={refs.progressBarRef}
                     elapsed={status.currentTime}
                     totalTime={status.videoTime}
+                    preview={status.preview}
                     progress={status.progress}
+                    isSeeking={status.isSeeking}
                 />
                 <Controls
                     onChangeVolume={functions.changeVolume}
                     onTogglePlay={functions.togglePlay}
                     onToggleMute={functions.toggleMute}
+                    onToggleFullscreen={functions.toggleFullscreen}
                     volume={status.volume}
+                    onPlaybackChange={functions.setPlaybackRate}
+                    onQualityChange={() => {}}
                     isMuted={status.isMuted}
+                    isFullscreen={status.isFullscreen}
                     isPlaying={status.isPlaying}
                 />
             </div>
@@ -65,14 +77,17 @@ function OnAirSign() {
     );
 }
 
-function ProgressContainer({ progress, elapsed, totalTime }) {
+const ProgressContainer = forwardRef(({ progress, elapsed, totalTime, preview, isSeeking }, ref) => {
     return (
         <div className="progress-container">
             <div className="progress-time-wrapper">
                 <span className="timemark">{formatTime(elapsed)}</span>
                 <span className="timemark">{formatTime(totalTime)}</span>
             </div>
-            <div className="progress-line-container">
+            <div
+                className={`${isSeeking ? "progress-line-container-large" : ""} progress-line-container`}
+                ref={ref}
+            >
                 <div className="progress-line-wrapper">
                     <div className="progress-line"></div>
                     <div
@@ -81,17 +96,32 @@ function ProgressContainer({ progress, elapsed, totalTime }) {
                     ></div>
                     <div
                         className="progress-thumb"
-                        style={{ left: `${progress}%` }}
+                        style={{ left: `${progress - 0.5}%` }}
+                    ></div>
+                    <div
+                        className="progress-preview"
+                        style={{ width: `${preview}%` }}
                     ></div>
                 </div>
             </div>
         </div>
     );
-}
+});
 
-function Controls({ onChangeVolume, onTogglePlay, isMuted, isPlaying, volume, onToggleMute }) {
+function Controls({
+    onChangeVolume,
+    onTogglePlay,
+    isMuted,
+    isPlaying,
+    volume,
+    onToggleMute,
+    onPlaybackChange,
+    onQualityChange,
+    onToggleFullscreen,
+    isFullscreen
+}) {
     const getVolumeIcon = useCallback(() => {
-        if (isMuted) return faVolumeMute;
+        if (isMuted || volume === 0) return faVolumeMute;
         if (volume <= 0.5) return faVolumeLow;
         return faVolumeHigh;
     }, [isMuted, volume]);
@@ -125,9 +155,15 @@ function Controls({ onChangeVolume, onTogglePlay, isMuted, isPlaying, volume, on
                 </div>
             </div>
             <div className="controls-right-container">
-                <Settings />
-                <button className="action-btn">
-                    <FontAwesomeIcon icon={faRectangleXmark} />
+                <Settings
+                    onPlaybackChange={onPlaybackChange}
+                    onQualityChange={onQualityChange}
+                />
+                <button
+                    onClick={onToggleFullscreen}
+                    className="action-btn"
+                >
+                    <FontAwesomeIcon icon={!isFullscreen ? faTvAlt : faRectangleXmark} />
                 </button>
             </div>
         </div>

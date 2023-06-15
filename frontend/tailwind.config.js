@@ -10,7 +10,17 @@ module.exports = {
         "./features/**/*.{js,ts,jsx,tsx}"
     ],
     theme: {
-        extend: {}
+        extend: {
+            keyframes: {
+                fadeIn: {
+                    from: { opacity: 0 },
+                    to: { opactiy: 1 }
+                }
+            },
+            animation: {
+                fadeIn: "fadeIn .5s ease-in-out"
+            }
+        }
     },
     plugins: []
 };

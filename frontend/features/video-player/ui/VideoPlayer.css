@@ -13,12 +13,17 @@
 }
 
 .top-curtain {
-    @apply absolute top-0 w-full h-16;
+    @apply absolute top-0 w-full h-16 animate-fadeIn;
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+}
+.fullscreen-curtain {
+    @apply absolute top-0 left-0 bg-black opacity-30;
+    width: 100vw;
+    height: 100vh;
 }
 
 .on-air-sign {
-    @apply flex gap-1 rounded-sm px-1.5 py-0.5 w-min items-center bg-red-500 text-white 
+    @apply flex gap-1 animate-fadeIn rounded-sm px-1.5 py-0.5 transition-colors w-min items-center bg-red-500 text-white 
     text-sm absolute top-5 right-5 font-bold;
 }
 .on-air-sign svg {
@@ -26,7 +31,7 @@
 }
 
 .control-panel-container {
-    @apply absolute bottom-0 w-full  px-4 py-1.5 flex flex-col gap-1;
+    @apply absolute bottom-0 w-full  px-4 py-1.5 flex flex-col gap-1 transition-opacity duration-500;
     height: 5.5rem;
     background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8));
 }
@@ -34,7 +39,7 @@
 /* Progress bar */
 
 .progress-container {
-    @apply flex flex-col gap-2;
+    @apply flex flex-col gap-2 touch-none select-none;
 }
 
 .progress-time-wrapper {
@@ -42,12 +47,17 @@
 }
 
 .timemark {
-    @apply text-xs;
+    @apply text-sm;
 }
 
 .progress-line-wrapper {
     @apply relative w-full h-1;
 }
+
+.progress-line-wrapper > * {
+    transition: height 0.15s ease-in-out;
+}
+
 .progress-line-container {
     @apply flex items-center w-full h-4 cursor-pointer;
 }
@@ -57,18 +67,31 @@
     background-color: rgba(255, 255, 255, 0.2);
 }
 
+.progress-line-container-large > .progress-line-wrapper > *,
+.progress-line-container:hover > .progress-line-wrapper > * {
+    @apply h-2;
+}
+
+.progress-line-container:hover > .progress-line-wrapper > .progress-thumb {
+    opacity: 1;
+}
+
 .progress-done {
     @apply h-1 bg-red-400 w-0 absolute top-0 left-0 z-10;
 }
 
 .progress-thumb {
     @apply w-3 h-3 rounded-full opacity-0 bg-white absolute left-0;
-    top: -85%;
+    bottom: -90%;
     z-index: 21;
 }
 
 .progress-line-container:hover > .progress-line-wrapper > .progress-thumb {
     opacity: 1;
+}
+
+.progress-preview {
+    @apply h-1 bg-white w-0 absolute top-0 left-0 z-20 opacity-40;
 }
 
 /*  Controls Container */
@@ -78,7 +101,7 @@
 }
 
 .controls-left-container {
-    @apply flex items-center gap-3;
+    @apply flex items-center gap-2;
 }
 .controls-right-container {
     @apply flex items-center gap-2;
@@ -135,6 +158,117 @@
 }
 
 /*  Settings menu */
+
+.settings-container {
+    @apply relative place-content-baseline grid;
+}
+
+.settings-menu-container {
+    @apply absolute rounded-lg z-30 text-white px-2 py-1.5;
+    background-color: rgb(39, 39, 45);
+    width: 15rem;
+    right: 50%;
+    bottom: 150%;
+}
+
+.settings-menu-container svg {
+    @apply relative;
+    top: 1px;
+}
+
+.settings-menu-header {
+    @apply py-1.5;
+}
+
+.settings-menu-header button {
+    @apply w-full flex px-2 py-1.5 items-center gap-1 justify-start rounded-sm transition-colors;
+}
+
+.settings-menu-header button span {
+    @apply text-sm font-semibold;
+}
+
+.settings-menu-header button svg {
+    @apply w-5 h-5;
+}
+
+.settings-menu-header button:hover {
+    background-color: rgba(217, 217, 227, 0.2);
+}
+
+.settings-menu-separator {
+    @apply h-0.5 w-full bg-white opacity-10;
+}
+
+.settings-menu-body {
+    @apply py-2;
+}
+
+.settings-actions-container {
+    @apply flex flex-col gap-2;
+}
+
+.settings-menu-button {
+    @apply flex text-sm items-center justify-between py-1.5 px-1.5 transition-colors rounded-sm;
+}
+
+.settings-menu-button div {
+    @apply flex  items-center gap-1;
+}
+
+.settings-menu-button div > svg {
+    @apply w-3.5 h-3.5;
+}
+
+.settings-menu-button:hover {
+    background-color: rgba(217, 217, 227, 0.2);
+}
+
+.option-settings-container {
+    @apply flex flex-col gap-2;
+}
+
+.option-container {
+    @apply flex items-center gap-2 text-sm font-semibold cursor-pointer;
+}
+
+.option-container input {
+    @apply appearance-none flex items-center justify-center bg-transparent m-0 text-red-400 transition-all cursor-pointer;
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.15em solid rgba(217, 217, 227, 0.2);
+    border-radius: 50%;
+    transform: translateY(-0.075em);
+}
+
+.option-container input::before {
+    @apply transition-all bg-red-400 relative;
+    content: "";
+    width: 0.65em;
+    left: 0.25px;
+    top: 0.25px;
+    height: 0.65em;
+    border-radius: 50%;
+    transform: scale(0);
+    box-shadow: inset 1em 1em var(--form-control-color);
+}
+
+.option-container input:checked::before {
+    transform: scale(1);
+}
+
+.option-container input:checked + label {
+    @apply text-red-400 opacity-100;
+}
+
+.option-container input:focus-visible {
+    outline: max(2px, 0.15em) solid rgb(248 113 113);
+    outline-offset: max(2px, 0.15em);
+}
+
+.option-container label {
+    @apply opacity-80 transition-colors hover:opacity-100 cursor-pointer;
+}
 
 @screen sm {
     .player-container {
