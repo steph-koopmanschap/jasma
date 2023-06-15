@@ -1,16 +1,78 @@
 import datetime
 import json
+
 from django.conf import settings
 from django.http import JsonResponse
+
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+
 from api.utils.request_method_wrappers import post_wrapper, put_wrapper, get_wrapper, delete_wrapper
 from api.constants.http_status import HTTP_STATUS
-from api.constants import user_roles
-from api.models import User, UserProfile, UserNotificationPreferences
 from api.utils.handle_file_save import handle_file_save
 from api.utils.handle_file_delete import handle_file_delete
 from api.utils.staff_auth_wrappers import admin_required
+
+
+from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.permissions import DjangoObjectPermissions
+from rest_framework.decorators import action
+
+from api.constants import user_roles
+from api.models import User, UserProfile, UserNotificationPreferences
+from api.serializers import UserFullSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserFullSerializer
+    permission_classes = [DjangoObjectPermissions]
+
+    def get_serializer(self, *args, **kwargs):
+        """ Allow overwrite of serializer fields by accepting a field argument. """
+        requested_fields = kwargs.pop("fields")
+        serializer = super().get_serializer(*args, **kwargs)
+        if requested_fields:
+            serializer_fields = [k for k in serializer.fields.keys()]
+            # Pop the fields that are not requested
+            for field in serializer_fields:
+                if field not in requested_fields:
+                    serializer.fields.pop(field)
+        
+        return serializer
+
+    def retrieve(self, request, *args, **kwargs):
+        user = self.get_object()
+        automatic_fields = [
+            "user_id",
+            "username",
+            "email",
+            "user_role"
+        ]
+        requested_fields = [
+            field.strip() for field
+            in request.GET.get("fields", "").split(",")
+        ]
+        field_names = automatic_fields + requested_fields
+
+        serializer = self.get_serializer(user, fields=field_names)
+
+        payload = serializer.data
+        
+        # Trigger a warning message if requested field don't exist
+        missing_fields = [
+            field for field 
+            in requested_fields 
+            if field not in serializer.fields.keys()
+        ]
+        if missing_fields:
+            warning = f"Warning could not find {', '.join(missing_fields)}."
+            payload["message"] = warning
+
+        return Response(payload)
+
+
 
 # Get info of a user.
 # What info is returned is provided by the query

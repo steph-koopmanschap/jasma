@@ -79,8 +79,8 @@ class AuthViewTestCase(APITestCase):
         with self.assertNumQueries(2):
             self.response = self.client.post(url, payload, format="json")
         # Response
-        self.assertEqual(self.response.status_code,
-                        status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(self.response.status_code, 
+                         status.HTTP_400_BAD_REQUEST)
         # Data
         data = self.response.data
         self.assertFalse(data.get("success"))
@@ -112,7 +112,7 @@ class AuthViewTestCase(APITestCase):
             self.response = self.client.post(url, payload)
         # Response
         self.assertEqual(self.response.status_code,
-                        status.HTTP_400_BAD_REQUEST)
+                         status.HTTP_400_BAD_REQUEST)
         # Data
         data = self.response.data
         self.assertFalse(data.get("success"))
@@ -154,16 +154,16 @@ class AuthViewTestCase(APITestCase):
         self.assertTrue(data.get("success"))
         self.assertEqual(data.get("message"), "User logged in.")
         expected_data = {
-            "user": {
-                "id": str(self.user1.id),
-                "username": self.user1.username,
-                "email": self.user1.email
-            }
+            "user_id": str(self.user1.id),
+            "username": self.user1.username,
+            "email": self.user1.email,
+            "user_role": self.user1.user_role
         }
         self.assertDictEqual(data.get("data"), expected_data)
         self.assertFalse(data.get("errors"))
         # Session
-        self.assertRegex(self.client.session.session_key, self.SESSION_KEY_REGEX)
+        self.assertRegex(self.client.session.session_key,
+                         self.SESSION_KEY_REGEX)
 
     def test_E_auth_login_wrong_password(self):
         # Request
@@ -179,9 +179,16 @@ class AuthViewTestCase(APITestCase):
         # Data
         data = self.response.data
         self.assertFalse(data.get("success"))
-        self.assertEqual(data.get("message"), "Invalid email or password.")
+        self.assertFalse(data.get("message"))
         self.assertFalse(data.get("data"))
-        self.assertFalse(data.get("errors"))
+        expected_errors = [
+            {
+                "attr": None,
+                "code": "permission_denied",
+                "message": "Invalid email or password."
+            }
+        ]
+        self.assertCountEqual(data.get("errors"), expected_errors)
 
     def test_F_auth_login_wrong_email(self):
         # Request
@@ -197,15 +204,23 @@ class AuthViewTestCase(APITestCase):
         # Data
         data = self.response.data
         self.assertFalse(data.get("success"))
-        self.assertEqual(data.get("message"), "Invalid email or password.")
+        self.assertFalse(data.get("message"))
         self.assertFalse(data.get("data"))
-        self.assertFalse(data.get("errors"))
+        expected_errors = [
+            {
+                "attr": None,
+                "code": "permission_denied",
+                "message": "Invalid email or password."
+            }
+        ]
+        self.assertCountEqual(data.get("errors"), expected_errors)
 
     def test_G_auth_logout_success(self):
         # Configure client
         self.client.force_authenticate(user=self.user1)
         # Confirm session has valid session_key
-        self.assertRegex(self.client.session.session_key, self.SESSION_KEY_REGEX)
+        self.assertRegex(self.client.session.session_key,
+                         self.SESSION_KEY_REGEX)
         # Request
         url = reverse_lazy("logout")
         with self.assertNumQueries(0):

@@ -1,35 +1,52 @@
+from urllib import request
+from rest_framework.fields import empty
 from api.models import Post, Hashtag, User, UserProfile, UserNotificationPreferences, Comment
 from rest_framework import serializers
 
 
-class UserRegisterSerializer(serializers.ModelSerializer):
-    user_id = serializers.PrimaryKeyRelatedField(source="id", read_only=True)
+class StringUUIDField(serializers.UUIDField):
+    def to_representation(self, value):
+        if value:
+            return str(value)
+        return None
+
+
+class JasmaModelSerializer(serializers.ModelSerializer):
+    """Add the serialized data to the "data" keyword of the response.data."""
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        return {
+            "data": dict(representation),
+            "message": ""
+        }
+
+class UserRegisterSerializer(JasmaModelSerializer):
+    user_id = StringUUIDField(source="pk", read_only=True)
 
     class Meta:
         model = User
         fields = ("user_id", "username", "email", "password")
 
 
-class UserSerializer(serializers.ModelSerializer):
-    user_id = serializers.PrimaryKeyRelatedField(source="id", read_only=True)
+class UserLoginSerializer(JasmaModelSerializer):
+    user_id = StringUUIDField(source="pk", read_only=True)
 
     class Meta:
         model = User
         fields = ("user_id", "username", "email", "user_role")
 
 
-class UserFullSerializer(serializers.ModelSerializer):
-    user_id = serializers.PrimaryKeyRelatedField(source="id", read_only=True)
+class UserFullSerializer(JasmaModelSerializer):
+    user_id = StringUUIDField(source="pk", read_only=True)
 
     class Meta:
         model = User
         fields = "__all__"
+                  
 
-
-class UserProfileSerializer(serializers.ModelSerializer):
-    user_profile_id = serializers.PrimaryKeyRelatedField(
-        source="id", read_only=True)
-    user_id = serializers.UUIDField(source="user.id", read_only=True)
+class UserProfileSerializer(JasmaModelSerializer):
+    user_profile_id = StringUUIDField(source="pk", read_only=True)
+    user_id = StringUUIDField(source="user.pk", read_only=True)
 
     class Meta:
         model = UserProfile
@@ -50,21 +67,19 @@ class UserProfileSerializer(serializers.ModelSerializer):
         )
 
 
-class UserNotificationPreferences(serializers.ModelSerializer):
-    user_notification_preferences_id = serializers.PrimaryKeyRelatedField(
-        source="id", read_only=True)
-    user_id = serializers.UUIDField(source="user.id", read_only=True)
+class UserNotificationPreferences(JasmaModelSerializer):
+    user_notification_preferences_id = StringUUIDField(source="pk", read_only=True)
+    user_id = StringUUIDField(source="user.id", read_only=True)
 
     class Meta:
         model = UserNotificationPreferences
         fields = "__all__"
 
 
-class CommentSerializer(serializers.ModelSerializer):
-    comment_id = serializers.PrimaryKeyRelatedField(
-        source="id", read_only=True)
-    user_id = serializers.UUIDField(source="user.id", read_only=True)
-    post_id = serializers.UUIDField(source="post.id", read_only=True)
+class CommentSerializer(JasmaModelSerializer):
+    comment_id = StringUUIDField(source="pk", read_only=True)
+    user_id = StringUUIDField(source="user.pk", read_only=True)
+    post_id = StringUUIDField(source="post.pk", read_only=True)
 
     class Meta:
         model = Comment
@@ -79,9 +94,9 @@ class CommentSerializer(serializers.ModelSerializer):
         )
 
 
-class PostSerializer(serializers.ModelSerializer):
-    post_id = serializers.PrimaryKeyRelatedField(source="id", read_only=True)
-    user_id = serializers.UUIDField(source="user.id", read_only=True)
+class PostSerializer(JasmaModelSerializer):
+    post_id = StringUUIDField(source="pk", read_only=True)
+    user_id = StringUUIDField(source="user.pk", read_only=True)
 
     class Meta:
         model = Post
@@ -97,7 +112,7 @@ class PostSerializer(serializers.ModelSerializer):
         )
 
 
-class HashtagSerializer(serializers.ModelSerializer):
+class HashtagSerializer(JasmaModelSerializer):
     hashtag = serializers.CharField(source="id")
 
     class Meta:

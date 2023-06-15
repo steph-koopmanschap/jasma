@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import auth_views, post_views
 from rest_framework.routers import DefaultRouter
+
+from .views import auth_views, user_views, post_views
 
 urlpatterns = [
     # auth_urls
@@ -14,11 +15,15 @@ urlpatterns = [
 
 # Inititalize the router
 router = DefaultRouter(trailing_slash=False)
-# Register viewset
+# Register viewsets
 router.register(r"posts", post_views.PostViewSet, basename="post")
+router.register(r"users", user_views.UserViewSet, basename="user")
 
 # Configure urlpatterns 
 urlpatterns += router.urls
+
+# print(urlpatterns)
+
 
 # path("users/", include("urls.user_urls")),
 # path("comments/", include("urls.comment_urls")),

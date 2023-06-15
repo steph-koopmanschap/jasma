@@ -5,10 +5,11 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import PermissionDenied
 
 from api.models import User
 from api.utils.get_client_ip import get_client_ip
-from api.serializers import UserRegisterSerializer
+from api.serializers import UserRegisterSerializer, UserLoginSerializer
 
 @api_view(["POST"])
 def register(request):
@@ -17,7 +18,7 @@ def register(request):
     serializer.is_valid(raise_exception=True)
     user = User.objects.create_user(**serializer.validated_data)
 
-    # return success response
+    # Return success response
     payload = {"message": f"User {user.username} registered successfully."}
     return Response(payload, status=status.HTTP_201_CREATED)
 
@@ -31,18 +32,16 @@ def login_view(request):
         user.last_ipv4 = get_client_ip(request)
         user.save()
         # Add user data to the user session
-        user_info = {
-            "id": str(user.id),
-            "username": user.username,
-            "email": user.email
+        user_info = UserLoginSerializer(user)
+        request.session.update(user_info.data.get("data"))
+        payload = {
+            **user_info.data,
+            "message": "User logged in."
         }
-        request.session.update(user_info)
-        payload = {"data": {"user": user_info},
-                    "message": "User logged in."}
+
         return Response(payload)
     else:
-        payload = {"success": False, "message": "Invalid email or password."}
-        return Response(payload, status=status.HTTP_403_FORBIDDEN)
+        raise PermissionDenied("Invalid email or password.")
 
 @api_view(["POST"])
 def logout_view(request):
@@ -65,8 +64,8 @@ a security risk for our API. We can reintegrate it if it is needed.
 
 @api_view(["GET"])
 def get_csrf_token(request):
-    data = {"csrfToken": get_token(request)}
-    return Response(data)
+    payload = {"csrfToken": get_token(request)}
+    return Response(payload)
 """
 
 @api_view(["POST"])
@@ -76,5 +75,5 @@ def change_password(request):
     user = request.user
     user.set_password(new_password)
     user.save()
-    data = {"message": "Password changed."}
-    return Response(data)
+    payload = {"message": "Password changed."}
+    return Response(payload)
