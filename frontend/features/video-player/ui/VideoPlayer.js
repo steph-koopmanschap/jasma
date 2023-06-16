@@ -1,5 +1,4 @@
 import {
-    faCircle,
     faPause,
     faPlay,
     faRectangleXmark,
@@ -10,9 +9,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { forwardRef, useCallback } from "react";
-import { useVideoPlayer } from "../model/useVideoPlayer";
+import { DIRECTION, UI_FEEDBACK_TYPES, useVideoPlayer } from "../model/useVideoPlayer";
 import { formatTime } from "../utils/formatTime";
 import { Settings } from "./Settings";
+import { OnAirSign, PlayState, SeekingDirection, VolumeDirection } from "./UI";
 import "./VideoPlayer.css";
 
 export const VideoPlayer = forwardRef(({ isLive = false }, forwardedRef) => {
@@ -37,6 +37,27 @@ export const VideoPlayer = forwardRef(({ isLive = false }, forwardedRef) => {
             {status.showUi ? <div className="top-curtain"></div> : null}
             <div className={`${status.isSeeking && !status.isPlaying ? "fullscreen-curtain" : ""}`}></div>
             {status.showUi && isLive ? <OnAirSign /> : null}
+            <div className="video-left">
+                {status.UIFeedback.type === UI_FEEDBACK_TYPES.SEEKING && status.UIFeedback.dir === DIRECTION.L ? (
+                    <SeekingDirection direction={status.UIFeedback.dir} />
+                ) : null}
+            </div>
+            <div className="video-center">
+                {status.UIFeedback.type === UI_FEEDBACK_TYPES.VOLUME_CHANGE ? (
+                    <VolumeDirection
+                        volume={status.volume}
+                        direction={status.UIFeedback.dir}
+                    />
+                ) : null}
+                {status.UIFeedback.type === UI_FEEDBACK_TYPES.PLAYBACK ? (
+                    <PlayState isPlaying={status.isPlaying} />
+                ) : null}
+            </div>
+            <div className="video-right">
+                {status.UIFeedback.type === UI_FEEDBACK_TYPES.SEEKING && status.UIFeedback.dir === DIRECTION.R ? (
+                    <SeekingDirection direction={status.UIFeedback.dir} />
+                ) : null}
+            </div>
 
             <div
                 className={`control-panel-container ${
@@ -62,20 +83,12 @@ export const VideoPlayer = forwardRef(({ isLive = false }, forwardedRef) => {
                     isMuted={status.isMuted}
                     isFullscreen={status.isFullscreen}
                     isPlaying={status.isPlaying}
+                    isMobile={status.isMobile}
                 />
             </div>
         </div>
     );
 });
-
-function OnAirSign() {
-    return (
-        <div className="on-air-sign">
-            <FontAwesomeIcon icon={faCircle} />
-            <p>Air</p>
-        </div>
-    );
-}
 
 const ProgressContainer = forwardRef(({ progress, elapsed, totalTime, preview, isSeeking }, ref) => {
     return (
@@ -118,7 +131,8 @@ function Controls({
     onPlaybackChange,
     onQualityChange,
     onToggleFullscreen,
-    isFullscreen
+    isFullscreen,
+    isMobile
 }) {
     const getVolumeIcon = useCallback(() => {
         if (isMuted || volume === 0) return faVolumeMute;
@@ -132,27 +146,31 @@ function Controls({
                 <button
                     className="action-btn"
                     onClick={onTogglePlay}
+                    onTouchStart={onTogglePlay}
                 >
                     <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
                 </button>
-                <div className="sound-container">
-                    <button
-                        className="action-btn"
-                        onClick={onToggleMute}
-                    >
-                        <FontAwesomeIcon icon={getVolumeIcon()} />
-                    </button>
-                    <input
-                        onChange={onChangeVolume}
-                        value={volume}
-                        type="range"
-                        min="0"
-                        max="1"
-                        step="any"
-                        className="volume-slider"
-                        style={{ backgroundSize: `${volume * 100}% 100%` }}
-                    />
-                </div>
+                {!isMobile ? (
+                    <div className="sound-container">
+                        <button
+                            className="action-btn"
+                            onClick={onToggleMute}
+                            onTouchStart={onToggleMute}
+                        >
+                            <FontAwesomeIcon icon={getVolumeIcon()} />
+                        </button>
+                        <input
+                            onChange={onChangeVolume}
+                            value={volume}
+                            type="range"
+                            min="0"
+                            max="1"
+                            step="0.1"
+                            className="volume-slider"
+                            style={{ backgroundSize: `${volume * 100}% 100%` }}
+                        />
+                    </div>
+                ) : null}
             </div>
             <div className="controls-right-container">
                 <Settings
@@ -161,6 +179,7 @@ function Controls({
                 />
                 <button
                     onClick={onToggleFullscreen}
+                    onTouchStart={onToggleFullscreen}
                     className="action-btn"
                 >
                     <FontAwesomeIcon icon={!isFullscreen ? faTvAlt : faRectangleXmark} />

@@ -1,25 +1,42 @@
 /* All the logic for video player */
 
 import { useIsMobile, useToast } from "@/shared/model";
+import { clamp } from "@/shared/utils";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { normilize } from "@/shared/utils";
+
+export const UI_FEEDBACK_TYPES = {
+    PLAYBACK: "playback",
+    SEEKING: "seeking",
+    VOLUME_CHANGE: "volume_change"
+};
+
+export const DIRECTION = {
+    L: "left",
+    R: "right",
+    U: "up",
+    D: "down"
+};
 
 export const useVideoPlayer = () => {
     const videoRef = useRef(null);
     const progressBarRef = useRef(null);
     const videoContainerRef = useRef(null);
 
+    const tapTimer = useRef(null); // for detecting double tap on mobile
+    const currentTime = useRef(0);
+    const videoTime = useRef(0);
     const { notifyToast } = useToast();
     const { isMobile } = useIsMobile();
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
-    const [currentTime, setCurrentTime] = useState(0);
-    const [videoTime, setVideoTime] = useState(0);
     const [preview, setPreview] = useState(0);
     const [isSeeking, setIsSeeking] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [volume, setVolume] = useState(1);
     const [showUi, setShowUI] = useState(true);
     const [isFullscreen, setIsFullScreen] = useState(false);
+    const [UIFeedback, setUIFeedback] = useState({});
 
     const togglePlay = useCallback(() => {
         if (isPlaying) {
@@ -29,7 +46,22 @@ export const useVideoPlayer = () => {
             videoRef.current?.play();
             setIsPlaying(true);
         }
+        toggleUIFeedback(UI_FEEDBACK_TYPES.PLAYBACK);
     }, [isPlaying]);
+
+    // Triggers UI feedback elements such as circles with UI information (play/pause/volume etc)
+    const toggleUIFeedback = useCallback((type, direction = DIRECTION.L) => {
+        switch (type) {
+            case UI_FEEDBACK_TYPES.PLAYBACK:
+                return setUIFeedback({ type });
+            case UI_FEEDBACK_TYPES.SEEKING:
+                return setUIFeedback({ type, dir: direction });
+            case UI_FEEDBACK_TYPES.VOLUME_CHANGE:
+                return setUIFeedback({ type, dir: direction });
+            default:
+                return;
+        }
+    }, []);
 
     const toggleMute = useCallback(() => {
         if (!videoRef.current) return;
@@ -47,7 +79,7 @@ export const useVideoPlayer = () => {
     }, [isMuted]);
 
     const updateProgress = useCallback((e) => {
-        setCurrentTime(e.target.currentTime);
+        currentTime.current = e.target.currentTime;
         setProgress(Number(((e.target.currentTime / e.target.duration) * 100).toFixed(4)));
     }, []);
 
@@ -64,11 +96,9 @@ export const useVideoPlayer = () => {
 
     const skip = useCallback(
         (dir) => {
-            if (videoRef.current) {
-                const factor = 0.05;
-                const result = videoRef.current.duration * factor;
-                videoRef.current.currentTime += result * dir;
-            }
+            if (!videoRef.current) return;
+            videoRef.current.currentTime += 5 * dir;
+            toggleUIFeedback(UI_FEEDBACK_TYPES.SEEKING, dir < 0 ? DIRECTION.L : DIRECTION.R);
         },
         [videoRef.current]
     );
@@ -112,19 +142,14 @@ export const useVideoPlayer = () => {
 
     const reset = useCallback(() => {
         setIsPlaying(false);
-        setCurrentTime(0);
+        currentTime.current(0);
         setProgress(0);
     }, []);
 
     const changeVolume = useCallback(
         (e) => {
             if (!videoRef.current) return;
-            const value = +e.target.value;
-            if (value > 1) return;
-            if (value < 0) {
-                setIsMuted(true);
-                return;
-            }
+            const value = clamp(+e.target.value, 0, 1);
 
             if (value <= 0) setIsMuted(true);
             if (value > 0) setIsMuted(false);
@@ -154,7 +179,7 @@ export const useVideoPlayer = () => {
 
             const percentage = mapMousePosToProgressBar(e);
             if (videoRef.current.paused && isSeeking) {
-                setCurrentTime(Number(((percentage / 100) * videoRef.current.duration).toFixed(4)));
+                currentTime.current = Number(((percentage / 100) * videoRef.current.duration).toFixed(4));
                 setProgress(percentage);
                 return;
             }
@@ -174,7 +199,7 @@ export const useVideoPlayer = () => {
 
     const setVideoStats = useCallback(
         (e) => {
-            setVideoTime(e.target.duration);
+            videoTime.current = e.target.duration;
             changeVolume({ target: { value: Number(window.localStorage.getItem("user_video_volume") || 0.5) } });
             setPlaybackRate(+window.sessionStorage.getItem("user_playback_rate") || 1);
         },
@@ -187,6 +212,7 @@ export const useVideoPlayer = () => {
 
     /* Main handlers */
 
+    // Listens for mouse on top level
     const handleMouseMove = useCallback(
         (e) => {
             if (progressBarRef.current.contains(e.target) || isSeeking) {
@@ -222,9 +248,72 @@ export const useVideoPlayer = () => {
         [progressBarRef.current]
     );
 
+    /* Mobile Handlers */
+
+    const handleDoubleTap = (e) => {
+        if (!videoContainerRef.current) return;
+        if (!tapTimer.current) {
+            tapTimer.current = setTimeout(function () {
+                tapTimer.current = null;
+            }, 500);
+        } else {
+            clearTimeout(tapTimer.current);
+            tapTimer.current = null;
+            const { width, x } = videoContainerRef.current.getBoundingClientRect();
+            const { clientX } = e.changedTouches[0];
+            const norm = normilize(clientX, x, x + width);
+
+            skip(norm < 0.5 ? -1 : 1);
+            return true;
+        }
+    };
+
+    const handleTouchStart = (e) => {
+        e.preventDefault();
+        if (handleDoubleTap(e)) return;
+        if (progressBarRef.current.contains(e.target)) {
+            setIsSeeking(true);
+        }
+    };
+
+    const handleTouchMove = useCallback(
+        (e) => {
+            const { clientX, clientY } = e.changedTouches[0];
+            handleMouseMove({ target: e.target, clientX, clientY });
+        },
+        [handleMouseMove]
+    );
+
+    const handleTouchEnd = useCallback(
+        (e) => {
+            const { clientX, clientY } = e.changedTouches[0];
+            if (progressBarRef.current.contains(e.target) || isSeeking) {
+                changeCurrentTime({ target: e.target, clientX, clientY });
+                setIsSeeking(false);
+                setPreview(0);
+            } else {
+                if (videoRef.current.contains(e.target) && showUi) togglePlay();
+            }
+            setShowUI(true);
+        },
+        [progressBarRef.current, togglePlay, showUi]
+    );
+
+    useEffect(() => {
+        if (!UIFeedback.type) return;
+        const delay = 200;
+        const timeout = setTimeout(() => {
+            setUIFeedback((prev) => Object.create(null));
+        }, delay);
+
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, [UIFeedback]);
+
     useEffect(() => {
         if (!isPlaying || !showUi) return;
-        const delay = 5000;
+        const delay = 1000 * 10;
         const timeout = setTimeout(() => {
             setShowUI(false);
         }, delay);
@@ -238,26 +327,37 @@ export const useVideoPlayer = () => {
         if (!videoContainerRef.current) return;
         const videoContainer = videoContainerRef.current;
 
-        videoContainer.addEventListener("mousemove", handleMouseMove);
-        videoContainer.addEventListener("mousedown", handleMouseDown);
-        videoContainer.addEventListener("mouseup", handleMouseUp);
-        videoContainer.addEventListener("dblclick", toggleFullscreen);
+        if (isMobile) {
+            videoContainer.addEventListener("touchstart", handleTouchStart);
+            videoContainer.addEventListener("touchmove", handleTouchMove);
+            videoContainer.addEventListener("touchend", handleTouchEnd);
+        } else {
+            videoContainer.addEventListener("mousemove", handleMouseMove);
+            videoContainer.addEventListener("mousedown", handleMouseDown);
+            videoContainer.addEventListener("mouseup", handleMouseUp);
+        }
+
         return () => {
-            videoContainer.removeEventListener("mousemove", handleMouseMove);
-            videoContainer.removeEventListener("mousedown", handleMouseDown);
-            videoContainer.removeEventListener("mouseup", handleMouseUp);
-            videoContainer.removeEventListener("dblclick", toggleFullscreen);
+            if (isMobile) {
+                videoContainer.removeEventListener("touchstart", handleTouchStart);
+                videoContainer.removeEventListener("touchmove", handleTouchMove);
+                videoContainer.removeEventListener("touchend", handleTouchEnd);
+            } else {
+                videoContainer.removeEventListener("mousemove", handleMouseMove);
+                videoContainer.removeEventListener("mousedown", handleMouseDown);
+                videoContainer.removeEventListener("mouseup", handleMouseUp);
+            }
         };
-    }, [videoContainerRef.current, handleMouseDown, handleMouseMove, handleMouseUp]);
+    }, [videoContainerRef.current, handleMouseDown, handleMouseMove, handleMouseUp, isMobile, handleTouchEnd]);
 
     useEffect(() => {
         if (!videoRef.current) return;
 
         const video = videoRef.current;
-        video.focus();
         video.addEventListener("ended", reset);
         video.addEventListener("timeupdate", updateProgress);
         video.addEventListener("canplay", setVideoStats);
+        video.addEventListener("dblclick", toggleFullscreen);
 
         document.addEventListener("fullscreenchange", handleOnFullscreenChange);
 
@@ -265,14 +365,17 @@ export const useVideoPlayer = () => {
             video.removeEventListener("ended", reset);
             video.removeEventListener("timeupdate", updateProgress);
             video.removeEventListener("canplay", setVideoStats);
+            video.removeEventListener("dblclick", toggleFullscreen);
         };
     }, [videoRef.current]);
 
     /* Button handlers */
 
     useEffect(() => {
+        if (isMobile) return;
+
         const handleKeys = (e) => {
-            if (videoContainerRef.current !== e.target) return;
+            if (videoContainerRef.current !== e.target || !videoRef.current) return;
             e.preventDefault();
             setShowUI(true);
             switch (e.code) {
@@ -283,10 +386,12 @@ export const useVideoPlayer = () => {
                     skip(-1);
                     break;
                 case "ArrowUp":
-                    changeVolume({ target: { value: volume + 0.2 } });
+                    toggleUIFeedback(UI_FEEDBACK_TYPES.VOLUME_CHANGE, DIRECTION.U);
+                    changeVolume({ target: { value: videoRef.current.volume + 0.1 } });
                     break;
                 case "ArrowDown":
-                    changeVolume({ target: { value: volume - 0.2 } });
+                    toggleUIFeedback(UI_FEEDBACK_TYPES.VOLUME_CHANGE, DIRECTION.D);
+                    changeVolume({ target: { value: videoRef.current.volume - 0.1 } });
                     break;
                 case "KeyF":
                     toggleFullscreen();
@@ -294,7 +399,8 @@ export const useVideoPlayer = () => {
                 case "Space":
                     togglePlay();
                     break;
-                case "Escape":
+                case "KeyM":
+                    toggleMute();
                     break;
 
                 default:
@@ -306,7 +412,7 @@ export const useVideoPlayer = () => {
         return () => {
             document.removeEventListener("keydown", handleKeys);
         };
-    }, [videoContainerRef.current, togglePlay, toggleFullscreen, volume]);
+    }, [videoRef.current, videoContainerRef.current, volume, togglePlay, toggleFullscreen, toggleMute, isMobile]);
 
     return {
         functions: {
@@ -320,13 +426,15 @@ export const useVideoPlayer = () => {
             isMuted,
             isPlaying,
             volume,
-            currentTime,
+            currentTime: currentTime.current,
             progress,
-            videoTime,
+            videoTime: videoTime.current,
             preview,
             isSeeking,
             isFullscreen,
-            showUi
+            showUi,
+            UIFeedback,
+            isMobile
         },
         refs: {
             videoRef,

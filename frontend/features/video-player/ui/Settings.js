@@ -14,6 +14,7 @@ export const Settings = memo(({ onPlaybackChange, onQualityChange }) => {
         >
             <button
                 onClick={() => setIsShow(!isShow)}
+                onTouchStart={() => setIsShow(!isShow)}
                 className="action-btn"
             >
                 <FontAwesomeIcon icon={faCog} />
@@ -88,12 +89,18 @@ function SettingsMenu({ onClose, onPlaybackChange, onQualityChange }) {
         >
             <div className="settings-menu-header">
                 {currentPage === SETTINGS_PAGES.ACTIONS ? (
-                    <button onClick={onClose}>
+                    <button
+                        onClick={onClose}
+                        onTouchStart={onClose}
+                    >
                         <FontAwesomeIcon icon={faClose} />
                         <span>Close</span>
                     </button>
                 ) : (
-                    <button onClick={() => setCurrentPage(SETTINGS_PAGES.ACTIONS)}>
+                    <button
+                        onClick={() => setCurrentPage(SETTINGS_PAGES.ACTIONS)}
+                        onTouchStart={() => setCurrentPage(SETTINGS_PAGES.ACTIONS)}
+                    >
                         <FontAwesomeIcon icon={faChevronLeft} />
                         <span>Back</span>
                     </button>
@@ -129,6 +136,7 @@ function SettingsButton({ title, currentChosen = "", icon = undefined, onChoose 
         <button
             className="settings-menu-button"
             onClick={onChoose}
+            onTouchStart={onChoose}
         >
             {title}
             <div>
@@ -176,13 +184,20 @@ function QualitySettings({ onChoose, current }) {
 }
 
 function RadioOption({ label, onChoose, isChecked, value }) {
+    const handleChange = useCallback(() => {
+        onChoose(value);
+    }, []);
+
     return (
-        <div className="option-container">
+        <div
+            className="option-container"
+            onClick={handleChange}
+            onTouchStart={handleChange}
+        >
             <input
                 type="radio"
                 id={`id_${label}`}
                 name={`id_${label}`}
-                onChange={(e) => onChoose(+e.currentTarget.value)}
                 checked={isChecked}
                 value={value}
             />

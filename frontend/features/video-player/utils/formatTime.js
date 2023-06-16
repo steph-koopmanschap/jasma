@@ -1,10 +1,12 @@
 export const formatTime = (seconds) => {
-    let secs = seconds.toFixed(0);
+    let secs = Math.round(seconds);
+    let hours = secs >= 3600 ? Math.trunc(secs / 3600) : 0;
+    let mins = secs >= 60 ? Math.trunc(secs / 60) : 0;
 
-    let hours = secs >= 3600 ? (secs / 3600).toFixed(0) : "00";
-    let mins = secs >= 60 ? (secs / 60).toFixed(0) : "00";
+    mins = mins % 60;
+    secs = secs % 60;
 
-    return `${hours.length < 2 ? "0" + hours : hours}:${mins.length < 2 ? "0" + mins : mins}:${
-        secs.length < 2 ? "0" + secs : secs
+    return `${hours.toString().length < 2 ? "0" + hours : hours}:${mins.toString().length < 2 ? "0" + mins : mins}:${
+        secs.toString().length < 2 ? "0" + secs : secs
     }`;
 };
