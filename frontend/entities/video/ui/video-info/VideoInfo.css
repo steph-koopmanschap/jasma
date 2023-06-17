@@ -1,0 +1,29 @@
+.video-title-container {
+    @apply py-1.5 px-2 text-lg text-black font-bold w-full h-max;
+}
+
+.video-info-container {
+    @apply flex flex-col gap-5 my-3 mx-1.5 rounded-xl overflow-hidden bg-gray-100 items-center;
+}
+.data-boxes-container {
+    @apply flex flex-col gap-2 items-center h-full w-full;
+}
+
+.data-boxes {
+    @apply px-2 py-1.5 flex items-center gap-3 justify-center;
+}
+
+.data-box {
+    @apply flex flex-col gap-1 items-center;
+}
+
+.data-box h3 {
+    @apply text-lg font-bold text-black;
+}
+.data-box h6 {
+    @apply text-sm font-light text-black opacity-70;
+}
+
+.separator {
+    @apply w-full h-0.5 bg-black opacity-20;
+}

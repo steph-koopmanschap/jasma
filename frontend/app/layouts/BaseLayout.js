@@ -53,19 +53,19 @@ export default function Layout({ children }) {
         <ThemeProvider theme={theme.styles}>
             <GlobalStyles isLoaded={isLoaded.current} />
             <MetaHead />
-
             <header>
                 <Nav
                     theme={theme}
                     toggleTheme={toggleTheme}
                 />
             </header>
-
-            <main>
-                <HeaderMain />
-                {children}
-            </main>
-            <FooterMain />
+            <div className="h-full flex-col justify-between flex">
+                <main>
+                    <HeaderMain />
+                    {children}
+                </main>
+                <FooterMain />
+            </div>
         </ThemeProvider>
     );
 }

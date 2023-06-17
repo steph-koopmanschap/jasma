@@ -1,0 +1,22 @@
+.chat-window {
+    @apply flex-col flex justify-between shadow-md w-full h-full;
+}
+.chat-title {
+    @apply text-black text-sm font-semibold text-center;
+}
+
+.chat-header {
+    @apply rounded-md  w-full h-10;
+}
+
+.chat-message-list {
+    @apply flex flex-col overflow-y-scroll w-full items-start py-1.5 px-1 gap-1;
+    height: 18rem;
+    scrollbar-width: 4px;
+}
+.chat-message-list::-webkit-scrollbar {
+    @apply w-1;
+}
+.chat-message-list::-webkit-scrollbar-thumb {
+    @apply w-1 h-16 rounded-full bg-gray-400;
+}

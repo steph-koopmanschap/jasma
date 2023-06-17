@@ -22,6 +22,7 @@ export const useVideoPlayer = () => {
     const videoRef = useRef(null);
     const progressBarRef = useRef(null);
     const videoContainerRef = useRef(null);
+    const mediaContainerRef = useRef(null);
 
     const tapTimer = useRef(null); // for detecting double tap on mobile
     const currentTime = useRef(0);
@@ -37,8 +38,10 @@ export const useVideoPlayer = () => {
     const [showUi, setShowUI] = useState(true);
     const [isFullscreen, setIsFullScreen] = useState(false);
     const [UIFeedback, setUIFeedback] = useState({});
+    const [buffered, setBuffered] = useState(0);
 
     const togglePlay = useCallback(() => {
+        if (!videoRef.current?.duration) return;
         if (isPlaying) {
             videoRef.current?.pause();
             setIsPlaying(false);
@@ -47,7 +50,7 @@ export const useVideoPlayer = () => {
             setIsPlaying(true);
         }
         toggleUIFeedback(UI_FEEDBACK_TYPES.PLAYBACK);
-    }, [isPlaying]);
+    }, [isPlaying, videoRef.current]);
 
     // Triggers UI feedback elements such as circles with UI information (play/pause/volume etc)
     const toggleUIFeedback = useCallback((type, direction = DIRECTION.L) => {
@@ -96,7 +99,7 @@ export const useVideoPlayer = () => {
 
     const skip = useCallback(
         (dir) => {
-            if (!videoRef.current) return;
+            if (!videoRef.current || !videoRef.current.duration) return;
             videoRef.current.currentTime += 5 * dir;
             toggleUIFeedback(UI_FEEDBACK_TYPES.SEEKING, dir < 0 ? DIRECTION.L : DIRECTION.R);
         },
@@ -104,45 +107,47 @@ export const useVideoPlayer = () => {
     );
 
     const requestFullscreen = useCallback(() => {
+        const media_container = mediaContainerRef.current;
         const video = videoRef.current;
-        if (!video) return;
+        if (!media_container || !video) return;
 
-        if (video.requestFullscreen) {
-            video.requestFullscreen();
-        } else if (video.msRequestFullscreen) {
-            video.msRequestFullscreen();
-        } else if (video.mozRequestFullscreen) {
-            video.mozRequestFullscreen();
+        if (media_container.requestFullscreen) {
+            return media_container.requestFullscreen();
+        } else if (media_container.msRequestFullscreen) {
+            return media_container.msRequestFullscreen();
+        } else if (media_container.mozRequestFullscreen) {
+            return media_container.mozRequestFullscreen();
+        } else if (media_container.webkitRequestFullscreen) {
+            return media_container.webkitRequestFullscreen();
+        } else if (media_container.webkitEnterFullscreen) {
+            return media_container.webkitEnterFullscreen();
         } else if (video.webkitRequestFullscreen) {
-            video.webkitRequestFullscreen();
+            return video.webkitRequestFullscreen();
+        } else if (video.webkitEnterFullscreen) {
+            return video.webkitEnterFullscreen();
         }
-    }, [videoRef.current]);
+    }, [mediaContainerRef.current, videoRef.current]);
 
     const handleOnFullscreenChange = useCallback((e) => {
         !!document.fullscreenElement ? setIsFullScreen(true) : setIsFullScreen(false);
     }, []);
 
     const toggleFullscreen = useCallback(async () => {
-        if (isMobile) return requestFullscreen();
-
-        const video_container = videoContainerRef.current;
-
-        if (!video_container) return;
         try {
             if (!!document.fullscreenElement) {
                 await window.document.exitFullscreen();
             } else {
-                await video_container.requestFullscreen();
+                await requestFullscreen();
             }
         } catch (error) {
             notifyToast("Something went wrong!", true);
             setIsFullScreen(!!document.fullscreenElement);
         }
-    }, [requestFullscreen, isMobile, videoContainerRef.current]);
+    }, [requestFullscreen, isMobile]);
 
     const reset = useCallback(() => {
         setIsPlaying(false);
-        currentTime.current(0);
+        currentTime.current = 0;
         setProgress(0);
     }, []);
 
@@ -173,9 +178,23 @@ export const useVideoPlayer = () => {
         [progressBarRef.current]
     );
 
+    const bufferHandler = useCallback((e) => {
+        const video = e.target;
+        if (!video.duration) return;
+
+        if (video.buffered && video.buffered.length > 0 && video.buffered.end) {
+            const buffered = video.buffered.end(video.buffered.length - 1);
+
+            console.log(video.buffered, buffered, video.buffered.start(video.buffered.length - 1));
+            const duration = video.duration;
+            const buffered_percentage = (buffered / duration) * 100;
+            setBuffered(buffered_percentage);
+        }
+    }, []);
+
     const previewSeeking = useCallback(
         (e) => {
-            if (!videoRef.current) return;
+            if (!videoRef.current || !videoRef.current.duration) return;
 
             const percentage = mapMousePosToProgressBar(e);
             if (videoRef.current.paused && isSeeking) {
@@ -190,21 +209,18 @@ export const useVideoPlayer = () => {
 
     const changeCurrentTime = useCallback(
         (e) => {
-            if (!videoRef.current) return;
+            if (!videoRef.current || !videoRef.current.duration) return;
             const percentage = mapMousePosToProgressBar(e);
             videoRef.current.currentTime = Number(((percentage / 100) * videoRef.current.duration).toFixed(4));
         },
         [mapMousePosToProgressBar, videoRef.current]
     );
 
-    const setVideoStats = useCallback(
-        (e) => {
-            videoTime.current = e.target.duration;
-            changeVolume({ target: { value: Number(window.localStorage.getItem("user_video_volume") || 0.5) } });
-            setPlaybackRate(+window.sessionStorage.getItem("user_playback_rate") || 1);
-        },
-        [videoRef.current]
-    );
+    const setVideoStats = useCallback((e) => {
+        videoTime.current = e.target.duration;
+        changeVolume({ target: { value: Number(window.localStorage.getItem("user_video_volume") || 0.5) } });
+        setPlaybackRate(+window.sessionStorage.getItem("user_playback_rate") || 1);
+    }, []);
 
     const setVideoQuality = useCallback(() => {
         if (!videoRef.current) return;
@@ -296,7 +312,7 @@ export const useVideoPlayer = () => {
             }
             setShowUI(true);
         },
-        [progressBarRef.current, togglePlay, showUi]
+        [progressBarRef.current, togglePlay, showUi, isSeeking]
     );
 
     useEffect(() => {
@@ -358,6 +374,7 @@ export const useVideoPlayer = () => {
         video.addEventListener("timeupdate", updateProgress);
         video.addEventListener("canplay", setVideoStats);
         video.addEventListener("dblclick", toggleFullscreen);
+        video.addEventListener("progress", bufferHandler);
 
         document.addEventListener("fullscreenchange", handleOnFullscreenChange);
 
@@ -365,6 +382,7 @@ export const useVideoPlayer = () => {
             video.removeEventListener("ended", reset);
             video.removeEventListener("timeupdate", updateProgress);
             video.removeEventListener("canplay", setVideoStats);
+            video.removeEventListener("progress", bufferHandler);
             video.removeEventListener("dblclick", toggleFullscreen);
         };
     }, [videoRef.current]);
@@ -434,12 +452,14 @@ export const useVideoPlayer = () => {
             isFullscreen,
             showUi,
             UIFeedback,
-            isMobile
+            isMobile,
+            buffered
         },
         refs: {
             videoRef,
             progressBarRef,
-            videoContainerRef
+            videoContainerRef,
+            mediaContainerRef
         }
     };
 };

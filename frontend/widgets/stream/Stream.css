@@ -1,0 +1,15 @@
+.stream-video-wrapper {
+    @apply w-full h-full relative;
+    min-height: 15rem;
+}
+
+.stream-widget-container {
+    @apply w-full h-full;
+}
+
+@screen md {
+    .stream-video-wrapper {
+        min-height: 20rem;
+        max-height: 30rem;
+    }
+}

@@ -1,10 +1,11 @@
 import { useClickOutside } from "@/shared/model";
+import { Portal } from "@/shared/ui";
 import { faChevronLeft, faChevronRight, faClose, faCog } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { memo, useCallback, useRef, useState } from "react";
+import { createElement, memo, useCallback, useState } from "react";
 import "./VideoPlayer.css";
 
-export const Settings = memo(({ onPlaybackChange, onQualityChange }) => {
+export const Settings = memo(({ onPlaybackChange, onQualityChange, isMobile, isLive, containerRef }) => {
     const { ref, isShow, setIsShow } = useClickOutside(false);
 
     return (
@@ -19,8 +20,21 @@ export const Settings = memo(({ onPlaybackChange, onQualityChange }) => {
             >
                 <FontAwesomeIcon icon={faCog} />
             </button>
-            {isShow ? (
-                <SettingsMenu
+            {isShow && !isMobile ? (
+                <div className="desktop-settings-wrapper">
+                    <SettingsMenu
+                        isLive={isLive}
+                        onClickOutside={() => setIsShow(false)}
+                        onClose={() => setIsShow(false)}
+                        onPlaybackChange={onPlaybackChange}
+                        onQualityChange={onQualityChange}
+                    />
+                </div>
+            ) : null}
+            {isShow && isMobile ? (
+                <MobileSettingsMenu
+                    containerRef={containerRef}
+                    isLive={isLive}
                     onClickOutside={() => setIsShow(false)}
                     onClose={() => setIsShow(false)}
                     onPlaybackChange={onPlaybackChange}
@@ -37,7 +51,7 @@ const SETTINGS_PAGES = {
     QUALITY: "quality" // quality options
 };
 
-function SettingsMenu({ onClose, onPlaybackChange, onQualityChange }) {
+function SettingsMenu({ onClose, onPlaybackChange, onQualityChange, isLive }) {
     const [currentPage, setCurrentPage] = useState(SETTINGS_PAGES.ACTIONS);
     const [currentSpeed, setCurrentSpeed] = useState(+window.sessionStorage.getItem("user_playback_rate") || 1);
     const [currentQuality, setCurrentQuality] = useState(+window.sessionStorage.getItem("user_video_quality") || 480);
@@ -59,6 +73,7 @@ function SettingsMenu({ onClose, onPlaybackChange, onQualityChange }) {
                     <SettingsActions
                         onQualityClick={() => setCurrentPage(SETTINGS_PAGES.QUALITY)}
                         onSpeedClick={() => setCurrentPage(SETTINGS_PAGES.SPEED)}
+                        isLive={isLive}
                         currentQuality={currentQuality}
                         currentSpeed={currentSpeed}
                     />
@@ -112,7 +127,7 @@ function SettingsMenu({ onClose, onPlaybackChange, onQualityChange }) {
     );
 }
 
-function SettingsActions({ currentQuality, currentSpeed, onQualityClick, onSpeedClick }) {
+function SettingsActions({ currentQuality, currentSpeed, onQualityClick, onSpeedClick, isLive }) {
     return (
         <div className="settings-actions-container">
             <SettingsButton
@@ -121,12 +136,14 @@ function SettingsActions({ currentQuality, currentSpeed, onQualityClick, onSpeed
                 currentChosen={currentQuality ? `${currentQuality}p` : null}
                 icon={<FontAwesomeIcon icon={faChevronRight} />}
             />
-            <SettingsButton
-                title="Speed"
-                onChoose={onSpeedClick}
-                currentChosen={currentSpeed ? `${currentSpeed}x` : null}
-                icon={<FontAwesomeIcon icon={faChevronRight} />}
-            />
+            {!isLive ? (
+                <SettingsButton
+                    title="Speed"
+                    onChoose={onSpeedClick}
+                    currentChosen={currentSpeed ? `${currentSpeed}x` : null}
+                    icon={<FontAwesomeIcon icon={faChevronRight} />}
+                />
+            ) : null}
         </div>
     );
 }
@@ -199,9 +216,18 @@ function RadioOption({ label, onChoose, isChecked, value }) {
                 id={`id_${label}`}
                 name={`id_${label}`}
                 checked={isChecked}
-                value={value}
             />
             <label htmlFor={`id_${label}`}>{label}</label>
         </div>
+    );
+}
+
+function MobileSettingsMenu({ containerRef, ...rest }) {
+    return (
+        <Portal parent={containerRef.current}>
+            <div className="mobile-settings-wrapper">
+                <SettingsMenu {...rest} />
+            </div>
+        </Portal>
     );
 }

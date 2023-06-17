@@ -1,25 +1,32 @@
 /* Main container */
 
+.media-wrapper {
+    @apply absolute z-20 overflow-hidden w-full h-full;
+}
+
 .player-container {
-    @apply relative w-full bg-black outline-none overflow-hidden;
-    z-index: 20;
-    height: 15rem;
-    min-height: 15rem;
-    max-height: calc(100vh - 16rem);
+    @apply w-full h-full bg-black outline-none overflow-hidden;
+
+    transform: scale(1);
+    transform-origin: center top;
+}
+
+.video-wrapper {
+    @apply relative w-full h-full;
+
+    /* padding-bottom: 25.25%; */
 }
 
 #video {
-    @apply w-full h-full;
+    @apply w-full h-full  top-0 left-0;
 }
 
 .top-curtain {
-    @apply absolute top-0 w-full h-16 animate-fadeIn;
+    @apply absolute top-0 w-full h-16 animate-fadeIn touch-auto select-none pointer-events-none;
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
 }
 .fullscreen-curtain {
-    @apply absolute top-0 left-0 bg-black opacity-30;
-    width: 100vw;
-    height: 100vh;
+    @apply absolute top-0 left-0 w-full h-full bg-black opacity-30;
 }
 
 .control-panel-container {
@@ -164,16 +171,25 @@
 
 /*  Settings menu */
 
+.mobile-settings-wrapper {
+    @apply w-full h-full absolute top-0 left-0 flex items-center justify-center z-50;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.desktop-settings-wrapper {
+    @apply absolute;
+    right: 50%;
+    bottom: 150%;
+}
+
 .settings-container {
-    @apply relative place-content-baseline grid;
+    @apply relative place-content-baseline grid shadow-md;
 }
 
 .settings-menu-container {
-    @apply absolute rounded-lg z-30 text-white px-2 py-1.5;
+    @apply rounded-lg z-30 text-white px-2 py-1.5;
     background-color: rgb(39, 39, 45);
     width: 15rem;
-    right: 50%;
-    bottom: 150%;
 }
 
 .settings-menu-container svg {
@@ -316,10 +332,6 @@
 /* Media queries */
 
 @screen sm {
-    .player-container {
-        min-height: 20rem;
-    }
-
     .circle-wrapper {
         @apply w-28 h-28;
     }
@@ -336,7 +348,6 @@
 }
 
 @screen md {
-    .player-container {
-        min-height: 30rem;
+    .settings-menu-container {
     }
 }

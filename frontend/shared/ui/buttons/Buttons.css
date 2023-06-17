@@ -1,0 +1,6 @@
+.input-field {
+    @apply appearance-none outline-none transition-all px-1.5 py-1;
+}
+.input-field:focus-visible {
+    @apply shadow-md;
+}
