@@ -7,6 +7,12 @@
     @apply w-full h-full;
 }
 
+@screen sm {
+    .stream-mobile-layout {
+        @apply flex items-center;
+    }
+}
+
 @screen md {
     .stream-video-wrapper {
         min-height: 20rem;

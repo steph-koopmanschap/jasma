@@ -1,9 +1,8 @@
 /* All the logic for video player */
 
-import { useIsMobile, useToast } from "@/shared/model";
-import { clamp } from "@/shared/utils";
+import { useMobileProvider, useToast } from "@/shared/model";
+import { clamp, normilize } from "@/shared/utils";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { normilize } from "@/shared/utils";
 
 export const UI_FEEDBACK_TYPES = {
     PLAYBACK: "playback",
@@ -28,7 +27,7 @@ export const useVideoPlayer = () => {
     const currentTime = useRef(0);
     const videoTime = useRef(0);
     const { notifyToast } = useToast();
-    const { isMobile } = useIsMobile();
+    const { isMobile } = useMobileProvider();
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
     const [preview, setPreview] = useState(0);

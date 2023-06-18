@@ -7,6 +7,7 @@ import { RecoilRoot } from "recoil";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import "react-toastify/dist/ReactToastify.css";
 import Layout from "../app/layouts/BaseLayout";
+import { MobileProvider } from "@/shared/model";
 
 function MyApp({ Component, pageProps }) {
     const [queryClient] = React.useState(() => new QueryClient());
@@ -18,15 +19,17 @@ function MyApp({ Component, pageProps }) {
 
     return (
         <RecoilRoot>
-            <QueryClientProvider client={queryClient}>
-                <ToastContainer />
-                <PayPalScriptProvider options={{ "client-id": paypalClientID }}>
-                    <Layout>
-                        <Component {...pageProps} />
-                    </Layout>
-                </PayPalScriptProvider>
-                <ReactQueryDevtools initialIsOpen={false} />
-            </QueryClientProvider>
+            <MobileProvider>
+                <QueryClientProvider client={queryClient}>
+                    <ToastContainer />
+                    <PayPalScriptProvider options={{ "client-id": paypalClientID }}>
+                        <Layout>
+                            <Component {...pageProps} />
+                        </Layout>
+                    </PayPalScriptProvider>
+                    <ReactQueryDevtools initialIsOpen={false} />
+                </QueryClientProvider>
+            </MobileProvider>
         </RecoilRoot>
     );
 }

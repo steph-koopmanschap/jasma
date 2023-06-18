@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 
 /* Simplified for now */
 
+/* This hook used in provider, use useMobileProvider instead from providers folder */
+
 export const useIsMobile = () => {
     const [isMobile, setIsMobile] = useState(true);
 
@@ -24,7 +26,7 @@ export const useIsMobile = () => {
         };
 
         const updateSize = () => {
-            setIsMobile(window.innerWidth <= 768 && window.mobileCheck());
+            setIsMobile(window.mobileCheck());
         };
         updateSize();
         window.addEventListener("resize", updateSize);

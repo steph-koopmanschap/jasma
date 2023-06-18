@@ -3,14 +3,15 @@ import { useRouter } from "next/router";
 import "./StreamPage.css";
 import React from "react";
 import ChatWidgets from "@/widgets/chat";
+import { useMobileProvider } from "@/shared/model";
 
 const StreamPage = (props) => {
     const router = useRouter();
+    const { isMobile } = useMobileProvider();
 
     return (
         <div>
-            <StreamWidget stream_key={router.query.key} />
-            <ChatWidgets.StreamChat />
+            <StreamWidget />
         </div>
     );
 };

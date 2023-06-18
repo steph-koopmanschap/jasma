@@ -1,0 +1,30 @@
+.stream-info-container {
+    @apply py-2 px-2 flex items-center w-full;
+}
+
+.stream-info-data {
+    @apply flex flex-col gap-1 w-full px-2 py-1.5;
+}
+
+.stream-info-data div {
+    @apply flex items-center justify-between;
+}
+
+.pic-container {
+    @apply py-0.5;
+}
+
+.username {
+    @apply text-sm;
+}
+.title {
+    @apply text-lg font-bold;
+}
+
+.stream-actions {
+    @apply flex items-center gap-2;
+}
+
+.stats-container {
+    @apply flex items-center gap-2;
+}
