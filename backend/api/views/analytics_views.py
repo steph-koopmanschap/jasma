@@ -1,10 +1,11 @@
 from datetime import datetime, timedelta
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from api.models import User, Post, Hashtag, SubscribedHashtag
+from api.models import User, Post, Hashtag, UserLoginHistory, SubscribedHashtag
 from django.db.models import Count
 from django.db import connection
 from django.db.models import Q
+from django.db.models.functions import TruncDate
 from api.constants import user_roles, relationships, genders
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes
@@ -57,6 +58,41 @@ def get_most_active_users(request):
     payload = {'success': True, 'most_active_users': most_active_users, 'timestamp': datetime.now()}
     return Response(payload, status=status.HTTP_200_OK)
 
+# Get the total count of logins in the last 24 hours
+# TODO: # Country filtering?
+@api_view(["GET"])
+def get_total_login_count(request):
+    # If no limit_hours is given set it to last hour
+    limit_hours = int(request.GET.get('limit_hours', 1))
+    # Limit the login history count to the last 48 hours
+    if limit_hours > 48:
+        limit_hours = 48
+    time_threshold = datetime.now() - timedelta(hours=limit_hours)
+    # Count the login records within the time threshold
+    login_count = UserLoginHistory.objects.filter(login_time__gte=time_threshold).count()
+    payload = {'success': True, 'login_count': login_count, 'timestamp': datetime.now()}
+    return Response(payload, status=status.HTTP_200_OK)
+
+# Get the average login per day, over a period of limit_days
+@api_view(["GET"])
+def average_logins(request):
+    #If no limit_days is given set it to 1 day
+    limit_days = int(request.GET.get('limit_days', 1))
+    # Limit the login period to the last 30 days
+    if limit_days > 30:
+        limit_days = 30
+    # Calculate the start and end date for the time period
+    end_date = datetime.now().date()
+    start_date = end_date - timedelta(days=limit_days)
+    # Query the UserLoginHistory table
+    login_count = UserLoginHistory.objects.filter(
+        login_time__date__range=(start_date, end_date)
+    ).annotate(date=TruncDate('login_time')).values('date').annotate(count=Count('id')).values('date', 'count')
+    # Calculate the average logins per day
+    average_logins = sum(entry['count'] for entry in login_count) / limit_days
+    payload = {"success": True, "average_logins": average_logins, 'timestamp': datetime.now()}
+    return Response(payload, status=status.HTTP_200_OK)
+
 # Get the top 100 users with the most created ads
 # Returns user_id, username, and email
 @api_view(["GET"])
@@ -100,6 +136,7 @@ def get_database_size(request):
 
 # Get the most frequently used total hashtags ordered from highest to lowest if limit_hours is 0.
 # If limit_hours is an integer get the count of the last limit_hours.
+# For trending hashtags set the limit_hours to 24 or 48 hours. and the limit to 10
 @api_view(["GET"])
 def get_top_hashtags(request):
     limit = int(request.GET.get('limit', 1))

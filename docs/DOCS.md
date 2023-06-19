@@ -95,6 +95,8 @@ To stop the app use the following command: <br />
 `docker compose down` <br />
 To check if the app containers are running and on which ports use the following command: <br />
 `docker ps`
+To check the memory and cpu usage of the docker containers use the following command: <br />
+`docker stats`
 
 ## Environment variables documentation
 
@@ -124,6 +126,7 @@ To check if the app containers are running and on which ports use the following 
 - [Recoil Docs](https://recoiljs.org/docs/introduction/getting-started/)
 - [TailwindCSS Docs](https://tailwindcss.com/docs/installation)
 - [Axios Docs](https://axios-http.com/docs/intro)
+- [React Toastify Docs](https://fkhadra.github.io/react-toastify/introduction/)
 - [NPM Docs](https://docs.npmjs.com/)
 - [Django Docs](https://docs.djangoproject.com/en/4.2/)
 - [Django REST Framework Docs](https://www.django-rest-framework.org/)

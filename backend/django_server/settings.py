@@ -36,6 +36,9 @@ MEDIA_URL = f"{BASE_URL}/media/"
 # MEDIA_URL = "/media/"
 DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
+GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 

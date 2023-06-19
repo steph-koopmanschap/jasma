@@ -47,6 +47,8 @@ class User(AbstractUser):
         return self.username
     """
 
+    # This does not actually return total created posts count, because a user can delete posts
+    # This only returns count of currenly created posts.
     @classmethod
     def total_created_posts(cls):
         return Post.objects.count()
@@ -55,6 +57,8 @@ class User(AbstractUser):
     def total_created_posts(self):
         return self.posts.count()
 
+    # This does not actually return total created comments count, because a user can delete comments
+    # This only returns count of currenly created comments.
     @classmethod
     def total_created_comments(cls):
         return Comment.objects.count()
@@ -63,6 +67,8 @@ class User(AbstractUser):
     def total_created_comments(self):
         return self.comments.count()
 
+    # This does not actually return total created ads count, because a user can delete ads
+    # This only returns count of currenly created ads.
     # TODO: Maybe restrict to users with ad priviledge.
     @classmethod
     def total_created_ads(cls):
@@ -71,6 +77,12 @@ class User(AbstractUser):
     @property
     def total_created_ads(self):
         return self.ads.count()
+    
+# Track at which time and at which ip the users login
+class UserLoginHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    login_ipv4 = models.CharField(max_length=55, default="0.0.0.0", blank=True, validators=[validate_ipv4_address])
+    login_time = models.DateTimeField(auto_now_add=True)
 
 class UserProfile(models.Model):
     user = models.OneToOneField(
