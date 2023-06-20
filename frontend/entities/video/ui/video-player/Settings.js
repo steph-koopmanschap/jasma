@@ -2,48 +2,54 @@ import { useClickOutside } from "@/shared/model";
 import { Portal } from "@/shared/ui";
 import { faChevronLeft, faChevronRight, faClose, faCog } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { createElement, memo, useCallback, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import "./VideoPlayer.css";
 
-export const Settings = memo(({ onPlaybackChange, onQualityChange, isMobile, isLive, containerRef }) => {
-    const { ref, isShow, setIsShow } = useClickOutside(false);
+export const Settings = memo(
+    ({ onPlaybackChange, onQualityChange, isMobile, isLive, containerRef, qualityOptions, defaultQuality }) => {
+        const { ref, isShow, setIsShow } = useClickOutside(false);
 
-    return (
-        <div
-            className="settings-container"
-            ref={ref}
-        >
-            <button
-                onClick={() => setIsShow(!isShow)}
-                onTouchStart={() => setIsShow(!isShow)}
-                className="action-btn"
+        return (
+            <div
+                className="settings-container"
+                ref={ref}
             >
-                <FontAwesomeIcon icon={faCog} />
-            </button>
-            {isShow && !isMobile ? (
-                <div className="desktop-settings-wrapper">
-                    <SettingsMenu
+                <button
+                    onClick={() => setIsShow(!isShow)}
+                    onTouchStart={() => setIsShow(!isShow)}
+                    className="action-btn"
+                >
+                    <FontAwesomeIcon icon={faCog} />
+                </button>
+                {isShow && !isMobile ? (
+                    <div className="desktop-settings-wrapper">
+                        <SettingsMenu
+                            isLive={isLive}
+                            onClickOutside={() => setIsShow(false)}
+                            onClose={() => setIsShow(false)}
+                            onPlaybackChange={onPlaybackChange}
+                            onQualityChange={onQualityChange}
+                            qualityOptions={qualityOptions}
+                            defaultQuality={defaultQuality}
+                        />
+                    </div>
+                ) : null}
+                {isShow && isMobile ? (
+                    <MobileSettingsMenu
+                        containerRef={containerRef}
                         isLive={isLive}
                         onClickOutside={() => setIsShow(false)}
                         onClose={() => setIsShow(false)}
                         onPlaybackChange={onPlaybackChange}
                         onQualityChange={onQualityChange}
+                        qualityOptions={qualityOptions}
+                        defaultQuality={defaultQuality}
                     />
-                </div>
-            ) : null}
-            {isShow && isMobile ? (
-                <MobileSettingsMenu
-                    containerRef={containerRef}
-                    isLive={isLive}
-                    onClickOutside={() => setIsShow(false)}
-                    onClose={() => setIsShow(false)}
-                    onPlaybackChange={onPlaybackChange}
-                    onQualityChange={onQualityChange}
-                />
-            ) : null}
-        </div>
-    );
-});
+                ) : null}
+            </div>
+        );
+    }
+);
 
 const SETTINGS_PAGES = {
     ACTIONS: "actions", // main
@@ -51,10 +57,10 @@ const SETTINGS_PAGES = {
     QUALITY: "quality" // quality options
 };
 
-function SettingsMenu({ onClose, onPlaybackChange, onQualityChange, isLive }) {
+function SettingsMenu({ onClose, onPlaybackChange, onQualityChange, isLive, qualityOptions, defaultQuality }) {
     const [currentPage, setCurrentPage] = useState(SETTINGS_PAGES.ACTIONS);
     const [currentSpeed, setCurrentSpeed] = useState(+window.sessionStorage.getItem("user_playback_rate") || 1);
-    const [currentQuality, setCurrentQuality] = useState(+window.sessionStorage.getItem("user_video_quality") || 480);
+    const [currentQuality, setCurrentQuality] = useState(480);
 
     const handleSpeedChange = useCallback((value) => {
         setCurrentSpeed(value);
@@ -86,10 +92,12 @@ function SettingsMenu({ onClose, onPlaybackChange, onQualityChange, isLive }) {
                     />
                 );
             case SETTINGS_PAGES.QUALITY:
+                if (!qualityOptions.length) return null;
                 return (
                     <QualitySettings
                         current={currentQuality}
                         onChoose={handleQualityChange}
+                        options={qualityOptions}
                     />
                 );
             default:
@@ -182,20 +190,19 @@ function SpeedSettings({ onChoose, current }) {
     );
 }
 
-function QualitySettings({ onChoose, current }) {
-    const options = [1080, 720, 480, 360];
-
+function QualitySettings({ onChoose, current, options }) {
     return (
         <div className="option-settings-container">
-            {options.map((option) => (
+            {options.map((option) => {
+                if (!option) return null;
                 <RadioOption
                     key={option}
                     onChoose={onChoose}
                     isChecked={option === current}
                     label={`${option}p`}
                     value={option}
-                />
-            ))}
+                />;
+            })}
         </div>
     );
 }

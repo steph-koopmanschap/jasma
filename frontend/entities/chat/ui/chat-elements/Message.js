@@ -1,8 +1,6 @@
-import React, { useRef } from "react";
-import "./ChatElements.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMessage } from "@fortawesome/free-solid-svg-icons";
 import { InputField } from "@/shared/ui";
+import { useRef } from "react";
+import "./ChatElements.css";
 
 export const ChatMessage = ({ message, sender, timestamp, isByUser = false }) => {
     return (
@@ -15,6 +13,8 @@ export const ChatMessage = ({ message, sender, timestamp, isByUser = false }) =>
         </div>
     );
 };
+
+/* Will be moved to features later */
 
 export const SendMessage = ({ onSend }) => {
     const fieldRef = useRef(null);

@@ -1,5 +1,5 @@
 .chat-message-container {
-    @apply w-full py-1.5 px-1  flex flex-col rounded-md gap-2 items-start;
+    @apply w-full py-1.5 px-1  flex flex-col rounded-md gap-2 items-start break-words;
     background-color: rgba(0, 0, 0, 0.05);
 }
 
@@ -9,9 +9,11 @@
 
 .chat-message-body h3 {
     @apply text-sm font-bold;
+    word-wrap: normal;
 }
 .chat-message-body p {
-    @apply text-sm font-normal;
+    @apply text-sm font-normal w-full;
+    overflow-wrap: anywhere;
 }
 
 .chat-timestamp {
@@ -30,5 +32,5 @@
 
 .chat-input-container button {
     @apply bg-red-400 h-full px-1 py-0.5;
-    width: 10%;
+    width: 3rem;
 }

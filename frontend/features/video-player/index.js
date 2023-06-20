@@ -1,3 +1,4 @@
-import { VideoPlayer } from "./ui/VideoPlayer";
+export { useVideoPlayer } from "./model/useVideoPlayer";
+import { Player } from "./ui/Player";
 
-export default VideoPlayer;
+export default Player;

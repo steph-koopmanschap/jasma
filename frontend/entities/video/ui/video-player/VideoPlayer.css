@@ -1,7 +1,7 @@
 /* Main container */
 
 .media-wrapper {
-    @apply absolute z-20 overflow-hidden w-full h-full;
+    @apply relative z-20 overflow-hidden w-full h-full;
 }
 
 .player-container {
@@ -12,13 +12,14 @@
 }
 
 .video-wrapper {
-    @apply relative w-full h-full;
+    @apply relative w-full h-full flex;
 
-    /* padding-bottom: 25.25%; */
+    /* padding-bottom: 10.25%;
+    padding-top: 10.25%; */
 }
 
 #video {
-    @apply w-full h-full  top-0 left-0;
+    @apply w-full h-full  top-0 left-0 my-auto;
 }
 
 .top-curtain {

@@ -8,19 +8,26 @@ import {
     faVolumeMute
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { forwardRef, memo, useCallback } from "react";
-import { DIRECTION, UI_FEEDBACK_TYPES, useVideoPlayer } from "../model/useVideoPlayer";
-import { formatTime } from "../utils/formatTime";
+import { forwardRef, useCallback } from "react";
+import { DIRECTION, UI_FEEDBACK_TYPES } from "../../utils/enums";
+import { formatTime } from "../../utils/formatTime";
 import { Settings } from "./Settings";
-import { OnAirSign, PlayState, SeekingDirection, VolumeDirection } from "./UI";
+import { LoadingState, OnAirSign, PlayState, SeekingDirection, VolumeDirection } from "./UI";
 import "./VideoPlayer.css";
 
-export const VideoPlayer = memo(({ isLive = false, videoSrc = "", thumbnail = "", forwardRef }) => {
-    const { refs, functions, status } = useVideoPlayer();
+/* Bare video player UI. Doesn't work without useVideoPlayer hook. Use composition pattern on upper level to make it work */
 
+export const VideoPlayer = ({
+    videoSrc = "",
+    thumbnail = "",
+    forwardRef = { current: null },
+    status,
+    refs,
+    functions
+}) => {
     return (
         <div
-            className="media-wrapper"
+            className="media-wrapper "
             ref={refs.mediaContainerRef}
         >
             <div
@@ -45,7 +52,7 @@ export const VideoPlayer = memo(({ isLive = false, videoSrc = "", thumbnail = ""
                 </div>
                 {status.showUi ? <div className="top-curtain"></div> : null}
                 <div className={`${status.isSeeking && !status.isPlaying ? "fullscreen-curtain" : ""}`}></div>
-                {status.showUi && isLive && status.isPlaying ? <OnAirSign /> : null}
+                {status.showUi && status.isLive && status.isPlaying ? <OnAirSign /> : null}
                 <div className="video-left">
                     {status.UIFeedback.type === UI_FEEDBACK_TYPES.SEEKING && status.UIFeedback.dir === DIRECTION.L ? (
                         <SeekingDirection direction={status.UIFeedback.dir} />
@@ -61,6 +68,7 @@ export const VideoPlayer = memo(({ isLive = false, videoSrc = "", thumbnail = ""
                     {status.UIFeedback.type === UI_FEEDBACK_TYPES.PLAYBACK ? (
                         <PlayState isPlaying={status.isPlaying} />
                     ) : null}
+                    {status.isBuffering ? <LoadingState /> : null}
                 </div>
                 <div className="video-right">
                     {status.UIFeedback.type === UI_FEEDBACK_TYPES.SEEKING && status.UIFeedback.dir === DIRECTION.R ? (
@@ -81,35 +89,41 @@ export const VideoPlayer = memo(({ isLive = false, videoSrc = "", thumbnail = ""
                         progress={status.progress}
                         isSeeking={status.isSeeking}
                         buffered={status.buffered}
+                        isLive={status.isLive}
                     />
                     <Controls
                         onChangeVolume={functions.changeVolume}
                         onTogglePlay={functions.togglePlay}
                         onToggleMute={functions.toggleMute}
+                        defaultQuality={status.defaultQuality}
                         onToggleFullscreen={functions.toggleFullscreen}
                         volume={status.volume}
+                        qualityOptions={status.qualityOptions}
                         onPlaybackChange={functions.setPlaybackRate}
-                        onQualityChange={() => {}}
+                        onQualityChange={functions.onChangeQuality}
                         isMuted={status.isMuted}
                         isFullscreen={status.isFullscreen}
                         isPlaying={status.isPlaying}
                         isMobile={status.isMobile}
-                        isLive={isLive}
+                        isLive={status.isLive}
                         containerRef={refs.mediaContainerRef}
                     />
                 </div>
             </div>
         </div>
     );
-});
+};
 
-const ProgressContainer = forwardRef(({ progress, elapsed, totalTime, preview, isSeeking, buffered }, ref) => {
+const ProgressContainer = forwardRef(({ progress, elapsed, totalTime, preview, isSeeking, buffered, isLive }, ref) => {
+    progress = isLive ? 100 : progress;
+
     return (
         <div className="progress-container">
             <div className="progress-time-wrapper">
                 <span className="timemark">{formatTime(elapsed)}</span>
-                <span className="timemark">{formatTime(totalTime)}</span>
+                {!isLive ? <span className="timemark">{formatTime(totalTime)}</span> : null}
             </div>
+
             <div
                 className={`${isSeeking ? "progress-line-container-large" : ""} progress-line-container`}
                 ref={ref}
@@ -147,10 +161,13 @@ function Controls({
     onToggleMute,
     onPlaybackChange,
     onQualityChange,
+    qualityOptions,
     onToggleFullscreen,
     isFullscreen,
     isMobile,
     isLive,
+    defaultQuality,
+
     containerRef
 }) {
     const getVolumeIcon = useCallback(() => {
@@ -195,6 +212,8 @@ function Controls({
                 <Settings
                     onPlaybackChange={onPlaybackChange}
                     onQualityChange={onQualityChange}
+                    qualityOptions={qualityOptions}
+                    defaultQuality={defaultQuality}
                     isMobile={isMobile}
                     isLive={isLive}
                     containerRef={containerRef}

@@ -1,3 +1,3 @@
-export { Follow } from "./ui/Follow";
-export { Share } from "./ui/Share";
-export { Report } from "./ui/Report";
+export { Follow } from "./ui/actions/Follow";
+export { Share } from "./ui/actions/Share";
+export { Report } from "./ui/actions/Report";

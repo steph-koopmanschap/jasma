@@ -15,17 +15,19 @@ export const ChatWindow = ({ title, messageList, sendMessage }) => {
             <div className="chat-header">
                 <h3 className="chat-title">{title}</h3>
             </div>
-            <>
-                {messageList ? (
-                    <MessageList
-                        list={messageList}
-                        forwardRef={messagesRef}
-                    />
-                ) : (
-                    <div></div>
-                )}
-            </>
-            <>{sendMessage ? sendMessage : <div></div>}</>
+            <div className="chat-messages-layout">
+                <>
+                    {messageList ? (
+                        <MessageList
+                            list={messageList}
+                            forwardRef={messagesRef}
+                        />
+                    ) : (
+                        <div></div>
+                    )}
+                </>
+                <>{sendMessage ? sendMessage : <div></div>}</>
+            </div>
         </div>
     );
 };

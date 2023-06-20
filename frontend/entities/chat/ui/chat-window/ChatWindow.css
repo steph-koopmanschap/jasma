@@ -1,5 +1,6 @@
 .chat-window {
-    @apply flex-col flex justify-between shadow-md w-full h-full;
+    @apply flex-col flex grow shadow-md w-full h-full;
+    max-height: calc(100vh - 5rem);
 }
 .chat-title {
     @apply text-black text-sm font-semibold text-center;
@@ -9,9 +10,12 @@
     @apply rounded-md  w-full h-10;
 }
 
+.chat-messages-layout {
+    @apply flex flex-col justify-between w-full h-full;
+}
+
 .chat-message-list {
-    @apply flex flex-col overflow-y-scroll w-full items-start py-1.5 px-1 gap-1;
-    height: 18rem;
+    @apply flex flex-col overflow-y-scroll overflow-x-hidden h-full items-start py-1.5 px-1 gap-1;
     scrollbar-width: 4px;
 }
 .chat-message-list::-webkit-scrollbar {

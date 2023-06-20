@@ -21,13 +21,18 @@ export const StreamInfo = ({
                     <h4 className="username">{username}</h4>
                     <div className="stream-actions">
                         {followAction ? followAction : null}
-                        {shareAction ? shareAction : null}
-                        {reportAction ? reportAction : null}
-                        {subAction ? subAction : null}
+                        {!isMobile ? (
+                            <>
+                                {shareAction ? shareAction : null}
+                                {reportAction ? reportAction : null}
+                                {subAction ? subAction : null}
+                            </>
+                        ) : null}
                     </div>
                 </div>
                 <div>
-                    <h2 className="title">{title}</h2>
+                    {!isMobile ? <h2 className="title">{title}</h2> : null}
+
                     <div className="stats-container">{!isMobile ? <span>Watching: {viewers}</span> : null}</div>
                 </div>
             </div>

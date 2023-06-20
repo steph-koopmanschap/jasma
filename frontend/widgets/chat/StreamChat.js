@@ -31,7 +31,7 @@ export const StreamChat = () => {
     );
 
     return (
-        <div className="px-1.5">
+        <div className="px-1.5 w-full h-full sticky top-0">
             <ChatWindow
                 title={"Live chat"}
                 messageList={messages.current}

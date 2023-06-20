@@ -9,8 +9,9 @@ import {
     faVolumeMute
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { DIRECTION } from "../model/useVideoPlayer";
+import { DIRECTION } from "../../utils/enums";
 import "./VideoPlayer.css";
+import { Spinner } from "@/shared/ui";
 
 /* Small UI elements */
 
