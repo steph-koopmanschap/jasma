@@ -33,9 +33,9 @@ def login_view(request):
         user.save()
         # Add user data to the user session
         user_info = UserLoginSerializer(user)
-        request.session.update(user_info.data.get("data"))
+        request.session.update(user_info.data)
         payload = {
-            **user_info.data,
+            "data": {**user_info.data},
             "message": "User logged in."
         }
 
@@ -52,11 +52,16 @@ def logout_view(request):
 @api_view(["GET"])
 def check_auth(request):
     has_user = request.user.is_authenticated
-    has_session = bool(request.session.session_key)
+    has_session = bool(request.session.session_key)   
     payload = {
-        "data": {"isAuth": has_user and has_session}
+        "data": {
+            "isAuth": has_user and has_session,
+            "role": request.session.get("user_role", "guest")
+        }
     }
     return Response(payload)
+
+
 
 """ 
 I will leave this out for now as I think this present

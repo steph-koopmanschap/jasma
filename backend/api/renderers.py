@@ -41,11 +41,18 @@ class JasmaJSONRenderer(JSONRenderer):
         """
         response = renderer_context["response"] if renderer_context else None
 
+        # Detail / Exception reponse
         if isinstance(data_obj, dict):
             data_obj = self.jasma_json(data_obj)
             if response and hasattr(response, "data"):
                 response.data = data_obj
+        # List response
+        elif isinstance(data_obj, list):
+            new_data = {"data": data_obj}
+            data_obj = self.jasma_json(new_data)
+            response.data = data_obj
         else:
+            print(f"*** Something wrong in the renderer: {type(data_obj)} and contains {data_obj}")
             logging.debug(
                 f"data_object is {type(data_obj)} and contains {data_obj}")
 

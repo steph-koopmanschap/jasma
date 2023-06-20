@@ -184,28 +184,7 @@ DATABASES = {
     }
 }
 
-# DATABASES = {
-#    "default": {
-#        "ENGINE": "django.db.backends.postgresql",
-#        "NAME": os.getenv("DB_NAME"),
-#        "USER": os.getenv("PG_SUPER_USER"),
-#        "PASSWORD": os.getenv("PG_SUPER_PASSWORD"),
-#        "HOST": os.getenv("PG_HOST"),
-#        "PORT": os.getenv("PG_PORT"),
-#    },
-#    "test": {
-#    "ENGINE": "django.db.backends.postgresql",
-#    "NAME": "jasma_test_db",
-#    "USER": os.getenv("DB_USER"),
-#    "PASSWORD": os.getenv("DB_PASSWORD"),
-#    "HOST": os.getenv("DB_HOST"),
-#    "PORT": os.getenv("DB_PORT"),
-#    }
-# }
-
-# TEST_NAME = "test"
-
-# Redis Config
+# REDIS Config
 REDIS_HOST = os.getenv("REDIS_HOST")
 REDIS_PORT = os.getenv("REDIS_PORT")
 

@@ -21,44 +21,25 @@ from rest_framework.decorators import action
 
 from api.constants import user_roles
 from api.models import User, UserProfile, UserNotificationPreferences
-from api.serializers import UserFullSerializer
+from api.serializers import UserCustomSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = UserFullSerializer
+    serializer_class = UserCustomSerializer
     permission_classes = [DjangoObjectPermissions]
-
-    def get_serializer(self, *args, **kwargs):
-        """ Allow overwrite of serializer fields by accepting a field argument. """
-        requested_fields = kwargs.pop("fields")
-        serializer = super().get_serializer(*args, **kwargs)
-        if requested_fields:
-            serializer_fields = [k for k in serializer.fields.keys()]
-            # Pop the fields that are not requested
-            for field in serializer_fields:
-                if field not in requested_fields:
-                    serializer.fields.pop(field)
-        
-        return serializer
 
     def retrieve(self, request, *args, **kwargs):
         user = self.get_object()
-        automatic_fields = [
-            "user_id",
-            "username",
-            "email",
-            "user_role"
-        ]
+        # List reuqested fields
         requested_fields = [
             field.strip() for field
             in request.GET.get("fields", "").split(",")
         ]
-        field_names = automatic_fields + requested_fields
+        # List serializer fields
+        serializer = self.get_serializer(user)
 
-        serializer = self.get_serializer(user, fields=field_names)
-
-        payload = serializer.data
+        payload = {"data": serializer.data}
         
         # Trigger a warning message if requested field don't exist
         missing_fields = [
