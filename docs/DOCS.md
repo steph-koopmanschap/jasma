@@ -1,7 +1,5 @@
 # JASMA Documentation
 
-## NOTE: THIS DOCUMENTATION IS DEPRECATED
-
 ## Table of Contents
 
 - [JASMA (Documentation](#jasma-old-documentation)
@@ -19,6 +17,7 @@
   - [Directory documentation](#directory-documentation)
   - [Frontend documentation](#frontend-documentation)
   - [Testing documentation](#testing-documentation)
+  - [Version history](#version-history)
   - [External documentation of 3rd party libraries, frameworks, and tools](#external-documentation-of-3rd-party-libraries-frameworks-and-tools)
 
 ## Tech Stack:
@@ -117,6 +116,10 @@ To check the memory and cpu usage of the docker containers use the following com
 ## Testing documentation
 
 [Click here](https://github.com/steph-koopmanschap/jasma/blob/development/docs/TEST_DOCS.md) to see the full testing documentation.
+
+## Version history
+
+[Click here](https://github.com/steph-koopmanschap/jasma/blob/development/docs/VERSION_HISTORY.md) to see the full testing documentation.
 
 ## External documentation of 3rd party libraries, frameworks, and tools
 
