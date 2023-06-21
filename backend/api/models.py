@@ -83,6 +83,10 @@ class UserLoginHistory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     login_ipv4 = models.CharField(max_length=55, default="0.0.0.0", blank=True, validators=[validate_ipv4_address])
     login_time = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = "user_login_history"
+        verbose_name_plural = "UserLoginHistory"
 
 class UserProfile(models.Model):
     user = models.OneToOneField(

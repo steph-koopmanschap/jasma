@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta
+import calendar
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from api.models import User, Post, Hashtag, UserLoginHistory, SubscribedHashtag
 from django.db.models import Count
 from django.db import connection
 from django.db.models import Q
-from django.db.models.functions import TruncDate
+from django.db.models.functions import TruncDate, ExtractHour, ExtractWeekDay
 from api.constants import user_roles, relationships, genders
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes
@@ -121,6 +122,44 @@ def get_count_current_posts(request):
         post_count = Post.objects.filter(created_at__gte=time_threshold).count()
     payload = {"success": True, "post_count": post_count, "timestamp": datetime.now()}
     return Response(payload, status=status.HTTP_200_OK) 
+
+# Returns how many posts were created on each weekday.
+# And how many posts were created per hour per weekday.
+@api_view(["GET"])
+def post_count_per_hour_and_weekday(request):
+    limit_days = int(request.GET.get('limit_days', 7))
+    # limit_days under 7 days now allowed because we get the data from a full week
+    if limit_days < 7:
+        limit_days = 7
+    # Calculate the start and end date for the limit_day period
+    end_date = datetime.now().date()
+    start_date = end_date - timedelta(days=limit_days)
+    # Query the Post table and group the count of posts per hour and weekday
+    post_counts = Post.objects.filter(
+        created_at__date__range=(start_date, end_date)
+    ).annotate(hour=ExtractHour('created_at'), weekday=ExtractWeekDay('created_at')).values('hour', 'weekday').annotate(count=Count('id'))
+
+    # Create a dictionary to store the count of posts per hour and weekday
+    data = []
+    for weekday in range(1, 6):
+        weekday_data = {
+            'day': calendar.day_name[weekday],
+            'count': 0,
+            'hours': []
+        }
+        for hour in range(24):
+            weekday_data['hours'].append({'hour': str(hour).zfill(2), 'count': 0})
+        data.append(weekday_data)
+
+    for entry in post_counts:
+        hour = entry['hour']
+        weekday = entry['weekday']
+        count = entry['count']
+        data[weekday - 1]['count'] += count
+        data[weekday - 1]['hours'][hour]['count'] = count
+
+    payload = {"success": True, "weekday_hour_counts": data, "timestamp": datetime.now()}
+    return Response(payload, status=status.HTTP_200_OK)
 
 @api_view(["GET"])
 def get_database_size(request):
