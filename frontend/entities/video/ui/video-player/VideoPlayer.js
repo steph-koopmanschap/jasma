@@ -12,19 +12,12 @@ import { forwardRef, useCallback } from "react";
 import { DIRECTION, UI_FEEDBACK_TYPES } from "../../utils/enums";
 import { formatTime } from "../../utils/formatTime";
 import { Settings } from "./Settings";
-import { LoadingState, OnAirSign, PlayState, SeekingDirection, VolumeDirection } from "./UI";
+import { ActionBtn, LoadingState, OnAirSign, PlayState, PreviewFrame, SeekingDirection, VolumeDirection } from "./UI";
 import "./VideoPlayer.css";
 
 /* Bare video player UI. Doesn't work without useVideoPlayer hook. Use composition pattern on upper level to make it work */
 
-export const VideoPlayer = ({
-    videoSrc = "",
-    thumbnail = "",
-    forwardRef = { current: null },
-    status,
-    refs,
-    functions
-}) => {
+export const VideoPlayer = ({ videoSrc = "", thumbnail = "", status, refs, functions }) => {
     return (
         <div
             className="media-wrapper "
@@ -38,16 +31,16 @@ export const VideoPlayer = ({
                 <div className="video-wrapper">
                     <video
                         id="video"
-                        ref={(el) => {
-                            refs.videoRef.current = el;
-                            forwardRef.current = el;
-                        }}
+                        ref={refs.videoRef}
                         playsInline
                         preload="metadata"
-                        src={videoSrc}
                         poster={thumbnail}
                     >
                         Your browser does not support HTML5 video.
+                        <source
+                            src={videoSrc}
+                            type="video/m3u8"
+                        />
                     </video>
                 </div>
                 {status.showUi ? <div className="top-curtain"></div> : null}
@@ -106,6 +99,7 @@ export const VideoPlayer = ({
                         isPlaying={status.isPlaying}
                         isMobile={status.isMobile}
                         isLive={status.isLive}
+                        currentSpeed={status.currentSpeed}
                         containerRef={refs.mediaContainerRef}
                     />
                 </div>
@@ -146,6 +140,7 @@ const ProgressContainer = forwardRef(({ progress, elapsed, totalTime, preview, i
                         className="progress-preview"
                         style={{ width: `${buffered}%` }}
                     ></div>
+                    {!isLive ? <PreviewFrame preview={preview} /> : null}
                 </div>
             </div>
         </div>
@@ -167,7 +162,7 @@ function Controls({
     isMobile,
     isLive,
     defaultQuality,
-
+    currentSpeed,
     containerRef
 }) {
     const getVolumeIcon = useCallback(() => {
@@ -179,22 +174,16 @@ function Controls({
     return (
         <div className="controls-container">
             <div className="controls-left-container">
-                <button
-                    className="action-btn"
-                    onClick={onTogglePlay}
-                    onTouchStart={onTogglePlay}
-                >
+                <ActionBtn onActivate={onTogglePlay}>
                     <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
-                </button>
-                {!isMobile ? (
-                    <div className="sound-container">
-                        <button
-                            className="action-btn"
-                            onClick={onToggleMute}
-                            onTouchStart={onToggleMute}
-                        >
-                            <FontAwesomeIcon icon={getVolumeIcon()} />
-                        </button>
+                </ActionBtn>
+
+                <div className="sound-container">
+                    <ActionBtn onActivate={onToggleMute}>
+                        <FontAwesomeIcon icon={getVolumeIcon()} />
+                    </ActionBtn>
+
+                    {!isMobile ? (
                         <input
                             onChange={onChangeVolume}
                             value={volume}
@@ -205,8 +194,8 @@ function Controls({
                             className="volume-slider"
                             style={{ backgroundSize: `${volume * 100}% 100%` }}
                         />
-                    </div>
-                ) : null}
+                    ) : null}
+                </div>
             </div>
             <div className="controls-right-container">
                 <Settings
@@ -216,15 +205,12 @@ function Controls({
                     defaultQuality={defaultQuality}
                     isMobile={isMobile}
                     isLive={isLive}
+                    currentSpeed={currentSpeed}
                     containerRef={containerRef}
                 />
-                <button
-                    onClick={onToggleFullscreen}
-                    onTouchStart={onToggleFullscreen}
-                    className="action-btn"
-                >
+                <ActionBtn onActivate={onToggleFullscreen}>
                     <FontAwesomeIcon icon={!isFullscreen ? faTvAlt : faRectangleXmark} />
-                </button>
+                </ActionBtn>
             </div>
         </div>
     );

@@ -4,16 +4,18 @@
 }
 
 .chat-message-body {
-    @apply flex items-center gap-1 text-black;
+    @apply w-full flex gap-1 text-black;
 }
 
 .chat-message-body h3 {
     @apply text-sm font-bold;
-    word-wrap: normal;
+}
+
+.chat-text-frag {
+    overflow-wrap: anywhere;
 }
 .chat-message-body p {
-    @apply text-sm font-normal w-full;
-    overflow-wrap: anywhere;
+    @apply text-sm font-normal;
 }
 
 .chat-timestamp {

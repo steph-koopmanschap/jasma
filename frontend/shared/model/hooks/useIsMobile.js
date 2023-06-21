@@ -8,7 +8,7 @@ export const useIsMobile = () => {
     const [isMobile, setIsMobile] = useState(true);
 
     useEffect(() => {
-        window.mobileCheck = function () {
+        const mobileCheck = () => {
             let check = false;
 
             (function (a) {
@@ -25,13 +25,7 @@ export const useIsMobile = () => {
             return check;
         };
 
-        const updateSize = () => {
-            setIsMobile(window.mobileCheck());
-        };
-        updateSize();
-        window.addEventListener("resize", updateSize);
-
-        return () => window.removeEventListener("resize", updateSize);
+        setIsMobile(mobileCheck());
     }, [isMobile]);
 
     return { isMobile };

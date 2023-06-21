@@ -5,6 +5,7 @@ import { useMobileProvider } from "@/shared/model";
 import ChatWidgets from "../chat";
 import UserWidgets from "../user";
 import "./Stream.css";
+import { Resizable } from "@/shared/ui";
 
 export const StreamWidget = ({ stream_key }) => {
     const { isMobile } = useMobileProvider();
@@ -29,9 +30,9 @@ export const StreamWidget = ({ stream_key }) => {
             {render(
                 <div className="stream-video-wrapper">
                     <Player
-                        // stream_src={`http://localhost:8000/hls/${stream_key}.m3u8`}
-                        stream_src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
-                        isPartitioned={false}
+                        stream_src={`http://localhost:8000/hls/${stream_key}.m3u8`}
+                        // stream_src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
+                        // isPartitioned={false}
                         isLive={true}
                     />
                 </div>,
@@ -65,12 +66,16 @@ function MobileLayout({ video, children }) {
 
 function LargeLayout({ video, children, subVideoSection }) {
     return (
-        <div className="stream-large-layout">
-            <div className="stream-large-main">
-                {video}
-                {subVideoSection}
-            </div>
-            <div>{children}</div>
-        </div>
+        <Resizable
+            child={
+                <div className="stream-large-layout">
+                    <div className="stream-large-main">
+                        {video}
+                        {subVideoSection}
+                    </div>
+                    <div>{children}</div>
+                </div>
+            }
+        />
     );
 }

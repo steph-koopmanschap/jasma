@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DIRECTION } from "../../utils/enums";
 import "./VideoPlayer.css";
 import { Spinner } from "@/shared/ui";
+import { useRef } from "react";
 
 /* Small UI elements */
 
@@ -74,5 +75,38 @@ export function SeekingDirection({ direction }) {
                 <h3>5 sec</h3>
             </div>
         </CircleWrapper>
+    );
+}
+
+export function ActionBtn({ onActivate, children }) {
+    return (
+        <button
+            className="action-btn"
+            onClick={onActivate}
+            // onTouchStart={(e) => {
+            //     onActivate();
+            // }}
+        >
+            {children}
+        </button>
+    );
+}
+
+export function PreviewFrame({ preview }) {
+    const frameRef = useRef(null);
+
+    const getFrameWidth = () => {
+        if (!frameRef.current) return 0;
+
+        const { width } = frameRef.current.getBoundingClientRect();
+        return width;
+    };
+
+    return (
+        <div
+            ref={frameRef}
+            className="preview-frame"
+            style={{ left: `calc(${preview}% - ${getFrameWidth() / 2}px)` }}
+        ></div>
     );
 }

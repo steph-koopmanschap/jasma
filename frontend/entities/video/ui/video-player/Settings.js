@@ -4,9 +4,19 @@ import { faChevronLeft, faChevronRight, faClose, faCog } from "@fortawesome/free
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { memo, useCallback, useState } from "react";
 import "./VideoPlayer.css";
+import { ActionBtn } from "./UI";
 
 export const Settings = memo(
-    ({ onPlaybackChange, onQualityChange, isMobile, isLive, containerRef, qualityOptions, defaultQuality }) => {
+    ({
+        onPlaybackChange,
+        onQualityChange,
+        isMobile,
+        isLive,
+        containerRef,
+        qualityOptions,
+        defaultQuality,
+        currentSpeed
+    }) => {
         const { ref, isShow, setIsShow } = useClickOutside(false);
 
         return (
@@ -14,13 +24,9 @@ export const Settings = memo(
                 className="settings-container"
                 ref={ref}
             >
-                <button
-                    onClick={() => setIsShow(!isShow)}
-                    onTouchStart={() => setIsShow(!isShow)}
-                    className="action-btn"
-                >
+                <ActionBtn onActivate={() => setIsShow(!isShow)}>
                     <FontAwesomeIcon icon={faCog} />
-                </button>
+                </ActionBtn>
                 {isShow && !isMobile ? (
                     <div className="desktop-settings-wrapper">
                         <SettingsMenu
@@ -30,6 +36,7 @@ export const Settings = memo(
                             onPlaybackChange={onPlaybackChange}
                             onQualityChange={onQualityChange}
                             qualityOptions={qualityOptions}
+                            currentSpeed={currentSpeed}
                             defaultQuality={defaultQuality}
                         />
                     </div>
@@ -42,6 +49,7 @@ export const Settings = memo(
                         onClose={() => setIsShow(false)}
                         onPlaybackChange={onPlaybackChange}
                         onQualityChange={onQualityChange}
+                        currentSpeed={currentSpeed}
                         qualityOptions={qualityOptions}
                         defaultQuality={defaultQuality}
                     />
@@ -57,15 +65,18 @@ const SETTINGS_PAGES = {
     QUALITY: "quality" // quality options
 };
 
-function SettingsMenu({ onClose, onPlaybackChange, onQualityChange, isLive, qualityOptions, defaultQuality }) {
+function SettingsMenu({
+    onClose,
+    onPlaybackChange,
+    onQualityChange,
+    isLive,
+    qualityOptions,
+    defaultQuality,
+    currentSpeed
+}) {
     const [currentPage, setCurrentPage] = useState(SETTINGS_PAGES.ACTIONS);
-    const [currentSpeed, setCurrentSpeed] = useState(+window.sessionStorage.getItem("user_playback_rate") || 1);
-    const [currentQuality, setCurrentQuality] = useState(480);
 
-    const handleSpeedChange = useCallback((value) => {
-        setCurrentSpeed(value);
-        onPlaybackChange(value);
-    }, []);
+    const [currentQuality, setCurrentQuality] = useState(480);
 
     const handleQualityChange = useCallback((value) => {
         setCurrentQuality(value);
@@ -88,7 +99,7 @@ function SettingsMenu({ onClose, onPlaybackChange, onQualityChange, isLive, qual
                 return (
                     <SpeedSettings
                         current={currentSpeed}
-                        onChoose={handleSpeedChange}
+                        onChoose={onPlaybackChange}
                     />
                 );
             case SETTINGS_PAGES.QUALITY:
@@ -114,7 +125,7 @@ function SettingsMenu({ onClose, onPlaybackChange, onQualityChange, isLive, qual
                 {currentPage === SETTINGS_PAGES.ACTIONS ? (
                     <button
                         onClick={onClose}
-                        onTouchStart={onClose}
+                        // onTouchStart={onClose}
                     >
                         <FontAwesomeIcon icon={faClose} />
                         <span>Close</span>
@@ -122,7 +133,7 @@ function SettingsMenu({ onClose, onPlaybackChange, onQualityChange, isLive, qual
                 ) : (
                     <button
                         onClick={() => setCurrentPage(SETTINGS_PAGES.ACTIONS)}
-                        onTouchStart={() => setCurrentPage(SETTINGS_PAGES.ACTIONS)}
+                        // onTouchEnd={() => setCurrentPage(SETTINGS_PAGES.ACTIONS)}
                     >
                         <FontAwesomeIcon icon={faChevronLeft} />
                         <span>Back</span>
@@ -161,7 +172,7 @@ function SettingsButton({ title, currentChosen = "", icon = undefined, onChoose 
         <button
             className="settings-menu-button"
             onClick={onChoose}
-            onTouchStart={onChoose}
+            // onTouchEnd={onChoose}
         >
             {title}
             <div>
@@ -216,7 +227,7 @@ function RadioOption({ label, onChoose, isChecked, value }) {
         <div
             className="option-container"
             onClick={handleChange}
-            onTouchStart={handleChange}
+            // onTouchStart={handleChange}
         >
             <input
                 type="radio"

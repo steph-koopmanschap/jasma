@@ -3,6 +3,7 @@
 import { UI_FEEDBACK_TYPES, DIRECTION } from "@/entities/video";
 import { useMobileProvider, useToast } from "@/shared/model";
 import { clamp, normilize } from "@/shared/utils";
+import { vi } from "date-fns/locale";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
@@ -27,7 +28,6 @@ export const useVideoPlayer = (
 
     const tapTimer = useRef(null); // for detecting double tap on mobile
     const currentTime = useRef(0);
-    const videoTime = useRef(0);
 
     const { notifyToast } = useToast();
     const { isMobile } = useMobileProvider();
@@ -42,8 +42,9 @@ export const useVideoPlayer = (
     const [UIFeedback, setUIFeedback] = useState({});
     const [buffered, setBuffered] = useState(0);
     const [isBuffering, setIsBuffering] = useState(false);
+    const [currentSpeed, setCurrentSpeed] = useState(+window.sessionStorage.getItem("user_playback_rate") || 1);
 
-    const togglePlay = useCallback(() => {
+    const togglePlay = () => {
         if (isPlaying) {
             videoRef.current?.pause();
             setIsPlaying(false);
@@ -52,10 +53,9 @@ export const useVideoPlayer = (
             setIsPlaying(true);
         }
         toggleUIFeedback(UI_FEEDBACK_TYPES.PLAYBACK);
-    }, [isPlaying]);
-
+    };
     // Triggers UI feedback elements such as circles with UI information (play/pause/volume etc)
-    const toggleUIFeedback = useCallback((type, direction = DIRECTION.L) => {
+    const toggleUIFeedback = (type, direction = DIRECTION.L) => {
         switch (type) {
             case UI_FEEDBACK_TYPES.PLAYBACK:
                 return setUIFeedback({ type });
@@ -66,9 +66,9 @@ export const useVideoPlayer = (
             default:
                 return;
         }
-    }, []);
+    };
 
-    const toggleMute = useCallback(() => {
+    const toggleMute = () => {
         if (!videoRef.current) return;
 
         if (isMuted) {
@@ -77,39 +77,32 @@ export const useVideoPlayer = (
             setVolume(videoRef.current.volume);
         } else {
             videoRef.current.muted = true;
-            window.localStorage.setItem("user_video_volume", "0");
             setIsMuted(true);
             setVolume(0);
         }
-    }, [isMuted]);
+    };
 
-    const updateProgress = useCallback((e) => {
+    const updateProgress = (e) => {
         currentTime.current = e.target.currentTime;
         setProgress(Number(((e.target.currentTime / e.target.duration) * 100).toFixed(4)));
-    }, []);
+    };
 
-    const setPlaybackRate = useCallback(
-        (value) => {
-            if (!videoRef.current) return;
+    const setPlaybackRate = (value) => {
+        if (!videoRef.current) return;
+        setCurrentSpeed(value);
+        videoRef.current.playbackRate = value;
 
-            videoRef.current.playbackRate = value;
+        window.sessionStorage.setItem("user_playback_rate", value);
+    };
 
-            window.sessionStorage.setItem("user_playback_rate", value);
-        },
-        [videoRef.current]
-    );
+    const skip = (dir) => {
+        if (isLive) return;
+        if (!videoRef.current || !videoRef.current.duration) return;
+        videoRef.current.currentTime += 5 * dir;
+        toggleUIFeedback(UI_FEEDBACK_TYPES.SEEKING, dir < 0 ? DIRECTION.L : DIRECTION.R);
+    };
 
-    const skip = useCallback(
-        (dir) => {
-            if (isLive) return;
-            if (!videoRef.current || !videoRef.current.duration) return;
-            videoRef.current.currentTime += 5 * dir;
-            toggleUIFeedback(UI_FEEDBACK_TYPES.SEEKING, dir < 0 ? DIRECTION.L : DIRECTION.R);
-        },
-        [videoRef.current, isLive]
-    );
-
-    const requestFullscreen = useCallback(() => {
+    const requestFullscreen = () => {
         const media_container = mediaContainerRef.current;
         const video = videoRef.current;
         if (!media_container || !video) return;
@@ -129,13 +122,21 @@ export const useVideoPlayer = (
         } else if (video.webkitEnterFullscreen) {
             return video.webkitEnterFullscreen();
         }
-    }, [mediaContainerRef.current, videoRef.current]);
+    };
 
-    const handleOnFullscreenChange = useCallback((e) => {
+    const handleOnFullscreenChange = (e) => {
         !!document.fullscreenElement ? setIsFullScreen(true) : setIsFullScreen(false);
-    }, []);
+        if (!videoRef.current && !isMobile) return;
 
-    const toggleFullscreen = useCallback(async () => {
+        // Update state after small delay, sync state after closing native mobile fullscreen player. Mostly on IOS Safari
+        setTimeout(() => {
+            setIsMuted(videoRef.current.muted);
+            setIsPlaying(!videoRef.current.paused);
+            setCurrentSpeed(videoRef.current.playbackRate);
+        }, 500);
+    };
+
+    const toggleFullscreen = async () => {
         try {
             if (!!document.fullscreenElement) {
                 await window.document.exitFullscreen();
@@ -143,105 +144,75 @@ export const useVideoPlayer = (
                 await requestFullscreen();
             }
         } catch (error) {
-            notifyToast("Something went wrong!", true);
+            notifyToast("Something went wrong!" + error.message, true);
             setIsFullScreen(!!document.fullscreenElement);
         }
-    }, [requestFullscreen, isMobile]);
+    };
 
-    const reset = useCallback(() => {
+    const reset = () => {
         setIsPlaying(false);
         currentTime.current = 0;
         setProgress(0);
         setIsBuffering(false);
-    }, []);
+    };
 
-    const changeVolume = useCallback(
-        (e) => {
-            if (!videoRef.current) return;
-            const value = clamp(+e.target.value, 0, 1);
+    const changeVolume = (e) => {
+        if (!videoRef.current) return;
+        const value = clamp(+e.target.value, 0, 1);
 
-            if (value <= 0) setIsMuted(true);
-            if (value > 0) setIsMuted(false);
-            if (isMuted) toggleMute();
-            videoRef.current.volume = value;
-            setVolume(value);
-            window.localStorage.setItem("user_video_volume", e.target.value);
-        },
-        [videoRef.current, toggleMute]
-    );
+        if (value <= 0) setIsMuted(true);
+        if (value > 0) setIsMuted(false);
+        if (isMuted) toggleMute();
+        videoRef.current.volume = value;
+        setVolume(value);
+        window.localStorage.setItem("user_video_volume", e.target.value);
+    };
 
-    const mapMousePosToProgressBar = useCallback(
-        (e) => {
-            if (!progressBarRef.current) return;
-            const node = progressBarRef.current.getBoundingClientRect();
-            const percentage = Number(
-                ((Math.min(Math.max(0, e.clientX - node.x), node.width) / node.width) * 100).toFixed(4)
-            );
-            return percentage;
-        },
-        [progressBarRef.current]
-    );
+    const mapMousePosToProgressBar = (e) => {
+        if (!progressBarRef.current) return;
+        const node = progressBarRef.current.getBoundingClientRect();
+        const percentage = Number((Math.min(Math.max(0, e.clientX - node.x), node.width) / node.width) * 100);
+        return percentage;
+    };
 
-    const bufferHandler = useCallback(
-        (e) => {
-            if (isLive) return;
-            const video = e.target;
-            if (!video.duration) return;
+    const bufferHandler = (e) => {
+        if (isLive) return;
+        const video = e.target;
+        if (!video.duration) return;
 
-            if (video.buffered && video.buffered.length > 0 && video.buffered.end) {
-                const buffered = video.buffered.end(video.buffered.length - 1);
+        if (video.buffered && video.buffered.length > 0 && video.buffered.end) {
+            const buffered = video.buffered.end(video.buffered.length - 1);
 
-                console.log(video.buffered, buffered, video.buffered.start(video.buffered.length - 1));
-                const duration = video.duration;
-                const buffered_percentage = (buffered / duration) * 100;
-                setBuffered(buffered_percentage);
-            }
-        },
-        [isLive]
-    );
+            const duration = video.duration;
+            const buffered_percentage = (buffered / duration) * 100;
+            setBuffered(buffered_percentage);
+        }
+    };
 
-    const setError = useCallback((err) => {
-        notifyToast(err, true); // temporary solution;
-    }, []);
+    const setError = (err) => notifyToast(err, true); // temporary solution;
 
-    const previewSeeking = useCallback(
-        (e) => {
-            if (isLive) return;
-            if (!videoRef.current || !videoRef.current.duration) return;
+    const previewSeeking = (e) => {
+        if (isLive) return;
+        if (!videoRef.current || !videoRef.current.duration) return;
 
-            const percentage = mapMousePosToProgressBar(e);
-            if (videoRef.current.paused && isSeeking) {
-                currentTime.current = Number(((percentage / 100) * videoRef.current.duration).toFixed(4));
-                setProgress(percentage);
-                return;
-            }
-            setPreview(percentage);
-        },
-        [mapMousePosToProgressBar, videoRef.current, isSeeking, isLive]
-    );
+        const percentage = mapMousePosToProgressBar(e);
+        if (videoRef.current.paused && isSeeking) {
+            currentTime.current = Number((percentage / 100) * videoRef.current.duration);
+            setProgress(percentage);
+        }
+        setPreview(percentage);
+    };
 
-    const changeCurrentTime = useCallback(
-        (e) => {
-            if (isLive) return;
-            if (!videoRef.current || !videoRef.current.duration) return;
-            const percentage = mapMousePosToProgressBar(e);
-            videoRef.current.currentTime = Number(((percentage / 100) * videoRef.current.duration).toFixed(4));
-        },
-        [mapMousePosToProgressBar, videoRef.current, isLive]
-    );
+    const changeCurrentTime = (e) => {
+        if (isLive) return;
+        if (!videoRef.current || !videoRef.current.duration) return;
+        const percentage = mapMousePosToProgressBar(e);
+        videoRef.current.currentTime = Number((percentage / 100) * videoRef.current.duration);
+    };
 
-    const setVideoStats = useCallback((e) => {}, []);
+    const handleCanPlay = () => setIsBuffering(false);
 
-    const handleCanPlay = useCallback(
-        (e) => {
-            videoTime.current = e.target.duration;
-            if (isLive) {
-                toggleMute();
-                togglePlay();
-            }
-        },
-        [isLive]
-    );
+    const handleLoading = () => setIsBuffering(true);
 
     /* Main handlers */
 
@@ -288,7 +259,7 @@ export const useVideoPlayer = (
         if (!tapTimer.current) {
             tapTimer.current = setTimeout(function () {
                 tapTimer.current = null;
-            }, 500);
+            }, 300);
         } else {
             clearTimeout(tapTimer.current);
             tapTimer.current = null;
@@ -302,8 +273,9 @@ export const useVideoPlayer = (
     };
 
     const handleTouchStart = (e) => {
-        e.preventDefault();
-        if (handleDoubleTap(e)) return;
+        if (videoRef.current === e.target) e.preventDefault();
+
+        handleDoubleTap(e);
         if (progressBarRef.current.contains(e.target)) {
             setIsSeeking(true);
         }
@@ -312,6 +284,7 @@ export const useVideoPlayer = (
     const handleTouchMove = useCallback(
         (e) => {
             const { clientX, clientY } = e.changedTouches[0];
+
             handleMouseMove({ target: e.target, clientX, clientY });
         },
         [handleMouseMove]
@@ -385,7 +358,6 @@ export const useVideoPlayer = (
 
     useEffect(() => {
         if (!videoRef.current) return;
-
         // Setting user's config
         changeVolume({ target: { value: Number(window.localStorage.getItem("user_video_volume") || 0.5) } });
         setPlaybackRate(+window.sessionStorage.getItem("user_playback_rate") || 1);
@@ -396,17 +368,21 @@ export const useVideoPlayer = (
         video.addEventListener("canplay", handleCanPlay);
         video.addEventListener("dblclick", toggleFullscreen);
         video.addEventListener("progress", bufferHandler);
+        video.addEventListener("waiting", handleLoading);
 
         document.addEventListener("fullscreenchange", handleOnFullscreenChange);
+        video.addEventListener("webkitendfullscreen", handleOnFullscreenChange);
 
         return () => {
             video.removeEventListener("ended", reset);
             video.removeEventListener("timeupdate", updateProgress);
             video.removeEventListener("canplay", handleCanPlay);
             video.removeEventListener("progress", bufferHandler);
+            video.removeEventListener("waiting", handleLoading);
             video.removeEventListener("dblclick", toggleFullscreen);
 
             document.removeEventListener("fullscreenchange", handleOnFullscreenChange);
+            video.removeEventListener("webkitendfullscreen", handleOnFullscreenChange);
         };
     }, [videoRef.current, isLive]);
 
@@ -417,30 +393,37 @@ export const useVideoPlayer = (
 
         const handleKeys = (e) => {
             if (videoContainerRef.current !== e.target || !videoRef.current) return;
-            e.preventDefault();
+
             setShowUI(true);
             switch (e.code) {
                 case "ArrowRight":
+                    e.preventDefault();
                     skip(1);
                     break;
                 case "ArrowLeft":
+                    e.preventDefault();
                     skip(-1);
                     break;
                 case "ArrowUp":
+                    e.preventDefault();
                     toggleUIFeedback(UI_FEEDBACK_TYPES.VOLUME_CHANGE, DIRECTION.U);
                     changeVolume({ target: { value: videoRef.current.volume + 0.1 } });
                     break;
                 case "ArrowDown":
+                    e.preventDefault();
                     toggleUIFeedback(UI_FEEDBACK_TYPES.VOLUME_CHANGE, DIRECTION.D);
                     changeVolume({ target: { value: videoRef.current.volume - 0.1 } });
                     break;
                 case "KeyF":
+                    e.preventDefault();
                     toggleFullscreen();
                     break;
                 case "Space":
+                    e.preventDefault();
                     togglePlay();
                     break;
                 case "KeyM":
+                    e.preventDefault();
                     toggleMute();
                     break;
 
@@ -453,16 +436,7 @@ export const useVideoPlayer = (
         return () => {
             document.removeEventListener("keydown", handleKeys);
         };
-    }, [
-        videoRef.current,
-        isLive,
-        videoContainerRef.current,
-        volume,
-        togglePlay,
-        toggleFullscreen,
-        toggleMute,
-        isMobile
-    ]);
+    }, [videoRef.current, isLive, isPlaying, videoContainerRef.current, volume, isMobile]);
 
     return {
         functions: {
@@ -482,7 +456,7 @@ export const useVideoPlayer = (
             volume,
             currentTime: currentTime.current,
             progress,
-            videoTime: videoTime.current,
+            videoTime: videoRef.current?.duration,
             preview,
             isSeeking,
             isFullscreen,
@@ -493,7 +467,8 @@ export const useVideoPlayer = (
             isLive,
             qualityOptions,
             defaultQuality,
-            isBuffering
+            isBuffering,
+            currentSpeed
         },
         refs: {
             videoRef,

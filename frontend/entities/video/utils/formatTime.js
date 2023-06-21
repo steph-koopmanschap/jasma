@@ -1,4 +1,5 @@
 export const formatTime = (seconds) => {
+    if (!seconds) return "00:00:00";
     let secs = Math.round(seconds);
     let hours = secs >= 3600 ? Math.trunc(secs / 3600) : 0;
     let mins = secs >= 60 ? Math.trunc(secs / 60) : 0;

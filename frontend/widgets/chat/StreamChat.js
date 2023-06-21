@@ -1,5 +1,6 @@
 import { ChatWindow, SendMessage } from "@/entities/chat";
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import "./Chat.css";
 
 const TEST_DATA = [
     { sender: "John Doe1", timestamp: "19:36", message: "Hello everyone!" },
@@ -16,22 +17,19 @@ export const StreamChat = () => {
 
     const [update, forceUpdate] = useState(false);
 
-    const handleSend = useCallback(
-        (msg) => {
-            // Sanitize first, most likely library will be used instead
+    const handleSend = (msg) => {
+        // Sanitize first, most likely library will be used instead
 
-            if (messages.current.length >= MSG_LIMIT) {
-                messages.current.splice(0, Math.floor(messages.current.length * SPLICE_FACTOR));
-            }
-            messages.current.push({ message: msg, sender: "You", timestamp: Date.now() });
+        if (messages.current.length >= MSG_LIMIT) {
+            messages.current.splice(0, Math.floor(messages.current.length * SPLICE_FACTOR));
+        }
+        messages.current.push({ message: msg, sender: "You", timestamp: Date.now() });
 
-            forceUpdate(!update);
-        },
-        [update]
-    );
+        forceUpdate(!update);
+    };
 
     return (
-        <div className="px-1.5 w-full h-full sticky top-0">
+        <div className="stream-chat-container">
             <ChatWindow
                 title={"Live chat"}
                 messageList={messages.current}

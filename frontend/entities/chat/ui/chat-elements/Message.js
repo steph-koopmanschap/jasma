@@ -7,7 +7,9 @@ export const ChatMessage = ({ message, sender, timestamp, isByUser = false }) =>
         <div className={`chat-message-container ${isByUser ? "bg-red-300" : ""}`}>
             <div className="chat-message-body">
                 <h3>{sender}:</h3>
-                <p>{message}</p>
+                <div className="chat-text-frag">
+                    <p>{message}</p>
+                </div>
             </div>
             <span className="chat-timestamp">{timestamp}</span>
         </div>
@@ -22,7 +24,9 @@ export const SendMessage = ({ onSend }) => {
     return (
         <form
             onSubmit={(e) => {
-                e.preventDefault(), onSend(fieldRef.current?.value);
+                e.preventDefault();
+                onSend(fieldRef.current?.value);
+                fieldRef.current.value = "";
             }}
         >
             <div className="chat-input-container">

@@ -7,7 +7,8 @@
 }
 
 .stream-large-layout {
-    @apply py-2 px-4 flex w-full h-full;
+    @apply py-2 px-4 flex w-full h-full relative;
+    transform-origin: center center;
 }
 
 /* video container */

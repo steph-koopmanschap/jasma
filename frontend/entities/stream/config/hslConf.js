@@ -20,7 +20,7 @@ export const HSL_CONFIG = {
     liveDurationInfinity: false,
     enableWorker: true,
     enableSoftwareAES: true,
-    manifestLoadingTimeOut: 10000,
+    manifestLoadingTimeOut: 20000,
     manifestLoadingMaxRetry: 1,
     manifestLoadingRetryDelay: 1000,
     manifestLoadingMaxRetryTimeout: 64000,
