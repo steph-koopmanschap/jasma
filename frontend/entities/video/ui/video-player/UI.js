@@ -83,9 +83,6 @@ export function ActionBtn({ onActivate, children }) {
         <button
             className="action-btn"
             onClick={onActivate}
-            // onTouchStart={(e) => {
-            //     onActivate();
-            // }}
         >
             {children}
         </button>
@@ -95,18 +92,25 @@ export function ActionBtn({ onActivate, children }) {
 export function PreviewFrame({ preview }) {
     const frameRef = useRef(null);
 
-    const getFrameWidth = () => {
+    const getFramePos = () => {
         if (!frameRef.current) return 0;
 
         const { width } = frameRef.current.getBoundingClientRect();
-        return width;
+        const parentW = frameRef.current.offsetParent.offsetWidth;
+        const previewPos = (preview / 100) * parentW;
+        const framePos = previewPos - width / 2;
+
+        if (framePos <= 0) return 0;
+        if (framePos + width >= parentW) return parentW - width;
+
+        return framePos;
     };
 
     return (
         <div
             ref={frameRef}
             className="preview-frame"
-            style={{ left: `calc(${preview}% - ${getFrameWidth() / 2}px)` }}
+            style={{ left: `${getFramePos()}px` }}
         ></div>
     );
 }

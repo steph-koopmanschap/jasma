@@ -3,4 +3,3 @@ export { DropDownBtn } from "./buttons/DropDownBtn";
 export { Spinner } from "./loading/Spinner";
 export { Portal } from "./wrappers/Portal";
 export { InputField } from "./buttons/InputField";
-export { Resizable } from "./wrappers/Resizable";

@@ -85,8 +85,9 @@ export const useStreamLogic = (stream_src, isLive) => {
             hls.current.attachMedia(video);
         } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
             video.addEventListener("loadedmetadata", (e) => {
-                functions.togglePlay();
-                functions.toggleMute();
+                // functions.togglePlay();
+                // functions.toggleMute();
+                functions.setError(e.target.duration);
             });
         }
     }, [stream_src, videoRef.current]);

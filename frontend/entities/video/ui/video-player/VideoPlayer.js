@@ -39,7 +39,7 @@ export const VideoPlayer = ({ videoSrc = "", thumbnail = "", status, refs, funct
                         Your browser does not support HTML5 video.
                         <source
                             src={videoSrc}
-                            type="video/m3u8"
+                            type="application/x-mpegURL"
                         />
                     </video>
                 </div>

@@ -3,7 +3,7 @@ import Head from "next/head";
 //Default Head to provide page metadata
 
 export function MetaHead(props) {
-    const { title } = props;
+    const { title, isMobile } = props;
 
     const csrfToken = "";
 
@@ -20,7 +20,7 @@ export function MetaHead(props) {
                 />
                 <meta
                     name="viewport"
-                    content="width=device-width, initial-scale=1"
+                    content={isMobile ? "width=device-width, initial-scale=1" : "width=1200"}
                 />
                 <meta
                     name="theme-color"

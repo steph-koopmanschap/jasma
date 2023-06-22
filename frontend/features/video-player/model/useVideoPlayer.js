@@ -1,14 +1,13 @@
 /* All the logic for video player */
 
-import { UI_FEEDBACK_TYPES, DIRECTION } from "@/entities/video";
+import { DIRECTION, UI_FEEDBACK_TYPES } from "@/entities/video";
 import { useMobileProvider, useToast } from "@/shared/model";
 import { clamp, normilize } from "@/shared/utils";
-import { vi } from "date-fns/locale";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
  *
- * @param {Boolean} isLive is streaming live (default: false)
+ * @param {Boolean} isLive is streaming live (default: false). Use false option for VoD
  * @param {Uint32Array} qualityOptions default: empty array
  * @param {Function} onChangeQuality function that fires on quality change
  * @param {Number} defaultQuality default: 480
@@ -263,6 +262,7 @@ export const useVideoPlayer = (
         } else {
             clearTimeout(tapTimer.current);
             tapTimer.current = null;
+            if (isLive) return toggleFullscreen(); // No skipping when live, just open fullscreen on double tap
             const { width, x } = videoContainerRef.current.getBoundingClientRect();
             const { clientX } = e.changedTouches[0];
             const norm = normilize(clientX, x, x + width);
