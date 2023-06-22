@@ -193,6 +193,32 @@ class Post(models.Model):
         verbose_name_plural = "Posts"
         ordering = ["-created_at"]
 
+# This stores a reference to the post that was deleted, 
+# because we can no longer retrieve the post info after its deleted.
+# It only stores the post id, and when a post was created not the whole post info.
+# This is mainly used for analytics purposes.
+class DeletedPostReference(models.Model):
+    id = models.UUIDField(default=uuid4, primary_key=True, editable=False)
+    post_id = models.UUIDField(editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    delete_reason = models.CharField(max_length=17, choices=[
+                                        ("user deleted", "User deleted"),
+                                        ("moderator deleted", "Moderator deleted"),
+                                        # audo deleted = Deleted by AI (feature not yet implemented)
+                                        ("auto deleted", "Auto deleted")])
+    # When the post was orginially created
+    created_at = models.DateTimeField(blank=False)
+    # When the post was deleted
+    deleted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Deleted id: {self.post_id} at: {self.deleted_at}"
+
+    class Meta:
+        db_table = "deleted_posts_references"
+        verbose_name_plural = "DeletedPostReferences"
+        ordering = ["-created_at"]
+
 class Comment(models.Model):
     id = models.UUIDField("Comment id",
                         default=uuid4, primary_key=True, editable=False)
