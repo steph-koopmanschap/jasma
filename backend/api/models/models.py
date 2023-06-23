@@ -1,10 +1,15 @@
+from typing import Any
+from uuid import uuid4
+
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group, Permission, UserManager
 from django.db import models
 from django.core.validators import validate_ipv4_address, MaxValueValidator, MinValueValidator
+from django.contrib.auth import get_user_model
+
 from api.validators import validate_image_file_size
-from uuid import uuid4
 from api.constants import user_roles, relationships, genders, education, countries
+
 
 # Custom user model
 # Login:
@@ -12,6 +17,7 @@ from api.constants import user_roles, relationships, genders, education, countri
 class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
+
 
     id = models.UUIDField("User id", primary_key=True,
                         default=uuid4, editable=False)
@@ -43,10 +49,10 @@ class User(AbstractUser):
             UserProfile.objects.create(user=self)
             UserNotificationPreferences.objects.create(user=self)
 
-    """ TODO: We could probably use a string representation
+    # TODO: We could probably use a string representation
     def __str__(self):
         return self.username
-    """
+
 
     @classmethod
     def total_created_posts(cls):
@@ -73,7 +79,31 @@ class User(AbstractUser):
     def total_created_ads(self):
         return self.ads.count()
 
-class UserProfile(models.Model):
+class JasmaBaseModel(models.Model):
+    created_by = models.ForeignKey(get_user_model(), models.CASCADE, related_name="created_by", editable=False)
+    last_modified_by = models.ForeignKey(get_user_model(), models.CASCADE, related_name="last_modified_by", null=True, blank=True)
+
+    class Meta:
+        abstract = True
+
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
+@receiver(pre_save)
+def update_modified_by(sender, instance, **kwargs):
+    print("*** update_modified_by:")
+    print(f"   sender: {sender}")
+    print(f"   instance: {instance}")
+    print(f"   kwargs: {kwargs}")
+    return 
+    if issubclass(sender, JasmaBaseModel) and instance.pk:
+        original = sender.objects.get(pk=instance.pk)
+        if original.modified_by != instance.modified_by:
+            instance.modified_by = ""
+
+
+
+class UserProfile(JasmaBaseModel):
     user = models.OneToOneField(User, related_name="profile",
         on_delete=models.CASCADE, primary_key=True, editable=False) 
     profile_pic = models.ImageField("Profile picture", 

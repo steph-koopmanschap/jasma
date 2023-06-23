@@ -109,7 +109,11 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PROXY_HEADERS": {
         "HTTP_X_FORWARDED_FOR": "X_FORWARDED_FOR",
-    }
+    },
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+        "rest_framework.permissions.DjangoModelPermissions"
+    ]
 }
 
 # CORS settings

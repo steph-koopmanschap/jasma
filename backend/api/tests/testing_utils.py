@@ -54,7 +54,9 @@ class JasmaTestCase(APITestCase):
         cls.user = User.objects.create_user(
             username="user",
             password="password1",
-            email="user@test1.test")
+            email="user@test1.test",
+            phone="9999999999"
+        )
         
         cls.mod_user = User.objects.create_user(
             username="mod_user",
@@ -68,6 +70,9 @@ class JasmaTestCase(APITestCase):
             email="admin_user@test1.test",
             user_role="admin"
             )
+        
+        
+        
 
     def setUp(self):
         print(f"======SETTING UP {self._testMethodName}========")

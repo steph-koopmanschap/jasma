@@ -13,10 +13,9 @@ from api.utils.handle_file_save import handle_file_save
 from api.utils.handle_file_delete import handle_file_delete
 from api.utils.staff_auth_wrappers import admin_required
 
-
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.permissions import DjangoObjectPermissions
+from rest_framework.permissions import DjangoModelPermissions, DjangoObjectPermissions
 from rest_framework.decorators import action
 
 from api.constants import user_roles
@@ -27,7 +26,7 @@ from api.serializers import UserCustomSerializer
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserCustomSerializer
-    permission_classes = [DjangoObjectPermissions]
+    permission_classes = [DjangoModelPermissions, DjangoObjectPermissions]
 
     def retrieve(self, request, *args, **kwargs):
         user = self.get_object()

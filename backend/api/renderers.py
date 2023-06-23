@@ -21,8 +21,8 @@ class JasmaJSONRenderer(JSONRenderer):
         unrecognized_keys = set(data.keys()) - JasmaJSONRenderer.recognized_keys
         if unrecognized_keys:
             logging.critical(
-                f"The following unrecognized keys have been detected: {unrecognized_keys}")
-            raise KeyError(f"The following unrecognized keys have been detected: {unrecognized_keys}")
+                f"The following unrecognized keys have been detected by the renderer: {unrecognized_keys}")
+            raise KeyError(f"The following unrecognized keys have been detected by the renderer: {unrecognized_keys}")
         return {
             # TODO: Success seems like it could let error pass. 
             # Check and test that errors is always populated when relelvant.

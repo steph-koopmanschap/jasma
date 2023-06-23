@@ -7,10 +7,10 @@ urlpatterns = [
     # auth_urls
     path("auth/login", auth_views.login_view, name="login"),
     path("auth/register", auth_views.register, name="register"),
-    path("auth/logout", auth_views.logout_view, name="logout"),
+    path("auth/logout", auth_views.LogoutView.as_view(), name="logout"),
     path("auth/checkAuth", auth_views.check_auth, name="check-auth"),
     # path("auth/getCsrf", auth_views.get_csrf_token, name="get-csrf"),
-    path("auth/changePassword", auth_views.change_password, name="change-password"),
+    path("auth/changePassword/<str:pk>", auth_views.ChangePasswordView.as_view(), name="change-password"),
 ]
 
 # Inititalize the router

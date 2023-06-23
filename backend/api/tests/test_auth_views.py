@@ -123,7 +123,7 @@ class AuthViewTestCase(JasmaTestCase):
         expected_data = {
             "user_id": str(self.user.id),
             "username": self.user.username,
-            "email": self.user.email,
+            # "email": self.user.email,
             "user_role": self.user.user_role
         }
         self.assertDictEqual(data.get("data"), expected_data)
@@ -248,13 +248,14 @@ class AuthViewTestCase(JasmaTestCase):
         self.assertFalse(data.get("errors"))
 
     def test_J_change_password_success(self):
+        self.client.login(username=self.user.email, password="password1")
         # Request
-        url = reverse_lazy("change-password")
+        url = reverse_lazy("change-password", args=[self.user.pk])
         payload = {
-            "new_password": "newPassword123"
+            "password": "newPassword123"
         }
-        with self.assertNumQueries(1):
-            self.response = self.client.post(url, payload)
+        with self.assertNumQueries(2):
+            self.response = self.client.patch(url, data=payload)
         # Response
         self.assertEqual(self.response.status_code, status.HTTP_200_OK)
         # Data
@@ -267,12 +268,12 @@ class AuthViewTestCase(JasmaTestCase):
     def test_K_change_password_not_logged_in(self):
         self.client.logout()
         # Request
-        url = reverse_lazy("change-password")
+        url = reverse_lazy("change-password", args=[self.user.pk])
         payload = {
             "new_password": "newPassword123"
         }
         with self.assertNumQueries(0):
-            self.response = self.client.post(url, payload)
+            self.response = self.client.patch(url, payload)
         # Response
         self.assertEqual(self.response.status_code, status.HTTP_403_FORBIDDEN)
         # Data

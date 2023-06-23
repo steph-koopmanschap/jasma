@@ -7,6 +7,17 @@ from api.models import BookmarkedPost, Comment, Following
 
 
 class UserViewsTestCase(JasmaTestCase):
+    def setUp(self):
+        """ Fields that are expected to always be returned for get request """
+        super().setUp()
+        self.expected_get_data = {
+            "user_id": self.user.id,
+            "username": self.user.username,
+            # "email": self.user.email,
+            "user_role": self.user.user_role,
+        }
+        
+    
     def test_A_get_user_self_basic_info_plus_phone_success(self):
         # Request
         url = reverse("user-detail", args=[self.user.pk])
@@ -19,14 +30,9 @@ class UserViewsTestCase(JasmaTestCase):
         data = self.response.data
         self.assertTrue(data.get("success"))
         self.assertFalse(data.get("message"))
-        expected_data = {
-            "user_id": self.user.id,
-            "username": self.user.username,
-            "email": self.user.email,
-            "user_role": self.user.user_role,
-            "phone": self.user.phone
-        }
-        self.assertCountEqual(data.get("data"), expected_data)
+        self.expected_get_data.update({
+            "phone": self.user.phone})
+        self.assertCountEqual(data.get("data"), self.expected_get_data)
         self.assertFalse(data.get("errors"))
 
     def test_B_get_user_basic_info_not_logged(self):
@@ -86,14 +92,9 @@ class UserViewsTestCase(JasmaTestCase):
         data = self.response.data
         self.assertTrue(data.get("success"))
         warning = "Warning could not find some_unknown_field, neither_this_one."
-        self.assertEqual(data.get("message"), warning)
-        expected_data = {
-            "user_id": self.user.id,
-            "username": self.user.username,
-            "email": self.user.email,
-            "user_role": self.user.user_role
-        }
-        self.assertCountEqual(data.get("data"), expected_data)
+        self.assertEqual(data.get(
+            "message"), warning)
+        self.assertCountEqual(data.get("data"), self.expected_get_data)
         self.assertFalse(data.get("errors"))
 
     def test_E_get_user_self_basic_info_plus_profile_success(self):
@@ -137,14 +138,9 @@ class UserViewsTestCase(JasmaTestCase):
         data = self.response.data
         self.assertTrue(data.get("success"))
         self.assertFalse(data.get("message"))
-        expected_data = {
-            "user_id": self.user.id,
-            "username": self.user.username,
-            "email": self.user.email,
-            "user_role": self.user.user_role,
-            "profile": self.user.profile
-        }
-        self.assertCountEqual(data.get("data"), expected_data)
+        self.expected_get_data.update({
+            "profile": self.user.profile})
+        self.assertCountEqual(data.get("data"), self.expected_get_data)
         self.assertFalse(data.get("errors"))
 
     def test_F_get_user_self_basic_info_plus_notification_preferences_success(self):
@@ -160,14 +156,9 @@ class UserViewsTestCase(JasmaTestCase):
         data = self.response.data
         self.assertTrue(data.get("success"))
         self.assertFalse(data.get("message"))
-        expected_data = {
-            "user_id": self.user.id,
-            "username": self.user.username,
-            "email": self.user.email,
-            "user_role": self.user.user_role,
-            "notification_preferences": self.user.notification_preferences
-        }
-        self.assertCountEqual(data.get("data"), expected_data)
+        self.expected_get_data.update({
+            "notification_preferences": self.user.notification_preferences})
+        self.assertCountEqual(data.get("data"), self.expected_get_data)
         self.assertFalse(data.get("errors"))
 
     def test_G_get_user_self_basic_info_plus_posts_success(self):
@@ -186,14 +177,9 @@ class UserViewsTestCase(JasmaTestCase):
         data = self.response.data
         self.assertTrue(data.get("success"))
         self.assertFalse(data.get("message"))
-        expected_data = {
-            "user_id": self.user.id,
-            "username": self.user.username,
-            "email": self.user.email,
-            "user_role": self.user.user_role,
-            "posts": self.user.posts
-        }
-        self.assertCountEqual(data.get("data"), expected_data)
+        self.expected_get_data.update({
+            "posts": self.user.posts})
+        self.assertCountEqual(data.get("data"), self.expected_get_data)
         self.assertFalse(data.get("errors"))
 
     def test_H_get_user_self_basic_info_plus_comments_success(self):
@@ -219,14 +205,9 @@ class UserViewsTestCase(JasmaTestCase):
         data = self.response.data
         self.assertTrue(data.get("success"))
         self.assertFalse(data.get("message"))
-        expected_data = {
-            "user_id": self.user.id,
-            "username": self.user.username,
-            "email": self.user.email,
-            "user_role": self.user.user_role,
-            "comments": self.user.comments
-        }
-        self.assertCountEqual(data.get("data"), expected_data)
+        self.expected_get_data.update({
+            "comments": self.user.comments})
+        self.assertCountEqual(data.get("data"), self.expected_get_data)
         self.assertFalse(data.get("errors"))
 
     def test_I_get_user_self_basic_info_plus_bookmarked_posts_success(self):
@@ -253,14 +234,9 @@ class UserViewsTestCase(JasmaTestCase):
         data = self.response.data
         self.assertTrue(data.get("success"))
         self.assertFalse(data.get("message"))
-        expected_data = {
-            "user_id": self.user.id,
-            "username": self.user.username,
-            "email": self.user.email,
-            "user_role": self.user.user_role,
-            "bookmarked_posts": self.user.bookmarked_posts
-        }
-        self.assertCountEqual(data.get("data"), expected_data)
+        self.expected_get_data.update({
+            "bookmarked_posts": self.user.bookmarked_posts})
+        self.assertCountEqual(data.get("data"), self.expected_get_data)
         self.assertFalse(data.get("errors"))
 
     def test_J_get_user_self_basic_info_plus_following_success(self):
@@ -287,17 +263,17 @@ class UserViewsTestCase(JasmaTestCase):
         data = self.response.data
         self.assertTrue(data.get("success"))
         self.assertFalse(data.get("message"))
-        expected_data = {
-            "user_id": self.user.id,
-            "username": self.user.username,
-            "email": self.user.email,
-            "user_role": self.user.user_role,
-            "following": self.user.following
-        }
-        self.assertCountEqual(data.get("data"), expected_data)
+        self.expected_get_data.update({
+            "following": self.user.following})
+
+        self.assertCountEqual(data.get("data"), self.expected_get_data)
         self.assertFalse(data.get("errors"))
 
-    def test_K_For_fun(self):
+
+    def test_Fun_get_user_self_all_info_success(self):
+        self.user.profile.relationship_with=self.mod_user
+        self.user.profile.save()
         url = reverse("user-list")
-        self.response = self.client.get(url)
+        self.query_params.update({"fields": "all"})
+        self.response = self.client.get(url, data=self.query_params)
         self.assertEqual(self.response.status_code, status.HTTP_200_OK)

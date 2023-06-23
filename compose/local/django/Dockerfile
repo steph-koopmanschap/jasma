@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   # psycopg2 dependencies
   libpq-dev \
   # cleaning up unused files
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=fals
+  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 
 WORKDIR /backend
 

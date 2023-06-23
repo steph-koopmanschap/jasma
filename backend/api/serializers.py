@@ -17,101 +17,63 @@ class StringUUIDField(serializers.UUIDField):
         return None
 
 # Model Serializer template
-
-
 class JasmaModelSerializer(serializers.ModelSerializer):
+    # Was created for the formating of response. 
+    # It was a bad idea in the end
+    # I kept here in case we need it as all serializer already inherit from it.
+    ...
     # NOTE: This was a bad idea :/
-    """Add the serialized data to the "data" keyword of the response.data."""
 
-    # def to_representation(self, instance):
-    #     representation = super().to_representation(instance)
-    #     # This is to take into account related fields
-    #     if self.context.get('view') is None or isinstance(self, self.context.get('view').serializer_class):
-    #         return {
-    #             "data": dict(representation),
-    #             "message": ""
-    #         }
-    #     return dict(representation)
-
-
-class ExcludeUserPassword(JasmaModelSerializer):
-    """ 
-    Use this ModelSerializer to make sure to exclude password from serialization. 
-
-    Inherit JasmaModelSerializer
-    NOTE: Not in use as I seem to have fiigured out exclude in the Meta.
-    Lets keep for now just in case.
-    """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields.pop("password")
 
 # USER serializers
-
-
-class UserRegisterSerializer(JasmaModelSerializer):
-    """ 
-    Serializer to be used for the registration process. 
-
-    Particularity: allow password.
+class UserAuthenticationSerializer(JasmaModelSerializer):
     """
-    user_id = StringUUIDField(source="pk", read_only=True)
+    Serializer to be used for the authentication process.
+
+    Particularity:
+    - Only returns "user_id", "username", "user_role"
+    - Will accept "password" and "email"
+
+    """
+    user_id = StringUUIDField(read_only=True)
 
     class Meta:
         model = User
-        fields = ["user_id", "username", "email", "password"]
+        fields = ["user_id", "username", "user_role", "password", "email"]
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'email': {'write_only': True},
+        }
 
 
-class UserLoginSerializer(JasmaModelSerializer):
-    """
-    Serializer to be used for the registration process.
-
-    Particularity: Only returns "user_id", "username", "email", "user_role".
-
-    NOTE: Could be replaced by UserFullSerializer without field query.
-    """
-    user_id = StringUUIDField(source="pk", read_only=True)
-
-    class Meta:
-        model = User
-        fields = ["user_id", "username", "email", "user_role"]
-
-
-# TODO: Review accessible fields.
 class UserProfileSerializer(JasmaModelSerializer):
     # Note user is the PK of this model
-    user_profile_id = StringUUIDField(source="pk")
-    relationship_with = StringUUIDField(source="relationship_with.pk")
+    user = StringUUIDField(read_only=True)
+    relationship_with = UserAuthenticationSerializer()
 
     class Meta:
         model = UserProfile
-        exclude = [
-            "user",
-            "job_company",
-            "job_industry",
-            "job_role",
-            "education"
-        ]
+        fields = "__all__"
 
 
 class UserNotificationPreferencesSerializer(JasmaModelSerializer):
     # Note user is the PK of this model
-    user_notification_preferences_id = StringUUIDField(source="pk")
+    user = StringUUIDField(read_only=True)
 
     class Meta:
         model = UserNotificationPreferences
-        exclude = ["user"]
+        fields = "__all__"
 
 
 class CommentSerializer(JasmaModelSerializer):
-    comment_id = StringUUIDField(source="pk", read_only=True)
-    user_id = StringUUIDField(source="user.pk", read_only=True)
-    post_id = StringUUIDField(source="post.pk", read_only=True)
+    id = StringUUIDField(source="pk", read_only=True)
+    user = StringUUIDField()
+    post = StringUUIDField()
 
     class Meta:
         model = Comment
-        exclude = ["id", "user", "post"]
+        fields = "__all__"
+
 
 
 class PostSerializer(JasmaModelSerializer):
@@ -203,7 +165,7 @@ class UserCustomSerializer(UserFullSerializer):
         automatic_fields = {
             "user_id",
             "username",
-            "email",
+            # "email",  # I don't believe we should / need to expose this by default
             "user_role"
         }
         # All available fields from the serializer
