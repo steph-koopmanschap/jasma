@@ -28,6 +28,7 @@ export const useStreamLogic = (stream_src, isLive) => {
             return data.levels.map((l) => l.height);
         });
         functions.setIsBuffering(true);
+        console.log(data);
     };
 
     const handleFragBuffered = (_, data) => {
