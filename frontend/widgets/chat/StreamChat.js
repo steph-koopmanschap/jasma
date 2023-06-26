@@ -3,10 +3,10 @@ import { useRef, useState } from "react";
 import "./Chat.css";
 
 const TEST_DATA = [
-    { sender: "John Doe1", timestamp: "19:36", message: "Hello everyone!" },
-    { sender: "John Doe2", timestamp: "19:35", message: "Hello everyone!" },
-    { sender: "John Doe3", timestamp: "19:31", message: "Hello everyone!" },
-    { sender: "John Doe4", timestamp: "19:32", message: "Hello everyone!" }
+    { sender: "John Doe1", timestamp: Date.now(), message: "Hello everyone!" },
+    { sender: "John Doe2", timestamp: Date.now(), message: "Hello everyone!" },
+    { sender: "John Doe3", timestamp: Date.now(), message: "Hello everyone!" },
+    { sender: "John Doe4", timestamp: Date.now(), message: "Hello everyone!" }
 ];
 
 const MSG_LIMIT = 50;
@@ -19,6 +19,7 @@ export const StreamChat = () => {
 
     const handleSend = (msg) => {
         // Sanitize first, most likely library will be used instead
+        if (!msg) return;
 
         if (messages.current.length >= MSG_LIMIT) {
             messages.current.splice(0, Math.floor(messages.current.length * SPLICE_FACTOR));

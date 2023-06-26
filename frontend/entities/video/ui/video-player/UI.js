@@ -78,15 +78,20 @@ export function SeekingDirection({ direction }) {
     );
 }
 
-export function ActionBtn({ onActivate, children }) {
+export function ActionBtn({ onActivate, tooltip, children }) {
     return (
         <button
             className="action-btn"
             onClick={onActivate}
         >
+            {tooltip ? <ToolTip text={tooltip} /> : null}
             {children}
         </button>
     );
+}
+
+export function ToolTip({ text }) {
+    return <div className="tooltip">{text}</div>;
 }
 
 export function PreviewFrame({ preview }) {

@@ -1,6 +1,7 @@
 import { InputField } from "@/shared/ui";
 import { useRef } from "react";
 import "./ChatElements.css";
+import { format } from "date-fns";
 
 export const ChatMessage = ({ message, sender, timestamp, isByUser = false }) => {
     return (
@@ -11,7 +12,7 @@ export const ChatMessage = ({ message, sender, timestamp, isByUser = false }) =>
                     <p>{message}</p>
                 </div>
             </div>
-            <span className="chat-timestamp">{timestamp}</span>
+            <span className="chat-timestamp">{`${format(timestamp, "kk")}:${format(timestamp, "mm")}`}</span>
         </div>
     );
 };

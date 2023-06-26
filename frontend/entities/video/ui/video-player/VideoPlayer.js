@@ -12,7 +12,16 @@ import { forwardRef, useCallback } from "react";
 import { DIRECTION, UI_FEEDBACK_TYPES } from "../../utils/enums";
 import { formatTime } from "../../utils/formatTime";
 import { Settings } from "./Settings";
-import { ActionBtn, LoadingState, OnAirSign, PlayState, PreviewFrame, SeekingDirection, VolumeDirection } from "./UI";
+import {
+    ActionBtn,
+    LoadingState,
+    OnAirSign,
+    PlayState,
+    PreviewFrame,
+    SeekingDirection,
+    ToolTip,
+    VolumeDirection
+} from "./UI";
 import "./VideoPlayer.css";
 
 /* Bare video player UI. Doesn't work without useVideoPlayer hook. Use composition pattern on upper level to make it work */
@@ -33,14 +42,12 @@ export const VideoPlayer = ({ videoSrc = "", thumbnail = "", status, refs, funct
                         id="video"
                         ref={refs.videoRef}
                         playsInline
-                        preload="metadata"
+                        // preload="metadata"
                         poster={thumbnail}
+                        src={videoSrc}
+                        type={status.type}
                     >
                         Your browser does not support HTML5 video.
-                        <source
-                            src={videoSrc}
-                            type="application/x-mpegURL"
-                        />
                     </video>
                 </div>
                 {status.showUi ? <div className="top-curtain"></div> : null}
@@ -174,12 +181,18 @@ function Controls({
     return (
         <div className="controls-container">
             <div className="controls-left-container">
-                <ActionBtn onActivate={onTogglePlay}>
+                <ActionBtn
+                    onActivate={onTogglePlay}
+                    tooltip={isPlaying ? "pause" : "play"}
+                >
                     <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
                 </ActionBtn>
 
                 <div className="sound-container">
-                    <ActionBtn onActivate={onToggleMute}>
+                    <ActionBtn
+                        onActivate={onToggleMute}
+                        tooltip={isMuted ? "unmute" : "mute"}
+                    >
                         <FontAwesomeIcon icon={getVolumeIcon()} />
                     </ActionBtn>
 
@@ -208,7 +221,10 @@ function Controls({
                     currentSpeed={currentSpeed}
                     containerRef={containerRef}
                 />
-                <ActionBtn onActivate={onToggleFullscreen}>
+                <ActionBtn
+                    onActivate={onToggleFullscreen}
+                    tooltip={isFullscreen ? "exit fullscreen" : "toggle fullscreen"}
+                >
                     <FontAwesomeIcon icon={!isFullscreen ? faTvAlt : faRectangleXmark} />
                 </ActionBtn>
             </div>

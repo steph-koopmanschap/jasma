@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 /* This hook used in provider, use useMobileProvider instead from providers folder */
 
 export const useIsMobile = () => {
-    const [isMobile, setIsMobile] = useState(true);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         const mobileCheck = () => {

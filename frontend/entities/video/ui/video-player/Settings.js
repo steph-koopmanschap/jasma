@@ -24,7 +24,11 @@ export const Settings = memo(
                 className="settings-container"
                 ref={ref}
             >
-                <ActionBtn onActivate={() => setIsShow(!isShow)}>
+                <ActionBtn
+                    onActivate={() => setIsShow(!isShow)}
+                    tooltip={isShow ? "Close settings" : "Open settings"}
+                >
+                    <span className="quality-span">{defaultQuality}</span>
                     <FontAwesomeIcon icon={faCog} />
                 </ActionBtn>
                 {isShow && !isMobile ? (
@@ -76,7 +80,7 @@ function SettingsMenu({
 }) {
     const [currentPage, setCurrentPage] = useState(SETTINGS_PAGES.ACTIONS);
 
-    const [currentQuality, setCurrentQuality] = useState(480);
+    const [currentQuality, setCurrentQuality] = useState(defaultQuality);
 
     const handleQualityChange = useCallback((value) => {
         setCurrentQuality(value);
@@ -206,13 +210,15 @@ function QualitySettings({ onChoose, current, options }) {
         <div className="option-settings-container">
             {options.map((option) => {
                 if (!option) return null;
-                <RadioOption
-                    key={option}
-                    onChoose={onChoose}
-                    isChecked={option === current}
-                    label={`${option}p`}
-                    value={option}
-                />;
+                return (
+                    <RadioOption
+                        key={option}
+                        onChoose={onChoose}
+                        isChecked={option.height === current}
+                        label={`${option.height}p`}
+                        value={option.height}
+                    />
+                );
             })}
         </div>
     );

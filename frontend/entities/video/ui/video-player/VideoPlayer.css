@@ -148,7 +148,7 @@
 }
 
 .action-btn {
-    @apply text-white w-7 h-7 flex items-center justify-center text-lg py-1 px-1 transition-colors 
+    @apply relative text-white w-7 h-7 flex items-center justify-center text-lg py-1 px-1 transition-colors 
     opacity-70;
 }
 
@@ -363,6 +363,17 @@
     animation-fill-mode: forwards;
 }
 
+.tooltip {
+    @apply absolute  left-1/2 -translate-x-1/2 py-1.5 px-2 bg-black capitalize
+     text-white text-sm transition-opacity pointer-events-none opacity-0 z-10 rounded-md font-semibold;
+    word-break: keep-all;
+    bottom: calc(100% + 1.5rem);
+}
+
+.quality-span {
+    @apply absolute -top-1 -right-1/3 text-xs px-0.5 z-10 rounded-sm text-white font-semibold bg-red-400;
+    font-size: 0.55rem;
+}
 /* Media queries */
 
 @screen sm {
@@ -393,5 +404,8 @@
 @media (hover: hover) {
     .action-btn {
         @apply hover:opacity-100;
+    }
+    .action-btn:hover > .tooltip {
+        @apply opacity-100;
     }
 }

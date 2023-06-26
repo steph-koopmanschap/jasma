@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 
 export const useStreamLogic = (stream_src, isLive) => {
     const [qualityOptions, setQualityOptions] = useState([]);
+    const [currentQuality, setCurrentQuality] = useState(360);
 
     const isFirstLoad = useRef(true);
     const hls = useRef(null);
@@ -19,16 +20,33 @@ export const useStreamLogic = (stream_src, isLive) => {
         });
     };
 
-    const { refs, functions, status } = useVideoPlayer(isLive, qualityOptions, changeQuality);
+    const { refs, functions, status } = useVideoPlayer(
+        isLive,
+        qualityOptions,
+        changeQuality,
+        currentQuality,
+        "application/x-mpegurl"
+    );
     const videoRef = refs.videoRef;
     const videoSrc = stream_src;
 
     const handleManifestParsed = (_, data) => {
         setQualityOptions(() => {
-            return data.levels.map((l) => l.height);
+            let res = data.levels.map((l, ind) => ({ index: ind, height: l.height }));
+            res.sort((a, b) => b.height - a.height);
+            return res;
         });
         functions.setIsBuffering(true);
-        console.log(data);
+        setCurrentQuality(() => {
+            return hls.current.levelController.currentLevel?.height;
+        });
+        console.log(data, hls.current);
+    };
+
+    const handleLevelChange = (_, data) => {
+        setCurrentQuality(() => {
+            return qualityOptions.find((item) => item.index === data.level).height;
+        });
     };
 
     const handleFragBuffered = (_, data) => {
@@ -85,6 +103,7 @@ export const useStreamLogic = (stream_src, isLive) => {
             hls.current.loadSource(videoSrc);
             hls.current.attachMedia(video);
         } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+            video.type = "application/x-mpegurl";
             video.addEventListener("loadedmetadata", (e) => {
                 // functions.togglePlay();
                 // functions.toggleMute();
@@ -99,13 +118,15 @@ export const useStreamLogic = (stream_src, isLive) => {
         hls.current.on(Events.MANIFEST_PARSED, handleManifestParsed);
         hls.current.on(Events.ERROR, handleError);
         hls.current.on(Events.FRAG_BUFFERED, handleFragBuffered);
+        hls.current.on(Events.LEVEL_SWITCHED, handleLevelChange);
         return () => {
             if (!hls.current) return;
             hls.current.off(Events.MANIFEST_PARSED, handleManifestParsed);
             hls.current.off(Events.ERROR, handleError);
             hls.current.off(Events.FRAG_BUFFERED, handleFragBuffered);
+            hls.current.off(Events.LEVEL_SWITCHED, handleLevelChange);
         };
-    }, [hls.current]);
+    }, [hls.current, qualityOptions]);
 
     return {
         refs,

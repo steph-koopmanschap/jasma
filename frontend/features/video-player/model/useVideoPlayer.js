@@ -10,16 +10,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * @param {Boolean} isLive is streaming live (default: false). Use false option for VoD
  * @param {Uint32Array} qualityOptions default: empty array
  * @param {Function} onChangeQuality function that fires on quality change
- * @param {Number} defaultQuality default: 480
+ * @param {Number} defaultQuality default: 0
  * @returns
  */
 
-export const useVideoPlayer = (
-    isLive = false,
-    qualityOptions = [],
-    onChangeQuality = () => {},
-    defaultQuality = 480
-) => {
+export const useVideoPlayer = (isLive = false, qualityOptions = [], onChangeQuality = () => {}, defaultQuality = 0) => {
     const videoRef = useRef(null);
     const progressBarRef = useRef(null);
     const videoContainerRef = useRef(null);
