@@ -57,7 +57,7 @@ def get_most_active_users(request):
     payload = {'success': True, 'most_active_users': most_active_users, 'timestamp': datetime.now()}
     return Response(payload, status=status.HTTP_200_OK)
 
-# Get the total count of logins in the last 24 hours
+# Get the total count of logins in the limit_hours hours
 # TODO: # Country filtering?
 @api_view(["GET"])
 def get_total_login_count(request):
