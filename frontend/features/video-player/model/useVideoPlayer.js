@@ -14,7 +14,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * @returns
  */
 
-export const useVideoPlayer = (isLive = false, qualityOptions = [], onChangeQuality = () => {}, defaultQuality = 0) => {
+export const useVideoPlayer = (
+    isLive = false,
+    qualityOptions = [],
+    onChangeQuality = () => {},
+    defaultQuality = 0,
+    type
+) => {
     const videoRef = useRef(null);
     const progressBarRef = useRef(null);
     const videoContainerRef = useRef(null);
@@ -463,7 +469,8 @@ export const useVideoPlayer = (isLive = false, qualityOptions = [], onChangeQual
             qualityOptions,
             defaultQuality,
             isBuffering,
-            currentSpeed
+            currentSpeed,
+            type
         },
         refs: {
             videoRef,
