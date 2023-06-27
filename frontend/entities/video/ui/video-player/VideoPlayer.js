@@ -45,26 +45,30 @@ export const VideoPlayer = ({ videoSrc = "", thumbnail = "", status, refs, funct
                 <div className={`${status.isSeeking && !status.isPlaying ? "fullscreen-curtain" : ""}`}></div>
                 {status.showUi && status.isLive && status.isPlaying ? <OnAirSign /> : null}
                 <div className="video-left">
-                    {status.UIFeedback.type === UI_FEEDBACK_TYPES.SEEKING && status.UIFeedback.dir === DIRECTION.L ? (
-                        <SeekingDirection direction={status.UIFeedback.dir} />
-                    ) : null}
+                    <SeekingDirection
+                        containerRef={refs.seekingUI_left}
+                        direction={status.UIFeedbackDir}
+                    />
                 </div>
                 <div className="video-center">
-                    {status.UIFeedback.type === UI_FEEDBACK_TYPES.VOLUME_CHANGE ? (
-                        <VolumeDirection
-                            volume={status.volume}
-                            direction={status.UIFeedback.dir}
-                        />
-                    ) : null}
-                    {status.UIFeedback.type === UI_FEEDBACK_TYPES.PLAYBACK ? (
-                        <PlayState isPlaying={status.isPlaying} />
-                    ) : null}
+                    <VolumeDirection
+                        volume={status.volume}
+                        direction={status.UIFeedbackDir}
+                        containerRef={refs.volumeUI}
+                    />
+
+                    <PlayState
+                        isPlaying={status.isPlaying}
+                        containerRef={refs.playstateUI}
+                    />
+
                     {status.isBuffering ? <LoadingState /> : null}
                 </div>
                 <div className="video-right">
-                    {status.UIFeedback.type === UI_FEEDBACK_TYPES.SEEKING && status.UIFeedback.dir === DIRECTION.R ? (
-                        <SeekingDirection direction={status.UIFeedback.dir} />
-                    ) : null}
+                    <SeekingDirection
+                        containerRef={refs.seekingUI_right}
+                        direction={status.UIFeedbackDir}
+                    />
                 </div>
 
                 <div
@@ -86,7 +90,7 @@ export const VideoPlayer = ({ videoSrc = "", thumbnail = "", status, refs, funct
                         onChangeVolume={functions.changeVolume}
                         onTogglePlay={functions.togglePlay}
                         onToggleMute={functions.toggleMute}
-                        defaultQuality={status.defaultQuality}
+                        defaultQuality={status.currentQuality}
                         onToggleFullscreen={functions.toggleFullscreen}
                         volume={status.volume}
                         qualityOptions={status.qualityOptions}

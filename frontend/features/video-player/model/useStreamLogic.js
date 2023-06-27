@@ -7,7 +7,6 @@ export const useStreamLogic = (stream_src, isLive) => {
     const [qualityOptions, setQualityOptions] = useState([]);
     const [currentQuality, setCurrentQuality] = useState(360);
 
-    const isFirstLoad = useRef(true);
     const hls = useRef(null);
     const Events = Hls.Events;
 
@@ -20,7 +19,7 @@ export const useStreamLogic = (stream_src, isLive) => {
         });
     };
 
-    const { refs, functions, status } = useVideoPlayer(isLive, qualityOptions, changeQuality, currentQuality);
+    const { refs, functions, status } = useVideoPlayer(isLive, qualityOptions, changeQuality);
     const videoRef = refs.videoRef;
 
     const handleManifestParsed = (_, data) => {
@@ -33,7 +32,6 @@ export const useStreamLogic = (stream_src, isLive) => {
         setCurrentQuality(() => {
             return hls.current.levelController.currentLevel?.height;
         });
-        console.log(data, hls.current);
     };
 
     const handleLevelChange = (_, data) => {
@@ -112,7 +110,10 @@ export const useStreamLogic = (stream_src, isLive) => {
 
     return {
         refs,
-        status,
+        status: {
+            ...status,
+            currentQuality: currentQuality ? currentQuality : status.currentQuality
+        },
         functions
     };
 };

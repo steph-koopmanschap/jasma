@@ -23,8 +23,8 @@ module.exports = {
                 },
                 scaleAndFadeout: {
                     from: { opacity: 0.5, scale: 0.5 },
-                    "50%": { opacity: 1, scale: 1 },
-                    to: { opacity: 0, scale: 1.5 }
+                    "50%": { opacity: 1, scale: 1.2 },
+                    to: { opacity: 0, scale: 1.7 }
                 }
             },
             animation: {

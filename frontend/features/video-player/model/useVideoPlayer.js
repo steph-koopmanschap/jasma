@@ -10,19 +10,24 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * @param {Boolean} isLive is streaming live (default: false). Use false option for VoD
  * @param {Uint32Array} qualityOptions default: empty array
  * @param {Function} onChangeQuality function that fires on quality change
- * @param {Number} defaultQuality default: 0
  * @returns
  */
 
-export const useVideoPlayer = (isLive = false, qualityOptions = [], onChangeQuality = () => {}, defaultQuality = 0) => {
+export const useVideoPlayer = (isLive = false, qualityOptions = [], onChangeQuality = () => {}) => {
     const videoRef = useRef(null);
     const progressBarRef = useRef(null);
     const videoContainerRef = useRef(null);
     const mediaContainerRef = useRef(null);
-    const defaultQualityRef = useRef(defaultQuality);
+    const currentQualityRef = useRef(0);
 
     const tapTimer = useRef(null); // for detecting double tap on mobile
     const currentTime = useRef(0);
+
+    /* UI feedback circles */
+    const playstateUI = useRef(null);
+    const volumeUI = useRef(null);
+    const seekingUI_left = useRef(null);
+    const seekingUI_right = useRef(null);
 
     const { notifyToast } = useToast();
     const { isMobile } = useMobileProvider();
@@ -34,7 +39,7 @@ export const useVideoPlayer = (isLive = false, qualityOptions = [], onChangeQual
     const [volume, setVolume] = useState(1);
     const [showUi, setShowUI] = useState(true);
     const [isFullscreen, setIsFullScreen] = useState(false);
-    const [UIFeedback, setUIFeedback] = useState({});
+    const [UIFeedbackDir, setUIFeedbackDir] = useState("");
     const [buffered, setBuffered] = useState(0);
     const [isBuffering, setIsBuffering] = useState(false);
     const [currentSpeed, setCurrentSpeed] = useState(+window.sessionStorage.getItem("user_playback_rate") || 1);
@@ -53,13 +58,27 @@ export const useVideoPlayer = (isLive = false, qualityOptions = [], onChangeQual
     const toggleUIFeedback = (type, direction = DIRECTION.L) => {
         switch (type) {
             case UI_FEEDBACK_TYPES.PLAYBACK:
-                return setUIFeedback({ type });
+                toggleElement(playstateUI.current);
+                break;
             case UI_FEEDBACK_TYPES.SEEKING:
-                return setUIFeedback({ type, dir: direction });
+                setUIFeedbackDir(direction);
+                if (direction === DIRECTION.L) return toggleElement(seekingUI_left.current);
+                if (direction === DIRECTION.R) return toggleElement(seekingUI_right.current);
+                break;
             case UI_FEEDBACK_TYPES.VOLUME_CHANGE:
-                return setUIFeedback({ type, dir: direction });
+                setUIFeedbackDir(direction);
+                toggleElement(volumeUI.current);
+                break;
             default:
                 return;
+        }
+
+        function toggleElement(el) {
+            if (!el) return;
+            el.classList.remove("ui-feedback");
+            setTimeout(() => {
+                el.classList.add("ui-feedback");
+            }, 10);
         }
     };
 
@@ -93,8 +112,10 @@ export const useVideoPlayer = (isLive = false, qualityOptions = [], onChangeQual
     const skip = (dir) => {
         if (isLive) return;
         if (!videoRef.current || !videoRef.current.duration) return;
+
         videoRef.current.currentTime += 5 * dir;
         toggleUIFeedback(UI_FEEDBACK_TYPES.SEEKING, dir < 0 ? DIRECTION.L : DIRECTION.R);
+        updateProgress({ target: videoRef.current });
     };
 
     const requestFullscreen = () => {
@@ -185,7 +206,7 @@ export const useVideoPlayer = (isLive = false, qualityOptions = [], onChangeQual
     };
 
     const handleMetadata = (e) => {
-        if (!defaultQualityRef.current) defaultQualityRef.current = e.target.videoHeight;
+        if (!currentQualityRef.current) currentQualityRef.current = e.target.videoHeight;
         changeVolume({ target: { value: Number(window.localStorage.getItem("user_video_volume") || 0.5) } });
         setPlaybackRate(+window.sessionStorage.getItem("user_playback_rate") || 1);
         if (isLive) {
@@ -310,18 +331,6 @@ export const useVideoPlayer = (isLive = false, qualityOptions = [], onChangeQual
         },
         [progressBarRef.current, togglePlay, showUi, isSeeking]
     );
-
-    useEffect(() => {
-        if (!UIFeedback.type) return;
-        const delay = 200;
-        const timeout = setTimeout(() => {
-            setUIFeedback((prev) => Object.create(null));
-        }, delay);
-
-        return () => {
-            clearTimeout(timeout);
-        };
-    }, [UIFeedback]);
 
     useEffect(() => {
         if (!isPlaying || !showUi) return;
@@ -468,12 +477,12 @@ export const useVideoPlayer = (isLive = false, qualityOptions = [], onChangeQual
             isSeeking,
             isFullscreen,
             showUi,
-            UIFeedback,
+            UIFeedbackDir,
             isMobile,
             buffered,
             isLive,
             qualityOptions,
-            defaultQuality: defaultQualityRef.current,
+            currentQuality: currentQualityRef.current,
             isBuffering,
             currentSpeed
         },
@@ -481,7 +490,11 @@ export const useVideoPlayer = (isLive = false, qualityOptions = [], onChangeQual
             videoRef,
             progressBarRef,
             videoContainerRef,
-            mediaContainerRef
+            mediaContainerRef,
+            playstateUI,
+            seekingUI_left,
+            seekingUI_right,
+            volumeUI
         }
     };
 };

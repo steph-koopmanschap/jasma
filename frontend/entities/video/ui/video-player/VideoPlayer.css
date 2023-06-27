@@ -341,8 +341,9 @@
 }
 
 .preview-frame {
-    @apply absolute bottom-5 left-0 w-20 h-12 rounded-md  bg-black opacity-0;
+    @apply absolute bottom-5 left-0 w-20 h-12 rounded-md animate-fadeIn opacity-0 bg-black;
     border: 0.15rem solid gray;
+    animation-fill-mode: forwards;
 }
 
 .seeking-direction svg {
@@ -359,7 +360,7 @@
 
 .ui-feedback {
     @apply animate-scaleAndFadeout;
-    animation-duration: 0.5s;
+    animation-duration: 0.7s;
     animation-fill-mode: forwards;
 }
 

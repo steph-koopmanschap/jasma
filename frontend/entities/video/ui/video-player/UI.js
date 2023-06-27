@@ -25,8 +25,15 @@ export function OnAirSign() {
     );
 }
 
-export function CircleWrapper({ className = "", children }) {
-    return <div className={`circle-wrapper ${className}`}>{children}</div>;
+export function CircleWrapper({ className = "", containerRef, children }) {
+    return (
+        <div
+            ref={containerRef}
+            className={`circle-wrapper ${className}`}
+        >
+            {children}
+        </div>
+    );
 }
 
 export function LoadingState() {
@@ -37,15 +44,18 @@ export function LoadingState() {
     );
 }
 
-export function VolumeDirection({ volume, direction }) {
+export function VolumeDirection({ volume, containerRef, direction }) {
     const render = () => {
         if (volume === 0) return <FontAwesomeIcon icon={faVolumeMute} />;
         if (volume > 0.5) return <FontAwesomeIcon icon={faVolumeHigh} />;
         if (volume <= 0.5) return <FontAwesomeIcon icon={faVolumeLow} />;
     };
     return (
-        <CircleWrapper className="ui-feedback">
-            <div className="volume-direction ui-feedback">
+        <CircleWrapper
+            containerRef={containerRef}
+            className="opacity-0"
+        >
+            <div className="volume-direction">
                 {render()}
                 <h3>Vol {direction === DIRECTION.D ? "-" : "+"}</h3>
             </div>
@@ -53,20 +63,26 @@ export function VolumeDirection({ volume, direction }) {
     );
 }
 
-export function PlayState({ isPlaying }) {
+export function PlayState({ isPlaying, containerRef }) {
     return (
-        <CircleWrapper className="ui-feedback">
-            <div className="playstate ui-feedback">
+        <CircleWrapper
+            containerRef={containerRef}
+            className="opacity-0"
+        >
+            <div className="playstate">
                 {isPlaying ? <FontAwesomeIcon icon={faPlay} /> : <FontAwesomeIcon icon={faPause} />}
             </div>
         </CircleWrapper>
     );
 }
 
-export function SeekingDirection({ direction }) {
+export function SeekingDirection({ direction, containerRef }) {
     return (
-        <CircleWrapper className={`ui-feedback absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`}>
-            <div className="seeking-direction ui-feedback">
+        <CircleWrapper
+            className="opacity-0"
+            containerRef={containerRef}
+        >
+            <div className="seeking-direction">
                 {direction === DIRECTION.L ? (
                     <FontAwesomeIcon icon={faChevronCircleLeft} />
                 ) : (
@@ -96,7 +112,7 @@ export function ToolTip({ text }) {
 
 export function PreviewFrame({ preview }) {
     const frameRef = useRef(null);
-
+    if (preview === 0) return null;
     const getFramePos = () => {
         if (!frameRef.current) return 0;
 

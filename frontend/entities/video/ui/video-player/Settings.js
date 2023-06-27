@@ -26,7 +26,7 @@ export const Settings = memo(
             >
                 <ActionBtn
                     onActivate={() => setIsShow(!isShow)}
-                    tooltip={isShow ? "Close settings" : "Open settings"}
+                    tooltip={isShow ? "" : "Open settings"}
                 >
                     {defaultQuality !== 0 ? <span className="quality-span">{defaultQuality}</span> : null}
                     <FontAwesomeIcon icon={faCog} />
