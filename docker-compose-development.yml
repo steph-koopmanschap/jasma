@@ -33,7 +33,8 @@ services:
         networks:
             - jasma-network-dev
         volumes:
-            - jasma-storage-dev:/var/lib/postgresql/data #Check that this works
+            - jasma-storage-dev:/var/lib/postgresql/data #Check that this works 
+            - ./compose/local/postgresql:/docker-entrypoint-initdb.d # Init script for database
 
     # REDIS
     jasma-redis-db:
