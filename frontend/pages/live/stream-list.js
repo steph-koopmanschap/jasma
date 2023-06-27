@@ -1,11 +1,14 @@
+import { MobileDetectSSR } from "@/shared/model";
+
 function StreamList() {
     return <div>List</div>;
 }
 
-export const getServerSideProps = async () => {
+export default StreamList;
+
+export const getServerSideProps = async (ctx) => {
+    const { isMobile } = MobileDetectSSR(ctx);
     return {
-        props: {}
+        props: { isSSRMobile: isMobile }
     };
 };
-
-export default StreamList;

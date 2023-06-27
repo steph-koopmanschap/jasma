@@ -1,3 +1,4 @@
+import { MobileDetectSSR } from "@/shared/model";
 import Link from "next/link";
 
 export default function Home() {
@@ -60,3 +61,10 @@ export default function Home() {
         </>
     );
 }
+
+export const getServerSideProps = async (ctx) => {
+    const { isMobile } = MobileDetectSSR(ctx);
+    return {
+        props: { isSSRMobile: isMobile }
+    };
+};

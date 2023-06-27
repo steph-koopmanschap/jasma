@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }) {
     return (
         <RecoilRoot>
             <QueryClientProvider client={queryClient}>
-                <MobileProvider>
+                <MobileProvider pageProps={pageProps}>
                     <ToastContainer />
                     <PayPalScriptProvider options={{ "client-id": paypalClientID }}>
                         <Layout>

@@ -1,4 +1,4 @@
-import { useRequireAuth } from "@/shared/model";
+import { MobileDetectSSR, useRequireAuth } from "@/shared/model";
 import UserWidgets from "@/widgets/user";
 
 //The Settings profile
@@ -12,3 +12,10 @@ export default function Settings(props) {
         </div>
     );
 }
+
+export const getServerSideProps = async (ctx) => {
+    const { isMobile } = MobileDetectSSR(ctx);
+    return {
+        props: { isSSRMobile: isMobile }
+    };
+};

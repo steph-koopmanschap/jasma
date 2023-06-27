@@ -29,12 +29,15 @@ export const StreamWidget = ({ stream_key }) => {
             {render(
                 <div className="stream-video-wrapper">
                     <Player
-                        stream_src={`http://192.168.1.128:8000/hls/${stream_key}.m3u8`}
-                        /* Uncomment these lines to check full video player */
-                        // stream_src="https://archive.org/download/ElephantsDream/ed_1024_512kb.mp4"
-                        // isPartitioned={false}
+                        // stream_src={`http://192.168.1.128:8000/hls/${stream_key}.m3u8`}
+                        /* Uncomment to check full video player */
+                        stream_src="https://archive.org/download/ElephantsDream/ed_1024_512kb.mp4"
+                        // type="application/x-mpegURL"
                         isLive={true}
                     />
+                    {/* <video type="application/x-mpegURL" controls playsInline src={`http://192.168.1.128:8000/hls/${stream_key}.m3u8`}>
+
+                    </video> */}
                 </div>,
                 <StreamInfo
                     userPicWidget={

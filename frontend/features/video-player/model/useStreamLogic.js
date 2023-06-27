@@ -20,15 +20,8 @@ export const useStreamLogic = (stream_src, isLive) => {
         });
     };
 
-    const { refs, functions, status } = useVideoPlayer(
-        isLive,
-        qualityOptions,
-        changeQuality,
-        currentQuality,
-        "application/x-mpegurl"
-    );
+    const { refs, functions, status } = useVideoPlayer(isLive, qualityOptions, changeQuality, currentQuality);
     const videoRef = refs.videoRef;
-    const videoSrc = stream_src;
 
     const handleManifestParsed = (_, data) => {
         setQualityOptions(() => {
@@ -49,12 +42,7 @@ export const useStreamLogic = (stream_src, isLive) => {
         });
     };
 
-    const handleFragBuffered = (_, data) => {
-        if (isFirstLoad.current && isLive) {
-            functions.toggleMute();
-            functions.togglePlay();
-            isFirstLoad.current = false;
-        }
+    const handleFragBuffered = () => {
         functions.setIsBuffering(false);
     };
     const handleError = (_, data) => {
@@ -100,15 +88,9 @@ export const useStreamLogic = (stream_src, isLive) => {
             hls.current.config.backBufferLength = 10;
             hls.current.config.maxBufferLength = 10;
 
-            hls.current.loadSource(videoSrc);
+            hls.current.loadSource(stream_src);
             hls.current.attachMedia(video);
         } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-            video.type = "application/x-mpegurl";
-            video.addEventListener("loadedmetadata", (e) => {
-                // functions.togglePlay();
-                // functions.toggleMute();
-                functions.setError(e.target.duration);
-            });
         }
     }, [stream_src, videoRef.current]);
 
@@ -131,7 +113,6 @@ export const useStreamLogic = (stream_src, isLive) => {
     return {
         refs,
         status,
-        functions,
-        videoSrc
+        functions
     };
 };

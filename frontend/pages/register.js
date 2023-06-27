@@ -1,4 +1,5 @@
 import SignUpForm from "@/features/auth/sign-up";
+import { MobileDetectSSR } from "@/shared/model";
 
 //Login page
 export default function RegistrationPage() {
@@ -10,3 +11,10 @@ export default function RegistrationPage() {
         </div>
     );
 }
+
+export const getServerSideProps = async (ctx) => {
+    const { isMobile } = MobileDetectSSR(ctx);
+    return {
+        props: { isSSRMobile: isMobile }
+    };
+};

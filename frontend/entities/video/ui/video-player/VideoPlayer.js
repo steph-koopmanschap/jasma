@@ -12,21 +12,12 @@ import { forwardRef, useCallback } from "react";
 import { DIRECTION, UI_FEEDBACK_TYPES } from "../../utils/enums";
 import { formatTime } from "../../utils/formatTime";
 import { Settings } from "./Settings";
-import {
-    ActionBtn,
-    LoadingState,
-    OnAirSign,
-    PlayState,
-    PreviewFrame,
-    SeekingDirection,
-    ToolTip,
-    VolumeDirection
-} from "./UI";
+import { ActionBtn, LoadingState, OnAirSign, PlayState, PreviewFrame, SeekingDirection, VolumeDirection } from "./UI";
 import "./VideoPlayer.css";
 
 /* Bare video player UI. Doesn't work without useVideoPlayer hook. Use composition pattern on upper level to make it work */
 
-export const VideoPlayer = ({ videoSrc = "", thumbnail = "", status, refs, functions }) => {
+export const VideoPlayer = ({ videoSrc = "", thumbnail = "", status, refs, functions, type }) => {
     return (
         <div
             className="media-wrapper "
@@ -41,11 +32,11 @@ export const VideoPlayer = ({ videoSrc = "", thumbnail = "", status, refs, funct
                     <video
                         id="video"
                         ref={refs.videoRef}
+                        preload="auto"
                         playsInline
-                        // preload="metadata"
                         poster={thumbnail}
                         src={videoSrc}
-                        type={status.type}
+                        type={type}
                     >
                         Your browser does not support HTML5 video.
                     </video>
@@ -121,8 +112,8 @@ const ProgressContainer = forwardRef(({ progress, elapsed, totalTime, preview, i
     return (
         <div className="progress-container">
             <div className="progress-time-wrapper">
-                <span className="timemark">{formatTime(elapsed)}</span>
-                {!isLive ? <span className="timemark">{formatTime(totalTime)}</span> : null}
+                <span className={`timemark ${isLive ? "opacity-0" : ""}`}>{formatTime(elapsed)}</span>
+                <span className={`timemark ${isLive ? "opacity-0" : ""}`}>{formatTime(totalTime)}</span>
             </div>
 
             <div

@@ -28,7 +28,7 @@ export const Settings = memo(
                     onActivate={() => setIsShow(!isShow)}
                     tooltip={isShow ? "Close settings" : "Open settings"}
                 >
-                    <span className="quality-span">{defaultQuality}</span>
+                    {defaultQuality !== 0 ? <span className="quality-span">{defaultQuality}</span> : null}
                     <FontAwesomeIcon icon={faCog} />
                 </ActionBtn>
                 {isShow && !isMobile ? (
@@ -135,10 +135,7 @@ function SettingsMenu({
                         <span>Close</span>
                     </button>
                 ) : (
-                    <button
-                        onClick={() => setCurrentPage(SETTINGS_PAGES.ACTIONS)}
-                        // onTouchEnd={() => setCurrentPage(SETTINGS_PAGES.ACTIONS)}
-                    >
+                    <button onClick={() => setCurrentPage(SETTINGS_PAGES.ACTIONS)}>
                         <FontAwesomeIcon icon={faChevronLeft} />
                         <span>Back</span>
                     </button>

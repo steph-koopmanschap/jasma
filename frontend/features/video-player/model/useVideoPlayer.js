@@ -14,17 +14,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * @returns
  */
 
-export const useVideoPlayer = (
-    isLive = false,
-    qualityOptions = [],
-    onChangeQuality = () => {},
-    defaultQuality = 0,
-    type
-) => {
+export const useVideoPlayer = (isLive = false, qualityOptions = [], onChangeQuality = () => {}, defaultQuality = 0) => {
     const videoRef = useRef(null);
     const progressBarRef = useRef(null);
     const videoContainerRef = useRef(null);
     const mediaContainerRef = useRef(null);
+    const defaultQualityRef = useRef(defaultQuality);
 
     const tapTimer = useRef(null); // for detecting double tap on mobile
     const currentTime = useRef(0);
@@ -45,7 +40,7 @@ export const useVideoPlayer = (
     const [currentSpeed, setCurrentSpeed] = useState(+window.sessionStorage.getItem("user_playback_rate") || 1);
 
     const togglePlay = () => {
-        if (isPlaying) {
+        if (!videoRef.current?.paused) {
             videoRef.current?.pause();
             setIsPlaying(false);
         } else {
@@ -186,6 +181,16 @@ export const useVideoPlayer = (
             const duration = video.duration;
             const buffered_percentage = (buffered / duration) * 100;
             setBuffered(buffered_percentage);
+        }
+    };
+
+    const handleMetadata = (e) => {
+        if (!defaultQualityRef.current) defaultQualityRef.current = e.target.videoHeight;
+        changeVolume({ target: { value: Number(window.localStorage.getItem("user_video_volume") || 0.5) } });
+        setPlaybackRate(+window.sessionStorage.getItem("user_playback_rate") || 1);
+        if (isLive) {
+            toggleMute();
+            togglePlay();
         }
     };
 
@@ -359,17 +364,16 @@ export const useVideoPlayer = (
 
     useEffect(() => {
         if (!videoRef.current) return;
-        // Setting user's config
-        changeVolume({ target: { value: Number(window.localStorage.getItem("user_video_volume") || 0.5) } });
-        setPlaybackRate(+window.sessionStorage.getItem("user_playback_rate") || 1);
 
         const video = videoRef.current;
         video.addEventListener("ended", reset);
         video.addEventListener("timeupdate", updateProgress);
         video.addEventListener("canplay", handleCanPlay);
+        video.addEventListener("loadedmetadata", handleMetadata);
         video.addEventListener("dblclick", toggleFullscreen);
         video.addEventListener("progress", bufferHandler);
         video.addEventListener("waiting", handleLoading);
+        video.addEventListener("error", setError);
 
         document.addEventListener("fullscreenchange", handleOnFullscreenChange);
         video.addEventListener("webkitendfullscreen", handleOnFullscreenChange);
@@ -380,6 +384,8 @@ export const useVideoPlayer = (
             video.removeEventListener("canplay", handleCanPlay);
             video.removeEventListener("progress", bufferHandler);
             video.removeEventListener("waiting", handleLoading);
+            video.removeEventListener("loadedmetadata", handleMetadata);
+            video.removeEventListener("error", setError);
             video.removeEventListener("dblclick", toggleFullscreen);
 
             document.removeEventListener("fullscreenchange", handleOnFullscreenChange);
@@ -467,10 +473,9 @@ export const useVideoPlayer = (
             buffered,
             isLive,
             qualityOptions,
-            defaultQuality,
+            defaultQuality: defaultQualityRef.current,
             isBuffering,
-            currentSpeed,
-            type
+            currentSpeed
         },
         refs: {
             videoRef,

@@ -1,4 +1,5 @@
 import { useGetSinglePost } from "@/features/post/index.js";
+import { MobileDetectSSR } from "@/shared/model";
 import { Post } from "@/widgets/post/index.js";
 import { useRouter } from "next/router";
 
@@ -27,3 +28,10 @@ export default function PostPage() {
         </div>
     );
 }
+
+export const getServerSideProps = async (ctx) => {
+    const { isMobile } = MobileDetectSSR(ctx);
+    return {
+        props: { isSSRMobile: isMobile }
+    };
+};

@@ -1,5 +1,4 @@
 import { createContext, useContext } from "react";
-import { useIsMobile } from "../hooks/useIsMobile";
 
 const MobileCtx = createContext();
 
@@ -11,8 +10,8 @@ export const useMobileProvider = () => {
     return context;
 };
 
-export const MobileProvider = ({ children }) => {
-    const { isMobile } = useIsMobile();
+export const MobileProvider = ({ pageProps, children }) => {
+    const { isSSRMobile } = pageProps;
 
-    return <MobileCtx.Provider value={{ isMobile }}>{children}</MobileCtx.Provider>;
+    return <MobileCtx.Provider value={{ isMobile: isSSRMobile }}>{children}</MobileCtx.Provider>;
 };

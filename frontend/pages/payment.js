@@ -1,4 +1,4 @@
-import { useRequireAuth } from "@/shared/model";
+import { MobileDetectSSR, useRequireAuth } from "@/shared/model";
 import Payment from "@/widgets/payments";
 
 export default function PaymentPage() {
@@ -13,3 +13,10 @@ export default function PaymentPage() {
         </div>
     );
 }
+
+export const getServerSideProps = async (ctx) => {
+    const { isMobile } = MobileDetectSSR(ctx);
+    return {
+        props: { isSSRMobile: isMobile }
+    };
+};
