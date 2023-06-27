@@ -17,6 +17,7 @@
         "copycompose:dev": "cp docker-compose-development.yml docker-compose.yml",
         "copycompose:prod": "cp docker-compose-production.yml docker-compose.yml",
         "composebuild": "docker-compose up --build",
+        "prepare-legacy": "cd backend && chmod u+x start_legacy.sh && ./start_legacy.sh",
         "dev": "concurrently -n 'backend,frontend' -c '#04FCF1,#9c143f' \"cd backend && python manage.py runserver\" \"cd frontend && npm run dev\"",
         "start": "concurrently -n 'backend,frontend' -c '#9c143f,#85590d' \"cd backend && python manage.py runserver && npm run start\" \"cd next && npm run start\"",
         "build": "cd backend && npm run build && cd ..",

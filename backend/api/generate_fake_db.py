@@ -9,18 +9,14 @@ from api.constants import countries, genders, relationships
 
 fake = Faker()
 
-
 def pick_random_user():
     return User.objects.order_by('?').first()
-
 
 def pick_random_hashtag():
     return Hashtag.objects.order_by('?').first()
 
-
 def pick_random_post():
     return Post.objects.order_by('?').first()
-
 
 def generate_user():
     created = False
@@ -58,7 +54,6 @@ def generate_user():
     user_profile.website = fake.url()
     user_profile.save()
 
-
 def generate_user_relationship():
     user = None
     relationship_with = None
@@ -71,7 +66,6 @@ def generate_user_relationship():
     user_profile.relationship_with = relationship_with
     user_profile.save()
 
-
 def generate_hashtag():
     created = False
     while created == False:
@@ -79,7 +73,6 @@ def generate_hashtag():
         hashtag, created = Hashtag.objects.get_or_create(hashtag=hashtag)
 
     return hashtag
-
 
 def generate_post():
     post = Post.objects.create(
@@ -93,14 +86,12 @@ def generate_post():
         post.hashtags.add(hashtag)
     post.save()
 
-
 def generate_comment():
     Comment.objects.create(
         user=pick_random_user(),
         post=pick_random_post(),
         text_content=fake.text(),
         file_url=None)
-
 
 def generate_reported_post():
     report_reasons = [
@@ -124,7 +115,6 @@ def generate_reported_post():
         ReportedPost.objects.create(post=post,
                                     report_reason=report_reason)
 
-
 def generate_follower():
     user = None
     follow_new_person = None
@@ -137,7 +127,6 @@ def generate_follower():
                 user=user,
                 following=follow_new_person)
 
-
 def generate_subscribed_hashtags():
     created = False
     while created == False:
@@ -147,7 +136,6 @@ def generate_subscribed_hashtags():
             user=user,
             hashtag=hashtag)
 
-
 def generate_bookmarked_post():
     created = False
     while created == False:
@@ -156,7 +144,6 @@ def generate_bookmarked_post():
         _, created = BookmarkedPost.objects.get_or_create(
             user=user,
             post=post)
-
 
 def generate_ad():
     now = datetime.datetime.now()
@@ -173,13 +160,17 @@ def generate_ad():
         text_content=fake.text(),
         ad_file_url=None,
         ad_url=None,
-        expires_at=expires_at,                                targ_age_start=age_start,
+        expires_at=expires_at,                                
+        targ_age_start=age_start,
         targ_age_end=age_end,
         targ_gender=random.choice(genders.LIST),
         targ_relationship=random.choice(relationships.LIST),
         targ_country=random.choice(list(countries.NAME_ABBR.keys())),
         targ_city=fake.city())
-
+    
+# Export the entire generated database to JSON
+def export_to_json():
+    pass
 
 def generate_fake_db(n):
     OK = "[\033[32m OK \033[0m]"  # Green colored [ OK ]
@@ -250,4 +241,7 @@ def generate_fake_db(n):
 
 if __name__ == "__main__":
     fakes_to_generate = int(sys.argv[1])
+    export_to_json_arg = sys.argv[2]
     generate_fake_db(fakes_to_generate)
+    if export_to_json_arg == "export_json":
+        export_to_json()
