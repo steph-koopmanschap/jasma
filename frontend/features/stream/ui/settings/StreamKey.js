@@ -68,7 +68,7 @@ function KeyField({ userID }) {
                 className="key-show-btn"
                 onClick={() => setIsVisible(!isVisible)}
             >
-                show
+                {isVisible ? "hide" : "show"}
             </button>
         </div>
     );
@@ -79,7 +79,8 @@ function Description() {
         <div className="stream-key-description">
             <p>
                 To start streaming through <b>OBS</b> specify server{" "}
-                <span className="font-bold text-red-500">rtmp://jasma_live/live</span> and add your <b>stream key</b>
+                <span className="font-bold text-red-500">rtmp://localhost:1935/live</span> and add your{" "}
+                <b>stream key</b>
             </p>
         </div>
     );

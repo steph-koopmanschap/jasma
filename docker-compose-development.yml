@@ -118,6 +118,22 @@ services:
             - "80:80"
         networks:
             - jasma-network-dev
+    # NGINX RTMP SERVER
+    jasma_live:
+        build: 
+            context: ./rtmp
+            target: development
+        expose:
+            - 5050
+            - 1935
+        ports:
+            - "1935:1935"
+            - "5050:5050"
+        networks:
+            - jasma-network-dev
+        user: root
+        container_name: jasma_live
+        
 
 volumes:
     jasma-storage-dev:

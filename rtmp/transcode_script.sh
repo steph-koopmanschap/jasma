@@ -10,7 +10,7 @@ trap "on_die" TERM
 echo "Starts script"
 
 
-ffmpeg -i rtmp://jasma_live/$1/$2 -async 1 -vsync -1 -c:v libx264 -x264opts keyint=60:no-scenecut -b:v 3000K -c:a aac -shortest -s 1920x1080 -r 30 -b:v 3000K -sws_flags bilinear -tune zerolatency -preset veryfast -f flv rtmp://jasma_live:1935/show/$2_ultra -c:v libx264 -x264opts keyint=60:no-scenecut -b:v 1500K -c:a aac -shortest -s 1280x720 -r 30 -sws_flags bilinear -tune zerolatency -preset veryfast -f flv rtmp://jasma_live:1935/show/$2_hd -c:v libx264 -x264opts keyint=60:no-scenecut -b:v 450k -c:a aac -shortest -s 852x480 -r 30 -sws_flags bilinear -tune zerolatency -preset veryfast -f flv rtmp://jasma_live:1935/show/$2_sd -c:v libx264 -x264opts keyint=60:no-scenecut -b:v 125k -c:a aac -shortest -s 426x240 -r 30 -sws_flags bilinear -tune zerolatency -preset veryfast -f flv rtmp://jasma_live:1935/show/$2_subsd
+ffmpeg -i rtmp://localhost:1935/$1/$2 -async 1 -vsync -1 -c:v libx264 -x264opts keyint=60:no-scenecut -b:v 3000K -c:a aac -shortest -s 1920x1080 -r 30 -b:v 3000K -sws_flags bilinear -tune zerolatency -preset veryfast -f flv rtmp://localhost:1935/show/$2_ultra -c:v libx264 -x264opts keyint=60:no-scenecut -b:v 1500K -c:a aac -shortest -s 1280x720 -r 30 -sws_flags bilinear -tune zerolatency -preset veryfast -f flv rtmp://localhost:1935/show/$2_hd -c:v libx264 -x264opts keyint=60:no-scenecut -b:v 450k -c:a aac -shortest -s 852x480 -r 30 -sws_flags bilinear -tune zerolatency -preset veryfast -f flv rtmp://localhost:1935/show/$2_sd -c:v libx264 -x264opts keyint=60:no-scenecut -b:v 125k -c:a aac -shortest -s 426x240 -r 30 -sws_flags bilinear -tune zerolatency -preset veryfast -f flv rtmp://localhost:1935/show/$2_subsd
 
 # filepath="rtmp://jasma_live:1935/$1/$2"
 
