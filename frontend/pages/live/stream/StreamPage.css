@@ -1,0 +1,16 @@
+.stream-page-mobile-layout {
+    @apply flex flex-col w-full;
+}
+
+@screen md {
+    .stream-page-mobile-layout {
+        @apply flex-row;
+    }
+
+    .stream-page-mobile-layout > :first-child {
+        @apply w-full;
+    }
+    .stream-page-mobile-layout > :last-child {
+        width: 35rem;
+    }
+}

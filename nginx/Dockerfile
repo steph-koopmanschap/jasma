@@ -7,3 +7,4 @@ RUN rm /etc/nginx/conf.d/default.conf
 RUN mkdir -p /etc/nginx/ssl
 COPY jasmaHTTPS.conf /etc/nginx/conf.d/default.conf
 
+

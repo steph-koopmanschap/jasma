@@ -9,7 +9,7 @@ import {
     getSinglePost,
     getUserPosts
 } from "@/entities/post/index.js";
-import { createMultipartData, handleError } from "@/shared/utils";
+import { copyToClipboard, createMultipartData, handleError } from "@/shared/utils";
 import { useQuery } from "react-query";
 
 /**
@@ -67,7 +67,7 @@ const handleCreatePost = async (postData, file) => {
  */
 
 const handleSharePost = (postID) => {
-    return navigator.clipboard.writeText(`${window.location.origin}/post/${postID}`);
+    return copyToClipboard(`${window.location.origin}/post/${postID}`);
 };
 
 /**

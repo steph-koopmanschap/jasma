@@ -9,3 +9,10 @@ export default function createAdPage() {
         </div>
     );
 }
+
+export const getServerSideProps = async (ctx) => {
+    const { isMobile } = MobileDetectSSR(ctx);
+    return {
+        props: { isSSRMobile: isMobile }
+    };
+};

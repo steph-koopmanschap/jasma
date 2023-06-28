@@ -1,3 +1,5 @@
+import { MobileDetectSSR } from "@/shared/model";
+
 export default function PaymentFailure() {
     return (
         <div className="">
@@ -7,3 +9,10 @@ export default function PaymentFailure() {
         </div>
     );
 }
+
+export const getServerSideProps = async (ctx) => {
+    const { isMobile } = MobileDetectSSR(ctx);
+    return {
+        props: { isSSRMobile: isMobile }
+    };
+};

@@ -1,5 +1,6 @@
 import { useCheckAuthClientSide } from "@/features/auth/admin";
 import LoginForm from "@/features/auth/login";
+import { MobileDetectSSR } from "@/shared/model";
 
 //Login page
 export default function LoginPage() {
@@ -13,3 +14,10 @@ export default function LoginPage() {
         </div>
     );
 }
+
+export const getServerSideProps = async (ctx) => {
+    const { isMobile } = MobileDetectSSR(ctx);
+    return {
+        props: { isSSRMobile: isMobile }
+    };
+};

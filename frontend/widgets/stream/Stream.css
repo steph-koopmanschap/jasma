@@ -1,0 +1,47 @@
+.stream-widget-container {
+    @apply w-full h-full;
+}
+
+.stream-mobile-layout {
+    @apply flex flex-col  gap-5;
+}
+
+.stream-large-layout {
+    @apply py-2 px-4 flex w-full h-full relative;
+    transform-origin: center center;
+}
+
+/* video container */
+.stream-mobile-layout > :first-child {
+    @apply h-full w-full;
+}
+
+.stream-large-main > .stream-video-wrapper {
+    @apply overflow-hidden w-full h-full;
+
+    max-height: 30rem;
+}
+
+.stream-large-main {
+    @apply w-full;
+}
+
+.stream-large-layout > :last-child {
+    width: 25rem;
+}
+
+@screen md {
+    .stream-mobile-layout {
+        @apply flex-row items-center;
+    }
+
+    .stream-mobile-layout > :last-child {
+        @apply h-full;
+        width: 32rem;
+    }
+
+    /* video container */
+    .stream-mobile-layout > :first-child > div > div {
+        /* padding-bottom: 25%; */
+    }
+}

@@ -7,10 +7,12 @@ import { themeState, themes } from "@/entities/theme";
 import GlobalStyles from "@/shared/styles/GlobalStyles";
 import FooterMain from "@/widgets/footer";
 import HeaderMain from "@/widgets/header";
+import { useMobileProvider } from "@/shared/model";
 
 export default function Layout({ children }) {
     const [theme, setTheme] = useRecoilState(themeState);
     const isLoaded = useRef(false);
+    const { isMobile } = useMobileProvider();
 
     useEffect(() => {
         function determineTheme() {
@@ -52,20 +54,20 @@ export default function Layout({ children }) {
     return (
         <ThemeProvider theme={theme.styles}>
             <GlobalStyles isLoaded={isLoaded.current} />
-            <MetaHead />
-
+            <MetaHead isMobile={isMobile} />
             <header>
                 <Nav
                     theme={theme}
                     toggleTheme={toggleTheme}
                 />
             </header>
-
-            <main>
-                <HeaderMain />
-                {children}
-            </main>
-            <FooterMain />
+            <div className="h-full flex-col justify-between flex">
+                <main>
+                    <HeaderMain />
+                    {children}
+                </main>
+                <FooterMain />
+            </div>
         </ThemeProvider>
     );
 }

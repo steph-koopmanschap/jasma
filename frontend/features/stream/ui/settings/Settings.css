@@ -1,0 +1,32 @@
+.stream-key-field {
+    @apply flex gap-1 flex-col items-start;
+}
+
+.action-gen-btn {
+}
+
+.stream-key-field-wrapper {
+    @apply flex gap-1 items-center w-full;
+}
+
+.stream-key-field-wrapper input {
+    @apply w-full;
+}
+
+.key-show-btn {
+    @apply cursor-pointer;
+}
+
+.stream-key-description {
+    @apply py-2;
+}
+
+.stream-key-description p {
+    @apply text-sm;
+}
+
+@media (hover: hover) {
+    .key-show-btn {
+        @apply hover:text-gray-600 hover:underline;
+    }
+}

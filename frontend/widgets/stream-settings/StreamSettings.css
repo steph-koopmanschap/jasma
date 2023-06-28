@@ -1,0 +1,15 @@
+.stream-settings-widget {
+    @apply w-full h-full px-2 py-4;
+}
+
+.stream-settings-widget h2 {
+    @apply text-lg font-bold mb-3;
+}
+
+.stream-settings-container {
+    @apply flex flex-col gap-1 bg-gray-200 rounded-md border-2 border-gray-300;
+}
+
+.separator {
+    @apply border-2 border-gray-300 opacity-50;
+}

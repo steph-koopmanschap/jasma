@@ -1,3 +1,5 @@
+import { MobileDetectSSR } from "@/shared/model";
+
 export default function TermsOfService() {
     return (
         <div>
@@ -6,3 +8,10 @@ export default function TermsOfService() {
         </div>
     );
 }
+
+export const getServerSideProps = async (ctx) => {
+    const { isMobile } = MobileDetectSSR(ctx);
+    return {
+        props: { isSSRMobile: isMobile }
+    };
+};
