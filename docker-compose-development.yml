@@ -33,7 +33,8 @@ services:
         networks:
             - jasma-network-dev
         volumes:
-            - jasma-storage-dev:/var/lib/postgresql/data #Check that this works
+            - jasma-storage-dev:/var/lib/postgresql/data #Check that this works 
+            - ./compose/local/postgresql:/docker-entrypoint-initdb.d # Init script for database
 
     # REDIS
     jasma-redis-db:
@@ -118,6 +119,22 @@ services:
             - "80:80"
         networks:
             - jasma-network-dev
+    # NGINX RTMP SERVER
+    jasma_live:
+        build: 
+            context: ./rtmp
+            target: development
+        expose:
+            - 5050
+            - 1935
+        ports:
+            - "1935:1935"
+            - "5050:5050"
+        networks:
+            - jasma-network-dev
+        user: root
+        container_name: jasma_live
+        
 
 volumes:
     jasma-storage-dev:

@@ -1,0 +1,10 @@
+.stream-chat-container {
+    @apply w-full px-1.5;
+    height: 20rem;
+}
+
+@screen md {
+    .stream-chat-container {
+        @apply h-full;
+    }
+}

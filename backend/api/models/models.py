@@ -53,6 +53,8 @@ class User(AbstractUser):
         return self.username
 
 
+    # This does not actually return total created posts count, because a user can delete posts
+    # This only returns count of currenly created posts.
     @classmethod
     def total_created_posts(cls):
         return Post.objects.count()
@@ -61,6 +63,8 @@ class User(AbstractUser):
     def total_created_posts(self):
         return self.posts.count()
 
+    # This does not actually return total created comments count, because a user can delete comments
+    # This only returns count of currenly created comments.
     @classmethod
     def total_created_comments(cls):
         return Comment.objects.count()
@@ -69,6 +73,8 @@ class User(AbstractUser):
     def total_created_comments(self):
         return self.comments.count()
 
+    # This does not actually return total created ads count, because a user can delete ads
+    # This only returns count of currenly created ads.
     # TODO: Maybe restrict to users with ad priviledge.
     @classmethod
     def total_created_ads(cls):
@@ -77,6 +83,16 @@ class User(AbstractUser):
     @property
     def total_created_ads(self):
         return self.ads.count()
+    
+# Track at which time and at which ip the users login
+class UserLoginHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    login_ipv4 = models.CharField(max_length=55, default="0.0.0.0", blank=True, validators=[validate_ipv4_address])
+    login_time = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = "user_login_history"
+        verbose_name_plural = "UserLoginHistory"
 
 class UserProfile(models.Model):
     
@@ -204,6 +220,32 @@ class Post(models.Model):
     class Meta:
         db_table = "posts"
         verbose_name_plural = "Posts"
+        ordering = ["-created_at"]
+
+# This stores a reference to the post that was deleted, 
+# because we can no longer retrieve the post info after its deleted.
+# It only stores the post id, and when a post was created not the whole post info.
+# This is mainly used for analytics purposes.
+class DeletedPostReference(models.Model):
+    id = models.UUIDField(default=uuid4, primary_key=True, editable=False)
+    post_id = models.UUIDField(editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    delete_reason = models.CharField(max_length=17, choices=[
+                                        ("user deleted", "User deleted"),
+                                        ("moderator deleted", "Moderator deleted"),
+                                        # audo deleted = Deleted by AI (feature not yet implemented)
+                                        ("auto deleted", "Auto deleted")])
+    # When the post was orginially created
+    created_at = models.DateTimeField(blank=False)
+    # When the post was deleted
+    deleted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Deleted id: {self.post_id} at: {self.deleted_at}"
+
+    class Meta:
+        db_table = "deleted_posts_references"
+        verbose_name_plural = "DeletedPostReferences"
         ordering = ["-created_at"]
 
 class Comment(models.Model):

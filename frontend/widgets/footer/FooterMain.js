@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export function FooterMain() {
     return (
-        <footer className="flex justify-center mt-20">
+        <footer className="flex justify-center py-10">
             <div className="flex items-center gap-2">
                 <Link
                     className="hover:text-sky-500 mr-2"

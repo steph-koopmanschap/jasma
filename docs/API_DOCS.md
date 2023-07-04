@@ -7,6 +7,19 @@
 
 ## Overview
 
+Required Header for POST, DELETE, PUT requests: `"X-CSRFTOKEN"`
+The `X-CSRFTOKEN` is automatically added by Axios.
+
+Default response structure:
+```
+{
+    "success": Boolean,
+    "message": String,
+    "data": Object,
+    "errors": Array
+}
+```
+
 #### Routes marked with ! require authenthication/authorization.
 #### Routes marked with !! require moderator/admin authenthication/authorization.
 
@@ -118,6 +131,7 @@ Success example.
 }
 ```
 Error example.
+```
 {
     "success": false,
     "message": "",
@@ -135,6 +149,7 @@ Error example.
         }
     ]
 }
+```
 
 ### POST | /api/auth/login
 
@@ -151,6 +166,7 @@ Login a user.
 
 #### Output
 
+```
 {
     "success": true,
     "message": "User logged in.",
@@ -163,6 +179,7 @@ Login a user.
     },
     "errors": []
 }
+```
 
 ### POST | /api/auth/checkAuth
 

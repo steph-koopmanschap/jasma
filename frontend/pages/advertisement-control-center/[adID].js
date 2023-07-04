@@ -1,4 +1,4 @@
-import { useRequireAuth } from "@/shared/model";
+import { MobileDetectSSR, useRequireAuth } from "@/shared/model";
 
 export default function advertisement(props) {
     //Redirect user to the dashboard if they are not logged in.
@@ -11,3 +11,10 @@ export default function advertisement(props) {
         </div>
     );
 }
+
+export const getServerSideProps = async (ctx) => {
+    const { isMobile } = MobileDetectSSR(ctx);
+    return {
+        props: { isSSRMobile: isMobile }
+    };
+};

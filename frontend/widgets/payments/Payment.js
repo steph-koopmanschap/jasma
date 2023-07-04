@@ -1,6 +1,7 @@
 /* Possible refactor in the future: each form as a separate feature */
 
 import { handleCreateOrder, handleStripeCheckoutSession } from "@/features/payments";
+import { useState } from "react";
 
 export const Payment = () => {
     const [paymentInput, setPaymentInput] = useState(0.0);

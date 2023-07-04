@@ -1,4 +1,4 @@
-import { checkAuthClientSide, checkAuthUserRole } from "@/entities/auth";
+import { checkAuth, checkAuthUserRole } from "@/entities/auth";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { handleError } from "@/shared/utils";
@@ -14,7 +14,7 @@ const useCheckAuthClientSide = async (redirectPath = "/", successRedirectPath) =
     useEffect(() => {
         const callApi = async () => {
             try {
-                const isLoggedIn = await checkAuthClientSide();
+                const isLoggedIn = await checkAuth();
                 if (
                     isLoggedIn === true &&
                     window.localStorage.getItem("loggedInUserID") &&

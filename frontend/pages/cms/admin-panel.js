@@ -1,4 +1,5 @@
 import { useCheckAuthClientSide } from "@/features/auth/admin";
+import { MobileDetectSSR } from "@/shared/model";
 import UserWidgets from "@/widgets/user/index.js";
 
 /*
@@ -14,3 +15,10 @@ export default function AdminPanel() {
         </div>
     );
 }
+
+export const getServerSideProps = async (ctx) => {
+    const { isMobile } = MobileDetectSSR(ctx);
+    return {
+        props: { isSSRMobile: isMobile }
+    };
+};

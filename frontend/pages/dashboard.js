@@ -1,4 +1,5 @@
 import { CreatePost } from "@/features/post";
+import { MobileDetectSSR } from "@/shared/model";
 import SubscribeHashtags from "@/widgets/hashtags";
 import NewsFeed from "@/widgets/news-feed";
 import UserWidgets from "@/widgets/user";
@@ -48,3 +49,10 @@ export default function Dashboard(props) {
 //     }
 //     return { props: { isAuth } };
 // }
+
+export const getServerSideProps = async (ctx) => {
+    const { isMobile } = MobileDetectSSR(ctx);
+    return {
+        props: { isSSRMobile: isMobile }
+    };
+};

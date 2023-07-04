@@ -1,10 +1,10 @@
 from datetime import datetime, timedelta
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from api.models import User, Post, Hashtag, SubscribedHashtag
+import calendar
+from api.models import User, Post, Hashtag, UserLoginHistory, DeletedPostReference, SubscribedHashtag
 from django.db.models import Count
 from django.db import connection
 from django.db.models import Q
+from django.db.models.functions import TruncDate, ExtractHour, ExtractWeekDay
 from api.constants import user_roles, relationships, genders
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes
@@ -57,6 +57,41 @@ def get_most_active_users(request):
     payload = {'success': True, 'most_active_users': most_active_users, 'timestamp': datetime.now()}
     return Response(payload, status=status.HTTP_200_OK)
 
+# Get the total count of logins in the limit_hours hours
+# TODO: # Country filtering?
+@api_view(["GET"])
+def get_total_login_count(request):
+    # If no limit_hours is given set it to last hour
+    limit_hours = int(request.GET.get('limit_hours', 1))
+    # Limit the login history count to the last 48 hours
+    if limit_hours > 48:
+        limit_hours = 48
+    time_threshold = datetime.now() - timedelta(hours=limit_hours)
+    # Count the login records within the time threshold
+    login_count = UserLoginHistory.objects.filter(login_time__gte=time_threshold).count()
+    payload = {'success': True, 'login_count': login_count, 'timestamp': datetime.now()}
+    return Response(payload, status=status.HTTP_200_OK)
+
+# Get the average login per day, over a period of limit_days
+@api_view(["GET"])
+def average_logins(request):
+    #If no limit_days is given set it to 1 day
+    limit_days = int(request.GET.get('limit_days', 1))
+    # Limit the login period to the last 30 days
+    if limit_days > 30:
+        limit_days = 30
+    # Calculate the start and end date for the time period
+    end_date = datetime.now().date()
+    start_date = end_date - timedelta(days=limit_days)
+    # Query the UserLoginHistory table
+    login_count = UserLoginHistory.objects.filter(
+        login_time__date__range=(start_date, end_date)
+    ).annotate(date=TruncDate('login_time')).values('date').annotate(count=Count('id')).values('date', 'count')
+    # Calculate the average logins per day
+    average_logins = sum(entry['count'] for entry in login_count) / limit_days
+    payload = {"success": True, "average_logins": average_logins, 'timestamp': datetime.now()}
+    return Response(payload, status=status.HTTP_200_OK)
+
 # Get the top 100 users with the most created ads
 # Returns user_id, username, and email
 @api_view(["GET"])
@@ -86,6 +121,89 @@ def get_count_current_posts(request):
     payload = {"success": True, "post_count": post_count, "timestamp": datetime.now()}
     return Response(payload, status=status.HTTP_200_OK) 
 
+# Returns how many posts were created on each weekday.
+# And how many posts were created per hour per weekday.
+# Note: This also includes count of created posts that were deleted
+@api_view(["GET"])
+def post_created_count_per_hour_and_weekday(request):
+    limit_days = int(request.GET.get('limit_days', 7))
+    # limit_days under 7 days not allowed because we get the data from a full week
+    if limit_days < 7:
+        limit_days = 7
+    # Calculate the start and end date for the limit_day period
+    end_date = datetime.now().date()
+    start_date = end_date - timedelta(days=limit_days)
+    # Query the Post table and group the count of posts per hour and weekday
+    post_counts = Post.objects.filter(
+        created_at__date__range=(start_date, end_date)
+    ).annotate(hour=ExtractHour('created_at'), weekday=ExtractWeekDay('created_at')).values('hour', 'weekday').annotate(count=Count('id'))
+    # Query the DeletedPostReference table and group the count of deleted posts per hour and weekday
+    deleted_post_counts = DeletedPostReference.objects.filter(
+        created_at__date__range=(start_date, end_date)
+    ).annotate(hour=ExtractHour('created_at'), weekday=ExtractWeekDay('created_at')).values('hour', 'weekday').annotate(count=Count('id'))
+    
+    # Create a dictionary to store the count of posts per hour and weekday
+    data = []
+    for weekday in range(1, 6):
+        weekday_data = {
+            'day': calendar.day_name[weekday],
+            'count': 0,
+            'hours': []
+        }
+        for hour in range(24):
+            weekday_data['hours'].append({'hour': str(hour).zfill(2), 'count': 0})
+        data.append(weekday_data)
+
+    # Add the counts for created posts are did not get deleted
+    for entry in post_counts:
+        hour = entry['hour']
+        weekday = entry['weekday']
+        count = entry['count']
+        data[weekday - 1]['count'] += count
+        data[weekday - 1]['hours'][hour]['count'] = count
+    # Add the counts for created posts that got deleted
+    for entry in deleted_post_counts:
+        hour = entry['hour']
+        weekday = entry['weekday']
+        count = entry['count']
+        data[weekday - 1]['deleted_count'] += count
+        data[weekday - 1]['hours'][hour]['deleted_count'] = count
+
+    payload = {"success": True, "weekday_hour_counts": data, "timestamp": datetime.now()}
+    return Response(payload, status=status.HTTP_200_OK)
+
+# Returns the count of how many posts were deleted in the past limit_days
+# Grouped by delete reason
+def deleted_posts_count(request):
+    limit_days = int(request.GET.get('limit_days', 1))
+    if limit_days < 1:
+        limit_days = 1
+    # Calculate the date limit_days days ago from today
+    time_threshold = datetime.now() - timedelta(days=limit_days)
+    # Query the deleted posts and group them by delete_reason
+    deleted_counts = (
+        DeletedPostReference.objects
+        .filter(deleted_at__gte=time_threshold)
+        .values('delete_reason')
+        .annotate(count=Count('id'))
+        .order_by()
+    )
+    # Calculate the total count of deleted posts
+    total_count = sum(count['count'] for count in deleted_counts)
+    # Prepare the response
+    deleted_post_counts = {
+        'user deleted': 0,
+        'moderator deleted': 0,
+        'auto deleted': 0,
+        'total': total_count
+    }
+    # Update the response dictionary with the counts
+    for count in deleted_post_counts:
+        deleted_post_counts[count['delete_reason']] = count['count']
+
+    payload = {"success": True, "deleted_post_counts": deleted_post_counts, "timestamp": datetime.now()}
+    return Response(payload, status=status.HTTP_200_OK)
+
 @api_view(["GET"])
 def get_database_size(request):
     try:
@@ -95,11 +213,12 @@ def get_database_size(request):
         payload = {"success": True, "database_size": db_size, "timestamp": datetime.now()}
         return Response(payload, status=status.HTTP_200_OK) 
     except Exception("Internal error") as e:
-        payload = {"success": True, "message": e}
+        payload = {"success": False, "message": e}
         return Response(payload, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # Get the most frequently used total hashtags ordered from highest to lowest if limit_hours is 0.
 # If limit_hours is an integer get the count of the last limit_hours.
+# For trending hashtags set the limit_hours to 24 or 48 hours. and the limit to 10
 @api_view(["GET"])
 def get_top_hashtags(request):
     limit = int(request.GET.get('limit', 1))

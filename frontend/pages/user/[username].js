@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import UserWidgets from "@/widgets/user";
 import HeaderMain from "@/widgets/header";
+import { MobileDetectSSR } from "@/shared/model";
 
 //The (public?) profile page of a user
 export default function ProfilePage(props) {
@@ -15,3 +16,10 @@ export default function ProfilePage(props) {
         </div>
     );
 }
+
+export const getServerSideProps = async (ctx) => {
+    const { isMobile } = MobileDetectSSR(ctx);
+    return {
+        props: { isSSRMobile: isMobile }
+    };
+};

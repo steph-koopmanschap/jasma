@@ -1,3 +1,5 @@
+import { MobileDetectSSR } from "@/shared/model";
+
 export default function adControlPanel() {
     //Redirect user to the dashboard if they are not logged in.
     useRequireAuth("/dashboard");
@@ -9,3 +11,10 @@ export default function adControlPanel() {
         </div>
     );
 }
+
+export const getServerSideProps = async (ctx) => {
+    const { isMobile } = MobileDetectSSR(ctx);
+    return {
+        props: { isSSRMobile: isMobile }
+    };
+};

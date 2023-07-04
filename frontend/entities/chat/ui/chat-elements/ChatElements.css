@@ -1,0 +1,38 @@
+.chat-message-container {
+    @apply w-full py-1.5 px-1  flex flex-col rounded-md gap-2 items-start break-words;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.chat-message-body {
+    @apply w-full flex gap-1 text-black;
+}
+
+.chat-message-body h3 {
+    @apply text-sm font-bold;
+}
+
+.chat-text-frag {
+    overflow-wrap: anywhere;
+}
+.chat-message-body p {
+    @apply text-sm font-normal;
+}
+
+.chat-timestamp {
+    @apply font-semibold text-black text-xs;
+}
+
+.chat-input-container {
+    @apply flex items-center w-full h-8 rounded-sm;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.chat-input-container input {
+    @apply bg-white text-black text-sm  h-full;
+    width: 90%;
+}
+
+.chat-input-container button {
+    @apply bg-red-400 h-full px-1 py-0.5;
+    width: 3rem;
+}
