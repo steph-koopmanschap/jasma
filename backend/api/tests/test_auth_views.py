@@ -112,7 +112,8 @@ class AuthViewTestCase(JasmaTestCase):
             "email": self.user.email,
             "password": "password1" # Must provide unhashed password
         }
-        with self.assertNumQueries(4):
+        # TODO: Account for login history!!!
+        with self.assertNumQueries(5):
             self.response = self.client.post(url, payload)
         # Response
         self.assertEqual(self.response.status_code, status.HTTP_200_OK)

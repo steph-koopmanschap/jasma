@@ -17,7 +17,6 @@ class StringUUIDField(serializers.UUIDField):
             if isinstance(value, Model):
                 return str(getattr(value, "pk", None))
             return str(value)
-        return None
 
 # Model Serializer template
 class JasmaModelSerializer(serializers.ModelSerializer):

@@ -37,8 +37,9 @@ def login_view(request):
         # Store ip address used to login
         ip_address = get_client_ip(request)
         user.last_ipv4 = ip_address
+        user.login_history.create(login_ipv4=ip_address)
         user.save()
-        UserLoginHistory.objects.create(user=user, login_ipv4=ip_address)
+        # UserLoginHistory.objects.create(user=user, )
         # Add user data to the user session
         user_info = UserAuthenticationSerializer(user)
         request.session.update({"user": user_info.data})

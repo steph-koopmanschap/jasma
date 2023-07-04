@@ -21,6 +21,7 @@ django-extensions = "^3.2.1"
 psycopg2-binary = "^2.9.6"
 pillow = "^9.5.0"
 django-cors-headers = "^4.0.0"
+coverage = "^7.2.7"
 
 
 [tool.poetry.group.dev.dependencies]
