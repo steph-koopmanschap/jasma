@@ -1,5 +1,6 @@
-from attr import fields
-from api.models import Ad, Post, Hashtag, User, UserProfile, UserNotificationPreferences, Comment, Transaction, BookmarkedPost, Following
+from django.db.models import Model
+
+from api.models import Ad, Post, Hashtag, User, UserProfile, UserNotificationPreferences, Comment, Transaction, BookmarkedPost, Following, SubscribedHashtag
 from rest_framework import serializers
 
 
@@ -12,13 +13,15 @@ class StringUUIDField(serializers.UUIDField):
     """
 
     def to_representation(self, value):
-        if value:
+        if value is not None:
+            if isinstance(value, Model):
+                return str(getattr(value, "pk", None))
             return str(value)
         return None
 
 # Model Serializer template
 class JasmaModelSerializer(serializers.ModelSerializer):
-    # Was created for the formating of response. 
+    # Was created for the formating of response.
     # It was a bad idea in the end
     # I kept here in case we need it as all serializer already inherit from it.
     ...
@@ -31,15 +34,15 @@ class UserAuthenticationSerializer(JasmaModelSerializer):
     Serializer to be used for the authentication process.
 
     Particularity:
-    - Only returns "user_id", "username", "user_role"
+    - Only returns "id", "username", "user_role"
     - Will accept "password" and "email"
 
     """
-    user_id = StringUUIDField(read_only=True)
+    id = StringUUIDField(read_only=True)
 
     class Meta:
         model = User
-        fields = ["user_id", "username", "user_role", "password", "email"]
+        fields = ["id", "username", "user_role", "password", "email"]
         extra_kwargs = {
             'password': {'write_only': True},
             'email': {'write_only': True},
@@ -48,8 +51,8 @@ class UserAuthenticationSerializer(JasmaModelSerializer):
 
 class UserProfileSerializer(JasmaModelSerializer):
     # Note user is the PK of this model
-    user = StringUUIDField(read_only=True)
-    relationship_with = UserAuthenticationSerializer()
+    user = StringUUIDField()
+    relationship_with = StringUUIDField() # TODO: Review if many2many
 
     class Meta:
         model = UserProfile
@@ -58,7 +61,7 @@ class UserProfileSerializer(JasmaModelSerializer):
 
 class UserNotificationPreferencesSerializer(JasmaModelSerializer):
     # Note user is the PK of this model
-    user = StringUUIDField(read_only=True)
+    user = StringUUIDField()
 
     class Meta:
         model = UserNotificationPreferences
@@ -66,7 +69,7 @@ class UserNotificationPreferencesSerializer(JasmaModelSerializer):
 
 
 class CommentSerializer(JasmaModelSerializer):
-    id = StringUUIDField(source="pk", read_only=True)
+    id = StringUUIDField()
     user = StringUUIDField()
     post = StringUUIDField()
 
@@ -75,30 +78,30 @@ class CommentSerializer(JasmaModelSerializer):
         fields = "__all__"
 
 
-
 class PostSerializer(JasmaModelSerializer):
-    post_id = StringUUIDField(source="pk", read_only=True)
-    user_id = StringUUIDField(source="user.pk", read_only=True)
+    id = StringUUIDField()
+    user= StringUUIDField()
+    
 
     class Meta:
         model = Post
-        exclude = ["id", "user"]
+        fields = "__all__"
 
 
 class AdSerializer(JasmaModelSerializer):
-    ad_id = StringUUIDField(source="pk", read_only=True)
+    id = StringUUIDField()
 
     class Meta:
         model = Ad
-        exclude = ["id"]
+        fields = "__all__"
 
 
 class TransactionSerializer(JasmaModelSerializer):
-    transaction_id = StringUUIDField(source="pk", read_only=True)
+    id = StringUUIDField()
 
     class Meta:
         model = Transaction
-        exclude = ["id"]
+        fields = "__all__"
 
 
 class HashtagSerializer(JasmaModelSerializer):
@@ -110,17 +113,17 @@ class HashtagSerializer(JasmaModelSerializer):
 
 
 class BookmarkedPostSerializer(JasmaModelSerializer):
-    bookmarked_post_id = StringUUIDField(source="pk", read_only=True)
-    post_id = StringUUIDField(source="post.pk", read_only=True)
-    user_id = StringUUIDField(source="user.pk", read_only=True)
+    id = StringUUIDField()
+    post = StringUUIDField()
+    user = StringUUIDField()
 
     class Meta:
         model = BookmarkedPost
-        exclude = ["id", "post", "user"]
+        fields = "__all__"
 
 
 class FollowingSerializer(JasmaModelSerializer):
-    followee = StringUUIDField(source="followee.pk", read_only=True)
+    followee = StringUUIDField()
 
     class Meta:
         model = Following
@@ -128,25 +131,33 @@ class FollowingSerializer(JasmaModelSerializer):
 
 
 class FollowersSerializer(JasmaModelSerializer):
-    follower = StringUUIDField(source="follower.pk", read_only=True)
+    follower = StringUUIDField()
 
     class Meta:
         model = Following
         fields = ["follower"]
 
 
+class SubscribedHashtagSerializer(JasmaModelSerializer):
+    user = StringUUIDField()
+    hashtag = StringUUIDField()
+
+    class Meta:
+        model = SubscribedHashtag
+        fields = "__all__"
+
 class UserFullSerializer(JasmaModelSerializer):
     """ 
     To be used when we want complete user information of depth=1. 
 
     """
-    user_id = StringUUIDField(source="pk", read_only=True)
+    id = StringUUIDField()
     profile = UserProfileSerializer()
     notification_preferences = UserNotificationPreferencesSerializer()
 
     class Meta:
         model = User
-        exclude = ["id", "password"]
+        exclude = ["password"]
         depth = 1
 
 
@@ -158,14 +169,14 @@ class UserCustomSerializer(UserFullSerializer):
     transactions = TransactionSerializer(many=True)
     following = FollowingSerializer(many=True)
     followers = FollowersSerializer(many=True)
+    sucribed_hashtags = SubscribedHashtagSerializer(many=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Fields to always include
         automatic_fields = {
-            "user_id",
+            "id",
             "username",
-            # "email",  # I don't believe we should / need to expose this by default
             "user_role"
         }
         # All available fields from the serializer
@@ -182,4 +193,3 @@ class UserCustomSerializer(UserFullSerializer):
             remove = serializer_fields - keep
             for field in remove:
                 self.fields.pop(field)
-

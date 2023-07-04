@@ -1,8 +1,6 @@
-from typing import Any
 from uuid import uuid4
 
-from django.conf import settings
-from django.contrib.auth.models import AbstractUser, Group, Permission, UserManager
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.validators import validate_ipv4_address, MaxValueValidator, MinValueValidator
 from django.contrib.auth import get_user_model
@@ -39,15 +37,16 @@ class User(AbstractUser):
                                 max_length=10, default="normal", choices=user_roles.CHOICES)
     deleted_at = models.DateTimeField(null=True, blank=True)
 
+
     def save(self, *args, **kwargs) -> None:
         """ Modifies save so the UserProfile and UserNotificationPreferences
         get created at User creation.
         """
-        creating = self._state.adding
-        super().save(*args, **kwargs)
-        if creating:
+        
+        if self._state.adding:
             UserProfile.objects.create(user=self)
             UserNotificationPreferences.objects.create(user=self)
+        super().save(*args, **kwargs)
 
     # TODO: We could probably use a string representation
     def __str__(self):
@@ -79,36 +78,17 @@ class User(AbstractUser):
     def total_created_ads(self):
         return self.ads.count()
 
-class JasmaBaseModel(models.Model):
-    created_by = models.ForeignKey(get_user_model(), models.CASCADE, related_name="created_by", editable=False)
-    last_modified_by = models.ForeignKey(get_user_model(), models.CASCADE, related_name="last_modified_by", null=True, blank=True)
+class UserProfile(models.Model):
+    
+    DEFAULT_PROFILE_PIC = "images/avatars/default-profile-pic.webp"
+    def get_default_profile_pic(self):
+        return self.DEFAULT_PROFILE_PIC
 
-    class Meta:
-        abstract = True
-
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
-
-@receiver(pre_save)
-def update_modified_by(sender, instance, **kwargs):
-    print("*** update_modified_by:")
-    print(f"   sender: {sender}")
-    print(f"   instance: {instance}")
-    print(f"   kwargs: {kwargs}")
-    return 
-    if issubclass(sender, JasmaBaseModel) and instance.pk:
-        original = sender.objects.get(pk=instance.pk)
-        if original.modified_by != instance.modified_by:
-            instance.modified_by = ""
-
-
-
-class UserProfile(JasmaBaseModel):
     user = models.OneToOneField(User, related_name="profile",
         on_delete=models.CASCADE, primary_key=True, editable=False) 
     profile_pic = models.ImageField("Profile picture", 
          upload_to="images/avatars/", 
-         default="images/avatars/default-profile-pic.webp", 
+         default=DEFAULT_PROFILE_PIC, 
         validators=[validate_image_file_size]
     )
     given_name = models.CharField(max_length=35, blank=True)
@@ -144,7 +124,8 @@ class UserProfile(JasmaBaseModel):
 
 class UserNotificationPreferences(models.Model):
     user = models.OneToOneField(
-        User, related_name="notification_preferences", on_delete=models.CASCADE, primary_key=True, editable=False)
+        User, related_name="notification_preferences", 
+        on_delete=models.CASCADE, primary_key=True, editable=False)
     is_all_email = models.BooleanField(default=True)
     is_all_push = models.BooleanField(default=True)
     is_all_inapp = models.BooleanField(default=True)

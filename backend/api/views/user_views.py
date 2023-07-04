@@ -15,8 +15,7 @@ from api.utils.staff_auth_wrappers import admin_required
 
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.permissions import DjangoModelPermissions, DjangoObjectPermissions
-from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 
 from api.constants import user_roles
 from api.models import User, UserProfile, UserNotificationPreferences
@@ -26,20 +25,71 @@ from api.serializers import UserCustomSerializer
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserCustomSerializer
-    permission_classes = [DjangoModelPermissions, DjangoObjectPermissions]
+    # NOTE: Need to rework on permissions
+    permission_classes = [IsAuthenticated]
+    http_method_names = ["get", "patch", ]
+    
+    def get_queryset(self):
+        # NOTE: This help reduce roundtrip to the DB.
+        queryset = super().get_queryset()
+        related_fields = [field.name 
+                          for field in User._meta.get_fields() 
+                          if field.is_relation]
+        requested_fields = [field.strip() 
+                           for field 
+                           in self.request.GET.get("fields", "").split(",")]
+
+        for field in related_fields:
+            if field in ["logentry"]:
+                continue
+            if field in requested_fields or "all" in requested_fields:
+                queryset = queryset.prefetch_related(field)
+                match field:
+                    case "profile":
+                        queryset = queryset.prefetch_related(
+                            f"{field}__relationship_with")
+                    case "posts":
+                        queryset = queryset.prefetch_related(
+                            f"{field}__hashtags")
+                    case "comments":
+                        queryset = queryset.prefetch_related(f"{field}__post")
+                    case "bookmarked_posts":
+                        queryset = queryset.prefetch_related(f"{field}__post")
+                    case "following":
+                        queryset = queryset.prefetch_related(
+                            f"{field}__followee")
+                    case "followers":
+                        queryset = queryset.prefetch_related(
+                            f"{field}__follower")
+                    case "sucribed_hashtags":
+                        queryset = queryset.prefetch_related(
+                            f"{field}__hashtag")
+                        
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        print(f"*** request: {request}")
+        print(f"*** user: {request.user}")
+        print(f"*** pk: {request.user.pk}")
+        kwargs["pk"] = request.user.pk
+        print(request._request)
+        return self.retrieve(request, *args, **kwargs)
+        
 
     def retrieve(self, request, *args, **kwargs):
+        print(f"*** request: {request}")
+        print(f"*** kwargs: {kwargs}")
         user = self.get_object()
+        
+        # Prepare payload
+        serializer = self.get_serializer(user)
+        payload = {"data": serializer.data}
+        
         # List reuqested fields
         requested_fields = [
             field.strip() for field
             in request.GET.get("fields", "").split(",")
         ]
-        # List serializer fields
-        serializer = self.get_serializer(user)
-
-        payload = {"data": serializer.data}
-        
         # Trigger a warning message if requested field don't exist
         missing_fields = [
             field for field 
@@ -49,11 +99,11 @@ class UserViewSet(viewsets.ModelViewSet):
         if missing_fields:
             warning = f"Warning could not find {', '.join(missing_fields)}."
             payload["message"] = warning
-
+        
         return Response(payload)
 
 
-
+"""
 # Get info of a user.
 # What info is returned is provided by the query
 # ID, Usermame, email, and role are provided automatically
@@ -91,6 +141,7 @@ def get_user(request, user_id):
 
     return JsonResponse({"success": True, "user": returned_dict},
                         status=HTTP_STATUS["OK"])
+"""
 
 @login_required
 @get_wrapper

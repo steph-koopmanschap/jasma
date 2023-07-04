@@ -18,7 +18,7 @@ from api.serializers import UserAuthenticationSerializer
 @permission_classes([AllowAny])
 def register(request):
     # Serialize, validate and create
-    serializer = UserRegisterSerializer(data=request.data)
+    serializer = UserAuthenticationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     user = User.objects.create_user(**serializer.validated_data)
 
@@ -38,7 +38,7 @@ def login_view(request):
         user.save()
         # Add user data to the user session
         user_info = UserAuthenticationSerializer(user)
-        request.session.update(user_info.data)
+        request.session.update({"user": user_info.data})
         payload = {
             "data": {**user_info.data},
             "message": "User logged in."
@@ -62,11 +62,12 @@ class LogoutView(CreateAPIView):
 @permission_classes([AllowAny])
 def check_auth(request):
     has_user = request.user.is_authenticated
-    has_session = bool(request.session.session_key)   
+    has_session = bool(request.session.session_key)
+    user = request.user
     payload = {
         "data": {
             "isAuth": has_user and has_session,
-            "role": request.session.get("user_role", "guest")
+            "role": user.user_role if hasattr(user, "user_role") else "guest"
         }
     }
     return Response(payload)

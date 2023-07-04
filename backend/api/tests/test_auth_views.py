@@ -121,7 +121,7 @@ class AuthViewTestCase(JasmaTestCase):
         self.assertTrue(data.get("success"))
         self.assertEqual(data.get("message"), "User logged in.")
         expected_data = {
-            "user_id": str(self.user.id),
+            "id": str(self.user.id),
             "username": self.user.username,
             # "email": self.user.email,
             "user_role": self.user.user_role

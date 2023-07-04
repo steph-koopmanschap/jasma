@@ -1,13 +1,15 @@
 import os
 import json
+from datetime import datetime
 from typing import Union
 
 from django.http import QueryDict
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.storage import default_storage
 
 from rest_framework.test import APITestCase
 
-from api.models import User
+from api.models import User, UserProfile
 
 class JasmaTestCase(APITestCase):
     SESSION_KEY_REGEX = r"^[a-z0-9]{32}$"
@@ -20,71 +22,61 @@ class JasmaTestCase(APITestCase):
         else:
             return data
 
-    def upload(self, *, file_path, name, content, content_type) -> SimpleUploadedFile:
-        """_summary_
+    def datetime_iso(self, datetime_obj: datetime) -> str:
+        return datetime_obj.isoformat().replace("+00:00", "Z")
 
-        Args:
-            file_path (_type_): _description_
-            name (_type_): _description_
-            content (_type_): _description_
-            content_type (_type_): _description_
-
-        Returns:
-            SimpleUploadedFile: _description_
-        """
-        if not hasattr(self, "uploaded"):
-            self.uploaded = []
+    @classmethod
+    def upload(cls, *, file_path, name, content_type) -> SimpleUploadedFile:
+        if not hasattr(cls, "uploaded"):
+            cls.uploaded = []
         current_directory = os.path.dirname(os.path.abspath(__file__))
         full_path = os.path.join(current_directory, file_path)
         with open(full_path, "rb") as f:
             uploaded_file = f.read()
         upload_object = SimpleUploadedFile(
-            name="dummy_test_pic_post.jpg",
+            name=name,
             content=uploaded_file,
-            content_type="image/jpeg"
+            content_type=content_type
         )
-        self.uploaded.append(upload_object)
+        cls.uploaded.append(upload_object)
         return upload_object
 
     @classmethod
     def setUpClass(cls):
         print(f"======SETTING UP {cls.__name__} ENVIRONMENT=======")
         super().setUpClass()
-        # Configure different types of test users
         cls.user = User.objects.create_user(
             username="user",
             password="password1",
             email="user@test1.test",
-            phone="9999999999"
+            phone="9999999999",
         )
-        
         cls.mod_user = User.objects.create_user(
             username="mod_user",
             password="mod_password1",
             email="mod_user@test1.test",
             user_role="mod"
-            )
+        )
         cls.admin_user = User.objects.create_user(
             username="admin_user",
             password="admin_password1",
             email="admin_user@test1.test",
             user_role="admin"
-            )
-        
-        
-        
+        )
 
     def setUp(self):
         print(f"======SETTING UP {self._testMethodName}========")
         super().setUp()
         # Add a custom header
         self.client.defaults["HTTP_USER_AGENT"] = "JasmaTestingSuite/1.0.0"
-        # Log basic user by default
-        self.client.force_authenticate(user=self.user)
         # Add query_params to self
         self.query_params = QueryDict(mutable=True)
         # Add payload to self
         self.payload = None
+        # Configure different types of test users
+
+        # Log basic user by default
+        self.client.force_authenticate(user=self.user)
 
     def tearDown(self):
         if hasattr(self, "response"):
@@ -122,3 +114,5 @@ class JasmaTestCase(APITestCase):
     def tearDownClass(cls) -> None:
         super().tearDownClass()
         print(f"======TEARING DOWN {cls.__name__} ENVIRONMENT======")
+        # TODO: Fid a better way to cleanup uploaded files.
+        default_storage.delete(cls.user.profile.profile_pic.path)
