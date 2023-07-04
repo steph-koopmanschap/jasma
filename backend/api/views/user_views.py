@@ -28,7 +28,33 @@ class UserViewSet(viewsets.ModelViewSet):
     # NOTE: Need to rework on permissions
     permission_classes = [IsAuthenticated]
     http_method_names = ["get", "patch", ]
+
+    def _get_requested_fields(self, request) -> list:
+        return [
+            field.strip() for field
+            in request.GET.get("fields", "").split(",")
+        ]
     
+    def _get_missing_fields(self, requested_fields, serializer) -> list:
+        return [
+            field for field 
+            in requested_fields 
+            if field not in serializer.fields.keys()
+        ]
+
+    def _add_warning_message(self, missing_fields, payload) -> None:
+        warning = f"Warning could not find {', '.join(missing_fields)}."
+        payload["message"] = warning
+
+    def check_for_missing_fields(self, request, serializer, payload) -> None:
+                # List requested fields
+        requested_fields = self._get_requested_fields(request)
+        # Trigger a warning message if requested field don't exist
+        missing_fields = self._get_missing_fields(requested_fields, serializer)
+        
+        if missing_fields:
+            self._add_warning_message(missing_fields, payload)
+
     def get_queryset(self):
         # NOTE: This help reduce roundtrip to the DB.
         queryset = super().get_queryset()
@@ -40,8 +66,9 @@ class UserViewSet(viewsets.ModelViewSet):
                            in self.request.GET.get("fields", "").split(",")]
 
         for field in related_fields:
-            if field in ["logentry"]:
+            if field in ["logentry", "deletedpostreference"]:
                 continue
+
             if field in requested_fields or "all" in requested_fields:
                 queryset = queryset.prefetch_related(field)
                 match field:
@@ -64,41 +91,33 @@ class UserViewSet(viewsets.ModelViewSet):
                     case "sucribed_hashtags":
                         queryset = queryset.prefetch_related(
                             f"{field}__hashtag")
+
                         
         return queryset
 
     def list(self, request, *args, **kwargs):
-        print(f"*** request: {request}")
-        print(f"*** user: {request.user}")
-        print(f"*** pk: {request.user.pk}")
-        kwargs["pk"] = request.user.pk
-        print(request._request)
-        return self.retrieve(request, *args, **kwargs)
+        # NOTE: Will need further testting, maybe could use some refactoring
+        if "pk" not in kwargs and request.user:
+            user = self.get_queryset().get(pk=request.user.pk)
+
+            # Prepare payload
+            serializer = self.get_serializer(user)
+            payload = {"data": serializer.data}
+
+            self.check_for_missing_fields(request, serializer, payload)
+            return Response(payload)
         
+        else:
+            return super().list(request, *args, **kwargs)       
 
     def retrieve(self, request, *args, **kwargs):
-        print(f"*** request: {request}")
-        print(f"*** kwargs: {kwargs}")
         user = self.get_object()
         
         # Prepare payload
         serializer = self.get_serializer(user)
         payload = {"data": serializer.data}
         
-        # List reuqested fields
-        requested_fields = [
-            field.strip() for field
-            in request.GET.get("fields", "").split(",")
-        ]
-        # Trigger a warning message if requested field don't exist
-        missing_fields = [
-            field for field 
-            in requested_fields 
-            if field not in serializer.fields.keys()
-        ]
-        if missing_fields:
-            warning = f"Warning could not find {', '.join(missing_fields)}."
-            payload["message"] = warning
+        self.check_for_missing_fields(request, serializer, payload)
         
         return Response(payload)
 
