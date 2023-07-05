@@ -160,7 +160,7 @@ def get_user(request, user_id):
 
     return JsonResponse({"success": True, "user": returned_dict},
                         status=HTTP_STATUS["OK"])
-"""
+
 
 @login_required
 @get_wrapper
@@ -188,6 +188,7 @@ def get_loggedin_user(request):
 
     return JsonResponse({"success": True, "user": returned_dict},
                         status=HTTP_STATUS["OK"])
+"""
 
 # NOTE: NOT DONE YET
 @login_required
