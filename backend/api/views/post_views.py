@@ -25,8 +25,8 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        user_id = self.request.query_params.get('user_id')
-        limit = int(self.request.query_params.get('limit', 1))
+        user_id = self.request.query_params.get("user_id")
+        limit = int(self.request.query_params.get("limit", 1))
         if user_id:
             queryset = queryset.filter(user_id=user_id)[:limit]
 
@@ -37,26 +37,12 @@ class PostViewSet(viewsets.ModelViewSet):
         request.data["user_id"] = request.user.id
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
         
-        data = {
-            "success": True,
-            'message': "Post created successfully."
+        payload = {
+            "message": "Post created successfully."
         }
-        return Response(data, status=status.HTTP_201_CREATED)
+        return Response(payload, status=status.HTTP_201_CREATED)
 
-    def perform_create(self, serializer):
-        # Save the post instance
-        post = serializer.save()
-        # Get the hashtags from the request data
-        hashtags = self.request.data.get('hashtags', [])
-        # Create non-existing hashtags
-        for tag in hashtags:
-            hashtag, _ = Hashtag.objects.get_or_create(hashtag=tag)
-            # Add the created hashtag to the post
-            post.hashtags.add(hashtag)
-        # Save the updated post
-        post.save()
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
@@ -66,12 +52,11 @@ class PostViewSet(viewsets.ModelViewSet):
         posts = serializer.data
 
         # Customize the response format
-        response_data = {
-            'posts': posts,
-            'success': True
+        payload = {
+            "data": {"posts": posts}
         }
 
-        return Response(response_data, status=status.HTTP_200_OK)
+        return Response(payload, status=status.HTTP_200_OK)
         
         
         
@@ -114,8 +99,8 @@ class PostList(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = Post.objects.all()
 
-        user_id = self.request.query_params.get('user_id')
-        limit = int(self.request.query_params.get('limit', 1))
+        user_id = self.request.query_params.get("user_id")
+        limit = int(self.request.query_params.get("limit", 1))
         if user_id:
             queryset = queryset.filter(user_id=user_id)[:limit]
 

@@ -1,17 +1,128 @@
 import datetime
 import json
+
 from django.conf import settings
 from django.http import JsonResponse
+
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+
 from api.utils.request_method_wrappers import post_wrapper, put_wrapper, get_wrapper, delete_wrapper
 from api.constants.http_status import HTTP_STATUS
-from api.constants import user_roles
-from api.models import User, UserProfile, UserNotificationPreferences
 from api.utils.handle_file_save import handle_file_save
 from api.utils.handle_file_delete import handle_file_delete
 from api.utils.staff_auth_wrappers import admin_required
 
+from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+
+from api.constants import user_roles
+from api.models import User, UserProfile, UserNotificationPreferences
+from api.serializers import UserCustomSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserCustomSerializer
+    # NOTE: Need to rework on permissions
+    permission_classes = [IsAuthenticated]
+    http_method_names = ["get", "patch", ]
+
+    def _get_requested_fields(self, request) -> list:
+        return [
+            field.strip() for field
+            in request.GET.get("fields", "").split(",")
+        ]
+    
+    def _get_missing_fields(self, requested_fields, serializer) -> list:
+        return [
+            field for field 
+            in requested_fields 
+            if field not in serializer.fields.keys()
+        ]
+
+    def _add_warning_message(self, missing_fields, payload) -> None:
+        warning = f"Warning could not find {', '.join(missing_fields)}."
+        payload["message"] = warning
+
+    def check_for_missing_fields(self, request, serializer, payload) -> None:
+                # List requested fields
+        requested_fields = self._get_requested_fields(request)
+        # Trigger a warning message if requested field don't exist
+        missing_fields = self._get_missing_fields(requested_fields, serializer)
+        
+        if missing_fields:
+            self._add_warning_message(missing_fields, payload)
+
+    def get_queryset(self):
+        # NOTE: This help reduce roundtrip to the DB.
+        queryset = super().get_queryset()
+        related_fields = [field.name 
+                          for field in User._meta.get_fields() 
+                          if field.is_relation]
+        requested_fields = [field.strip() 
+                           for field 
+                           in self.request.GET.get("fields", "").split(",")]
+
+        for field in related_fields:
+            if field in ["logentry", "deletedpostreference"]:
+                continue
+
+            if field in requested_fields or "all" in requested_fields:
+                queryset = queryset.prefetch_related(field)
+                match field:
+                    case "profile":
+                        queryset = queryset.prefetch_related(
+                            f"{field}__relationship_with")
+                    case "posts":
+                        queryset = queryset.prefetch_related(
+                            f"{field}__hashtags")
+                    case "comments":
+                        queryset = queryset.prefetch_related(f"{field}__post")
+                    case "bookmarked_posts":
+                        queryset = queryset.prefetch_related(f"{field}__post")
+                    case "following":
+                        queryset = queryset.prefetch_related(
+                            f"{field}__followee")
+                    case "followers":
+                        queryset = queryset.prefetch_related(
+                            f"{field}__follower")
+                    case "sucribed_hashtags":
+                        queryset = queryset.prefetch_related(
+                            f"{field}__hashtag")
+
+                        
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        # NOTE: Will need further testting, maybe could use some refactoring
+        if "pk" not in kwargs and request.user:
+            user = self.get_queryset().get(pk=request.user.pk)
+
+            # Prepare payload
+            serializer = self.get_serializer(user)
+            payload = {"data": serializer.data}
+
+            self.check_for_missing_fields(request, serializer, payload)
+            return Response(payload)
+        
+        else:
+            return super().list(request, *args, **kwargs)       
+
+    def retrieve(self, request, *args, **kwargs):
+        user = self.get_object()
+        
+        # Prepare payload
+        serializer = self.get_serializer(user)
+        payload = {"data": serializer.data}
+        
+        self.check_for_missing_fields(request, serializer, payload)
+        
+        return Response(payload)
+
+
+"""
 # Get info of a user.
 # What info is returned is provided by the query
 # ID, Usermame, email, and role are provided automatically
@@ -50,6 +161,7 @@ def get_user(request, user_id):
     return JsonResponse({"success": True, "user": returned_dict},
                         status=HTTP_STATUS["OK"])
 
+
 @login_required
 @get_wrapper
 def get_loggedin_user(request):
@@ -76,6 +188,7 @@ def get_loggedin_user(request):
 
     return JsonResponse({"success": True, "user": returned_dict},
                         status=HTTP_STATUS["OK"])
+"""
 
 # NOTE: NOT DONE YET
 @login_required

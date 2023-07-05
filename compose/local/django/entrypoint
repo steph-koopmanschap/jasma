@@ -7,11 +7,14 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-echo "Prepare database migrations"
+echo "Prepare database migrations ..."
 python manage.py makemigrations
 
-echo "Apply database migrations"
+echo "Apply database migrations ..."
 python manage.py migrate
+
+# echo "Collecting static ..."
+# python manage.py collectstatic --noinput
 
 echo "Starting server"
 python manage.py runserver

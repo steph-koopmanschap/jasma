@@ -17,15 +17,24 @@ import redis
 from dotenv import load_dotenv
 load_dotenv()
 
-runserver.default_addr = os.getenv("BACKEND_HOST")
-runserver.default_port = os.getenv("BACKEND_PORT")
+# Environment varaibles
+BACKEND_HOST = os.getenv("BACKEND_HOST")
+BACKEND_PORT = os.getenv("BACKEND_PORT")
 
 if os.getenv("STAGE") == "production":
     BASE_URL = "https://" + os.getenv("BACKEND_HOST")
+# This is to allows external services though .env file
+MEDIA_ROOT = os.getenv("MEDIA_ROOT")
+LOGS_ROOT  = os.getenv("LOGS_ROOT")
+
+runserver.default_addr = BACKEND_HOST
+runserver.default_port = BACKEND_PORT
+
+if os.getenv("STAGE") == "production":
+    BASE_URL = f"https://{BACKEND_HOST}"
     DEBUG = False
 elif os.getenv("STAGE") == "development":
-    BASE_URL = "http://" + \
-        os.getenv("BACKEND_HOST") + ":" + os.getenv("BACKEND_PORT")
+    BASE_URL = f"http://{BACKEND_HOST}:{BACKEND_PORT}"
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
 
@@ -52,7 +61,7 @@ LOGGING = {
     "handlers": {
         "file": {
             "class": "logging.handlers.WatchedFileHandler",
-            "filename": os.path.join(BASE_DIR, "logs/server_logfile.log"),
+            "filename": os.path.join(LOGS_ROOT, "server_logfile.log"),
         },
     },
     "loggers": {
@@ -64,8 +73,8 @@ LOGGING = {
 }
 
 ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
-
 APPEND_SLASH = False
+
 
 # Application definition
 
@@ -95,12 +104,19 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": [
         "api.renderers.JasmaJSONRenderer",
-        # "rest_framework.renderers.BrowsableAPIRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
     ],
     "EXCEPTION_HANDLER" : "api.exception_handler.jasma_exception_handler",
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
     ],
+    "DEFAULT_PROXY_HEADERS": {
+        "HTTP_X_FORWARDED_FOR": "X_FORWARDED_FOR",
+    },
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+        "rest_framework.permissions.DjangoModelPermissions"
+    ]
 }
 
 # CORS settings
@@ -183,32 +199,12 @@ elif os.getenv("SQLITE") == 'True':
     }
 }
 
-# DATABASES = {
-#    "default": {
-#        "ENGINE": "django.db.backends.postgresql",
-#        "NAME": os.getenv("DB_NAME"),
-#        "USER": os.getenv("PG_SUPER_USER"),
-#        "PASSWORD": os.getenv("PG_SUPER_PASSWORD"),
-#        "HOST": os.getenv("PG_HOST"),
-#        "PORT": os.getenv("PG_PORT"),
-#    },
-#    "test": {
-#    "ENGINE": "django.db.backends.postgresql",
-#    "NAME": "jasma_test_db",
-#    "USER": os.getenv("DB_USER"),
-#    "PASSWORD": os.getenv("DB_PASSWORD"),
-#    "HOST": os.getenv("DB_HOST"),
-#    "PORT": os.getenv("DB_PORT"),
-#    }
-# }
-
-# TEST_NAME = "test"
-
-# Redis Config
+# REDIS Config
 REDIS_HOST = os.getenv("REDIS_HOST")
 REDIS_PORT = os.getenv("REDIS_PORT")
 
 REDIS_CLIENT = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
+
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"

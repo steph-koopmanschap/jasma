@@ -50,7 +50,7 @@ def generate_user():
         minimum_age=8, maximum_age=115)
     user_profile.gender = random.choice(genders.LIST)
     user_profile.relationship = random.choice(relationships.LIST)
-    user_profile.country = random.choice(list(countries.NAME_ABBR.keys()))
+    user_profile.country = random.choice(list(countries.CHOICES.keys()))
     user_profile.website = fake.url()
     user_profile.save()
 
@@ -165,7 +165,7 @@ def generate_ad():
         targ_age_end=age_end,
         targ_gender=random.choice(genders.LIST),
         targ_relationship=random.choice(relationships.LIST),
-        targ_country=random.choice(list(countries.NAME_ABBR.keys())),
+        targ_country=random.choice(list(countries.CHOICE.keys())),
         targ_city=fake.city())
     
 # Export the entire generated database to JSON
