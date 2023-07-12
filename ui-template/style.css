@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+
+  /* background colors  */
+  --background: #f1f2f5;
+  --card: #ffffff;
+  --card-inside: #e6e7ec;
+
+
+  /* foreground colors  */
+  --heading1: #111827;
+  --heading2: #1f2937;
+  --heading3: #374151;
+  --heading4: #4b5563;
+  --heading5: #6b7280;
+
+  /* border colors */
+  --bdr: theme(colors.gray.100);
+  --bdr-inside: theme(colors.gray.200);
+  --bdr-lighter: theme(colors.gray.50);
+}
+
+.dark {
+  /* background colors  */
+  --background: #1a2236;
+  --card: #293145;
+  --card-inside: #242a3f;
+
+
+  /* foreground colors  */
+  --heading1: #ffffff;
+  --heading2: #e5e7eb;
+  --heading3: #d1d5db;
+  --heading4: #9ca3af;
+  --heading5: #9ca1aa;
+
+  /* border colors */
+  --bdr: theme(colors.gray.900);
+  --bdr-inside: theme(colors.gray.800);
+  --bdr-lighter: theme(colors.gray.950);
+}
+
+
+body{
+  font-family: 'Inter', sans-serif;
+}
+
+
+
+.scrollable-box, [data-hidden-scrollbar]{
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+.scrollable-box::-webkit-scrollbar,[data-hidden-scrollbar]::-webkit-scrollbar{
+  display: none;
+}
+
+[data-dropdown-element] [data-drop-content]{
+  visibility: hidden;
+  opacity: 0;
+  transform: scale(.9);
+  -webkit-transform: scale(.9);
+  -moz-transform: scale(.9);
+  -ms-transform: scale(.9);
+  -o-transform: scale(.9);
+}
+[data-dropdown-element][data-is-open="true"] [data-drop-content]{
+  visibility: visible;
+  opacity: 1;
+  transform: scale(1);
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  -o-transform: scale(1);
+}
