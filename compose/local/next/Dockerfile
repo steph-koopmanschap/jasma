@@ -26,10 +26,12 @@ ENV NEXT_PUBLIC_PAYPAL_CLIENT_ID_PRODUCTION=${NEXT_PUBLIC_PAYPAL_CLIENT_ID_PRODU
 ENV NEXT_TELEMETRY_DEBUG=${NEXT_TELEMETRY_DEBUG}
 ENV NEXT_TELEMETRY_DISABLED=${NEXT_TELEMETRY_DISABLED}
 
-COPY ./frontend /client
+RUN mkdir -p /client
 WORKDIR /client
+COPY ./frontend/package.*json /client
 RUN npm install
 RUN npx next telemetry disable
+COPY ./frontend /client
 CMD ["npm", "run", "dev"]
 
 FROM node:alpine AS production

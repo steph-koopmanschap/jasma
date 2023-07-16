@@ -99,6 +99,10 @@ services:
             - .env/.local/.nextjs/.env
         restart: always
         image: jasma-client-dev
+        volumes:
+            - ./frontend:/client
+            - /client/node_modules
+            - /client/.next
         expose:
             - 3000
         ports:

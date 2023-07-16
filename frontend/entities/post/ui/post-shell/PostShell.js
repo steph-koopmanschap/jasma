@@ -1,6 +1,7 @@
 /* UI wrapper where we create slots for different actions and other ui elements */
 
 import { DropDownBtn } from "@/shared/ui";
+import { formatDistance } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 
