@@ -1,0 +1,6 @@
+.stream-list-page-lg {
+    @apply bg-stream-dark-bg-800 px-16;
+}
+.stream-list-content {
+    @apply px-20;
+}

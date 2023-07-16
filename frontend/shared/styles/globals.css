@@ -20,6 +20,20 @@ body {
         Helvetica Neue, sans-serif;
 }
 
+:root {
+    --background-color: #fff;
+    --text-color: #121416d8;
+    --link-color: #543fd7;
+    --stream-light-bg-200: #faeaff;
+    --stream-light-bg-300: #f4d7ff;
+    --stream-light-bg-400: #efc3ff;
+    --stream-dark-bg-800: #1c0026;
+    --stream-dark-bg-700: #33153f;
+    --stream-dark-bg-600: #472654;
+    --stream-accent: #ff7f5c;
+    --stream-additional: #62d2f5;
+}
+
 #__next {
     @apply h-full w-full;
 }

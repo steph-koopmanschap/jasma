@@ -52,8 +52,9 @@ export default function Layout({ children }) {
     }
 
     return (
-        <ThemeProvider theme={theme.styles}>
-            <GlobalStyles isLoaded={isLoaded.current} />
+        // <ThemeProvider theme={theme.styles}>
+        // <GlobalStyles isLoaded={isLoaded.current} />
+        <>
             <MetaHead isMobile={isMobile} />
             <header>
                 <Nav
@@ -68,6 +69,7 @@ export default function Layout({ children }) {
                 </main>
                 <FooterMain />
             </div>
-        </ThemeProvider>
+        </>
+        // </ThemeProvider>
     );
 }
