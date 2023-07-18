@@ -1,4 +1,4 @@
-import { CategoryCard } from "@/entities/stream";
+import { CategoryCard, SectionHeading } from "@/entities/stream";
 import "./List.css";
 const DUMMY_DATA = [
     {
@@ -30,7 +30,7 @@ const DUMMY_DATA = [
 export const RecommendedList = () => {
     return (
         <div className="recommendations-container">
-            <h2 className="recommendations-title">Recommended Categories</h2>
+            <SectionHeading>Recommended Categories</SectionHeading>
             <div className="list-container">
                 {DUMMY_DATA.map((item) => (
                     <CategoryCard

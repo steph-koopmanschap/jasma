@@ -1,4 +1,4 @@
-import { ChannelCard } from "@/entities/stream";
+import { ChannelCard, SectionHeading } from "@/entities/stream";
 import "./List.css";
 import UserWidgets from "@/widgets/user";
 
@@ -28,7 +28,7 @@ const DUMMY_DATA = [
 export const TopChannelsList = () => {
     return (
         <div className="top-channels-container">
-            <h2 className="section-title">Top Channels</h2>
+            <SectionHeading>Top Channels</SectionHeading>
             <div className="channels-list">
                 {DUMMY_DATA.map((item) => (
                     <ChannelCard

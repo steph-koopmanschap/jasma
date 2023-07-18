@@ -9,6 +9,7 @@ function StreamList() {
                 <StreamListWidgets.Header />
                 <StreamListWidgets.RecommendedList />
                 <StreamListWidgets.TopChannelsList />
+                <StreamListWidgets.LiveList />
             </div>
         </div>
     );

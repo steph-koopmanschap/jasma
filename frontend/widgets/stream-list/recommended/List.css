@@ -2,11 +2,6 @@
     @apply py-4;
 }
 
-.recommendations-title {
-    @apply text-white text-xl font-bold;
-    letter-spacing: 0.07rem;
-}
-
 .list-container {
     @apply flex gap-10 py-6 my-5;
     flex-basis: 1 1 0;

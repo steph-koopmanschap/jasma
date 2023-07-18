@@ -1,8 +1,3 @@
-.section-title {
-    @apply text-white text-xl font-bold;
-    letter-spacing: 0.07rem;
-}
-
 .top-channels-container {
     @apply py-4;
 }

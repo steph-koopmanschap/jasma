@@ -1,0 +1,8 @@
+.stream-section-heading {
+    @apply text-white text-xl font-bold;
+    letter-spacing: 0.07rem;
+}
+
+.stream-load-error {
+    @apply text-white font-bold text-sm text-center my-5 opacity-80;
+}

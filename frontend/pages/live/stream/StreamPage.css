@@ -2,8 +2,12 @@
     @apply flex flex-col w-full;
 }
 
+.stream-page-main-container {
+    @apply bg-stream-dark-bg-800 py-6 h-max;
+}
+
 @screen md {
-    .stream-page-mobile-layout {
+    /* .stream-page-mobile-layout {
         @apply flex-row;
     }
 
@@ -12,5 +16,5 @@
     }
     .stream-page-mobile-layout > :last-child {
         width: 35rem;
-    }
+    } */
 }

@@ -1,0 +1,7 @@
+.live-list-wrapper {
+    @apply flex w-full flex-wrap;
+}
+
+.list-layout {
+    @apply relative py-6 my-2 w-full;
+}

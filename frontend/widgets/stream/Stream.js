@@ -29,10 +29,10 @@ export const StreamWidget = ({ stream_key }) => {
             {render(
                 <div className="stream-video-wrapper">
                     <Player
-                        stream_src={`http://localhost:5050/hls/${stream_key}.m3u8`}
+                        // stream_src={`http://localhost:5050/hls/${stream_key}.m3u8`}
                         /* Uncomment to check full video player */
-                        // stream_src="https://archive.org/download/ElephantsDream/ed_1024_512kb.mp4"
-                        type="application/x-mpegURL"
+                        stream_src="https://archive.org/download/ElephantsDream/ed_1024_512kb.mp4"
+                        // type="application/x-mpegURL"
                         isLive={true}
                     />
                 </div>,

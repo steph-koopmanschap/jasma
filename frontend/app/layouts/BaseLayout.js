@@ -64,7 +64,7 @@ export default function Layout({ children }) {
             </header>
             <div className="h-full flex-col justify-between flex">
                 <main>
-                    <HeaderMain />
+                    {/* <HeaderMain /> */}
                     {children}
                 </main>
                 <FooterMain />
