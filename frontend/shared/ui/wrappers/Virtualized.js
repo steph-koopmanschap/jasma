@@ -1,5 +1,7 @@
 import { forwardRef, PropsWithChildren, useEffect, useRef, useState } from "react";
 
+// Save sizes of dummy divs so when page is changed we have full length of the page and
+// upon getting back user scroll position can be restored properly
 const sizeCache = {};
 
 const Virtualized = forwardRef(

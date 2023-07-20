@@ -1,14 +1,13 @@
 .card-container {
-    @apply relative bg-transparent cursor-pointer;
+    @apply relative bg-transparent cursor-pointer outline-none appearance-none;
     width: 11rem;
-
     height: 12rem;
 }
 
-.card-container:focus-within > .shape-container {
+.card-container:focus-visible > .shape-container {
     box-shadow: 0 10px 15px -3px rgb(255 255 255 / 0.3), 0 4px 6px -4px rgb(255 255 255 / 0.3);
 }
-.card-container:focus-within > .card-wrapper > .play-icon {
+.card-container:focus-visible > .card-wrapper > .play-icon {
     @apply bg-stream-accent;
 }
 

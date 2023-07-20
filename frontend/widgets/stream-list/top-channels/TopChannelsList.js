@@ -1,6 +1,7 @@
 import { ChannelCard, SectionHeading } from "@/entities/stream";
 import "./List.css";
 import UserWidgets from "@/widgets/user";
+import { memo } from "react";
 
 const DUMMY_DATA = [
     {
@@ -25,7 +26,7 @@ const DUMMY_DATA = [
     }
 ];
 
-export const TopChannelsList = () => {
+export const TopChannelsList = memo(() => {
     return (
         <div className="top-channels-container">
             <SectionHeading>Top Channels</SectionHeading>
@@ -47,4 +48,4 @@ export const TopChannelsList = () => {
             </div>
         </div>
     );
-};
+});

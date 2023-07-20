@@ -1,5 +1,7 @@
 import { CategoryCard, SectionHeading } from "@/entities/stream";
 import "./List.css";
+import { useRouter } from "next/router";
+import { memo } from "react";
 const DUMMY_DATA = [
     {
         title: "Chatting",
@@ -27,7 +29,7 @@ const DUMMY_DATA = [
     }
 ];
 
-export const RecommendedList = () => {
+export const RecommendedList = memo(({ onClickCategory }) => {
     return (
         <div className="recommendations-container">
             <SectionHeading>Recommended Categories</SectionHeading>
@@ -35,11 +37,11 @@ export const RecommendedList = () => {
                 {DUMMY_DATA.map((item) => (
                     <CategoryCard
                         key={item.title}
-                        onClick={() => {}}
+                        onClick={() => onClickCategory(item.title)}
                         {...item}
                     />
                 ))}
             </div>
         </div>
     );
-};
+});

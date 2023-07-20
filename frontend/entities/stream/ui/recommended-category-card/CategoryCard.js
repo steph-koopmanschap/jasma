@@ -5,7 +5,11 @@ import { faPlay } from "@fortawesome/free-solid-svg-icons";
 
 export const CategoryCard = ({ title, onClick, views, category_color, category_png }) => {
     return (
-        <div className={`card-container`}>
+        <div
+            className={`card-container`}
+            tabIndex={0}
+            onClick={onClick}
+        >
             <CardShape color={category_color} />
             <div className="card-wrapper">
                 <div className="play-icon">

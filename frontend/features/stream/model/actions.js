@@ -18,13 +18,14 @@ export const handleGenerateStreamKey = async (userID) => {
 /**
  *
  * @param {String} category query specified category. Defaluts to any
+ * @param {Number} page query with page number. Defaults to 1
  * @returns
  */
-export const handleGetLiveStreams = async (category = "") => {
+export const handleGetLiveStreams = async (category = "", page = 1) => {
     return useQuery(
         ["liveList"],
         async () => {
-            return getLiveStreams(category);
+            return getLiveStreams(category, page);
         },
         {
             enabled: true,

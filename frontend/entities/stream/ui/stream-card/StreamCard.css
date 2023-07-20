@@ -1,22 +1,5 @@
 .stream-card-container {
     @apply cursor-pointer mx-1 my-1 outline-none appearance-none shadow-lg rounded-lg overflow-hidden bg-stream-dark-bg-600;
-    /* max-width: 100%; */
-    flex: 1 0 auto;
-    width: 50%;
-}
-
-@screen md {
-    .stream-card-container {
-        max-width: 50%;
-        flex: 1 0 25%;
-        width: 25%;
-    }
-}
-
-@screen lg {
-    .stream-card-container {
-        width: 30rem;
-    }
 }
 
 .stream-card-container:focus-visible > .stream-card-layout > .stream-card-info-container > .stream-info-body {

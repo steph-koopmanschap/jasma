@@ -1,11 +1,11 @@
 import { LoadError, SectionHeading, StreamCard } from "@/entities/stream";
-import "./List.css";
-import UserWidgets from "@/widgets/user";
-import { useRouter } from "next/router";
 import { handleGetLiveStreams } from "@/features/stream";
+import { useInfiniteScroll } from "@/shared/model/hooks/useInfiniteScroll";
 import { Spinner } from "@/shared/ui";
 import Virtualized from "@/shared/ui/wrappers/Virtualized";
-import { useInfiniteScroll } from "@/shared/model/hooks/useInfiniteScroll";
+import UserWidgets from "@/widgets/user";
+import { useEffect } from "react";
+import "./List.css";
 
 const DUMMY_DATA = [
     {
@@ -66,22 +66,30 @@ const DUMMY_DATA = [
     }
 ];
 
-export const LiveList = () => {
-    const router = useRouter();
-
-    const { isError, data, isLoading, error } = handleGetLiveStreams();
+export const LiveList = ({ onClick, category = "" }) => {
+    const { isError, error, isLoading, data } = handleGetLiveStreams(category);
     const { lastElRef } = useInfiniteScroll({
         onRequestNext: (page) => {
             console.log(page);
+            // DATA.push(DUMMY_DATA);
         },
         isLoading,
         startPage: 1
     });
 
+    useEffect(() => {
+        const scrollPosition = sessionStorage.getItem("stream_scroll_pos");
+        if (scrollPosition) {
+            window.scrollTo(0, parseInt(scrollPosition, 10));
+            sessionStorage.removeItem("scrollPosition");
+        }
+    }, []);
+
     const DATA = data ? data : DUMMY_DATA;
 
     const handleClick = (stream_key) => {
-        router.push(`/live/stream/${stream_key}`);
+        window.sessionStorage.setItem("stream_scroll_pos", window.pageYOffset);
+        onClick(stream_key);
     };
 
     return (
