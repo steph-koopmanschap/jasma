@@ -5,9 +5,11 @@ import { useMobileProvider } from "@/shared/model";
 import ChatWidgets from "../chat";
 import UserWidgets from "../user";
 import "./Stream.css";
+import { useRouter } from "next/router";
 
 export const StreamWidget = ({ stream_key }) => {
     const { isMobile } = useMobileProvider();
+    const router = useRouter();
 
     const render = (...elements) => {
         if (isMobile) {
@@ -44,7 +46,8 @@ export const StreamWidget = ({ stream_key }) => {
                         />
                     }
                     title="Random Stream"
-                    username="John Doe"
+                    username="username_24"
+                    onUserClick={() => router.push(`/user/${"dummy_user"}`)}
                     followAction={<Follow />}
                     reportAction={<Report />}
                     shareAction={<Share />}

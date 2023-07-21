@@ -2,8 +2,10 @@ import { MobileDetectSSR } from "@/shared/model";
 import StreamListWidgets from "@/widgets/stream-list";
 import { useState } from "react";
 import "./StreamList.css";
+import { useRouter } from "next/router";
 
 function StreamList() {
+    const router = useRouter();
     const [category, setCategory] = useState("");
     const handleOpenStream = (stream_key) => {
         router.push(`/live/stream/${stream_key}`);
@@ -15,7 +17,7 @@ function StreamList() {
         <div className="stream-list-page-lg">
             <div className="stream-list-content">
                 <StreamListWidgets.Header />
-                <StreamListWidgets.RecommendedList onClickCategory={handleChooseCategory} />
+                <StreamListWidgets.CategoriesList onClickCategory={handleChooseCategory} />
                 <StreamListWidgets.TopChannelsList />
                 <StreamListWidgets.LiveList
                     onClick={handleOpenStream}

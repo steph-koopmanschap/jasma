@@ -1,8 +1,0 @@
-.recommendations-container {
-    @apply py-4;
-}
-
-.list-container {
-    @apply flex gap-10 py-6 my-5;
-    flex-basis: 1 1 0;
-}

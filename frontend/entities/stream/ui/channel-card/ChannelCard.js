@@ -7,6 +7,8 @@ export const ChannelCard = ({ userPic, title, followers, onClick }) => {
             className="channel-card-container"
             tabIndex={0}
             onClick={onClick}
+            role="link"
+            aria-label={`${title} profile page`}
         >
             <div className="pic-container">{userPic ? userPic : null}</div>
             <div className="info-container">

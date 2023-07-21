@@ -1,6 +1,7 @@
 .card-container {
     @apply relative bg-transparent cursor-pointer outline-none appearance-none;
-    width: 11rem;
+    flex-shrink: 0;
+    width: 13rem;
     height: 12rem;
 }
 
@@ -23,9 +24,10 @@
 
 .shape-container {
     @apply absolute w-full h-full top-0 left-0 overflow-hidden transition-all;
-    border-radius: 7.5rem 2rem 2rem 2rem;
+    /* border-radius: 7.5rem 2rem 2rem 2rem; */
+    border-radius: 0rem 0rem 2rem 2rem;
     background: url("https://images.pexels.com/photos/2117937/pexels-photo-2117937.jpeg?cs=srgb&dl=pexels-scott-webb-2117937.jpg&fm=jpg");
-    background-position: center center;
+    background-position: 26% 100%;
     background-size: 100% 100%;
     box-shadow: 0 10px 15px -3px rgb(255 255 255 / 0.2), 0 4px 6px -4px rgb(255 255 255 / 0.2);
     background-repeat: no-repeat;
@@ -34,7 +36,7 @@
 .shape-container::after {
     @apply absolute -top-10 -left-0 bg-stream-dark-bg-800 w-full z-20;
     content: "";
-    transform: rotate(-0deg);
+    transform: rotate(0deg);
     height: 8rem;
 }
 
@@ -51,7 +53,7 @@
 }
 
 .shape-before {
-    @apply absolute top-0 left-0 w-full h-full opacity-50 z-10;
+    @apply absolute top-0 left-0 w-full h-full opacity-80 z-10;
     content: "";
 }
 
@@ -59,7 +61,7 @@
     @apply absolute right-0 -top-10 w-28 h-full z-20;
     background-repeat: no-repeat;
     background-size: contain;
-    background-position: center center;
+    background-position: center;
 }
 
 .play-icon {

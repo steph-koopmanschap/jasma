@@ -11,7 +11,7 @@
 }
 
 .pic-container {
-    @apply shrink-0;
+    @apply shrink-0 outline-none cursor-pointer;
 }
 
 .username {

@@ -29,11 +29,11 @@
 }
 
 .user-pic-container {
-    @apply overflow-hidden rounded-full w-10 h-10;
+    @apply overflow-hidden rounded-full w-10 h-10 shrink-0;
 }
 
 .stream-info-body {
-    @apply text-white flex flex-col gap-1 transition-colors;
+    @apply text-white flex flex-col gap-1 transition-colors whitespace-nowrap overflow-hidden;
 }
 .stream-info-body > h3 {
     @apply font-bold text-base;

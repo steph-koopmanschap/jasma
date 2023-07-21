@@ -12,7 +12,7 @@ export function UsersList({ users }) {
 
     return (
         <div>
-            {users.map((user) => (
+            {users?.map((user) => (
                 <UserListItemShell
                     followAction={
                         <>

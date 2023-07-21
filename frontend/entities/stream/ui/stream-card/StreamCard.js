@@ -6,6 +6,8 @@ export const StreamCard = ({ userPic, title, username, viewers, thumbnail, onCli
         <div
             className="stream-card-container"
             tabIndex={0}
+            aria-label={`stream titled: ${title}`}
+            role="link"
             onClick={onClick}
         >
             <div className="stream-card-layout">

@@ -1,0 +1,31 @@
+.search-container {
+    @apply flex h-12 items-center gap-2 overflow-hidden rounded-lg 
+    bg-stream-dark-bg-700 py-0.5 px-2 transition-shadow duration-200 shadow-lg;
+}
+
+.search-container > input {
+    @apply bg-transparent p-1 w-full text-white;
+}
+.search-container > input::placeholder {
+    @apply text-white opacity-60;
+}
+
+.search-container svg {
+    @apply h-6 w-6 opacity-50 text-white;
+}
+
+.result-item-container {
+    @apply relative flex cursor-pointer items-center gap-5 py-0.5 px-2 transition-colors;
+}
+
+.result-icon-container {
+    @apply w-6 h-6 overflow-hidden;
+}
+
+.result-body-container {
+    @apply flex flex-col text-xs font-semibold;
+}
+
+.result-body-container > p {
+    @apply text-xs font-normal;
+}

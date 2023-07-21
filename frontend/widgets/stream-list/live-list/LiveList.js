@@ -59,7 +59,7 @@ const DUMMY_DATA = [
     {
         user_id: 10,
         username: "John Doe",
-        title: "Random Stream6",
+        title: "Random Stream6 Random Stream6 Random Stream6 Random Stream6 Random Stream6",
         thumbnail: "https://www.pexels.com/photo/45853/download/",
         stream_key: "test",
         viewers: 32525
@@ -70,7 +70,7 @@ export const LiveList = ({ onClick, category = "" }) => {
     const { isError, error, isLoading, data } = handleGetLiveStreams(category);
     const { lastElRef } = useInfiniteScroll({
         onRequestNext: (page) => {
-            console.log(page);
+            // console.log(page);
             // DATA.push(DUMMY_DATA);
         },
         isLoading,

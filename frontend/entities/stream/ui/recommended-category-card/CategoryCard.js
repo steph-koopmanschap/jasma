@@ -8,6 +8,8 @@ export const CategoryCard = ({ title, onClick, views, category_color, category_p
         <div
             className={`card-container`}
             tabIndex={0}
+            role="link"
+            aria-label={`${title} category`}
             onClick={onClick}
         >
             <CardShape color={category_color} />

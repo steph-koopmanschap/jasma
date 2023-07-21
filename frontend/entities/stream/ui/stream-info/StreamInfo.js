@@ -3,6 +3,7 @@ import "./StreamInfo.css";
 
 export const StreamInfo = ({
     userPicWidget,
+    onUserClick,
     username = "",
     title = "",
     viewers = 0,
@@ -15,7 +16,15 @@ export const StreamInfo = ({
 
     return (
         <div className="stream-info-container">
-            <div className="pic-container">{userPicWidget ? userPicWidget : null}</div>
+            <div
+                className="pic-container"
+                tabIndex={0}
+                role="link"
+                aria-label={`${username} profile`}
+                onClick={onUserClick}
+            >
+                {userPicWidget ? userPicWidget : null}
+            </div>
             <div className="stream-info-data">
                 <div>
                     <h4 className="username">{username}</h4>

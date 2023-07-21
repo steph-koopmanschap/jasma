@@ -2,6 +2,7 @@ import { ChannelCard, SectionHeading } from "@/entities/stream";
 import "./List.css";
 import UserWidgets from "@/widgets/user";
 import { memo } from "react";
+import { useRouter } from "next/router";
 
 const DUMMY_DATA = [
     {
@@ -27,6 +28,7 @@ const DUMMY_DATA = [
 ];
 
 export const TopChannelsList = memo(() => {
+    const router = useRouter();
     return (
         <div className="top-channels-container">
             <SectionHeading>Top Channels</SectionHeading>
@@ -34,7 +36,7 @@ export const TopChannelsList = memo(() => {
                 {DUMMY_DATA.map((item) => (
                     <ChannelCard
                         key={item.user_id}
-                        onClick={() => {}}
+                        onClick={() => router.push(`/user/${item.title}`)}
                         userPic={
                             <UserWidgets.ProfilePic
                                 width={50}
