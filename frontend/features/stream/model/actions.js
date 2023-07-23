@@ -34,3 +34,5 @@ export const handleGetLiveStreams = async (category = "", page = 1) => {
         }
     );
 };
+
+export const handleStreamSearch = async () => {};
