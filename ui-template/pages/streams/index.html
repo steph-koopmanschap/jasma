@@ -433,11 +433,249 @@
 
 
         <div class="flex flex-col flex-1 py-3 pt-8 space-y-8 overflow-hidden">
-            <div>
-                <h1 class="text-sm mb-5 font-medium text-foreground-heading4">Suggested for you</h1>
+            <div data-recommanded-streams>
+                <div class="flex justify-between items-center pb-4">
+                    <h1 class="text-sm mb-5 font-medium text-foreground-heading4">Suggested for you</h1>
+                    <div class="flex items-center space-x-1">
+                        <button data-go-left class="outline-none rounded-full p-2 border border-bdr text-foreground-heading4 disabled:cursor-not-allowed">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                                <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                            </svg>                              
+                        </button>
+                        <button data-go-right class="outline-none rounded-full p-2 border border-bdr text-foreground-heading4 disabled:cursor-not-allowed">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                                <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                            </svg>                              
+                        </button>
+                    </div>
+                </div>
                 <div class="overflow-hidden max-w-full">
                     <div data-hidden-scrollbar
-                        class="overflow-hidden max-w-full overflow-x-auto w-full flex items-center gap-x-4 sm:gap-x-5">
+                        class="overflow-hidden max-w-full snap-mandatory snap-x children:snap-center sm:children:snap-start overflow-x-auto w-full flex items-center gap-x-4 sm:gap-x-5">
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div
                             class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
                             <div
