@@ -8,3 +8,9 @@ export const getLiveStreams = async (category = "", page = 1) => {
 
     return res.data;
 };
+
+export const getLiveSearchResults = async (searchTerm = "") => {
+    const res = await STREAM_API.get(`${STREAM_ENDPOINT}/search?term=${searchTerm}`);
+
+    return res.data;
+};

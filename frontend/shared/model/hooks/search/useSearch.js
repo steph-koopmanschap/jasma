@@ -27,7 +27,7 @@ export function useSearch({
     const [results, setResults] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [autocomplete, setAutocomplete] = useState("");
-    const [suggestions, setSuggestions] = useState([]);
+    const [prevQueries, setPrevQueries] = useState([]);
 
     const debounced = useDebounce(searchTerm, delay);
     const inputRef = useRef(null);
@@ -113,9 +113,9 @@ export function useSearch({
             const filtered = queries.filter((item) => item !== query);
             window.localStorage.setItem(queryPrefix + "user_queries", JSON.stringify(filtered));
 
-            setSuggestions((prev) => prev.filter((sugg) => sugg !== query));
+            setPrevQueries((prev) => prev.filter((sugg) => sugg !== query));
         },
-        [suggestions]
+        [prevQueries]
     );
 
     const _handleSuggestion = useCallback(
@@ -125,7 +125,7 @@ export function useSearch({
                 let temp = str.slice(0, searchQuery.length);
                 return temp.toLowerCase() === searchQuery.toLowerCase();
             });
-            setSuggestions(matches.slice(0, 5));
+            setPrevQueries(matches.slice(0, 5));
         },
         [debounced]
     );
@@ -172,6 +172,6 @@ export function useSearch({
         searchTerm: `${searchTerm}${autocomplete}`,
         inputRef,
         resultsRef,
-        suggestions
+        prevQueries
     };
 }

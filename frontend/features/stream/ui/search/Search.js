@@ -11,7 +11,7 @@ export const Search = ({ onGoTo }) => {
         return [{ value: "Test", description: "test" }];
     };
 
-    const { searchTerm, suggestions, inputRef, results, resultsRef, handlers } = useSearch({
+    const { searchTerm, prevQueries, inputRef, results, resultsRef, handlers } = useSearch({
         onGoTo,
         onSearch: handleSearch,
         queryPrefix: "stream-queries"
@@ -37,7 +37,7 @@ export const Search = ({ onGoTo }) => {
                 <ResultList
                     onDeleteCache={handlers.handleDeleteCached}
                     forwardedRef={resultsRef}
-                    suggestions={suggestions}
+                    prevQueries={prevQueries}
                     results={results}
                     onItemClick={handlers.handleGoTo}
                 />

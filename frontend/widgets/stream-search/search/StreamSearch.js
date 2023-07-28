@@ -1,14 +1,13 @@
-import { StreamSearch } from "@/features/stream";
-import "./Header.css";
+import { StreamSearch as Search } from "@/features/stream";
+import "./Search.css";
 import { useRouter } from "next/router";
 
-export const Header = () => {
+export const StreamSearch = () => {
     const router = useRouter();
-
     return (
         <div className="stream-list-header">
             <div className="stream-search-container">
-                <StreamSearch onGoTo={(value) => router.push(`/live/stream-list?search=${value}`)} />
+                <Search onGoTo={(value) => router.push(`/live/results/search/${value}`)} />
             </div>
         </div>
     );

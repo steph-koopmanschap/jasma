@@ -36,18 +36,18 @@ export const SearchInput = ({ isResultsOpen, onChange, onSubmit, onClick, forwar
     );
 };
 
-export const ResultList = ({ results, onItemClick, forwardedRef, suggestions, onDeleteCache }) => {
+export const ResultList = ({ results, onItemClick, forwardedRef, prevQueries, onDeleteCache }) => {
     const handleKeyDown = (code, value) => {
         if (code === "Enter") onItemClick(value);
     };
-    console.log(suggestions, results);
+    console.log(prevQueries);
     return (
         <div className="results-list-container">
             <ul ref={forwardedRef}>
-                {suggestions?.map((item) => (
+                {prevQueries?.map((item) => (
                     <ResultItem
                         value={item}
-                        onClick={() => onItemClick(item.value)}
+                        onClick={() => onItemClick(item)}
                         onKeyDown={(e) => handleKeyDown(e.code, item.value)}
                         description="last search"
                         isFromCache={true}

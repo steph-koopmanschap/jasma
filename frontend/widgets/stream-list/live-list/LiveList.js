@@ -1,11 +1,6 @@
-import { LoadError, SectionHeading, StreamCard } from "@/entities/stream";
+import { SectionHeading } from "@/entities/stream";
 import { handleGetLiveStreams } from "@/features/stream";
-import { useInfiniteScroll } from "@/shared/model/hooks/useInfiniteScroll";
-import { Spinner } from "@/shared/ui";
-import Virtualized from "@/shared/ui/wrappers/Virtualized";
-import UserWidgets from "@/widgets/user";
-import { useEffect } from "react";
-import "./List.css";
+import { VirtualizedCatalog } from "../catalog/VirtualizedCatalog";
 
 const DUMMY_DATA = [
     {
@@ -66,70 +61,20 @@ const DUMMY_DATA = [
     }
 ];
 
-export const LiveList = ({ onClick, category = "" }) => {
+export const LiveList = ({ category = "" }) => {
     const { isError, error, isLoading, data } = handleGetLiveStreams(category);
-    const { lastElRef } = useInfiniteScroll({
-        onRequestNext: (page) => {
-            // console.log(page);
-            // DATA.push(DUMMY_DATA);
-        },
-        isLoading,
-        startPage: 1
-    });
-
-    useEffect(() => {
-        const scrollPosition = sessionStorage.getItem("stream_scroll_pos");
-        if (scrollPosition) {
-            window.scrollTo(0, parseInt(scrollPosition, 10));
-            sessionStorage.removeItem("scrollPosition");
-        }
-    }, []);
 
     const DATA = data ? data : DUMMY_DATA;
 
-    const handleClick = (stream_key) => {
-        window.sessionStorage.setItem("stream_scroll_pos", window.pageYOffset);
-        onClick(stream_key);
-    };
-
     return (
         <div className="live-list-container">
-            <SectionHeading>Live Now</SectionHeading>
-            <div className="list-layout">
-                {isError ? (
-                    <LoadError>{error}</LoadError>
-                ) : (
-                    <div className="live-list-wrapper">
-                        {DATA?.map((item, ind) => (
-                            <Virtualized
-                                key={item.user_id}
-                                itemId={item.stream_key}
-                                isLast={ind + 1 === DATA.length}
-                                ref={lastElRef}
-                            >
-                                <StreamCard
-                                    key={item.user_id}
-                                    userPic={
-                                        <UserWidgets.ProfilePic
-                                            userID={item.user_id}
-                                            width={50}
-                                            height={50}
-                                        />
-                                    }
-                                    onClick={() => handleClick(item.stream_key)}
-                                    {...item}
-                                />
-                            </Virtualized>
-                        ))}
-                    </div>
-                )}
-                {isLoading ? (
-                    <div className="relative w-full h-12">
-                        <Spinner />
-                    </div>
-                ) : null}
-                {!DATA?.length && !isLoading ? <LoadError>{"No live streams found"}</LoadError> : null}
-            </div>
+            <SectionHeading>{category ? category : "Live Now"}</SectionHeading>
+            <VirtualizedCatalog
+                data={DATA}
+                isError={isError}
+                isLoading={isLoading}
+                error={error}
+            />
         </div>
     );
 };

@@ -1,5 +1,5 @@
 .stream-list-page-lg {
-    @apply bg-stream-dark-bg-800;
+    @apply bg-stream-dark-bg-800 min-h-screen;
 }
 .stream-list-content {
     @apply px-6;

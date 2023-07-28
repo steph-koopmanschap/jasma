@@ -1,4 +1,4 @@
-import { getLiveStreams } from "@/entities/stream";
+import { getLiveSearchResults, getLiveStreams } from "@/entities/stream";
 import { useQuery } from "react-query";
 
 import { handleError } from "@/shared/utils/handleError";
@@ -35,4 +35,16 @@ export const handleGetLiveStreams = async (category = "", page = 1) => {
     );
 };
 
-export const handleStreamSearch = async () => {};
+export const handleStreamSearch = async (searchTerm) => {
+    return useQuery(
+        ["liveSearchResults"],
+        async () => {
+            return getLiveSearchResults(searchTerm);
+        },
+        {
+            enabled: true,
+            refetchOnWindowFocus: false,
+            onError: handleError
+        }
+    );
+};

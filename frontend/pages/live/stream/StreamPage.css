@@ -3,7 +3,7 @@
 }
 
 .stream-page-main-container {
-    @apply bg-stream-dark-bg-800 py-6 h-max;
+    @apply bg-stream-dark-bg-800 py-6 min-h-screen;
 }
 
 @screen md {
