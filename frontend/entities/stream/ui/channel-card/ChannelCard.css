@@ -1,0 +1,31 @@
+.channel-card-container {
+    @apply flex items-center gap-3 w-max cursor-pointer appearance-none outline-none;
+}
+
+@media (hover: hover) {
+    .channel-card-container:hover > .info-container {
+        @apply text-stream-accent;
+    }
+}
+
+.channel-card-container:focus-visible > .info-container {
+    @apply text-stream-accent;
+}
+
+.pic-container {
+    @apply overflow-hidden rounded-lg w-10 h-10 shadow-lg;
+}
+.pic-container > img {
+    /* width: 100% !important; */
+    /* height: 100% !important; */
+}
+
+.info-container {
+    @apply flex flex-col gap-1 text-white transition-colors;
+}
+.info-container h3 {
+    @apply font-bold text-sm opacity-95 whitespace-nowrap overflow-hidden text-ellipsis;
+}
+.info-container span {
+    @apply text-xs opacity-80 whitespace-nowrap;
+}

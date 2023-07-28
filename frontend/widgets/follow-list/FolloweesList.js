@@ -14,8 +14,8 @@ export function FolloweesList({ userID }) {
 
     return (
         <div>
-            <p className="">This person is following: {data.followingCount}</p>
-            <UserLists.UsersList users={data.following} />
+            <p className="">This person is following: {data?.followingCount}</p>
+            <UserLists.UsersList users={data?.following} />
         </div>
     );
 }

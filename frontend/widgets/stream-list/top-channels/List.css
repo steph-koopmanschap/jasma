@@ -1,0 +1,17 @@
+.top-channels-container {
+    @apply py-4;
+}
+
+.channels-list {
+    @apply py-6 flex gap-5 w-full overflow-x-scroll;
+    scrollbar-width: none;
+}
+.channels-list::-webkit-scrollbar {
+    @apply w-0 h-0 bg-transparent;
+}
+
+@screen sm {
+    .channels-list {
+        @apply gap-10;
+    }
+}

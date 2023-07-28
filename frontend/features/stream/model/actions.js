@@ -1,4 +1,7 @@
-const { handleError } = require("@/shared/utils");
+import { getLiveSearchResults, getLiveStreams } from "@/entities/stream";
+import { useQuery } from "react-query";
+
+import { handleError } from "@/shared/utils/handleError";
 
 export const handleGenerateStreamKey = async (userID) => {
     try {
@@ -10,4 +13,38 @@ export const handleGenerateStreamKey = async (userID) => {
     } catch (error) {
         return handleError(error);
     }
+};
+
+/**
+ *
+ * @param {String} category query specified category. Defaluts to any
+ * @param {Number} page query with page number. Defaults to 1
+ * @returns
+ */
+export const handleGetLiveStreams = async (category = "", page = 1) => {
+    return useQuery(
+        ["liveList"],
+        async () => {
+            return getLiveStreams(category, page);
+        },
+        {
+            enabled: true,
+            refetchOnWindowFocus: false,
+            onError: handleError
+        }
+    );
+};
+
+export const handleStreamSearch = async (searchTerm) => {
+    return useQuery(
+        ["liveSearchResults"],
+        async () => {
+            return getLiveSearchResults(searchTerm);
+        },
+        {
+            enabled: true,
+            refetchOnWindowFocus: false,
+            onError: handleError
+        }
+    );
 };

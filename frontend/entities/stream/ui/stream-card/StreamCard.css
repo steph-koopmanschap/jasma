@@ -1,0 +1,48 @@
+.stream-card-container {
+    @apply cursor-pointer mx-1 my-1 outline-none appearance-none shadow-lg rounded-lg overflow-hidden bg-stream-dark-bg-600;
+}
+
+.stream-card-container:focus-visible > .stream-card-layout > .stream-card-info-container > .stream-info-body {
+    @apply text-stream-accent;
+}
+
+@media (hover: hover) {
+    .stream-card-container:hover > .stream-card-layout > .stream-card-info-container > .stream-info-body {
+        @apply text-stream-accent;
+    }
+}
+
+.stream-card-layout {
+    @apply flex flex-col gap-1 w-full h-full;
+}
+
+.stream-media-container {
+    @apply relative overflow-hidden  w-full;
+    height: 15rem;
+}
+.stream-media-container > img {
+    @apply absolute top-0 left-0 object-cover w-full h-full;
+}
+
+.stream-card-info-container {
+    @apply flex gap-5 py-1.5 px-2 items-center;
+}
+
+.user-pic-container {
+    @apply overflow-hidden rounded-full w-10 h-10 shrink-0;
+}
+
+.stream-info-body {
+    @apply text-white flex flex-col gap-1 transition-colors whitespace-nowrap overflow-hidden;
+}
+.stream-info-body > h3 {
+    @apply font-bold text-base;
+}
+.stream-info-body > h4 {
+    @apply text-xs opacity-80;
+}
+
+.stream-card-views-container {
+    @apply absolute bottom-3 left-2 text-white font-bold text-xs rounded-sm py-0.5 px-1.5;
+    background-color: rgba(0, 0, 0, 0.4);
+}

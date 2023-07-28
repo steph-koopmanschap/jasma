@@ -1,9 +1,9 @@
 .stream-info-container {
-    @apply py-2 px-2 flex items-center w-full;
+    @apply py-2 px-2 flex gap-2 items-center w-full text-white;
 }
 
 .stream-info-data {
-    @apply flex flex-col gap-1 w-full px-2 py-1.5;
+    @apply flex flex-col w-full px-2 py-1.5;
 }
 
 .stream-info-data div {
@@ -11,11 +11,11 @@
 }
 
 .pic-container {
-    @apply shrink-0;
+    @apply shrink-0 outline-none cursor-pointer;
 }
 
 .username {
-    @apply text-sm;
+    @apply text-xs opacity-80;
 }
 .title {
     @apply text-lg font-bold;

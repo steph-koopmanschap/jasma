@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function Modal(props) {
+export function Modal(props) {
     const { modalName, isOpen, onClose } = props;
 
     return (

@@ -1,8 +1,8 @@
-import SharedUI from "@/shared/ui/modal/Modal";
+import { Modal } from "@/shared/ui/modal/Modal";
 
 export const ReportModal = ({ isOpen, onClose, onSubmitModal }) => {
     return (
-        <SharedUI.Modal
+        <Modal
             modalName="reportModal"
             isOpen={isOpen}
             onClose={onClose}
@@ -27,6 +27,6 @@ export const ReportModal = ({ isOpen, onClose, onSubmitModal }) => {
                     value="Submit report"
                 />
             </form>
-        </SharedUI.Modal>
+        </Modal>
     );
 };

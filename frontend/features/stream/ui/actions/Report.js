@@ -1,3 +1,5 @@
+import { StreamActionBtn } from "@/entities/stream";
+
 export const Report = () => {
-    return <button className=" text-sm font-semibold">Report</button>;
+    return <StreamActionBtn>Report</StreamActionBtn>;
 };

@@ -3,6 +3,8 @@ import { ProfilePic } from "../profile-picture/ProfilePic";
 import { Modal } from "@/shared/ui";
 import FollowList from "@/widgets/follow-list";
 import UserLists from "@/widgets/user-list";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export const Profile = ({ username }) => {
     const [loggedInUserID, setLoggedInUserID] = useState(null);

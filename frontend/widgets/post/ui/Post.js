@@ -7,7 +7,7 @@ import UserWidgets from "@/widgets/user";
 
 export const Post = ({ postData }) => {
     if (!postData) return null;
-    const { post_id } = postData;
+    const { post_id, user_id } = postData;
     return (
         <PostShell
             authOwnerActions={
@@ -20,7 +20,7 @@ export const Post = ({ postData }) => {
             postData={postData}
             reportAction={<ReportPostBtn post_id={post_id} />}
             shareAction={<SharePostBtn post_id={post_id} />}
-            commentList={<CommentList postID={post_id} />}
+            // commentList={<CommentList postID={post_id} />}
             commentAction={<CreateComment postID={post_id} />}
             profilePicture={<UserWidgets.ProfilePic userID={user_id} />}
         />

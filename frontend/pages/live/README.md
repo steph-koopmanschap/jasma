@@ -34,7 +34,5 @@ Change localhost part to your machine IP where server is running.
 # TODO
 
 -   VoD server architecture
--   Design layout for stream page
 -   Backend handling for live-streams and recordings
--   Design layout for stream-list page where all current live streams are shown
 -   Stream categories, viewers count, follow, share actions.

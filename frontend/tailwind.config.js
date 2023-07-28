@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     mode: "jit",
+    darkMode: "class",
     content: [
         "./pages/**/*.{js,ts,jsx,tsx}",
         "./shared/**/*.{js,ts,jsx,tsx}",
@@ -11,6 +12,20 @@ module.exports = {
     ],
     theme: {
         extend: {
+            colors: {
+                "stream-dark-bg": {
+                    800: "var(--stream-dark-bg-800)",
+                    700: "var(--stream-dark-bg-700)",
+                    600: "var(--stream-dark-bg-600)"
+                },
+                "stream-accent": "var(--stream-accent)",
+                "stream-additional": "var(--stream-additional)",
+                "stream-light-bg": {
+                    200: "var(--stream-light-bg-200)",
+                    300: "var(--stream-light-bg-300)",
+                    400: "var(--stream-light-bg-400)"
+                }
+            },
             keyframes: {
                 fadeIn: {
                     from: { opacity: 0 },

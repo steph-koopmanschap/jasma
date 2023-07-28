@@ -5,9 +5,8 @@ import { useToast } from "@/shared/model";
 export const SharePostBtn = ({ post_id }) => {
     const { notifyToast } = useToast();
     const sharePost = () => {
-        handleSharePost(post_id)
-            .then(() => notifyToast("Copied to clipboard"))
-            .catch((err) => notifyToast(err.message, true));
+        handleSharePost(post_id);
+        notifyToast("Copied to clipboard");
     };
 
     return (
