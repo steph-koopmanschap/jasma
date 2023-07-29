@@ -100,7 +100,7 @@
 }
 
 .progress-done {
-    @apply h-1 bg-red-400 w-0 absolute top-0 left-0 z-10;
+    @apply h-1 bg-stream-accent w-0 absolute top-0 left-0 z-10;
 }
 
 .progress-thumb {
@@ -165,13 +165,13 @@
 }
 
 .volume-slider {
-    @apply appearance-none outline-none opacity-0 transition-opacity duration-300 cursor-pointer;
+    @apply appearance-none outline-none opacity-0  transition-opacity duration-300 cursor-pointer;
     width: 3rem;
     background-color: rgba(255, 255, 255, 0.5);
     height: 0.25rem;
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    background-image: linear-gradient(rgb(248, 113, 113, 1), rgb(248, 113, 113, 1));
+    background-image: linear-gradient(var(--stream-accent), var(--stream-accent));
 }
 .volume-slider::-webkit-slider-runnable-track {
     @apply appearance-none outline-none border-none bg-transparent;
@@ -291,7 +291,7 @@
 }
 
 .option-container input::before {
-    @apply transition-all bg-red-400 relative;
+    @apply transition-all bg-stream-accent relative;
     content: "";
     width: 0.65em;
     left: 0.25px;
@@ -322,7 +322,7 @@
 /* Small UI Elements */
 
 .on-air-sign {
-    @apply flex gap-1 animate-fadeIn rounded-sm px-1.5 py-0.5 transition-colors w-min items-center bg-red-500 text-white 
+    @apply flex gap-1 animate-fadeIn rounded-sm px-1.5 py-0.5 transition-colors w-min items-center bg-stream-accent text-white 
     text-sm absolute top-5 right-5 font-bold;
 }
 .on-air-sign svg {
@@ -372,7 +372,7 @@
 }
 
 .quality-span {
-    @apply absolute -top-1 -right-1/3 text-xs px-0.5 z-10 rounded-sm text-white font-semibold bg-red-400;
+    @apply absolute -top-1 -right-1/3 text-xs px-0.5 z-10 rounded-sm text-white font-semibold bg-stream-accent;
     font-size: 0.55rem;
 }
 /* Media queries */

@@ -1,0 +1,24 @@
+.live-list-wrapper {
+    @apply flex w-full flex-wrap;
+}
+
+.live-list-wrapper > div {
+    @apply w-full;
+    flex: 1 0 auto;
+}
+
+@screen sm {
+    .live-list-wrapper > div {
+        max-width: 50%;
+    }
+}
+
+@screen lg {
+    .live-list-wrapper > div {
+        width: 30rem;
+    }
+}
+
+.list-layout {
+    @apply relative py-6 my-2 w-full;
+}

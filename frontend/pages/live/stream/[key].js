@@ -7,7 +7,7 @@ const StreamPage = (props) => {
     const router = useRouter();
 
     return (
-        <div>
+        <div className="stream-page-main-container">
             <StreamWidget stream_key={router.query.key} />
         </div>
     );

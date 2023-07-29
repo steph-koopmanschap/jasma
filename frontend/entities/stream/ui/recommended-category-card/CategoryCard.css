@@ -1,0 +1,72 @@
+.card-container {
+    @apply relative bg-transparent cursor-pointer outline-none appearance-none;
+    flex-shrink: 0;
+    width: 13rem;
+    height: 12rem;
+}
+
+.card-container:focus-visible > .shape-container {
+    box-shadow: 0 10px 15px -3px rgb(255 255 255 / 0.3), 0 4px 6px -4px rgb(255 255 255 / 0.3);
+}
+.card-container:focus-visible > .card-wrapper > .play-icon {
+    @apply bg-stream-accent;
+}
+
+@media (hover: hover) {
+    .card-container:hover > .shape-container {
+        /* @apply; */
+        box-shadow: 0 10px 15px -3px rgb(255 255 255 / 0.3), 0 4px 6px -4px rgb(255 255 255 / 0.3);
+    }
+    .card-container:hover > .card-wrapper > .play-icon {
+        @apply bg-stream-accent;
+    }
+}
+
+.shape-container {
+    @apply absolute w-full h-full top-0 left-0 overflow-hidden z-10 transition-all;
+    /* border-radius: 7.5rem 2rem 2rem 2rem; */
+    border-radius: 0rem 0rem 2rem 2rem;
+    background: url("https://images.pexels.com/photos/2117937/pexels-photo-2117937.jpeg?cs=srgb&dl=pexels-scott-webb-2117937.jpg&fm=jpg");
+    background-position: 26% 100%;
+    background-size: 100% 100%;
+    box-shadow: 0 10px 15px -3px rgb(255 255 255 / 0.2), 0 4px 6px -4px rgb(255 255 255 / 0.2);
+    background-repeat: no-repeat;
+}
+
+.shape-container::after {
+    @apply absolute -top-10 -left-0 bg-stream-dark-bg-800 w-full z-20;
+    content: "";
+    transform: rotate(0deg);
+    height: 8rem;
+}
+
+.card-wrapper {
+    @apply absolute z-30 w-full h-1/2 bottom-0 left-0 text-white px-4 py-2;
+}
+.card-wrapper h2 {
+    @apply font-bold text-lg;
+    letter-spacing: 0.05rem;
+}
+
+.card-wrapper h3 {
+    @apply font-medium text-xs;
+}
+
+.shape-before {
+    @apply absolute top-0 left-0 w-full h-full opacity-80 z-10;
+    content: "";
+}
+
+.card-img-wrapper {
+    @apply absolute right-0 -top-10 w-28 h-full z-20;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+.play-icon {
+    @apply w-6 h-6 bg-stream-additional rounded-full flex items-center justify-center transition-colors;
+}
+.play-icon svg {
+    @apply w-3 h-3;
+}

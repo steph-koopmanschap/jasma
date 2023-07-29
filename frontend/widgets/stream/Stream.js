@@ -5,9 +5,11 @@ import { useMobileProvider } from "@/shared/model";
 import ChatWidgets from "../chat";
 import UserWidgets from "../user";
 import "./Stream.css";
+import { useRouter } from "next/router";
 
 export const StreamWidget = ({ stream_key }) => {
     const { isMobile } = useMobileProvider();
+    const router = useRouter();
 
     const render = (...elements) => {
         if (isMobile) {
@@ -29,10 +31,10 @@ export const StreamWidget = ({ stream_key }) => {
             {render(
                 <div className="stream-video-wrapper">
                     <Player
-                        stream_src={`http://localhost:5050/hls/${stream_key}.m3u8`}
+                        // stream_src={`http://localhost:5050/hls/${stream_key}.m3u8`}
                         /* Uncomment to check full video player */
-                        // stream_src="https://archive.org/download/ElephantsDream/ed_1024_512kb.mp4"
-                        type="application/x-mpegURL"
+                        stream_src="https://archive.org/download/ElephantsDream/ed_1024_512kb.mp4"
+                        // type="application/x-mpegURL"
                         isLive={true}
                     />
                 </div>,
@@ -44,7 +46,8 @@ export const StreamWidget = ({ stream_key }) => {
                         />
                     }
                     title="Random Stream"
-                    username="John Doe"
+                    username="username_24"
+                    onUserClick={() => router.push(`/user/${"dummy_user"}`)}
                     followAction={<Follow />}
                     reportAction={<Report />}
                     shareAction={<Share />}

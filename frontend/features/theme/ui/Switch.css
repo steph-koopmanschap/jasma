@@ -1,0 +1,7 @@
+.switch-container {
+    @apply w-8 h-8 cursor-pointer;
+}
+
+.switch-container > svg {
+    @apply w-full h-full;
+}

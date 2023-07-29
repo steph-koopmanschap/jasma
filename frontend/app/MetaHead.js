@@ -20,7 +20,7 @@ export function MetaHead(props) {
                 />
                 <meta
                     name="viewport"
-                    content={isMobile ? "width=device-width, initial-scale=1" : "width=1200"}
+                    content={isMobile ? "width=device-width, initial-scale=1, viewport-fit=cover" : "width=1200"}
                 />
                 <meta
                     name="theme-color"

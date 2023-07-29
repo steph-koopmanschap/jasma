@@ -1,0 +1,6 @@
+.stream-list-header {
+    @apply pt-6 pb-4 w-full;
+}
+.stream-search-container {
+    @apply max-w-lg mx-auto;
+}
