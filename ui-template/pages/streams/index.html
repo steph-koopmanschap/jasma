@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en" class="dsark">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Jasma</title>
+    <meta name="description" content="Lorem ipsum dolor, sit amet consectetur adipisicing elit.">
+</head>
+
+<body class="bg-background overflow-hidden overflow-y-auto">
+    <header class="bg-background-card z-50 border-b border-gray-100 dark:border-b-gray-800 h-20 sticky top-0">
+        <nav class="max-w-screen-2xl mx-auto px-3 lg:px-6 h-full flex justify-between items-center">
+            <div class="flex items-center gap-x-5 lg:flex-1">
+                <div
+                    class="lg:hidden flex -ml-2.5 lg:ml-0 border-r border-gray-100 dark:border-r-gray-700 text-foreground">
+
+                    <button data-toggle-sidebar class="outline-none p-2.5 hover:bg-background-card_inside">
+                        <span class="sr-only">Toggle sidebar</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                        </svg>
+                    </button>
+                </div>
+                <a href="#" class="text-lg font-semibold text-foreground">
+                    <span class="text-blue-600">J</span>ASMA
+                </a>
+
+                <form action="" class="hidden lg:flex w-72 relative">
+                    <input type="text" placeholder="Search people"
+                        class="w-full px-6 pl-12 text-sm py-2.5 rounded-full bg-background-card_inside outline-none text-foreground-heading3">
+                    <span class="absolute left-5 inset-y-0 flex items-center text-foreground-heading4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-search" viewBox="0 0 16 16">
+                            <path
+                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                        </svg>
+                    </span>
+                </form>
+            </div>
+            <div class="hidden lg:flex items-center">
+                <ul class="flex items-center gap-x-6 text-foreground-heading3">
+                    <li class="flex items-center relative">
+                        <a href="#" class="px-5 py-2.5 h-20 flex items-center">
+                            <span class="sr-only">icon-for</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="24"
+                                class="w-6 h-6">
+                                <path fill-rule="evenodd"
+                                    d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="flex items-center relative before:absolute before:inset-x-0 before:bottom-0 before:h-1 before:rounded-full before:bg-blue-600">
+                        <a href="#"
+                            class="text-blue-600 px-5 py-2.5 h-20 flex items-center">
+                            <span class="sr-only">icon-for</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-play-btn" viewBox="0 0 16 16">
+                                <path
+                                    d="M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z" />
+                                <path
+                                    d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="flex items-center relative">
+                        <a href="#" class="px-5 py-2.5 h-20 flex items-center">
+                            <span class="sr-only">icon-for</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" width="24" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="flex items-center relative">
+                        <a href="#" class="px-5 py-2.5 h-20 flex items-center">
+                            <span class="sr-only">icon-for</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" width="20" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" />
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="flex h-full items-center justify-end space-x-2 lg:flex-1 text-foreground">
+                <a href="#" class="p-2 rounded-full bg-background-card_inside lg:hidden">
+                    <span class="sr-only">Search</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                    </svg>
+                </a>
+                <a href="#" class="p-2 rounded-full bg-background-card_inside hidden lg:flex">
+                    <span class="sr-only">notifications</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                    </svg>
+                </a>
+                <a href="#" class="p-2 rounded-full bg-background-card_inside">
+                    <span class="sr-only">messages</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                    </svg>
+                </a>
+                <div data-dropdown-element class="relative h-full flex items-center">
+                    <button data-trigger class="flex">
+                        <span class="sr-only">profile</span>
+                        <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                            alt="user avatar">
+                    </button>
+                    <div data-drop-content
+                        class="absolute top-16 min-w-max w-60 origin-top-right right-0 transition-transform duration-300 ease-linear">
+                        <div
+                            class="bg-background-card rounded-xl py-5 shadow shadow-gray-200/30 dark:shadow-transparent border border-gray-100 dark:border-gray-700">
+                            <div class="flex items-center gap-x-4 px-3">
+                                <img src="/images/avatar.jpg" width="1600" class="w-10 h-10 object-cover rounded-full"
+                                    alt="user avatar">
+                                <div class="flex flex-col flex-1">
+                                    <h4 class="text-foreground-heading2 font-semibold">John Doe</h4>
+                                    <p class="text-foreground-heading5 text-sm">@doe03</p>
+                                </div>
+                            </div>
+                            <ul
+                                class="mt-2 space-y-2 pt-2 border-t border-t-gray-100 dark:border-t-gray-700 text-foreground-heading3">
+                                <li>
+                                    <a href="#"
+                                        class="flex items-center gap-x-4 px-4 py-2 hover:bg-background-card_inside">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-person-gear" viewBox="0 0 16 16">
+                                            <path
+                                                d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm.256 7a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Zm3.63-4.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382l.045-.148ZM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
+                                        </svg>
+                                        My account
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="flex items-center gap-x-4 px-4 py-2  hover:bg-background-card_inside">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                                            <path
+                                                d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z" />
+                                            <path
+                                                d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z" />
+                                        </svg>
+                                        Settings
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="flex items-center gap-x-4 justify-between px-4 py-2 ">
+                                        <span class="flex items-center  gap-x-3">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                fill="currentColor" class="bi bi-moon-stars" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278zM4.858 1.311A7.269 7.269 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.316 7.316 0 0 0 5.205-2.162c-.337.042-.68.063-1.029.063-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286z" />
+                                                <path
+                                                    d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
+                                            </svg>
+                                            Dark Mode
+                                        </span>
+                                        <div class="flex items-center">
+                                            <input data-toggle-dark
+                                                class="h-5 w-9 appearance-none rounded-full ring ring-gray-100 dark:ring-gray-700 bg-background-card_inside relative before:absolute before:w-4 before:h-4 before:top-1/2 before:-translate-y-1/2 before:rounded-full left-0 before:bg-gray-400 dark:before:bg-gray-500 checked:before:translate-x-full checked:before:!bg-blue-600 before:transition before:ease-linear before:duration-300 cursor-pointer"
+                                                type="checkbox" role="switch" id="flexSwitchCheckDefault" />
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="flex items-center gap-x-4 px-4 py-2 hover:bg-background-card_inside">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd"
+                                                d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                                            <path fill-rule="evenodd"
+                                                d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                                        </svg>
+                                        Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="lg:hidden fixed bottom-0 h-16 sm:h-20 bg-background-card z-60 inset-x-0">
+        <nav class="h-full max-w-3xl mx-auto">
+            <ul class="items-center gap-x-6 text-foreground-heading3 h-full grid grid-cols-5 px-2">
+                <li
+                    class="flex items-center justify-center h-full relative before:absolute before:inset-x-0 before:top-0 before:h-1 before:rounded-full before:bg-blue-600">
+                    <a href="#" class="px-3 sm:px-5 py-2.5 flex items-center flex-col space-y-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="24"
+                            class="w-6 h-6">
+                            <path fill-rule="evenodd"
+                                d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-center text-xs sm:text-sm">
+                            Feeds
+                        </span>
+                    </a>
+                </li>
+                <li class="flex items-center justify-center h-full relative">
+                    <a href="#" class="text-blue-600 px-3 sm:px-5 py-2.5 flex items-center flex-col space-y-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                            class="bi bi-play-btn" viewBox="0 0 16 16">
+                            <path
+                                d="M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z" />
+                            <path
+                                d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                        </svg>
+                        <span class="text-center text-xs sm:text-sm text-blue-500">
+                            Streams
+                        </span>
+                    </a>
+                </li>
+                <li class="flex items-center justify-center">
+                    <button href="#" class="px-3 sm:px-5 py-2.5 flex items-center flex-col space-y-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                            class="bi bi-plus-square" viewBox="0 0 16 16">
+                            <path
+                                d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                            <path
+                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                        </svg>
+                        <span class="text-center text-xs sm:text-sm">
+                            Post
+                        </span>
+                    </button>
+                </li>
+                <li class="flex items-center justify-center relative">
+                    <a href="#" class="px-3 sm:px-5 py-2.5 flex items-center flex-col space-y-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" width="20" height="24" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                        </svg>
+                        <span class="text-center text-xs sm:text-sm">
+                            Followees
+                        </span>
+                    </a>
+                </li>
+                <li class="flex items-center justify-center relative h-full">
+                    <a href="#" class="px-3 sm:px-5 py-2.5 flex items-center flex-col space-y-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" width="24" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" />
+                        </svg>
+                        <span class="text-center text-xs sm:text-sm">
+                            Jobs
+                        </span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <main
+        class="flex lg:flex-row flex-col gap-6 xl:gap-12 px-3  lg:px-6 max-w-3xl lg:max-w-screen-2xl mx-auto pb-24 lg:pb-0">
+
+        <div data-nav-overay class="fixed inset-0 hidden lg:hidden bg-gray-800/70 z-60"></div>
+        <aside data-side-bar
+            class="bg-background-card transition-transform ease-linear duration-300 lg:transition-none -translate-x-full lg:-translate-x-0 lg:bg-transparent w-5/6 max-w-xs lg:max-w-none lg:w-60 xl:w-64 fixed lg:sticky  lg:visible top-0 left-0 lg:top-20 h-[100dvh] lg:h-[calc(100dvh-5rem)] z-70">
+            <div
+                class="scrollable-box space-y-10 lg:space-y-4 h-full py-3 px-4 lg:px-0 lg:pt-8 overflow-hidden overflow-y-auto">
+                <div
+                    class="max-w-full lg:bg-background-card lg:rounded-xl lg:shadow lg:shadow-gray-200/30 lg:dark:shadow-transparent">
+                    <div class="bg-background-card_inside lg:rounded-t-xl aspect-[5/1.8] overflow-hidden">
+                        <img src="" alt="" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-3 flex gap-x-4 items-center">
+                        <div class="-mt-16">
+                            <img src="/images/avatar.jpg" width="1600" class="w-16 h-16 rounded-full object-cover"
+                                alt="avatar">
+                        </div>
+                        <div class="">
+                            <h4 class="text-foreground-heading2 font-semibold">John Doe</h4>
+                            <p class="text-foreground-heading5 text-sm">Lorem writter</p>
+                        </div>
+                    </div>
+                    <div class="border-t mt-2 py-2 border-t-gray-100 dark:border-t-gray-700">
+                        <button
+                            class="outline-none text-xs sm:text-sm flex items-center gap-x-3 px-2 text-foreground-heading4">
+                            <span
+                                class="w-6 h-6 flex items-center justify-center rounded-md border border-gray-100 dark:border-gray-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                    class="w-5 h-5">
+                                    <path
+                                        d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z" />
+                                </svg>
+                            </span>
+                            Add an other account
+                        </button>
+                    </div>
+                </div>
+                <div
+                    class="max-w-full lg:p-6 lg:bg-background-card lg:rounded-xl lg:shadow lg:shadow-gray-200/30 lg:dark:shadow-transparent">
+                    <h3 class="text-foreground-heading3 text-sm">Feeds navigation</h3>
+                    <nav class="mt-6 text-foreground-heading4">
+                        <ul class="flex flex-col gap-y-5">
+                            <li>
+                                <a href="#" class="flex items-center gap-x-4">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            fill="currentColor" class="bi bi-newspaper" viewBox="0 0 16 16">
+                                            <path
+                                                d="M0 2.5A1.5 1.5 0 0 1 1.5 1h11A1.5 1.5 0 0 1 14 2.5v10.528c0 .3-.05.654-.238.972h.738a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 1 1 0v9a1.5 1.5 0 0 1-1.5 1.5H1.497A1.497 1.497 0 0 1 0 13.5v-11zM12 14c.37 0 .654-.211.853-.441.092-.106.147-.279.147-.531V2.5a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0-.5.5v11c0 .278.223.5.497.5H12z" />
+                                            <path
+                                                d="M2 3h10v2H2V3zm0 3h4v3H2V6zm0 4h4v1H2v-1zm0 2h4v1H2v-1zm5-6h2v1H7V6zm3 0h2v1h-2V6zM7 8h2v1H7V8zm3 0h2v1h-2V8zm-3 2h2v1H7v-1zm3 0h2v1h-2v-1zm-3 2h2v1H7v-1zm3 0h2v1h-2v-1z" />
+                                        </svg>
+                                    </span>
+                                    Newsfeed
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="flex items-center gap-x-4">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            fill="currentColor" class="bi bi-record-btn" viewBox="0 0 16 16">
+                                            <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                                            <path
+                                                d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                                        </svg>
+                                    </span>
+                                    Live Streams
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="flex items-center gap-x-4">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            fill="currentColor" class="bi bi-balloon-heart" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd"
+                                                d="m8 2.42-.717-.737c-1.13-1.161-3.243-.777-4.01.72-.35.685-.451 1.707.236 3.062C4.16 6.753 5.52 8.32 8 10.042c2.479-1.723 3.839-3.29 4.491-4.577.687-1.355.587-2.377.236-3.061-.767-1.498-2.88-1.882-4.01-.721L8 2.42Zm-.49 8.5c-10.78-7.44-3-13.155.359-10.063.045.041.089.084.132.129.043-.045.087-.088.132-.129 3.36-3.092 11.137 2.624.357 10.063l.235.468a.25.25 0 1 1-.448.224l-.008-.017c.008.11.02.202.037.29.054.27.161.488.419 1.003.288.578.235 1.15.076 1.629-.157.469-.422.867-.588 1.115l-.004.007a.25.25 0 1 1-.416-.278c.168-.252.4-.6.533-1.003.133-.396.163-.824-.049-1.246l-.013-.028c-.24-.48-.38-.758-.448-1.102a3.177 3.177 0 0 1-.052-.45l-.04.08a.25.25 0 1 1-.447-.224l.235-.468ZM6.013 2.06c-.649-.18-1.483.083-1.85.798-.131.258-.245.689-.08 1.335.063.244.414.198.487-.043.21-.697.627-1.447 1.359-1.692.217-.073.304-.337.084-.398Z" />
+                                        </svg>
+                                    </span>
+                                    Most popular
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="flex items-center gap-x-4">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" width="20" class="w-5 h-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                                        </svg>
+                                    </span>
+                                    Discover people
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div
+                    class="max-w-full lg:p-6 lg:bg-background-card lg:rounded-xl lg:shadow lg:shadow-gray-200/30 lg:dark:shadow-transparent">
+                    <h3 class="text-foreground-heading3 text-sm">Account</h3>
+                    <nav class="mt-6 text-foreground-heading4">
+                        <ul class="flex flex-col gap-y-5">
+                            <li>
+                                <a href="#" class="flex items-center gap-x-4">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                                            <path
+                                                d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z" />
+                                            <path
+                                                d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z" />
+                                        </svg>
+                                    </span>
+                                    Settings
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="flex items-center gap-x-4">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            fill="currentColor" class="bi bi-chat-left-text" viewBox="0 0 16 16">
+                                            <path
+                                                d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                            <path
+                                                d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z" />
+                                        </svg>
+                                    </span>
+                                    Chats
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="flex items-center gap-x-4">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            fill="currentColor" class="bi bi-graph-up" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd"
+                                                d="M0 0h1v15h15v1H0V0Zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07Z" />
+                                        </svg>
+                                    </span>
+                                    Analytics
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="flex items-center gap-x-4">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            fill="currentColor" class="bi bi-bounding-box" viewBox="0 0 16 16">
+                                            <path
+                                                d="M5 2V0H0v5h2v6H0v5h5v-2h6v2h5v-5h-2V5h2V0h-5v2H5zm6 1v2h2v6h-2v2H5v-2H3V5h2V3h6zm1-2h3v3h-3V1zm3 11v3h-3v-3h3zM4 15H1v-3h3v3zM1 4V1h3v3H1z" />
+                                        </svg>
+                                    </span>
+                                    Most popular
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </aside>
+
+
+        <div class="flex flex-col flex-1 py-3 pt-8 space-y-8 overflow-hidden">
+            <div data-recommanded-streams>
+                <div class="flex justify-between items-center pb-4">
+                    <h1 class="text-sm mb-5 font-medium text-foreground-heading4">Suggested for you</h1>
+                    <div class="flex items-center space-x-1">
+                        <button data-go-left class="outline-none rounded-full p-2 border border-bdr text-foreground-heading4 disabled:cursor-not-allowed">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                                <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                            </svg>                              
+                        </button>
+                        <button data-go-right class="outline-none rounded-full p-2 border border-bdr text-foreground-heading4 disabled:cursor-not-allowed">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                                <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                            </svg>                              
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-hidden max-w-full">
+                    <div data-hidden-scrollbar
+                        class="overflow-hidden max-w-full snap-mandatory snap-x children:snap-center sm:children:snap-start overflow-x-auto w-full flex items-center gap-x-4 sm:gap-x-5">
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col w-64 min-w-[16rem] xs:w-72 sm:min-w-[18rem] md:w-80 md:min-w-[20rem]">
+                            <div
+                                class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                                <img src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                    Live
+                                </div>
+                                <div
+                                    class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                    1k spectators
+                                </div>
+                            </div>
+                            <div class="space-y-3 p-4 relative flex flex-col">
+                                <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                    Deploying turbo repo project on google cloud
+                                </h2>
+                                <div class="flex items-center gap-x-4">
+                                    <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                        alt="user avatar">
+                                    <div>
+                                        <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                        <p class="text-foreground-heading5 text-sm">category name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h1 class="text-sm mb-5 font-medium text-foreground-heading4">Current Streams</h1>
+                <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    <div
+                        class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col">
+                        <div
+                            class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                            <img src="" alt="" class="w-full h-full object-cover">
+                            <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                Live
+                            </div>
+                            <div
+                                class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                1k spectators
+                            </div>
+                        </div>
+                        <div class="space-y-3 p-4 relative flex flex-col">
+                            <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                Deploying turbo repo project on google cloud
+                            </h2>
+                            <div class="flex items-center gap-x-4">
+                                <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                    alt="user avatar">
+                                <div>
+                                    <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                    <p class="text-foreground-heading5 text-sm">category name</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col">
+                        <div
+                            class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                            <img src="" alt="" class="w-full h-full object-cover">
+                            <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                Live
+                            </div>
+                            <div
+                                class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                1k spectators
+                            </div>
+                        </div>
+                        <div class="space-y-3 p-4 relative flex flex-col">
+                            <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                Deploying turbo repo project on google cloud
+                            </h2>
+                            <div class="flex items-center gap-x-4">
+                                <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                    alt="user avatar">
+                                <div>
+                                    <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                    <p class="text-foreground-heading5 text-sm">category name</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col">
+                        <div
+                            class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                            <img src="" alt="" class="w-full h-full object-cover">
+                            <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                Live
+                            </div>
+                            <div
+                                class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                1k spectators
+                            </div>
+                        </div>
+                        <div class="space-y-3 p-4 relative flex flex-col">
+                            <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                Deploying turbo repo project on google cloud
+                            </h2>
+                            <div class="flex items-center gap-x-4">
+                                <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                    alt="user avatar">
+                                <div>
+                                    <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                    <p class="text-foreground-heading5 text-sm">category name</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col">
+                        <div
+                            class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                            <img src="" alt="" class="w-full h-full object-cover">
+                            <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                Live
+                            </div>
+                            <div
+                                class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                1k spectators
+                            </div>
+                        </div>
+                        <div class="space-y-3 p-4 relative flex flex-col">
+                            <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                Deploying turbo repo project on google cloud
+                            </h2>
+                            <div class="flex items-center gap-x-4">
+                                <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                    alt="user avatar">
+                                <div>
+                                    <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                    <p class="text-foreground-heading5 text-sm">category name</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col">
+                        <div
+                            class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                            <img src="" alt="" class="w-full h-full object-cover">
+                            <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                Live
+                            </div>
+                            <div
+                                class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                1k spectators
+                            </div>
+                        </div>
+                        <div class="space-y-3 p-4 relative flex flex-col">
+                            <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                Deploying turbo repo project on google cloud
+                            </h2>
+                            <div class="flex items-center gap-x-4">
+                                <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                    alt="user avatar">
+                                <div>
+                                    <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                    <p class="text-foreground-heading5 text-sm">category name</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-background-card rounded-xl shadow shadow-gray-200/30 dark:shadow-transparent flex flex-col">
+                        <div
+                            class="w-full aspect-video bg-background-card_inside rounded-t-xl relative overflow-hidden">
+                            <img src="" alt="" class="w-full h-full object-cover">
+                            <div class="absolute left-2 top-2 px-3 py-0.5 rounded-md bg-red-600 text-white text-sm">
+                                Live
+                            </div>
+                            <div
+                                class="absolute left-2 bottom-2 px-3 py-0.5 rounded-md bg-gray-800/90 text-white text-sm">
+                                1k spectators
+                            </div>
+                        </div>
+                        <div class="space-y-3 p-4 relative flex flex-col">
+                            <h2 class="text-foreground-heading3 font-semibold line-clamp-2">
+                                Deploying turbo repo project on google cloud
+                            </h2>
+                            <div class="flex items-center gap-x-4">
+                                <img src="/images/avatar.jpg" width="1600" class="w-9 h-9 object-cover rounded-full"
+                                    alt="user avatar">
+                                <div>
+                                    <h4 class="text-foreground-heading3 font-medium text-sm">John Doe</h4>
+                                    <p class="text-foreground-heading5 text-sm">category name</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="./../../main.js"></script>
+</body>
+
+</html>
