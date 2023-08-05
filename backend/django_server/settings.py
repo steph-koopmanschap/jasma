@@ -39,13 +39,13 @@ elif os.getenv("STAGE") == "development":
     DEBUG = True
 
 # Build paths inside the project like this: BASE_DIR / "subdir".
-BASE_DIR = Path(__file__).resolve().parent.parent
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-MEDIA_URL = f"{BASE_URL}/media/"
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+    MEDIA_URL = f"{BASE_URL}/media/"
 # MEDIA_URL = "/media/"
-DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
-GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')
+    GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')
 
 
 # Quick-start development settings - unsuitable for production
@@ -55,22 +55,22 @@ GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')
 # Used for signing and hashing cookies and session secrets
 SECRET_KEY = os.getenv("SESSION_SECRET")
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "file": {
-            "class": "logging.handlers.WatchedFileHandler",
-            "filename": os.path.join(LOGS_ROOT, "server_logfile.log"),
-        },
-    },
-    "loggers": {
-        "django": {
-            "handlers": ["file"],
-            "level": "INFO",
-        },
-    },
-}
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "handlers": {
+#         "file": {
+#             "class": "logging.handlers.WatchedFileHandler",
+#             "filename": os.path.join(LOGS_ROOT, "server_logfile.log"),
+#         },
+#     },
+#     "loggers": {
+#         "django": {
+#             "handlers": ["file"],
+#             "level": "INFO",
+#         },
+#     },
+# }
 
 ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
 APPEND_SLASH = False
@@ -87,6 +87,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     "corsheaders",
+    "live.apps.LiveConfig",
+    'rest_framework',
     "api",
 ]
 

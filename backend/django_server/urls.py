@@ -19,10 +19,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
 from api.views.media_views import get_file
+from django.views.decorators.csrf import get_token
 
 urlpatterns = [
     # path('', include('api.urls')),
     path('admin', admin.site.urls),
     path('api/', include('api.urls')),
+    path('live/', include('live.urls')),
+    path('token', get_token, name='api-csrf-token'),
     path('media/<path:filepath>', get_file)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

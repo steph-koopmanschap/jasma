@@ -21,7 +21,7 @@
         "dev": "concurrently -n 'backend,frontend' -c '#04FCF1,#9c143f' \"cd backend && python manage.py runserver\" \"cd frontend && npm run dev\"",
         "start": "concurrently -n 'backend,frontend' -c '#9c143f,#85590d' \"cd backend && python manage.py runserver && npm run start\" \"cd next && npm run start\"",
         "build": "cd backend && npm run build && cd ..",
-        "install:all": "cd backend && pip install -r requirements.txt && cd frontend && npm install",
+        "install:all": "cd compose/local/django && pip install -r requirements.txt --user && cd ../../frontend && npm install",
         "start:all": "gnome-terminal --window --title=JASMA-API -x sh -i -c \"cd backend && python manage.py runserver\" && gnome-terminal --window --title=JASMA-NEXT -x sh -i -c \"cd frontend && npm run start\"",
         "db:init": "cd backend && python manage.py genfakedb 50",
         "db:resetTables": "cd backend && python manage.py flush",
