@@ -25,7 +25,7 @@ urlpatterns = [
     # path('', include('api.urls')),
     path('admin', admin.site.urls),
     path('api/', include('api.urls')),
-    path('live/', include('live.urls')),
+    path('api/live/', include('live.urls')),
     path('token', get_token, name='api-csrf-token'),
     path('media/<path:filepath>', get_file)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

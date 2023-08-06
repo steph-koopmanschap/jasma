@@ -37,7 +37,7 @@ class UserAuthenticationSerializer(JasmaModelSerializer):
     - Will accept "password" and "email"
 
     """
-    # id = StringUUIDField(read_only=True)
+    id = StringUUIDField(read_only=True)
 
     class Meta:
         model = User

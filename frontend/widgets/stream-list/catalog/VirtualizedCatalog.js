@@ -31,7 +31,7 @@ export const VirtualizedCatalog = ({
 
     const handleClick = (stream_key) => {
         window.sessionStorage.setItem("stream_scroll_pos", window.pageYOffset);
-        router.push(`/live/stream/${stream_key}`);
+        router.push(`/stream-page/stream/${stream_key}`);
     };
     return (
         <div className="list-layout">

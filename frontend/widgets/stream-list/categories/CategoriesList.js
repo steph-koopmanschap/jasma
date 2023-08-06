@@ -38,7 +38,7 @@ export const CategoriesList = memo(() => {
                 {DUMMY_DATA.map((item) => (
                     <CategoryCard
                         key={item.title}
-                        onClick={() => router.push(`/live/results/category/${item.title}`)}
+                        onClick={() => router.push(`/stream-page/results/category/${item.title}`)}
                         {...item}
                     />
                 ))}
