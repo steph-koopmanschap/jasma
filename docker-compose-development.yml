@@ -125,6 +125,7 @@ services:
             - jasma-network-dev
     # NGINX RTMP SERVER
     jasma_live:
+        restart: always
         build: 
             context: ./rtmp
             target: development
