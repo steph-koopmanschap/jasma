@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 from ..models.models import StreamCategory
@@ -11,6 +11,7 @@ class CategoriesListView(viewsets.ModelViewSet):
     model = StreamCategory
     queryset = StreamCategory.objects.all()
     serializer_class = StreamCategorySerializerGet
+    permission_classes = [AllowAny]
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())

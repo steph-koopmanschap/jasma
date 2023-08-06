@@ -3,7 +3,7 @@ import "./CategoryCard.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 
-export const CategoryCard = ({ title, onClick, views, category_color, category_png }) => {
+export const CategoryCard = ({ title, onClick, views = 0, color_hex, category_img }) => {
     return (
         <div
             className={`card-container`}
@@ -12,17 +12,17 @@ export const CategoryCard = ({ title, onClick, views, category_color, category_p
             aria-label={`${title} category`}
             onClick={onClick}
         >
-            <CardShape color={category_color} />
+            <CardShape color={color_hex} />
             <div className="card-wrapper">
                 <div className="play-icon">
                     <FontAwesomeIcon icon={faPlay} />
                 </div>
                 <h2>{title}</h2>
-                <h3>{formatLargeNumber(views)} views</h3>
+                {views > 100 ? <h3>{formatLargeNumber(views)} views</h3> : null}
             </div>
             <div
                 className="card-img-wrapper"
-                style={{ backgroundImage: `url(${category_png})` }}
+                style={{ backgroundImage: `url(${category_img})` }}
             ></div>
         </div>
     );

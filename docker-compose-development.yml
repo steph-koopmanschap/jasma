@@ -126,6 +126,8 @@ services:
     # NGINX RTMP SERVER
     jasma_live:
         restart: always
+        volumes:
+            - ./rtmp:/etc/nginx
         build: 
             context: ./rtmp
             target: development

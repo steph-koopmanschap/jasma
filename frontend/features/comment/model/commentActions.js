@@ -27,7 +27,7 @@ const handleCreatePostComment = async (commentData, file) => {
  * @returns
  */
 
-const useGetComments = async (postID, limit) => {
+const useGetComments = (postID, limit) => {
     return useQuery(
         [`comments_${postID}`],
         async () => {

@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import "./Catalog.css";
 import Virtualized from "@/shared/ui/wrappers/Virtualized";
 import UserWidgets from "@/widgets/user";
+import { Spinner } from "@/shared/ui";
 
 export const VirtualizedCatalog = ({
     data = [],
@@ -36,7 +37,7 @@ export const VirtualizedCatalog = ({
     return (
         <div className="list-layout">
             {isError ? (
-                <LoadError>{error}</LoadError>
+                <LoadError>{error?.message}</LoadError>
             ) : (
                 <div className="live-list-wrapper">
                     {data?.map((item, ind) => (

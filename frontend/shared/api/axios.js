@@ -10,7 +10,7 @@ else if (process.env.NEXT_PUBLIC_NODE_ENV === "production") {
 }
 
 const axiosInstance = axios.create({
-    baseURL: baseURL,
+    baseURL,
     withCredentials: true,
     timeout: 9000 //Timeout response after 9 seconds
 });

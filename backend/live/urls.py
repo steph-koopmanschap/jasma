@@ -12,6 +12,6 @@ urlpatterns = [
     path("create-category", create_category, name='create_category'),
     path("update-category/<id>", update_category, name='update_category'),
     path("delete-category/<id>", delete_category, name='delete_category'),
-    path("start-stream", start_stream),
-    path("end-stream", end_stream)
+    path("publish", start_stream),
+    path("done", end_stream)
 ]
