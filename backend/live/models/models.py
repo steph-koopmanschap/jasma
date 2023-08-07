@@ -28,8 +28,8 @@ class StreamerProfile(models.Model):
     
     def __str__(self) -> str:
         return self.user.username
-    
-  
+
+
     
 class StreamCategory(models.Model):
     DEFAULT_CATEGORY_IMG = "images/live/category_thumbs/default.png"
@@ -45,12 +45,20 @@ class StreamCategory(models.Model):
     def __str__(self) -> str:
         return self.title
     
-  
-    
     def get_absolute_url(self):
         return reverse('delete_category', kwargs={'id': self.id})
     
    
+class StreamerSettings(models.Model):
+    profile = models.OneToOneField(StreamerProfile, on_delete=models.CASCADE, primary_key=True, editable=False, blank=True, related_name="profile_settings")
+    next_stream_title = models.CharField(max_length=120, default="I'm live. Join me now!")
+    next_stream_category = models.OneToOneField(StreamCategory, default=None, null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+
+    def __str__(self) -> str:
+        return f"{self.profile.user.username} stream settings"
     
     
 

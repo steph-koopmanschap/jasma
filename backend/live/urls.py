@@ -10,6 +10,7 @@ urlpatterns = [
     path("generate-new-key", profile_views.generate_new_stream_key),
     path("create-profile", profile_views.create_streamer_profile, name='create_profile'),
     path("toggle-active", profile_views.toggle_is_active),
+    path("update-streamer-profile-settings", profile_views.update_profile_settings),
     path("toggle-ban/<id>", profile_views.toggle_ban_streamer_profile, name='toggle_ban'),
     path("categories", category_views.CategoriesListView.as_view({"get": 'list'})),
     path("create-category", category_views.create_category, name='create_category'),

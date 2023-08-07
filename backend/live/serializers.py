@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models.models import StreamCategory, StreamerProfile, StreamReport
+from .models.models import StreamCategory, StreamerProfile, StreamReport, StreamerSettings
 from api.models.models import User
 from .constants import report_reasons
 
@@ -21,6 +21,7 @@ class StreamCategorySerializerGet(serializers.ModelSerializer):
 
 class StreamerProfileSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
+    
     class Meta:
         model = StreamerProfile
         fields = "__all__"
@@ -35,3 +36,12 @@ class StreamReportSerializer(serializers.Serializer):
     class Meta:
         model = StreamReport
         fields = ["report_reason", "stream", "profile", "created_at", "updated_at"]
+
+class StreamerSettingsSerializer(serializers.ModelSerializer):
+
+    next_stream_category = serializers.UUIDField()
+
+    class Meta:
+        model = StreamerSettings
+        fields = ["next_stream_title", "next_stream_category"]
+        extra_kwargs = {"next_stream_category": {"required": False, "allow_null": True}}

@@ -1,11 +1,13 @@
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 from api.models.models import User
 from django.utils import timezone
-from ..models.models import StreamerProfile
-from ..serializers import StreamerProfileSerializer
+from ..models.models import StreamerProfile, StreamerSettings, StreamCategory
+from ..serializers import StreamerProfileSerializer, StreamerSettingsSerializer
+from datetime import timedelta
+from math import floor
 from uuid import uuid4
 
 
@@ -21,6 +23,8 @@ class StreamerProfilesList(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         stream_profiles = serializer.data
+        
+        print(StreamerProfile.objects.all().first().live_streamersettings)
 
         payload = {'data': {"stream_profiles": stream_profiles}}
 
@@ -41,7 +45,7 @@ def create_streamer_profile(request):
     profile.save()
 
     serializer = StreamerProfileSerializer(profile)
-    
+
     payload = {"message": f"Streamer profile for {request.user.username} created successfully.",
                "data": {"profile": serializer.data}}
     return Response(payload, status=status.HTTP_201_CREATED)
@@ -99,6 +103,9 @@ def toggle_is_active(request):
         return Response({"message": f"User hasn't created their streamer profile yet."}, status=status.HTTP_400_BAD_REQUEST)
     elif profile.first().is_banned:
         return Response({"message": f"Unfortunately, profile has been banned."}, status=status.HTTP_400_BAD_REQUEST)
+    elif profile.first().is_live:
+        return Response({"message": f"User is currently live. Finish your stream first then try again."}, status=status.HTTP_400_BAD_REQUEST)
+        
 
     if profile.first().is_active:
         profile.update(is_active=False, deactivated_at=timezone.now(), updated_at=timezone.now())
@@ -108,3 +115,18 @@ def toggle_is_active(request):
 
         return Response({"message": f"Profile has been activated successfully!."}, status=status.HTTP_200_OK)
         
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def update_profile_settings(request):
+    serializer = StreamerSettingsSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    settings_obj = StreamerSettings.objects.filter(profile=request.user.streamerprofile)
+    # Get category by id
+    category = StreamCategory.objects.filter(id=serializer.data["next_stream_category"]).first()
+    settings_obj.update(next_stream_title=serializer.validated_data["next_stream_title"], 
+                        updated_at=timezone.now(), next_stream_category=category)
+    print(request.user.streamerprofile.streams.all())
+    print(floor((category.created_at - request.user.streamerprofile.created_at).total_seconds()))
+    # Return success response
+    payload = {"message": f"Profile settings have been updated successfully.", 'data': {"profile_settings": serializer.data}}
+    return Response(payload, status=status.HTTP_200_OK)
