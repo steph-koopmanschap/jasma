@@ -1,17 +1,22 @@
 from django.urls import path
-from .views.profile_views import create_streamer_profile, toggle_ban_streamer_profile, StreamerProfilesList, generate_new_stream_key
-from .views.category_views import create_category, update_category, delete_category, CategoriesListView
-from .views.stream_views import start_stream, end_stream
+from .views import profile_views 
+from .views import category_views
+from .views import stream_views
+from .views import report_views
+
 
 urlpatterns = [
-    path("streamer-profiles", StreamerProfilesList.as_view({"get": 'list'})),
-    path("generate-new-key", generate_new_stream_key),
-    path("create-profile", create_streamer_profile, name='create_profile'),
-    path("toggle-ban/<id>", toggle_ban_streamer_profile, name='toggle_ban'),
-    path("categories", CategoriesListView.as_view({"get": 'list'})),
-    path("create-category", create_category, name='create_category'),
-    path("update-category/<id>", update_category, name='update_category'),
-    path("delete-category/<id>", delete_category, name='delete_category'),
-    path("publish", start_stream),
-    path("done", end_stream)
+    path("streamer-profiles", profile_views.StreamerProfilesList.as_view({"get": 'list'})),
+    path("generate-new-key", profile_views.generate_new_stream_key),
+    path("create-profile", profile_views.create_streamer_profile, name='create_profile'),
+    path("toggle-active", profile_views.toggle_is_active),
+    path("toggle-ban/<id>", profile_views.toggle_ban_streamer_profile, name='toggle_ban'),
+    path("categories", category_views.CategoriesListView.as_view({"get": 'list'})),
+    path("create-category", category_views.create_category, name='create_category'),
+    path("update-category/<id>", category_views.update_category, name='update_category'),
+    path("delete-category/<id>", category_views.delete_category, name='delete_category'),
+    path("publish", stream_views.start_stream),
+    path("done", stream_views.end_stream),
+    path("stream-reports", report_views.StreamReportsList.as_view({'get': 'list'})),
+    path("create-stream-report", report_views.create_stream_report),
 ]

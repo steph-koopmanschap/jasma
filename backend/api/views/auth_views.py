@@ -20,18 +20,20 @@ def register(request):
     # Serialize, validate and create
     serializer = UserAuthenticationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    user = User.objects.create(**serializer.validated_data)
+    user = User.objects.create_user(**serializer.validated_data)
     print(serializer.validated_data)
     # Return success response
     payload = {"message": f"User {user.username} registered successfully."}
-    return Response({}, status=status.HTTP_201_CREATED)
+    return Response(payload, status=status.HTTP_201_CREATED)
 
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def login_view(request):
     email = request.data.get("email")
     password = request.data.get("password")
+    
     user = authenticate(request, username=email, password=password)
+  
     if user:
         login(request, user)
         # Store ip address used to login

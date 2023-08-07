@@ -3,6 +3,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 from api.models.models import User
+from django.utils import timezone
 from ..models.models import StreamerProfile
 from ..serializers import StreamerProfileSerializer
 from uuid import uuid4
@@ -30,7 +31,7 @@ class StreamerProfilesList(viewsets.ModelViewSet):
 def create_streamer_profile(request):
 
     prev_profile = StreamerProfile.objects.filter(user=request.user).first()
-
+    
     if prev_profile:
         return Response({"message": "User has already created streamer profile."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -39,8 +40,10 @@ def create_streamer_profile(request):
 
     profile.save()
 
+    serializer = StreamerProfileSerializer(profile)
+    
     payload = {"message": f"Streamer profile for {request.user.username} created successfully.",
-               "profile": profile}
+               "data": {"profile": serializer.data}}
     return Response(payload, status=status.HTTP_201_CREATED)
 
 
@@ -58,10 +61,10 @@ def toggle_ban_streamer_profile(request, id):
         return Response({"message": f"User {user_to_ban.username} hasn't created their streamer profile yet."}, status=status.HTTP_400_BAD_REQUEST)
     else:
         if not profile.first().is_banned:
-            profile.update(is_banned=True)
+            profile.update(is_banned=True, last_banned_at=timezone.now(), updated_at=timezone.now())
             return Response({"message": f"User {user_to_ban.username} has been banned successfully!"},status=status.HTTP_200_OK)
         else:
-            profile.update(is_banned=False)    
+            profile.update(is_banned=False, updated_at=timezone.now())    
             return Response({"message": f"User {user_to_ban.username} has been unbanned successfully!"},status=status.HTTP_200_OK)
     
 
@@ -77,7 +80,7 @@ def generate_new_stream_key(request):
     elif profile.first().is_banned:
         return Response({"message": f"Unfortunately, profile has been banned."}, status=status.HTTP_400_BAD_REQUEST)
     
-    profile.update(stream_key=new_stream_key)
+    profile.update(stream_key=new_stream_key, updated_at=timezone.now())
 
     payload = {"message": f"User's stream key has been updated successfully!", 
                "data": {"stream_key": new_stream_key}
@@ -86,5 +89,22 @@ def generate_new_stream_key(request):
     return Response(payload,status=status.HTTP_200_OK)
 
 
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def toggle_is_active(request):
 
+    profile = StreamerProfile.objects.filter(user=request.user)
     
+    if not profile.first():
+        return Response({"message": f"User hasn't created their streamer profile yet."}, status=status.HTTP_400_BAD_REQUEST)
+    elif profile.first().is_banned:
+        return Response({"message": f"Unfortunately, profile has been banned."}, status=status.HTTP_400_BAD_REQUEST)
+
+    if profile.first().is_active:
+        profile.update(is_active=False, deactivated_at=timezone.now(), updated_at=timezone.now())
+        return Response({"message": f"Profile has been deactivated successfully!."}, status=status.HTTP_200_OK)
+    else:
+        profile.update(is_active=True, updated_at=timezone.now())
+
+        return Response({"message": f"Profile has been activated successfully!."}, status=status.HTTP_200_OK)
+        

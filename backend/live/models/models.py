@@ -3,21 +3,28 @@ from api.models.models import User
 from django.urls import reverse
 from django.utils import timezone
 from uuid import uuid4
+from ..constants import report_reasons
 # Create your models here.
 
 
 class StreamerProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, editable=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, editable=False, blank=True)
     stream_key = models.CharField(unique=True)
     is_banned = models.BooleanField(default=False)
     is_live = models.BooleanField(default=False)
+    is_active = models.BooleanField("Is profile not deleted by user", default=True)
     followers_count = models.PositiveIntegerField(default=0)
     total_views_count = models.PositiveIntegerField(default=0)
+    total_stream_time = models.PositiveIntegerField(default=0)
     followed_by = models.ManyToManyField(
         "self", blank=True, symmetrical=False
     )
     created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+    deactivated_at = models.DateTimeField(default=None, null=True, blank=True)
+    last_banned_at = models.DateTimeField(default=None, null=True, blank=True)
     last_live_time = models.DateTimeField(default=None, auto_now=False, null=True)
+
     
     def __str__(self) -> str:
         return self.user.username
@@ -50,13 +57,14 @@ class StreamCategory(models.Model):
 class StreamLive(models.Model):
     id = models.UUIDField(default=uuid4, primary_key=True, editable=False)
     title = models.CharField(max_length=120, default="I'm live. Join me now!")
-    streamer = models.OneToOneField(StreamerProfile, on_delete=models.CASCADE)
+    streamer = models.ForeignKey(StreamerProfile,related_name="streams", on_delete=models.CASCADE)
     watching_count = models.PositiveIntegerField(default=0)
     total_views_count = models.PositiveIntegerField(default=0)
     category = models.ForeignKey(StreamCategory, on_delete=models.SET_NULL, blank=True, null=True)
     banned_chat_users = models.ManyToManyField(
-        "self", blank=True, symmetrical=False, null=True
+        "self", symmetrical=False
     )
+    shared_count = models.PositiveIntegerField(default=0)
     thumbnail_img = models.ImageField('Stream Thumbnail Image', upload_to='images/live/thumbnails', blank=True, null=True)
     started_at = models.DateTimeField(default=timezone.now)
     ended_at = models.DateTimeField(default=None, null=True, blank=True)
@@ -76,7 +84,14 @@ class StreamChatMsg(models.Model):
         return self.author.username
 
 
-
+class StreamReport(models.Model):
+    id = models.UUIDField(default=uuid4, primary_key=True)
+    issued_by = models.ForeignKey(User, related_name="issued_by", on_delete=models.CASCADE)
+    report_reason = models.CharField(choices=report_reasons.CHOICES)
+    stream = models.ForeignKey(StreamLive, related_name="reported", on_delete=models.CASCADE)
+    profile = models.ForeignKey(StreamerProfile, related_name="reported", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 
