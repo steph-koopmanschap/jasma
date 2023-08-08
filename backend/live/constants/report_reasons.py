@@ -1,6 +1,6 @@
 # For use in the choices= field in Django models
 CHOICES = [
-    ("harrassment", "Harrassment"),
+    ("harassment", "Harassment"),
     ("racism", "Racism"),
     ("sexual content", "Sexual content"),
     ("gore", "Gore"),

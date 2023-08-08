@@ -17,8 +17,9 @@ class StreamerProfile(models.Model):
     total_views_count = models.PositiveIntegerField(default=0)
     total_stream_time = models.PositiveIntegerField(default=0)
     followed_by = models.ManyToManyField(
-        "self", blank=True, symmetrical=False
+        User, blank=True, symmetrical=False, related_name="followed_streamers"
     )
+    followers_count = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     deactivated_at = models.DateTimeField(default=None, null=True, blank=True)
@@ -68,7 +69,7 @@ class StreamLive(models.Model):
     streamer = models.ForeignKey(StreamerProfile,related_name="streams", on_delete=models.CASCADE)
     watching_count = models.PositiveIntegerField(default=0)
     total_views_count = models.PositiveIntegerField(default=0)
-    category = models.ForeignKey(StreamCategory, on_delete=models.SET_NULL, blank=True, null=True)
+    category = models.ForeignKey(StreamCategory, related_name="current_streams", on_delete=models.SET_NULL, blank=True, null=True)
     banned_chat_users = models.ManyToManyField(
         "self", symmetrical=False
     )
@@ -94,10 +95,10 @@ class StreamChatMsg(models.Model):
 
 class StreamReport(models.Model):
     id = models.UUIDField(default=uuid4, primary_key=True)
-    issued_by = models.ForeignKey(User, related_name="issued_by", on_delete=models.CASCADE)
+    issued_by = models.ForeignKey(User, related_name="streamers_reported", on_delete=models.CASCADE)
     report_reason = models.CharField(choices=report_reasons.CHOICES)
-    stream = models.ForeignKey(StreamLive, related_name="reported", on_delete=models.CASCADE)
-    profile = models.ForeignKey(StreamerProfile, related_name="reported", on_delete=models.CASCADE)
+    reported_stream = models.ForeignKey(StreamLive, related_name="reported", on_delete=models.CASCADE)
+    reported_profile = models.ForeignKey(StreamerProfile, related_name="reported", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

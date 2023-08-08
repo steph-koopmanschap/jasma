@@ -2,6 +2,7 @@ from django.db.models import Model
 
 from api.models import Ad, Post, Hashtag, User, UserProfile, UserNotificationPreferences, Comment, Transaction, BookmarkedPost, Following, SubscribedHashtag
 from rest_framework import serializers
+from live.serializers import StreamerProfileSerializer
 
 
 # Field serializer
@@ -153,6 +154,7 @@ class UserFullSerializer(JasmaModelSerializer):
     id = StringUUIDField()
     profile = UserProfileSerializer()
     notification_preferences = UserNotificationPreferencesSerializer()
+    streamerprofile = StreamerProfileSerializer(many=False, read_only=True)
 
     class Meta:
         model = User
