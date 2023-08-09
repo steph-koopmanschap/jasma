@@ -55,22 +55,22 @@ elif os.getenv("STAGE") == "development":
 # Used for signing and hashing cookies and session secrets
 SECRET_KEY = os.getenv("SESSION_SECRET")
 
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     "handlers": {
-#         "file": {
-#             "class": "logging.handlers.WatchedFileHandler",
-#             "filename": os.path.join(LOGS_ROOT, "server_logfile.log"),
-#         },
-#     },
-#     "loggers": {
-#         "django": {
-#             "handlers": ["file"],
-#             "level": "INFO",
-#         },
-#     },
-# }
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "class": "logging.handlers.WatchedFileHandler",
+            "filename": os.path.join(LOGS_ROOT, "server_logfile.log"),
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file"],
+            "level": "INFO",
+        },
+    },
+}
 
 ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
 APPEND_SLASH = False

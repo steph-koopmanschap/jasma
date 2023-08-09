@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models.models import StreamCategory, StreamerProfile, StreamReport, StreamerSettings, StreamLive
-from .constants import report_reasons
+from .constants import report_reasons, ban_reasons
 
 
 
@@ -36,38 +36,48 @@ class StreamReportSerializer(serializers.ModelSerializer):
         fields = ["report_reason", "reported_stream", "reported_profile", "created_at", "updated_at"]
         extra_kwargs = {"reported_profile": {"required": False, "allow_null": True}}
 
-    # def create(self, validated_data):
-    #     validated_data.pop("issued_by")
-    #     report = StreamReport.objects.create(**validated_data)
-        
-    #     return report
-    
 
+class ToggleBanSeriazlizer(serializers.ModelSerializer):
+    last_ban_reason = serializers.ChoiceField(choices = ban_reasons.CHOICES)
+
+    class Meta:
+        model = StreamerProfile
+        fields = ["last_ban_reason"]
+
+class DeactivateReasonSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StreamerProfile
+        fields = ["deactivate_reason_description"]
+
+        
 class StreamerSettingsSerializer(serializers.ModelSerializer):
 
+    # banned_chat_users = serializers.ManyRelatedField(many=False, read_only=True)
     next_stream_category = serializers.UUIDField()
 
     class Meta:
         model = StreamerSettings
-        fields = ["next_stream_title", "next_stream_category"]
+        exclude = ["banned_chat_users", "profile"]
+        # fields = "__all__"
         extra_kwargs = {"next_stream_category": {"required": False, "allow_null": True}}
 
 class StreamerProfileSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
-    profile_settings = StreamerSettingsSerializer(many=False, read_only=True)
-    reported = StreamReportSerializer(many=True, read_only=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    profile_settings = StreamerSettingsSerializer(read_only=True)
     
     
     class Meta:
         model = StreamerProfile
-        fields = "__all__"
+        exclude = ["followed_by"]
     
-    def create(self, validated_data):
-        validated_data.pop("profile_settings")
-        validated_data.pop("reported")
-        profile = StreamerProfile.objects.create(**validated_data)
-        
-        return profile
+
+class StreamerProfileSerializerFull(StreamerProfileSerializer):
+    reported = StreamReportSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = StreamerProfile
+        fields = "__all__"
 
 
 

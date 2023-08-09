@@ -3,7 +3,7 @@ from api.models.models import User
 from django.urls import reverse
 from django.utils import timezone
 from uuid import uuid4
-from ..constants import report_reasons
+from ..constants import report_reasons, ban_reasons
 # Create your models here.
 
 
@@ -12,6 +12,8 @@ class StreamerProfile(models.Model):
     stream_key = models.CharField(unique=True)
     is_banned = models.BooleanField(default=False)
     is_live = models.BooleanField(default=False)
+    last_ban_reason = models.CharField(default=None, null=True, blank=True, choices=ban_reasons.CHOICES)
+    deactivate_reason_description = models.CharField(default=None, blank=True, null=True, max_length=500)
     is_active = models.BooleanField("Is profile not deleted by user", default=True)
     followers_count = models.PositiveIntegerField(default=0)
     total_views_count = models.PositiveIntegerField(default=0)
@@ -54,6 +56,7 @@ class StreamerSettings(models.Model):
     profile = models.OneToOneField(StreamerProfile, on_delete=models.CASCADE, primary_key=True, editable=False, blank=True, related_name="profile_settings")
     next_stream_title = models.CharField(max_length=120, default="I'm live. Join me now!")
     next_stream_category = models.OneToOneField(StreamCategory, default=None, null=True, blank=True, on_delete=models.SET_NULL)
+    banned_chat_users = models.ManyToManyField(User, symmetrical=False, related_name="banned_in_stream_chats")
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -70,11 +73,8 @@ class StreamLive(models.Model):
     watching_count = models.PositiveIntegerField(default=0)
     total_views_count = models.PositiveIntegerField(default=0)
     category = models.ForeignKey(StreamCategory, related_name="current_streams", on_delete=models.SET_NULL, blank=True, null=True)
-    banned_chat_users = models.ManyToManyField(
-        "self", symmetrical=False
-    )
     shared_count = models.PositiveIntegerField(default=0)
-    thumbnail_img = models.ImageField('Stream Thumbnail Image', upload_to='images/live/thumbnails', blank=True, null=True)
+    thumbnail_img = models.ImageField('Stream Thumbnail Image', default=None, upload_to='images/live/thumbnails', blank=True, null=True)
     started_at = models.DateTimeField(default=timezone.now)
     ended_at = models.DateTimeField(default=None, null=True, blank=True)
 

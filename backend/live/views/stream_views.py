@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView
 from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime,timedelta
 from django.utils import timezone
 from ..models.models import StreamerProfile, StreamLive, StreamerSettings, StreamCategory
 from math import floor
@@ -32,7 +33,7 @@ def start_stream(request):
         return Response(status=status.HTTP_403_FORBIDDEN)
         
 
-    #Get defaults from user's settings
+    # Get defaults from user's settings
     settings = StreamerSettings.objects.filter(profile=profile).first()
   
     stream_record = StreamLive.objects.create(title=settings.next_stream_title, category=settings.next_stream_category, 
@@ -106,29 +107,55 @@ def update_total_views(request, id):
 
 
 
-class LiveStreamsList(ListCreateAPIView):
+
+    
+class LiveStreamsAll(ListCreateAPIView):
     
     pagination_class = StrandartStreamsPaginator
     permission_classes = [AllowAny]
     serializer_class = StreamLiveSerializer
 
-    def get_queryset(self):
-        category = self.kwargs["category"]
-        if not category:
-            return StreamLive.objects.filter(ended_at=None).order_by("-watching_count")
-        else:
-            category_obj = StreamCategory.objects.filter(title=category).first()
-            return StreamLive.objects.filter(category=category_obj, ended_at=None).order_by("-watching_count")
+    def get(self,request,*args,**kwargs):
+        queryset=StreamLive.objects.all()
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
-        streams = serializer.data
+        #Custom Filters Parameters
 
-        # Customize the response format
-        payload = {'data': {"live_streams": streams}}
+        streamer=self.request.query_params.get('streamer',None)
+        title=self.request.query_params.get('title',None)
+        category=self.request.query_params.get('category',None)
+        order_by=self.request.query_params.get('order_by',None)
+        is_live=self.request.query_params.get('is_live', None)
 
-        return Response(payload, status=status.HTTP_200_OK)
+        started_at_from=self.request.query_params.get('started_at_from',None)
+        started_at_to=self.request.query_params.get('started_at_to',None)
+
+        if streamer: # check if key is not None
+            queryset=queryset.filter(streamer=streamer)
+
+        if title: # check if key is not None
+            queryset=queryset.filter(title__startswith=title)
+
+        if is_live:
+            queryset=queryset.filter(ended_at=None)
+
+        # Date Filters
+
+        if started_at_from and started_at_to: # check if key is not None
+            date_format='%d-%m-%Y'
+            from_date=datetime.strptime(started_at_from,date_format) #Convert string into date format
+            to_date=datetime.strptime(started_at_to,date_format)
+            to_date=to_date+timedelta(days=1) # add extra day in date search
+            queryset=queryset.filter(started_at__range=[from_date,to_date]) 
+
+        if category:
+            queryset=queryset.filter(category=category) 
+        
+        if order_by :
+            queryset=queryset.order_by(f"-{order_by}") 
+
+        serializer=self.get_serializer(queryset,many=True)
+
+        return Response({"data": {"results": serializer.data}}, status=status.HTTP_200_OK )
 
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
@@ -153,3 +180,17 @@ def update_current_stream_info(request, id):
     else:
         return Response({"message": "Cannot update ended stream"}, status=status.HTTP_400_BAD_REQUEST)
         
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def update_share_count(request, id):
+
+    current_stream = StreamLive.objects.filter(id=id).first()
+
+    # If not valid, fail silently
+    if current_stream and not current_stream.ended_at:
+        current_stream.shared_count += 1
+        current_stream.save()
+
+    return Response({"message": "Success!"}, status=status.HTTP_200_OK)
+
+
