@@ -130,7 +130,7 @@ const useGetLatestFeed = (limit = 25) =>
  * @returns
  */
 
-const useGetUserPost = async (user_id, limit) =>
+const useGetUserPost = (user_id, limit) =>
     useQuery(
         [`userPosts_${user_id}`],
         async () => {

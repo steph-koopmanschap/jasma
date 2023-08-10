@@ -36,17 +36,18 @@ class User(AbstractUser):
     user_role = models.CharField("User role",
                                 max_length=10, default="normal", choices=user_roles.CHOICES)
     deleted_at = models.DateTimeField(null=True, blank=True)
-
-
-    def save(self, *args, **kwargs) -> None:
-        """ Modifies save so the UserProfile and UserNotificationPreferences
-        get created at User creation.
-        """
+    followed_streamers_count = models.PositiveIntegerField(default=0)
+    # Caused foreign key conflict error on save. Rewritten in signals.py file
+    
+    # def save(self, *args, **kwargs) -> None:
+    #     """ Modifies save so the UserProfile and UserNotificationPreferences
+    #     get created at User creation.
+    #     """
         
-        if self._state.adding:
-            UserProfile.objects.create(user=self)
-            UserNotificationPreferences.objects.create(user=self)
-        super().save(*args, **kwargs)
+    #     if self._state.adding:
+    #         UserProfile.objects.create(user=self)
+    #         UserNotificationPreferences.objects.create(user=self)
+    #     super().save(*args, **kwargs)
 
     # TODO: We could probably use a string representation
     def __str__(self):

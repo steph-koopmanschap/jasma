@@ -14,3 +14,8 @@ export const getLiveSearchResults = async (searchTerm = "") => {
 
     return res.data;
 };
+
+export const getCategories = async () => {
+    const res = await STREAM_API.get(`${STREAM_ENDPOINT}/categories`);
+    return res.data.data?.categories || [];
+};

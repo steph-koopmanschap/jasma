@@ -2,6 +2,7 @@ from django.db.models import Model
 
 from api.models import Ad, Post, Hashtag, User, UserProfile, UserNotificationPreferences, Comment, Transaction, BookmarkedPost, Following, SubscribedHashtag
 from rest_framework import serializers
+from live.serializers import StreamerProfileSerializer
 
 
 # Field serializer
@@ -37,11 +38,11 @@ class UserAuthenticationSerializer(JasmaModelSerializer):
     - Will accept "password" and "email"
 
     """
-    id = StringUUIDField(read_only=True)
+    # id = StringUUIDField(read_only=True)
 
     class Meta:
         model = User
-        fields = ["id", "username", "user_role", "password", "email"]
+        fields = ["username", "user_role", "password", "email"]
         extra_kwargs = {
             'password': {'write_only': True},
             'email': {'write_only': True},
@@ -153,6 +154,7 @@ class UserFullSerializer(JasmaModelSerializer):
     id = StringUUIDField()
     profile = UserProfileSerializer()
     notification_preferences = UserNotificationPreferencesSerializer()
+    streamerprofile = StreamerProfileSerializer(many=False, read_only=True)
 
     class Meta:
         model = User

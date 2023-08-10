@@ -7,7 +7,7 @@ export const StreamSearch = () => {
     return (
         <div className="stream-list-header">
             <div className="stream-search-container">
-                <Search onGoTo={(value) => router.push(`/live/results/search/${value}`)} />
+                <Search onGoTo={(value) => router.push(`/stream-page/results/search/${value}`)} />
             </div>
         </div>
     );

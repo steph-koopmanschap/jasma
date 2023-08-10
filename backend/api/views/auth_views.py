@@ -21,7 +21,7 @@ def register(request):
     serializer = UserAuthenticationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     user = User.objects.create_user(**serializer.validated_data)
-
+    print(serializer.validated_data)
     # Return success response
     payload = {"message": f"User {user.username} registered successfully."}
     return Response(payload, status=status.HTTP_201_CREATED)
@@ -31,7 +31,9 @@ def register(request):
 def login_view(request):
     email = request.data.get("email")
     password = request.data.get("password")
+    
     user = authenticate(request, username=email, password=password)
+  
     if user:
         login(request, user)
         # Store ip address used to login
@@ -55,6 +57,7 @@ def login_view(request):
 class LogoutView(CreateAPIView):
     queryset = User.objects.none()
     permission_classes = [IsAuthenticated]
+    serializer_class = UserAuthenticationSerializer
     
     def post(self, request):
         logout(request)

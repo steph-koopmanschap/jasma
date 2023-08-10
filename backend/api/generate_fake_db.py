@@ -4,7 +4,7 @@ import datetime
 import random
 from faker import Faker
 from django.db.utils import IntegrityError
-from api.models import User, Post, Comment, Hashtag, UserProfile, ReportedPost, Following, SubscribedHashtag, BookmarkedPost, Ad
+from api.models.models import User, Post, Comment, Hashtag, UserProfile, ReportedPost, Following, SubscribedHashtag, BookmarkedPost, Ad
 from api.constants import countries, genders, relationships
 
 fake = Faker()
@@ -39,9 +39,8 @@ def generate_user():
             # If the email already exists, try again with a new email
             continue
     # if created == False:
-    user.after_create()
+    # user.after_create()
 
-    user_profile = UserProfile.objects.get(user=user)
     user_profile = UserProfile.objects.get(user=user)
     user_profile.given_name = fake.first_name()
     user_profile.last_name = fake.last_name()

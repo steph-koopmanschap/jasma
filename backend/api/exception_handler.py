@@ -1,6 +1,8 @@
 from rest_framework.views import exception_handler
 from rest_framework.exceptions import ValidationError, APIException, NotFound, ErrorDetail
+from django.db.utils import IntegrityError
 from django.http import Http404
+from rest_framework import status
 from rest_framework.response import Response
 
 def common_drf_exception_handler(exc: APIException) -> dict:
@@ -86,6 +88,9 @@ def jasma_exception_handler(exc: Exception, context: dict) -> Response:
         # Convert django Http404 into a DRF NotFound format
         elif isinstance(exc, Http404):
             errors.append(http404_exception_handler(context))
+        elif isinstance(exc, IntegrityError):
+            data = {'detail': str(exc)}
+            return Response(data, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         
         # TODO: Complete list of possible errors
         elif "errors" not in response.data:
