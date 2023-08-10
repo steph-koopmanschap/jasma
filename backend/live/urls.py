@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import profile_views, category_views, stream_views, report_views, search_views
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated 
 
 
 urlpatterns = [
@@ -31,5 +32,9 @@ urlpatterns = [
     # Search
     path("stream-general-search", search_views.search_query, name='stream_general_search'),
     path("search-streamers", search_views.StreamersListAll.as_view(), name='search_streamers'),
-    path("search-stream-reports", search_views.ReportsListAll.as_view(), name='search_stream_reports')
+    path("search-stream-reports", search_views.ReportsListAll.as_view(), name='search_stream_reports'),
+
+    
+  
+    
 ]

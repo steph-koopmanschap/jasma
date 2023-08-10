@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListAPIView
 from ..models.models import StreamerProfile, StreamReport, StreamCategory
 from ..paginators import StrandartListPaginator
 from api.models.models import User
@@ -32,7 +32,7 @@ def search_query(request):
     return Response({'data': {"results": results}}, status=status.HTTP_200_OK)
     
 
-class StreamersListAll(ListCreateAPIView):
+class StreamersListAll(ListAPIView):
     
     pagination_class = StrandartListPaginator
     permission_classes = [AllowAny]
@@ -119,7 +119,7 @@ class StreamersListAll(ListCreateAPIView):
         return Response({"data": {"results": serializer.data}}, status=status.HTTP_200_OK )
     
 
-class ReportsListAll(ListCreateAPIView):
+class ReportsListAll(ListAPIView):
     
     pagination_class = StrandartListPaginator
     permission_classes = [IsAdminUser]

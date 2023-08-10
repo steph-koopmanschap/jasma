@@ -2,13 +2,13 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status, viewsets
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListAPIView
 from ..models.models import StreamReport, StreamLive, StreamerProfile
 from ..serializers import StreamReportSerializer, StreamReportSerializerGet
 from ..paginators import StrandartListPaginator
 
 
-class StreamReportsList(ListCreateAPIView):
+class StreamReportsList(ListAPIView):
     model = StreamReport
     queryset = StreamReport.objects.all()
     serializer_class = StreamReportSerializerGet

@@ -57,6 +57,7 @@ def login_view(request):
 class LogoutView(CreateAPIView):
     queryset = User.objects.none()
     permission_classes = [IsAuthenticated]
+    serializer_class = UserAuthenticationSerializer
     
     def post(self, request):
         logout(request)
