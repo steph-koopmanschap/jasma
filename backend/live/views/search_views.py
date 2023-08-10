@@ -35,7 +35,7 @@ def search_query(request):
 class StreamersListAll(ListCreateAPIView):
     
     pagination_class = StrandartListPaginator
-    permission_classes = [IsAdminUser]
+    permission_classes = [AllowAny]
     serializer_class = StreamerProfileSerializerFull
 
     def get(self,request,*args,**kwargs):
@@ -48,7 +48,6 @@ class StreamersListAll(ListCreateAPIView):
         is_banned=self.request.query_params.get('is_banned',None)
         is_live=self.request.query_params.get('is_live', None)
         ban_reason=self.request.query_params.get('ban_reason', None)
-        
         total_views_count_from = self.request.query_params.get('total_views_count_from', None)
         total_views_count_to = self.request.query_params.get('total_views_count_to', None)
         order_by=self.request.query_params.get('order_by',None)
@@ -64,12 +63,21 @@ class StreamersListAll(ListCreateAPIView):
         if user_id: # check if key is not None
             queryset=queryset.filter(user_id=user_id)
 
-        if is_active: # check if key is not None
-            queryset=queryset.filter(is_active=is_active)
+        if order_by:
+            queryset=queryset.order_by(f"-{order_by}") 
 
         if is_live:
             queryset=queryset.filter(is_live=is_live)
-            
+        
+        
+        # If user is not admin, return here
+        if request.user.is_staff == False:
+            serializer=self.get_serializer(queryset,many=True)
+            return Response({"data": {"results": serializer.data}}, status=status.HTTP_200_OK )
+
+        if is_active: # check if key is not None
+            queryset=queryset.filter(is_active=is_active)
+
         if is_banned:
             queryset=queryset.filter(is_banned=is_banned) 
         
@@ -104,8 +112,7 @@ class StreamersListAll(ListCreateAPIView):
 
 
 
-        if order_by:
-            queryset=queryset.order_by(f"-{order_by}") 
+        
 
         serializer=self.get_serializer(queryset,many=True)
 

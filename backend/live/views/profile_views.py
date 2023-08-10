@@ -56,20 +56,23 @@ def toggle_ban_streamer_profile(request, id):
     if not user_to_ban:
         return Response({"message": f"User {id} doesn't exist."}, status=status.HTTP_404_NOT_FOUND)
     
-    profile = StreamerProfile.objects.filter(user=user_to_ban)
 
-    if not profile.first():
+    if not hasattr(user_to_ban, 'streamerprofile'):
         return Response({"message": f"User {user_to_ban.username} hasn't created their streamer profile yet."}, status=status.HTTP_400_BAD_REQUEST)
     else:
-        if not profile.first().is_banned:
+        profile = user_to_ban.streamerprofile
+        if not profile.is_banned:
             reason = ToggleBanSeriazlizer(data=request.data)
             reason.is_valid(raise_exception=True)
-            profile.update(is_banned=True, last_banned_at=timezone.now(), updated_at=timezone.now(),
-                            last_ban_reason=reason.validated_data["last_ban_reason"])
+            profile.is_banned=True
+            profile.last_banned_at=timezone.now()
+            profile.last_ban_reason=reason.validated_data["last_ban_reason"]
+            profile.save()
             
             return Response({"message": f"User {user_to_ban.username} has been banned successfully!"},status=status.HTTP_200_OK)
         else:
-            profile.update(is_banned=False, updated_at=timezone.now())    
+            profile.is_banned=False
+            profile.save()    
             return Response({"message": f"User {user_to_ban.username} has been unbanned successfully!"},status=status.HTTP_200_OK)
     
 
@@ -130,12 +133,13 @@ def toggle_is_active(request):
 def update_profile_settings(request):
     serializer = StreamerSettingsSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    settings_obj = StreamerSettings.objects.filter(profile=request.user.streamerprofile)
+    settings_obj = request.user.streamerprofile.profile_settings
     # Get category by id
-    category = StreamCategory.objects.filter(id=serializer.data["next_stream_category"]).first()
-    settings_obj.update(next_stream_title=serializer.validated_data["next_stream_title"], 
-                                  updated_at=timezone.now(), next_stream_category=category)
-    request.user.streamerprofile.save()
+    category = StreamCategory.objects.filter(id=serializer.validated_data["next_stream_category"]).first()
+    
+    settings_obj.next_stream_title=serializer.validated_data["next_stream_title"] 
+    settings_obj.next_stream_category=category
+    settings_obj.save()
     # Return success response
     payload = {"message": f"Profile settings have been updated successfully.", 'data': {"profile_settings": serializer.data}}
     return Response(payload, status=status.HTTP_200_OK)

@@ -3,17 +3,18 @@ from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 from ..models.models import StreamCategory
+from rest_framework.generics import ListCreateAPIView
 from django.utils import timezone
 from ..serializers import StreamCategorySerializerUpdate, StreamCategorySerializerGet
 
 
-class CategoriesListView(viewsets.ModelViewSet):
+class CategoriesListView(ListCreateAPIView):
     model = StreamCategory
     queryset = StreamCategory.objects.all()
     serializer_class = StreamCategorySerializerGet
     permission_classes = [AllowAny]
 
-    def list(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         serializer = self.get_serializer(queryset, many=True)
         categories = serializer.data

@@ -2,19 +2,20 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status, viewsets
+from rest_framework.generics import ListCreateAPIView
 from ..models.models import StreamReport, StreamLive, StreamerProfile
 from ..serializers import StreamReportSerializer, StreamReportSerializerGet
 from ..paginators import StrandartListPaginator
 
 
-class StreamReportsList(viewsets.ModelViewSet):
+class StreamReportsList(ListCreateAPIView):
     model = StreamReport
     queryset = StreamReport.objects.all()
     serializer_class = StreamReportSerializerGet
     permission_classes = [IsAdminUser]
     pagination_class = StrandartListPaginator
 
-    def list(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         serializer = self.get_serializer(queryset, many=True)
         reports = serializer.data
@@ -31,11 +32,8 @@ def create_stream_report(request):
     serializer.is_valid(raise_exception=True)
 
     stream_to_report = StreamLive.objects.filter(id=request.data["reported_stream"]).first()
-
-    if not stream_to_report:
-        return Response({"message": "Such stream doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
     
-    profile_to_report = StreamerProfile.objects.filter(user_id=stream_to_report.streamer.user.id).first()
+    profile_to_report = stream_to_report.streamer
     
     if not profile_to_report:
         return Response({"message": "Such streamer profile doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
@@ -45,7 +43,7 @@ def create_stream_report(request):
         return Response({"message": "You've already reported this channel"}, status=status.HTTP_400_BAD_REQUEST)
     
     # Check if report is valid
-    if request.user.streamerprofile:
+    if hasattr(request.user, 'streamerprofile'):
         my_profile = request.user.streamerprofile
         is_my_stream = my_profile.streams.filter(id=stream_to_report.id).first()
         if my_profile == profile_to_report or is_my_stream:

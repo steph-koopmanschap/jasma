@@ -12,7 +12,7 @@ urlpatterns = [
     path("toggle-ban/<id>", profile_views.toggle_ban_streamer_profile, name='toggle_ban'),
     path("toggle-follow/<id>", profile_views.toggle_follow, name='toggle_follow'),
     # Stream categories
-    path("categories", category_views.CategoriesListView.as_view({"get": 'list'}), name='categories'),
+    path("categories", category_views.CategoriesListView.as_view(), name='categories'),
     path("create-category", category_views.create_category, name='create_category'),
     path("update-category/<id>", category_views.update_category, name='update_category'),
     path("delete-category/<id>", category_views.delete_category, name='delete_category'),
@@ -24,7 +24,7 @@ urlpatterns = [
     path("live-streams-all", stream_views.LiveStreamsAll.as_view(), name='update_streams_all'),
     path("update-share-count/<id>", stream_views.update_share_count, name='update_share_count'),
     # Reports
-    path("stream-reports", report_views.StreamReportsList.as_view({'get': 'list'}), name='stream_reports'),
+    path("stream-reports", report_views.StreamReportsList.as_view(), name='stream_reports'),
     path("create-stream-report", report_views.create_stream_report, name='create_stream_report'),
     path("delete-report/<id>", report_views.delete_report, name='delete_report'),
     path("clear-all-reports/<user_id>", report_views.clear_all_reports, name='clear_all_reports'),

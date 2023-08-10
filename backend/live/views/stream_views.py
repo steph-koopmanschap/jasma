@@ -15,7 +15,6 @@ from ..paginators import StrandartStreamsPaginator
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def start_stream(request):
-    print(request.GET)
     stream_key = request.GET['name']
 
     if not stream_key:
@@ -50,7 +49,6 @@ def start_stream(request):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def end_stream(request):
-    print(request.GET)
     stream_key = request.GET['name']
 
     if not stream_key:
@@ -172,9 +170,8 @@ def update_current_stream_info(request, id):
 
     if not current_stream.first().ended_at:
         current_stream.update(**serializer.validated_data)
-        serializer_full = StreamLiveSerializer(data=current_stream.first())
+        serializer_full = StreamLiveSerializer(current_stream.first())
         
-        serializer_full.is_valid()
         return Response({"message": "Stream info has been updated successfully!", 
                          "data": {"live_stream": serializer_full.data} }, status=status.HTTP_200_OK)
     else:
@@ -187,7 +184,7 @@ def update_share_count(request, id):
     current_stream = StreamLive.objects.filter(id=id).first()
 
     # If not valid, fail silently
-    if current_stream and not current_stream.ended_at:
+    if current_stream and current_stream.ended_at == None:
         current_stream.shared_count += 1
         current_stream.save()
 

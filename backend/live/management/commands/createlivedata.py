@@ -3,9 +3,10 @@ import random
 import faker.providers
 from django.core.management.base import BaseCommand
 from faker import Faker
-from live.models.models import StreamCategory, StreamerProfile, StreamerSettings
+from live.models.models import StreamCategory, StreamerProfile, StreamerSettings, StreamLive
 from api.models.models import User
 from live.constants import ban_reasons
+from django.utils import timezone
 from uuid import uuid4
 
 
@@ -40,15 +41,14 @@ def create_live_data():
     fake = Faker(["nl_NL"])
     fake.add_provider(Provider)
 
-        # print(fake.ecommerce_products())
-
     print("Creating categories...")
 
-    for _ in range(3):
-        title = fake.unique.category()
-        color = fake.unique.category_color()
+    for ind in range(3):
+        title = CATEGORIES[ind]
+        color = CATEGORY_COLORS[ind]
           
-        StreamCategory.objects.create(title=title, total_views_count=random.randint(500, 2021410))
+        StreamCategory.objects.create(title=title, total_views_count=random.randint(500, 2021410), color_hex=color)
+    
 
     print("Creating users...")
     for _ in range(10):
@@ -69,7 +69,6 @@ def create_live_data():
 
     print("Creating streamer profiles...")
     for user in User.objects.all():
-        print(user)
         stream_key = STREAM_PREFIX + uuid4().hex
         StreamerProfile.objects.get_or_create(user_id=user.id, stream_key=stream_key)
         
@@ -82,8 +81,18 @@ def create_live_data():
             profile.is_banned = views % 2 == 0
             profile.last_ban_reason = fake.ban_reason()
         next_stream_title = f"I'm {fake.first_name()}. Join now!"
-        StreamerSettings.objects.create(profile=profile, next_stream_title=next_stream_title,)
+        StreamerSettings.objects.create(profile=profile, next_stream_title=next_stream_title)
+        
+        if is_banned:
+            StreamLive.objects.create(title=next_stream_title, 
+                                              streamer=profile, ended_at=timezone.now())
+        else:
+            StreamLive.objects.create(title=next_stream_title, 
+                                              streamer=profile, ended_at=None)
+            profile.is_live =True
+            
         profile.save()
+
 
             
 
