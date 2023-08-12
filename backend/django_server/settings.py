@@ -39,13 +39,13 @@ elif os.getenv("STAGE") == "development":
     DEBUG = True
 
 # Build paths inside the project like this: BASE_DIR / "subdir".
-BASE_DIR = Path(__file__).resolve().parent.parent
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-MEDIA_URL = f"{BASE_URL}/media/"
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+    MEDIA_URL = f"{BASE_URL}/media/"
 # MEDIA_URL = "/media/"
-DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
-GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')
+    GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')
 
 
 # Quick-start development settings - unsuitable for production
@@ -87,6 +87,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     "corsheaders",
+    "live.apps.LiveConfig",
+    'rest_framework',
     "api",
 ]
 
@@ -116,7 +118,8 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
         "rest_framework.permissions.DjangoModelPermissions"
-    ]
+    ],
+    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema"
 }
 
 # CORS settings
@@ -265,8 +268,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = 'api/static/'
 
-STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

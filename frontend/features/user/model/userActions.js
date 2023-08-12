@@ -89,7 +89,7 @@ const handleUploadUserPic = async (file) => {
  * @returns
  */
 
-const useGetFollowers = async (userID) =>
+const useGetFollowers = (userID) =>
     useQuery(
         [`followers_${userID}`],
         async () => {
@@ -108,7 +108,7 @@ const useGetFollowers = async (userID) =>
  * @returns
  */
 
-const useGetFollowing = async (userID) =>
+const useGetFollowing = (userID) =>
     useQuery(
         [`followees_${userID}`],
         async () => {
@@ -142,7 +142,7 @@ const handleCheckIsFollowing = async (userID_two) => {
  * @returns
  */
 
-const useGetUserIDsByRole = async (roleFilter) =>
+const useGetUserIDsByRole = (roleFilter) =>
     useQuery(
         [`UserIDS_${roleFilter}`],
         async () => {
@@ -178,7 +178,7 @@ const handleChangeUserRole = async (user_id, role) => {
  * @param {String} username
  * @returns
  */
-const useGetUserID = async (username) =>
+const useGetUserID = (username) =>
     useQuery(
         [`${username}`],
         async () => {
@@ -197,7 +197,7 @@ const useGetUserID = async (username) =>
  * @returns
  */
 
-const useGetUserInfo = async (userID) =>
+const useGetUserInfo = (userID) =>
     useQuery(
         [`${username}`],
         async () => {
